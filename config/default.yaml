@@ -1,0 +1,4 @@
+webserver:
+  port: 8871
+  endpoint: "/v1"
+  subscriptions: "/ws"

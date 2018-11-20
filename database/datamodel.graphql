@@ -1,0 +1,145 @@
+type User @pgTable(name: "users") {
+  id: UUID! @unique @pgColumn(name: "uuid")
+  createdAt: DateTime @pgColumn(name: "created_at")
+  updatedAt: DateTime @pgColumn(name: "updated_at")
+  username:
+  emails: [Email!]!
+  fullName: String @pgColumn(name: "full_name")
+  inviteTokens: [InviteToken!]! @pgColumn(name: "invite_tokens")
+  localCredentials: [LocalCredential!]! @pgColumn("local_credentials")
+  oauthCredentials: [OauthCredential!]! @pgColumn("oauth_credentials")
+  sessionRefreshTokens: [SessionRefreshToken!]! @pgColumn("session_refresh_tokens")
+  status: String @pgColumn("status")
+  properties: [UserProperty!]!
+  groups: [Group!]! @pgRelationTable(table: "user_group_map" name: "user_group_map")
+  workspaces: [Workspace!]! @pgRelationTable(table: "user_workspace_map" name: "user_workspace_map")
+}
+
+type Emails @pgTable(name: "emails") {
+  id: UUID! @unique @pgColumn(name: "uuid")
+  createdAt: DateTime @pgColumn(name: "created_at")
+  updatedAt: DateTime @pgColumn(name: "updated_at")
+  address: String @unique
+  main: Boolean
+  token: String @unique
+  userId: Users @pgRelation(column: "user_uuid")
+  verified: Boolean
+}
+
+type InviteToken @pgTable(name: "invite_tokens") {
+  id: UUID! @unique @pgColumn(name: "uuid")
+  createdAt: DateTime @pgColumn(name: "created_at")
+  updatedAt: DateTime @pgColumn(name: "updated_at")
+  assignments: String
+  email: String
+  token: String @unique
+  userId: Users @pgRelation(column: "user_uuid")
+  workspace: Workspace @pgRelation(column: "workspace_uuid")
+}
+
+type LocalCredential @pgTable(name: "local_credentials") {
+  id: UUID! @unique @pgColumn(name: "user_uuid")
+  createdAt: DateTime @pgColumn(name: "created_at")
+  updatedAt: DateTime @pgColumn(name: "updated_at")
+  password: String @unique
+  resetToken: String @pgColumn(name: "reset_token")
+  user: User @pgRelation(column: "user_uuid")
+}
+
+type OauthCredential @pgTable(name: "oauth_credentials") {
+  createdAt: DateTime @pgColumn(name: "created_at")
+  updatedAt: DateTime @pgColumn(name: "updated_at")
+  expiresAt: DateTime @pgColumn(name: "expires_at")
+  oauthProvider: String! @pgColumn(name: "oauth_provider")
+  oauthUserId: String! @pgColumn(name: "oauth_user_id")
+  user: User @pgRelation(column: "user_uuid")
+}
+
+type SessionRefreshToken @pgTable(name: "session_refresh_tokens") {
+  id: UUID! @unique @pgColumn(name: "uuid")
+  createdAt: DateTime @pgColumn(name: "created_at")
+  updatedAt: DateTime @pgColumn(name: "updated_at")
+  expiresAt: DateTime @pgColumn(name: "expires_at")
+  active: Boolean
+  metadata: String
+  refreshToken: String @unique @pgColumn(name: "refresh_token")
+  refreshedAt: DateTime @pgColumn(name: "refreshed_at")
+  source: String
+  user: User @pgRelation(column: "user_uuid")
+}
+
+# type UserGroup @pgTable(name: "user_group_map") {
+#   createdAt: DateTime @pgColumn(name: "created_at")
+#   updatedAt: DateTime @pgColumn(name: "updated_at")
+#   group: Group @pgRelation(column: "group_uuid")
+#   user: User @pgRelation(column: "user_uuid")
+# }
+
+type Group @pgTable(name: "groups") {
+  id: UUID! @unique @pgColumn(name: "uuid")
+  createdAt: DateTime @pgColumn(name: "created_at")
+  updatedAt: DateTime @pgColumn(name: "updated_at")
+  active: Boolean
+  custom: Boolean
+  description: String
+  entityType: String @unique @pgColumn("entity_type")
+  entityId: UUID @unique @pgColumn("entity_uuid")
+  properties: [GroupProperty!]!
+  roles: [GroupRole!]!
+  label: String @unique
+  users: [User_group_map!]!
+}
+
+type GroupProperty @pgTable(name: "group_properties") {
+  createdAt: DateTime @pgColumn(name: "created_at")
+  updatedAt: DateTime @pgColumn(name: "updated_at")
+  category: String
+  group: Group @pgRelation(column: "group_uuid")
+  key: String!
+  value: String
+}
+
+# type Group_role_map @pgTable(name: "group_role_map") {
+#   created_at: DateTime
+#   group_uuid: Groups @pgRelation(column: "group_uuid")
+#   role_uuid: Roles @pgRelation(column: "role_uuid")
+#   updated_at: DateTime
+# }
+
+type UserProperty @pgTable(name: "user_properties") {
+  createdAt: DateTime @pgColumn(name: "created_at")
+  updatedAt: DateTime @pgColumn(name: "updated_at")
+  category: String
+  key: String!
+  value: String
+  user: User @pgRelation(column: "user_uuid")
+}
+
+type UserWorkspace @pgTable(name: "user_workspace_map") {
+  createdAt: DateTime @pgColumn(name: "created_at")
+  updatedAt: DateTime @pgColumn(name: "updated_at")
+  user: User @pgRelation(column: "user_uuid")
+  workspace: Workspace @pgRelation(column: "workspace_uuid")
+}
+
+type Workspace @pgTable(name: "workspaces") {
+  id: UUID! @unique @pgColumn(name: "uuid")
+  createdAt: DateTime @pgColumn(name: "created_at")
+  updatedAt: DateTime @pgColumn(name: "updated_at")
+  active: Boolean
+  deployments: [Deployments!]!
+  description: String
+  invite_tokens: [InviteToken!]!
+  label: String
+  properties: [WorkspaceProperty!]!
+  users: [User!]!
+}
+
+type WorkspaceProperty @pgTable(name: "workspace_properties") {
+  createdAt: DateTime @pgColumn(name: "created_at")
+  updatedAt: DateTime @pgColumn(name: "updated_at")
+  category: String
+  key: String!
+  value: String
+  workspace: Workspace @pgRelation(column: "workspace_uuid")
+}
