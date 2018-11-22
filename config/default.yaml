@@ -1,4 +1,20 @@
+# API webserver configuration.
 webserver:
   port: 8871
   endpoint: "/v1"
   subscriptions: "/ws"
+
+# Charts live here.
+# This is where the airflow chart is installed from.
+repository: "https://helm.astronomer.io/"
+
+# Helm configuration.
+# These values are set at runtime and used for airflow deployments.
+helm:
+  baseDomain: ~
+  registryAuthSecret: ~
+  acme: ~
+  rbacEnabled: ~
+  releaseName: ~
+  releaseNamespace: ~
+  releaseVersion: ~

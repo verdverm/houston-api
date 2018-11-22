@@ -1,42 +1,16 @@
+# import User from "./generated/prisma.graphql"
+
 scalar UUID
 scalar JSON
 scalar Date
 
 type Query {
-  test: String
+  users(userUuid: UUID, username: String, email: String): [User]
 }
 
 type Mutation {
   createUser(email: String!, password: String!, username: String, profile: JSON, inviteToken: String, duration: Int): AuthUser
   createToken(password: String!, identity: String, duration: Int): AuthUser
-}
-
-# type Subscription {
-# }
-
-type UserProperty {
-  key: String
-  value: String
-  category: String
-}
-
-type Email {
-  address: String
-  verified: Boolean
-  primary: Boolean
-  createdAt: String
-  updatedAt: String
-}
-
-type User {
-  uuid: UUID
-  emails: [Email]
-  fullName: String
-  username: String
-  profile: [UserProperty]
-  status: String
-  createdAt: String
-  updatedAt: String
 }
 
 type AuthUser {

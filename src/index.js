@@ -1,4 +1,5 @@
 import "@babel/polyfill";
+import "dotenv/config";
 import Mutation from "./resolvers/Mutation";
 import Query from "./resolvers/Query";
 import log from "./logger";
@@ -49,7 +50,7 @@ server.applyMiddleware({ app, path: serverConfig.endpoint });
 // Create HTTP server
 const httpServer = createServer(app);
 
-// Install subscriptions handlers
+// Install subscriptions handlers on our server
 server.installSubscriptionHandlers(httpServer);
 
 // Start the HTTP server

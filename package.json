@@ -7,7 +7,8 @@
     "start": "nodemon --exec babel-node -e js,graphql src/index.js",
     "serve": "node dist/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint src --ext .js --ext .graphql"
+    "lint": "eslint src --ext .js --ext .graphql",
+    "knex": "babel-node node_modules/.bin/knex"
   },
   "author": "Astronomer",
   "license": "Apache 2.0",
@@ -17,12 +18,16 @@
     "apollo-server-express": "^2.2.2",
     "bcryptjs": "^2.4.3",
     "config": "^2.0.1",
+    "dotenv": "^6.1.0",
     "express": "^4.16.4",
     "graphql": "^14.0.2",
     "graphql-import": "^0.7.1",
     "graphql-type-json": "^0.2.1",
     "jsonwebtoken": "^8.3.0",
+    "knex": "^0.15.2",
+    "pg": "^7.6.1",
     "prisma-binding": "^2.1.6",
+    "shortid": "^2.2.14",
     "winston": "^3.1.0"
   },
   "devDependencies": {
