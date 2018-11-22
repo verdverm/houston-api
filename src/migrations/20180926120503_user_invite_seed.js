@@ -1,13 +1,17 @@
-const Constants = require("../constants.js");
-const MigrationHelper = require("../migration_helpers.js");
-const Uuid = require("uuid/v4");
+import { SYSTEM_SETTING_PUBLIC_SIGNUP } from "../constants";
 
 const PERMISSION_TABLE = "permissions";
 const ROLE_PERMISSION_TABLE = "role_permission_map";
 const ROLE_TABLE = "roles";
-const GROUP_TABLE = "groups";
-const GROUP_ROLE_TABLE = "group_role_map";
 const SYSTEM_SETTING_TABLE = "system_settings";
+
+async function insertSystemSettingIfNotExists(knex, record) {
+  const setting = await knex.select().where("key", record.key);
+  if (setting.length) {
+    return;
+  }
+  return await knex.insert(record);
+}
 
 const scopedPermissions = {
   user: {
@@ -28,13 +32,13 @@ const scopedPermissions = {
 
 const settings = [
   {
-    key: Constants.SYSTEM_SETTING_PUBLIC_SIGNUP,
+    key: SYSTEM_SETTING_PUBLIC_SIGNUP,
     value: false,
     category: "user"
   }
 ];
 
-exports.up = async function(knex) {
+export async function up(knex) {
   let promises = [];
 
   // Insert permissions
@@ -99,15 +103,10 @@ exports.up = async function(knex) {
       setting.is_encrypted = false;
     }
     promises.push(
-      MigrationHelper.insertSystemSettingIfNotExists(
-        knex(SYSTEM_SETTING_TABLE),
-        setting
-      )
+      insertSystemSettingIfNotExists(knex(SYSTEM_SETTING_TABLE), setting)
     );
   }
   return Promise.all(promises);
-};
+}
 
-exports.down = function(knex, Promise) {
-  return Promise.resolve(true);
-};
+export function down() {}

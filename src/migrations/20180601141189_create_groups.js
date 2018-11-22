@@ -1,14 +1,12 @@
-const MigrationHelper = require("../migration_helpers.js");
-
 const TABLE_NAME = "groups";
 
-exports.up = function(knex) {
-  return knex.schema.hasTable(TABLE_NAME).then((exists) => {
+export function up(knex) {
+  return knex.schema.hasTable(TABLE_NAME).then(exists => {
     if (exists) {
       return;
     }
 
-    return knex.schema.createTable(TABLE_NAME, function (table) {
+    return knex.schema.createTable(TABLE_NAME, function(table) {
       table.uuid("uuid").primary();
       table.string("label");
       table.string("description");
@@ -22,8 +20,8 @@ exports.up = function(knex) {
       table.unique(["label", "entity_type", "entity_uuid"]);
     });
   });
-};
+}
 
-exports.down = function(knex) {
+export function down(knex) {
   return knex.schema.dropTableIfExists(TABLE_NAME);
-};
+}

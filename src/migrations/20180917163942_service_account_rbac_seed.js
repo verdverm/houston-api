@@ -1,5 +1,9 @@
-const Constants = require("../constants.js");
-const Uuid = require("uuid/v4");
+import {
+  SYSTEM_SETTING_DEPLOYMENT_ROLE_TEMPLATE,
+  SYSTEM_SETTING_WORKSPACE_ROLE_TEMPLATE,
+  SYSTEM_SETTING_SYSTEM_ROLE_TEMPLATE
+} from "../constants";
+import uuid from "uuid/v4";
 
 const ROLE_PERMISSION_TABLE = "role_permission_map";
 const ROLE_TABLE = "roles";
@@ -10,7 +14,7 @@ const roles = [
     label: "Deployment Service Account",
     category: "service_account",
     scope: "user",
-    settings_key: Constants.SYSTEM_SETTING_DEPLOYMENT_ROLE_TEMPLATE,
+    settings_key: SYSTEM_SETTING_DEPLOYMENT_ROLE_TEMPLATE,
     permissions: [
       "user_deployment_list",
       "user_deployment_view",
@@ -25,7 +29,7 @@ const roles = [
     label: "Workspace Service Account",
     category: "service_account",
     scope: "user",
-    settings_key: Constants.SYSTEM_SETTING_WORKSPACE_ROLE_TEMPLATE,
+    settings_key: SYSTEM_SETTING_WORKSPACE_ROLE_TEMPLATE,
     permissions: [
       "user_group_view",
       "user_group_update",
@@ -65,7 +69,7 @@ const roles = [
     label: "System Service Account",
     category: "service_account",
     scope: "global",
-    settings_key: Constants.SYSTEM_SETTING_SYSTEM_ROLE_TEMPLATE,
+    settings_key: SYSTEM_SETTING_SYSTEM_ROLE_TEMPLATE,
     permissions: [
       "global_user_create",
       "global_user_list",
@@ -117,7 +121,7 @@ const roles = [
 
 async function createRole(knex, payload) {
   const roleData = {
-    uuid: Uuid(),
+    uuid: uuid(),
     label: payload.label,
     category: payload.category,
     entity_type: "",
@@ -150,7 +154,7 @@ async function createRole(knex, payload) {
   });
 }
 
-exports.up = function(knex) {
+export function up(knex) {
   let promises = [];
 
   // Insert roles
@@ -159,8 +163,6 @@ exports.up = function(knex) {
   }
 
   return Promise.all(promises);
-};
+}
 
-exports.down = function(knex, Promise) {
-  return Promise.resolve(true);
-};
+export function down() {}

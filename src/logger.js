@@ -2,7 +2,7 @@ import { createLogger, format, transports } from "winston";
 
 // Reuturn a default console logger
 export default createLogger({
-  level: "info",
+  level: "debug",
   format: format.combine(
     format(info => {
       info.level = `${info.level.toUpperCase()}`;

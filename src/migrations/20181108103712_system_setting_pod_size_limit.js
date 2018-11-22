@@ -1,11 +1,15 @@
-const Constants = require("../constants.js");
+import {
+  SYSTEM_SETTING_ASTRO_UNIT,
+  SYSTEM_SETTING_POD_SIZE_LIMIT
+} from "../constants";
+
 const SYSTEM_SETTING_TABLE = "system_settings";
 
-exports.up = async function(knex, Promise) {
+export async function up(knex) {
   // Grab that AU system setting value
   const au = await knex(SYSTEM_SETTING_TABLE)
     .select("value")
-    .where("key", Constants.SYSTEM_SETTING_ASTRO_UNIT)
+    .where("key", SYSTEM_SETTING_ASTRO_UNIT)
     .first();
 
   // These are the base values used to derive all values listed in here
@@ -15,7 +19,7 @@ exports.up = async function(knex, Promise) {
   // Default settings based on GCP n1-standard
   const settings = [
     {
-      key: Constants.SYSTEM_SETTING_POD_SIZE_LIMIT,
+      key: SYSTEM_SETTING_POD_SIZE_LIMIT,
       value: JSON.stringify({
         cpu: `${cpuAU * 40}m`,
         memory: `${memAU * 40}Mi`
@@ -27,10 +31,10 @@ exports.up = async function(knex, Promise) {
 
   // Insert limits.
   return knex(SYSTEM_SETTING_TABLE).insert(settings);
-};
+}
 
-exports.down = async function(knex) {
+export async function down(knex) {
   return await knex(SYSTEM_SETTING_TABLE)
-    .where("key", Constants.SYSTEM_SETTING_POD_SIZE_LIMIT)
+    .where("key", SYSTEM_SETTING_POD_SIZE_LIMIT)
     .del();
-};
+}

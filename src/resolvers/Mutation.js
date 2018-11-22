@@ -16,7 +16,7 @@ async function createUser(parent, args, ctx) {
     `{ username }`
   );
 
-  log.debug(user.username);
+  log.info(user.username);
 }
 
 async function createToken(parent, args, ctx) {}

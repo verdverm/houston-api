@@ -1,4 +1,8 @@
-const Constants = require("../constants.js");
+import {
+  SYSTEM_SETTING_ASTRO_UNIT,
+  SYSTEM_SETTING_CELERY_AU_MIN,
+  SYSTEM_SETTING_MAX_EXTRA_AU
+} from "../constants";
 
 const SYSTEM_SETTING_TABLE = "system_settings";
 
@@ -10,10 +14,10 @@ const insertIfNotExists = async (knex, record) => {
   return await knex.insert(record);
 };
 
-exports.up = function(knex) {
+export function up(knex) {
   const settings = [
     {
-      key: Constants.SYSTEM_SETTING_ASTRO_UNIT,
+      key: SYSTEM_SETTING_ASTRO_UNIT,
       value: JSON.stringify({
         // CPU and mem based on GCP n1-standard machine type.
         // Always use millicpu and Megabytes here. Downstream calculations depend on it.
@@ -33,12 +37,12 @@ exports.up = function(knex) {
       category: "system"
     },
     {
-      key: Constants.SYSTEM_SETTING_CELERY_AU_MIN,
+      key: SYSTEM_SETTING_CELERY_AU_MIN,
       value: 3,
       category: "system"
     },
     {
-      key: Constants.SYSTEM_SETTING_MAX_EXTRA_AU,
+      key: SYSTEM_SETTING_MAX_EXTRA_AU,
       value: 400,
       category: "system"
     }
@@ -54,8 +58,6 @@ exports.up = function(knex) {
     promises.push(insertIfNotExists(knex(SYSTEM_SETTING_TABLE), setting));
   }
   return Promise.all(promises);
-};
+}
 
-exports.down = function(knex, Promise) {
-  return Promise.resolve(true);
-};
+export function down() {}
