@@ -32,7 +32,7 @@ export default async function createUser(parent, args, ctx) {
   // Parse string to boolean.
   const allowPublicSignups = JSON.parse(publicSignup.value);
 
-  // If it's not the first and we're not allowing public signups, check for invite.
+  // If it's not the first signup and we're not allowing public signups, check for invite.
   if (!isFirst && !allowPublicSignups) {
     if (!args.inviteToken) throw new PublicSignupsDisabledError();
 
@@ -49,6 +49,15 @@ export default async function createUser(parent, args, ctx) {
     if (token.email !== args.email) throw new InviteTokenEmailError();
   }
 
+  // Username can fall back to email.
+  const username = args.username || args.email;
+
+  // Full name is sent in on profile and can fall back to empty string.
+  const fullName = (args.profile || {}).fullName || "";
+
+  // Hash password.
+  const password = await bcrypt.hash(args.password, 10);
+
   // Check to see if we are requiring email confirmations.
   const emailConfirm = await ctx.db.query.systemSetting(
     { where: { id: SYSTEM_SETTING_USER_CONFIRMATION } },
@@ -56,21 +65,18 @@ export default async function createUser(parent, args, ctx) {
   );
 
   // Determine default status.
-  const defaultStatus = emailConfirm ? USER_STATUS_PENDING : USER_STATUS_ACTIVE;
+  const status = emailConfirm ? USER_STATUS_PENDING : USER_STATUS_ACTIVE;
 
   // Generate an verification token.
   const emailToken = shortid.generate();
-
-  // Hash password.
-  const password = await bcrypt.hash(args.password, 10);
 
   // Create the user records.
   const user = await ctx.db.mutation.createUser(
     {
       data: {
-        username: args.username,
-        fullName: args.fullName,
-        status: defaultStatus,
+        username,
+        fullName,
+        status,
         emails: {
           create: {
             address: args.email,
