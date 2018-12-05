@@ -1,42 +1,50 @@
 type User @pgTable(name: "users") {
   id: UUID! @unique @pgColumn(name: "uuid")
   username: String
-  # emails: [Email!]!
+  emails: [Email!]!
   fullName: String @pgColumn(name: "full_name")
-  # inviteTokens: [InviteToken!]!
-  # localCredentials: [LocalCredential!]!
+  inviteTokens: [InviteToken!]!
+  localCredential: LocalCredential
   # oauthCredentials: [OauthCredential!]!
   # sessionRefreshTokens: [SessionRefreshToken!]!
   status: String
   # properties: [UserProperty!]!
   # groups: [Group!]!
   # workspaces: [Workspace!]!
+  createdAt: DateTime! @pgColumn(name: "created_at")
+  updatedAt: DateTime! @pgColumn(name: "updated_at")
 }
 
-# type Email {
-#   id: UUID! @unique
-#   address: String @unique
-#   main: Boolean
-#   token: String @unique
-#   user: User
-#   verified: Boolean
-# }
+type Email @pgTable(name: "emails") {
+  id: UUID! @unique @pgColumn(name: "uuid")
+  address: String @unique
+  main: Boolean
+  token: String @unique
+  user: User @pgRelation(column: "user_uuid")
+  verified: Boolean
+  createdAt: DateTime! @pgColumn(name: "created_at")
+  updatedAt: DateTime! @pgColumn(name: "updated_at")
+}
 
-# type InviteToken {
-#   id: UUID! @unique
-#   assignments: String
-#   email: String
-#   token: String @unique
-#   user: User
-#   workspace: Workspace
-# }
+type LocalCredential @pgTable(name: "local_credentials") {
+  id: UUID! @unique @pgColumn(name: "uuid")
+  user: User @pgRelation(column: "user_uuid")
+  password: String @unique
+  resetToken: String @pgColumn(name: "reset_token")
+  createdAt: DateTime! @pgColumn(name: "created_at")
+  updatedAt: DateTime! @pgColumn(name: "updated_at")
+}
 
-# type LocalCredential {
-#   id: UUID! @unique
-#   password: String @unique
-#   resetToken: String
-#   user: User
-# }
+type InviteToken @pgTable(name: "invite_tokens") {
+  id: UUID! @unique @pgColumn(name: "uuid")
+  assignments: String
+  email: String
+  token: String @unique
+  user: User @pgRelation(column: "user_uuid")
+  workspace: Workspace @pgRelation(column: "workspace_uuid")
+  createdAt: DateTime! @pgColumn(name: "created_at")
+  updatedAt: DateTime! @pgColumn(name: "updated_at")
+}
 
 # type OauthCredential {
 #   id: UUID! @unique
@@ -150,24 +158,28 @@ type User @pgTable(name: "users") {
 # #   workspace: Workspace @pgRelation(column: "workspace_uuid")
 # # }
 
-# type Workspace @pgTable("workspaces") {
-#   id: UUID! @unique
-#   active: Boolean
-#   deployments: [Deployment!]!
-#   description: String
-#   inviteTokens: [InviteToken!]!
-#   label: String
-#   properties: [WorkspaceProperty!]!
-#   users: [User!]!
-# }
+type Workspace @pgTable(name: "workspaces") {
+  id: UUID! @unique @pgColumn(name: "uuid")
+  active: Boolean
+  # deployments: [Deployment!]!
+  description: String
+  inviteTokens: [InviteToken!]!
+  label: String
+  properties: [WorkspaceProperty!]!
+  users: [User!]!
+  createdAt: DateTime! @pgColumn(name: "created_at")
+  updatedAt: DateTime! @pgColumn(name: "updated_at")
+}
 
-# type WorkspaceProperty @pgTable("workspace_properties") {
-#   id: UUID! @unique
-#   category: String
-#   key: String!
-#   value: String
-#   workspace: Workspace @pgRelation(column: "workspace_uuid")
-# }
+type WorkspaceProperty @pgTable(name: "workspace_properties") {
+  id: ID! @unique
+  category: String
+  key: String!
+  value: String
+  workspace: Workspace @pgRelation(column: "workspace_uuid")
+  createdAt: DateTime! @pgColumn(name: "created_at")
+  updatedAt: DateTime! @pgColumn(name: "updated_at")
+}
 
 # type Deployment {
 #   id: UUID! @unique
@@ -191,9 +203,12 @@ type User @pgTable(name: "users") {
 #   value: String
 # }
 
-# type SystemSetting {
-#   id: UUID! @unique
-#   category: String
-#   is_encrypted: Boolean
-#   value: String
-# }
+type SystemSetting @pgTable(name: "system_settings") {
+  id: ID! @unique @pgColumn(name: "key")
+  key: String
+  value: String
+  category: String
+  isEncrypted: Boolean @pgColumn(name: "is_encrypted")
+  createdAt: DateTime! @pgColumn(name: "created_at")
+  updatedAt: DateTime! @pgColumn(name: "updated_at")
+}

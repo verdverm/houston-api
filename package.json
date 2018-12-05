@@ -4,9 +4,9 @@
   "description": "",
   "scripts": {
     "build": "babel src -d dist",
-    "start": "npm run migrate-latest && nodemon --exec babel-node -e js,graphql src/index.js",
+    "start": "npm run migrate-latest && prisma deploy && nodemon --exec babel-node -e js,graphql src/index.js",
     "serve": "node dist/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "lint": "eslint src --ext .js --ext .graphql",
     "knex": "babel-node node_modules/.bin/knex",
     "migrate-latest": "npm run knex migrate:latest"
@@ -35,6 +35,7 @@
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
     "@babel/node": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/preset-env": "^7.1.5",
     "babel-eslint": "^10.0.1",
     "babel-plugin-module-resolver": "^3.1.1",
@@ -44,7 +45,8 @@
     "eslint-plugin-graphql": "^2.1.1",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-prettier": "^3.0.0",
-    "nodemon": "^1.18.6",
+    "jest": "^23.6.0",
+    "nodemon": "^1.18.7",
     "prettier": "^1.15.1"
   }
 }

@@ -1,3 +1,6 @@
+// XXX: Knex requires that this file not use import/export.
+require("dotenv").config();
+
 module.exports = {
   development: {
     client: "postgres",

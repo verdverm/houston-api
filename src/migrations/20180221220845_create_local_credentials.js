@@ -7,7 +7,8 @@ export function up(knex) {
     }
 
     return knex.schema.createTable(TABLE_NAME, function(table) {
-      table.uuid("user_uuid").primary();
+      table.uuid("uuid").primary();
+      table.uuid("user_uuid");
       table.string("password").unique();
       table.string("reset_token").index();
       table.timestamps();

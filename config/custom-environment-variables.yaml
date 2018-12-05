@@ -13,3 +13,5 @@ helm:
   releaseName: "HELM_RELEASE_NAME"
   releaseNamespace: "HELM_RELEASE_NAMESPACE"
   releaseVersion: "HELM_RELEASE_VERSION"
+
+jwtPassphrase: "JWT_PASSPHRASE"

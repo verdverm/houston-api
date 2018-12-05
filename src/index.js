@@ -1,10 +1,8 @@
 import "@babel/polyfill";
 import "dotenv/config";
-import Mutation from "./resolvers/Mutation";
-import Query from "./resolvers/Query";
+import resolvers from "./resolvers";
 import log from "./logger";
 import config from "config";
-import GraphQLJSON from "graphql-type-json";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { Prisma } from "prisma-binding";
@@ -13,13 +11,6 @@ import { createServer } from "http";
 
 // Get configuration from config dir and environment
 const serverConfig = config.get("webserver");
-
-// Define resolvers
-const resolvers = {
-  Query,
-  Mutation,
-  JSON: GraphQLJSON
-};
 
 // Create express server
 const app = express();
