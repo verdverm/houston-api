@@ -10,7 +10,7 @@ type User @pgTable(name: "users") {
   status: String
   # properties: [UserProperty!]!
   # groups: [Group!]!
-  # workspaces: [Workspace!]!
+  # userWorkspaces: [UserWorkspace!]!
   createdAt: DateTime! @pgColumn(name: "created_at")
   updatedAt: DateTime! @pgColumn(name: "updated_at")
 }
@@ -152,11 +152,12 @@ type InviteToken @pgTable(name: "invite_tokens") {
 #   # serviceAccountRoles: [ServiceAccountRole!]!
 # }
 
-# # type UserWorkspace @pgTable(name: "user_workspace_map") {
-# #   id: UUID! @unique
-# #   user: User @pgRelation(column: "user_uuid")
-# #   workspace: Workspace @pgRelation(column: "workspace_uuid")
-# # }
+# type UserWorkspace @pgTable(name: "user_workspace_map") {
+#   user: User @pgRelation(column: "user_uuid")
+#   workspace: Workspace @pgRelation(column: "workspace_uuid")
+#   createdAt: DateTime! @pgColumn(name: "created_at")
+#   updatedAt: DateTime! @pgColumn(name: "updated_at")
+# }
 
 type Workspace @pgTable(name: "workspaces") {
   id: UUID! @unique @pgColumn(name: "uuid")

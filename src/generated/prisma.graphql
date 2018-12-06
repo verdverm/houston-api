@@ -1,5 +1,5 @@
 # source: http://localhost:4466
-# timestamp: Tue Dec 04 2018 16:20:08 GMT-0500 (Eastern Standard Time)
+# timestamp: Thu Dec 06 2018 15:38:14 GMT-0500 (Eastern Standard Time)
 
 type AggregateEmail {
   count: Int!

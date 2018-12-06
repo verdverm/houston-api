@@ -12,6 +12,26 @@ import {
   USER_STATUS_ACTIVE
 } from "constants";
 
+function validateInviteToken(ctx, args) {
+  // Return early if no token found.
+  if (!args.inviteToken) return;
+
+  // Grab the invite token.
+  const token = ctx.db.query.inviteTokensConnection(
+    { where: { token: args.token } },
+    `{ workspace { id }, email }`
+  );
+
+  // Throw error if token not found.
+  if (!token) throw new InviteTokenNotFoundError();
+
+  // Throw error if email does not match.
+  if (token.email !== args.email) throw new InviteTokenEmailError();
+
+  // Return validated token.
+  return token;
+}
+
 // Create a new user. This is the singnup mutation.
 export default async function createUser(parent, args, ctx) {
   // Check to see if this is the first signup.
@@ -33,21 +53,12 @@ export default async function createUser(parent, args, ctx) {
   const allowPublicSignups = JSON.parse(publicSignup.value);
 
   // If it's not the first signup and we're not allowing public signups, check for invite.
-  if (!isFirst && !allowPublicSignups) {
-    if (!args.inviteToken) throw new PublicSignupsDisabledError();
-
-    // Grab the invite token.
-    const token = ctx.db.query.inviteTokensConnection(
-      { where: { token: args.token } },
-      `{ email }`
-    );
-
-    // Throw error if token not found.
-    if (!token) throw new InviteTokenNotFoundError();
-
-    // Throw error if email does not match.
-    if (token.email !== args.email) throw new InviteTokenEmailError();
+  if (!isFirst && !allowPublicSignups && !args.inviteToken) {
+    throw new PublicSignupsDisabledError();
   }
+
+  // Validate our invite token if exists.
+  const token = validateInviteToken(ctx, args);
 
   // Username can fall back to email.
   const username = args.username || args.email;
@@ -70,30 +81,35 @@ export default async function createUser(parent, args, ctx) {
   // Generate an verification token.
   const emailToken = shortid.generate();
 
-  // Create the user records.
-  const user = await ctx.db.mutation.createUser(
-    {
-      data: {
-        username,
-        fullName,
-        status,
-        emails: {
-          create: {
-            address: args.email,
-            main: true,
-            verified: !emailConfirm,
-            token: emailToken
-          }
-        },
-        localCredential: {
-          create: {
-            password
-          }
+  // Create our base mutation.
+  const mutation = {
+    data: {
+      username,
+      fullName,
+      status,
+      emails: {
+        create: {
+          address: args.email,
+          main: true,
+          verified: !emailConfirm,
+          token: emailToken
+        }
+      },
+      localCredential: {
+        create: {
+          password
         }
       }
-    },
-    `{ id }`
-  );
+    }
+  };
+
+  // If we have an invite token, add user to the originating workspace.
+  if (token && token.workspace) {
+    mutation.data.workspaces = {};
+  }
+
+  // Create the user records.
+  const user = await ctx.db.mutation.createUser(mutation, `{ id }`);
 
   // Return our new user id.
   return { userId: user.id };
