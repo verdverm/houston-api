@@ -39,7 +39,7 @@ export default async function createUser(parent, args, ctx) {
     // Grab the invite token.
     const token = ctx.db.query.inviteTokensConnection(
       { where: { token: args.token } },
-      `{ workspace { id } }`
+      `{ email }`
     );
 
     // Throw error if token not found.
