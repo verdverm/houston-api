@@ -27,7 +27,6 @@
     "graphql-type-json": "^0.2.1",
     "jsonwebtoken": "^8.3.0",
     "lodash": "^4.17.11",
-    "moment": "^2.23.0",
     "ms": "^2.1.1",
     "pg": "^7.6.1",
     "prisma-binding": "^2.1.6",
