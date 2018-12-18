@@ -51,6 +51,7 @@ describe("createUser", () => {
       .fn()
       .mockReturnValue({ aggregate: { count: 0 } });
     const createUser = jest.fn().mockReturnValue({ id: casual.uuid });
+    const cookie = jest.fn();
 
     // Construct db object for context.
     const db = {
@@ -66,10 +67,17 @@ describe("createUser", () => {
     };
 
     // Run the graphql mutation.
-    const res = await graphql(schema, mutation, null, { db }, vars);
+    const res = await graphql(
+      schema,
+      mutation,
+      null,
+      { db, res: { cookie } },
+      vars
+    );
 
     expect(usersConnection.mock.calls.length).toBe(1);
     expect(createUser.mock.calls.length).toBe(1);
+    expect(cookie.mock.calls.length).toBe(1);
     expect(res.data.createUser.token.payload.iat).toBe(
       Math.floor(new Date() / 1000)
     );

@@ -20,7 +20,7 @@ export function token(parent, args, ctx) {
   });
 
   // Set the cookie.
-  ctx.res.cookie("astronomer_auth", jwt, {
+  ctx.res.cookie("astronomer_auth", token, {
     domain: `.${config.get("helm.baseDomain")}`,
     path: "/",
     expires: new Date(millis),
