@@ -3,6 +3,7 @@ webserver:
   port: 8871
   endpoint: "/v1"
   subscriptions: "/ws"
+  debug: false
 
 # Charts live here.
 # This is where the airflow chart is installed from.
@@ -21,3 +22,96 @@ helm:
 
 # Passphrase to sign JWTs with.
 jwtPassphrase: ~
+
+# JWT / Cookie duration in milliseconds.
+authDuration: 86400000
+
+# Allow public signups.
+publicSignups: false
+
+# Require email confirmation.
+emailConfirmation: true
+
+# Format: ${SCOPE}.${RESOURCE}.${VERB}
+roles:
+  #
+  # System
+  #
+  - id: SYSTEM_ADMIN
+    name: System Admin
+    permissions:
+      - global.systemSettings.create
+      - global.systemSettings.get
+      - global.systemSettings.list
+      - global.systemSettings.update
+      - global.systemSettings.delete
+      - global.workspace.get
+      - global.workspace.list
+      - global.workspace.update
+      - global.workspace.delete
+      - global.deployment.get
+      - global.deployment.list
+      - global.deployment.update
+      - global.deployment.delete
+
+  - id: SYSTEM_EDITOR
+    name: System Editor
+    permissions:
+      - global.systemSettings.get
+      - global.systemSettings.list
+      - global.systemSettings.update
+
+  - id: SYSTEM_VIEWER
+    name: System Viewer
+    permissions:
+      - global.systemSettings.get
+      - global.systemSettings.list
+
+  #
+  # User
+  #
+  - id: USER
+    name: User
+    permissions:
+      - user.workspace.create
+      - user.workspace.list
+      - user.deployment.create
+      - user.deployment.list
+
+  # Workspace
+  - id: WORKSPACE_ADMIN
+    name: Workspace Admin
+    permissions:
+      - user.workspace.get
+      - user.workspace.update
+      - user.workspace.delete
+
+  - id: WORKSPACE_EDITOR
+    name: Workspace Editor
+    permissions:
+      - user.workspace.get
+      - user.workspace.update
+
+  - id: WORKSPACE_VIEWER
+    name: Workspace Viewer
+    permissions:
+      - user.workspace.get
+
+  # Deployment
+  - id: DEPLOYMENT_ADMIN
+    name: Deployment Admin
+    permissions:
+      - user.deployment.get
+      - user.deployment.update
+      - user.deployment.delete
+
+  - id: DEPLOYMENT_EDITOR
+    name: Deployment Editor
+    permissions:
+      - user.deployment.get
+      - user.deployment.update
+
+  - id: DEPLOYMENT_VIEWER
+    name: Deployment Viewer
+    permissions:
+      - user.deployment.get

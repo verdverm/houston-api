@@ -2,6 +2,7 @@ webserver:
   port: "WEBSERVER_PORT"
   endpoint: "WEBSERVER_ENDPOINT"
   subscriptions: "WEBERVER_SUBCRIPTIONS"
+  debug: "WEBSERVER_DEBUG"
 
 repository: "REPOSITORY"
 
@@ -15,3 +16,6 @@ helm:
   releaseVersion: "HELM_RELEASE_VERSION"
 
 jwtPassphrase: "JWT_PASSPHRASE"
+authDuration: "AUTH_DURATION"
+publicSignups: "PUBLIC_SIGNUPS"
+emailConfirmation: "EMAIL_CONFIRMATION"

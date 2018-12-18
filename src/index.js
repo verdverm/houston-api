@@ -1,7 +1,8 @@
 import "@babel/polyfill";
 import "dotenv/config";
-import resolvers from "./resolvers";
-import log from "./logger";
+import log from "logger";
+import resolvers from "resolvers";
+import directives from "directives";
 import config from "config";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
@@ -19,6 +20,9 @@ const app = express();
 const server = new ApolloServer({
   typeDefs: importSchema("./src/schema.graphql"),
   resolvers,
+  schemaDirectives: {
+    ...directives
+  },
   introspection: true,
   playground: true,
   subscriptions: {
@@ -30,7 +34,7 @@ const server = new ApolloServer({
       typeDefs: "src/generated/prisma.graphql",
       endpoint: "http://localhost:4466",
       secret: "supersecret",
-      debug: true
+      debug: serverConfig.debug
     })
   })
 });

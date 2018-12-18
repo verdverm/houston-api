@@ -1,5 +1,6 @@
 import config from "config";
 import jwt from "jsonwebtoken";
+import ms from "ms";
 
 // Grab the user object for this id.
 export function user(parent, args, ctx, info) {
@@ -7,12 +8,23 @@ export function user(parent, args, ctx, info) {
 }
 
 // Generate a JWT using the user id.
-export function token(parent) {
+export function token(parent, args, ctx) {
   // Create our JWT.
+  const millis = config.get("authDuration");
+
+  // Create the payload.
   const payload = { uuid: parent.userId };
   const token = jwt.sign(payload, config.get("jwtPassphrase"), {
-    expiresIn: `1 days`,
+    expiresIn: ms(millis),
     mutatePayload: true
+  });
+
+  // Set the cookie.
+  ctx.res.cookie("astronomer_auth", jwt, {
+    domain: `.${config.get("helm.baseDomain")}`,
+    path: "/",
+    expires: new Date(millis),
+    secure: true
   });
 
   // Return in the legacy format.

@@ -1,3 +1,7 @@
+import {
+  defaultWorkspaceLabel,
+  defaultWorkspaceDescription
+} from "./create-user";
 import resolvers from "resolvers";
 import casual from "casual";
 import { graphql } from "graphql";
@@ -46,12 +50,11 @@ describe("createUser", () => {
     const usersConnection = jest
       .fn()
       .mockReturnValue({ aggregate: { count: 0 } });
-    const systemSetting = jest.fn().mockReturnValue({ value: "true" });
     const createUser = jest.fn().mockReturnValue({ id: casual.uuid });
 
     // Construct db object for context.
     const db = {
-      query: { usersConnection, systemSetting },
+      query: { usersConnection },
       mutation: { createUser }
     };
 
@@ -66,7 +69,6 @@ describe("createUser", () => {
     const res = await graphql(schema, mutation, null, { db }, vars);
 
     expect(usersConnection.mock.calls.length).toBe(1);
-    expect(systemSetting.mock.calls.length).toBe(2);
     expect(createUser.mock.calls.length).toBe(1);
     expect(res.data.createUser.token.payload.iat).toBe(
       Math.floor(new Date() / 1000)
@@ -81,12 +83,11 @@ describe("createUser", () => {
     const usersConnection = jest
       .fn()
       .mockReturnValue({ aggregate: { count: 1 } });
-    const systemSetting = jest.fn().mockReturnValue({ value: "false" });
     const createUser = jest.fn().mockReturnValue({ id: casual.uuid });
 
     // Construct db object for context.
     const db = {
-      query: { usersConnection, systemSetting },
+      query: { usersConnection },
       mutation: { createUser }
     };
 
@@ -111,13 +112,12 @@ describe("createUser", () => {
     const usersConnection = jest
       .fn()
       .mockReturnValue({ aggregate: { count: 1 } });
-    const systemSetting = jest.fn().mockReturnValue({ value: "false" });
     const createUser = jest.fn().mockReturnValue({ id: casual.uuid });
     const inviteTokensConnection = jest.fn().mockReturnValue(null);
 
     // Construct db object for context.
     const db = {
-      query: { usersConnection, systemSetting, inviteTokensConnection },
+      query: { usersConnection, inviteTokensConnection },
       mutation: { createUser }
     };
 
@@ -136,5 +136,51 @@ describe("createUser", () => {
       expect.stringMatching(/^Invite token not found/)
     );
     expect(createUser).toHaveBeenCalledTimes(0);
+  });
+});
+
+describe("defaultWorkspaceLabel", () => {
+  test("generates workspace label with full name", () => {
+    const args = { profile: { fullName: "Elon Musk" }, username: "elon1" };
+    const res = defaultWorkspaceLabel(args);
+    expect(res).toBe("Elon Musk's Workspace");
+  });
+
+  test("generates workspace label with username", () => {
+    const args = { username: "elon1" };
+    const res = defaultWorkspaceLabel(args);
+    expect(res).toBe("elon1's Workspace");
+  });
+
+  test("generates workspace label no user information", () => {
+    const args = {};
+    const res = defaultWorkspaceLabel(args);
+    expect(res).toBe("Default Workspace");
+  });
+});
+
+describe("defaultWorkspaceDescription", () => {
+  test("generates workspace description with full name", () => {
+    const args = { profile: { fullName: "Elon Musk" }, username: "elon1" };
+    const res = defaultWorkspaceDescription(args);
+    expect(res).toBe("Default workspace for Elon Musk");
+  });
+
+  test("generates workspace description with email", () => {
+    const args = { username: "elon1" };
+    const res = defaultWorkspaceDescription(args);
+    expect(res).toBe("Default workspace for elon1");
+  });
+
+  test("generates workspace description with username", () => {
+    const args = { email: "elon1@gmail.com" };
+    const res = defaultWorkspaceDescription(args);
+    expect(res).toBe("Default workspace for elon1@gmail.com");
+  });
+
+  test("generates workspace description no user information", () => {
+    const args = {};
+    const res = defaultWorkspaceDescription(args);
+    expect(res).toBe("Default Workspace");
   });
 });

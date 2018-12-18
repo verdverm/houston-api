@@ -1,49 +1,63 @@
-type User @pgTable(name: "users") {
-  id: UUID! @unique @pgColumn(name: "uuid")
-  username: String
-  emails: [Email!]!
-  fullName: String @pgColumn(name: "full_name")
-  inviteTokens: [InviteToken!]!
-  localCredential: LocalCredential
-  # oauthCredentials: [OauthCredential!]!
-  # sessionRefreshTokens: [SessionRefreshToken!]!
-  status: String
-  # properties: [UserProperty!]!
-  # groups: [Group!]!
-  # userWorkspaces: [UserWorkspace!]!
-  createdAt: DateTime! @pgColumn(name: "created_at")
-  updatedAt: DateTime! @pgColumn(name: "updated_at")
+enum Role {
+  USER
+  WORKSPACE_ADMIN
+  WORKSPACE_EDITOR
+  WORKSPACE_VIEWER
+  DEPLOYMENT_ADMIN
+  DEPLOYMENT_EDITOR
+  DEPLOYMENT_VIEWER
+  SYSTEM_ADMIN
+  SYSTEM_EDITOR
+  SYSTEM_VIEWER
 }
 
-type Email @pgTable(name: "emails") {
-  id: UUID! @unique @pgColumn(name: "uuid")
+type User {
+  id: UUID! @unique
+  username: String @unique
+  emails: [Email!]!
+  fullName: String
+  status: String
+  inviteTokens: [InviteToken!]!
+  localCredential: LocalCredential
+  roleBindings: [RoleBinding!]!
+  # workspaces: [Workspace!]!
+  # groups: [Group!]!
+  # oauthCredentials: [OauthCredential!]!
+  # sessionRefreshTokens: [SessionRefreshToken!]!
+  # properties: [UserProperty!]!
+}
+
+type RoleBinding {
+  id: UUID! @unique
+  subject: User
+  role: Role
+  workspace: Workspace
+  deployment: Deployment
+}
+
+type Email {
+  id: UUID! @unique
   address: String @unique
   main: Boolean
   token: String @unique
-  user: User @pgRelation(column: "user_uuid")
+  user: User
   verified: Boolean
-  createdAt: DateTime! @pgColumn(name: "created_at")
-  updatedAt: DateTime! @pgColumn(name: "updated_at")
 }
 
-type LocalCredential @pgTable(name: "local_credentials") {
-  id: UUID! @unique @pgColumn(name: "uuid")
-  user: User @pgRelation(column: "user_uuid")
+type LocalCredential {
+  id: UUID! @unique
+  user: User
   password: String @unique
-  resetToken: String @pgColumn(name: "reset_token")
-  createdAt: DateTime! @pgColumn(name: "created_at")
-  updatedAt: DateTime! @pgColumn(name: "updated_at")
+  resetToken: String
 }
 
-type InviteToken @pgTable(name: "invite_tokens") {
-  id: UUID! @unique @pgColumn(name: "uuid")
+type InviteToken {
+  id: UUID! @unique
   assignments: String
   email: String
-  token: String @unique
-  user: User @pgRelation(column: "user_uuid")
-  workspace: Workspace @pgRelation(column: "workspace_uuid")
-  createdAt: DateTime! @pgColumn(name: "created_at")
-  updatedAt: DateTime! @pgColumn(name: "updated_at")
+  token: String
+  user: User
+  workspace: Workspace
 }
 
 # type OauthCredential {
@@ -73,13 +87,14 @@ type InviteToken @pgTable(name: "invite_tokens") {
 
 # type Group {
 #   id: UUID! @unique
+#   name: String! # New static name to remove need to dynamically set ids in system settings
 #   active: Boolean
 #   custom: Boolean
 #   description: String
-#   entityType: String @unique
-#   entityId: UUID @unique
+#   entityType: String # System, Workspace, Deployment
+#   entityId: UUID
 #   properties: [GroupProperty!]!
-#   label: String @unique
+#   label: String
 #   users: [User!]!
 #   roles: [Role!]!
 # }
@@ -107,17 +122,15 @@ type InviteToken @pgTable(name: "invite_tokens") {
 
 # type Role {
 #   id: UUID! @unique
-#   category: String
-#   entityType: String @unique
-#   entityId: UUID @unique
-#   label: String @unique
-#   scope: String
-#   groups: [Group!]!
+#   name: String!
+#   # category: String
+#   # entityType: String # Group / ServiceAccount
+#   # entityId: UUID
+#   label: String!
+#   # scope: String
 #   permissions: [Permission!]!
-#   serviceAccounts: [ServiceAccount!]!
-#   # serviceAccountRoles: [ServiceAccountRole!]!
-#   # groupRoles: [GroupRole!]!
-#   # rolePermissions: [RolePermission!]!
+#   # groups: [Group!]!
+#   # serviceAccounts: [ServiceAccount!]!
 # }
 
 # # type RolePermission {
@@ -127,9 +140,10 @@ type InviteToken @pgTable(name: "invite_tokens") {
 
 # type Permission {
 #   id: UUID! @unique
-#   category: String
-#   label: String
-#   scope: String!
+#   name: String! @unique # This used to be id
+#   # category: String
+#   # label: String
+#   # scope: String!
 #   roles: [Role!]!
 #   # rolePermissions: [RolePermission!]!
 # }
@@ -159,8 +173,8 @@ type InviteToken @pgTable(name: "invite_tokens") {
 #   updatedAt: DateTime! @pgColumn(name: "updated_at")
 # }
 
-type Workspace @pgTable(name: "workspaces") {
-  id: UUID! @unique @pgColumn(name: "uuid")
+type Workspace {
+  id: UUID! @unique
   active: Boolean
   # deployments: [Deployment!]!
   description: String
@@ -168,23 +182,19 @@ type Workspace @pgTable(name: "workspaces") {
   label: String
   properties: [WorkspaceProperty!]!
   users: [User!]!
-  createdAt: DateTime! @pgColumn(name: "created_at")
-  updatedAt: DateTime! @pgColumn(name: "updated_at")
 }
 
-type WorkspaceProperty @pgTable(name: "workspace_properties") {
-  id: ID! @unique
+type WorkspaceProperty {
+  id: UUID! @unique
   category: String
   key: String!
   value: String
-  workspace: Workspace @pgRelation(column: "workspace_uuid")
-  createdAt: DateTime! @pgColumn(name: "created_at")
-  updatedAt: DateTime! @pgColumn(name: "updated_at")
+  workspace: Workspace
 }
 
-# type Deployment {
-#   id: UUID! @unique
-#   config: String
+type Deployment {
+  id: UUID! @unique
+  config: String
 #   deployment_properties: [DeploymentProperty!]!
 #   description: String
 #   label: String @unique
@@ -194,7 +204,7 @@ type WorkspaceProperty @pgTable(name: "workspace_properties") {
 #   type: String
 #   version: String
 #   workspace: Workspace
-# }
+}
 
 # type DeploymentProperty {
 #   id: UUID! @unique
@@ -204,12 +214,12 @@ type WorkspaceProperty @pgTable(name: "workspace_properties") {
 #   value: String
 # }
 
-type SystemSetting @pgTable(name: "system_settings") {
-  id: ID! @unique @pgColumn(name: "key")
-  key: String
-  value: String
-  category: String
-  isEncrypted: Boolean @pgColumn(name: "is_encrypted")
-  createdAt: DateTime! @pgColumn(name: "created_at")
-  updatedAt: DateTime! @pgColumn(name: "updated_at")
-}
+# type SystemSetting @pgTable(name: "system_settings") {
+#   id: ID! @unique @pgColumn(name: "key")
+#   key: String
+#   value: String
+#   category: String
+#   isEncrypted: Boolean @pgColumn(name: "is_encrypted")
+#   createdAt: DateTime! @pgColumn(name: "created_at")
+#   updatedAt: DateTime! @pgColumn(name: "updated_at")
+# }

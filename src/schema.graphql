@@ -1,16 +1,48 @@
-# import User from "./generated/prisma.graphql"
+# import User, Scope, AccessLevel from "./generated/prisma.graphql"
 
+#
+# Directives
+#
+directive @auth(
+  permissions: [String!],
+) on OBJECT | FIELD_DEFINITION
+
+#
+# Scalars
+#
 scalar UUID
 scalar JSON
 scalar Date
 
+#
+# Queries
+#
 type Query {
-  users(userUuid: UUID, username: String, email: String): [User]
+  users(
+    userUuid: UUID,
+    username: String,
+    email: String
+  ): [User] @auth
 }
 
+#
+# Mutations
+#
 type Mutation {
-  createUser(email: String!, password: String!, username: String, profile: JSON, inviteToken: String, duration: Int): AuthUser
-  createToken(password: String!, identity: String, duration: Int): AuthUser
+  createUser(
+    email: String!
+    password: String!
+    username: String
+    profile: JSON
+    inviteToken: String
+    duration: Int
+  ): AuthUser
+
+  createToken(
+    password: String!
+    identity: String!
+    duration: Int
+  ): AuthUser
 }
 
 type AuthUser {

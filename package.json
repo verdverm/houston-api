@@ -4,13 +4,12 @@
   "description": "",
   "scripts": {
     "build": "babel src -d dist",
-    "start": "npm run migrate-latest && prisma deploy && nodemon --exec babel-node -e js,graphql src/index.js",
+    "start": "npm run prisma-deploy && nodemon --exec babel-node -e js,graphql src/index.js",
     "serve": "node dist/index.js",
     "test": "jest",
     "coverage": "jest --coverage",
     "lint": "eslint src --ext .js --ext .graphql",
-    "knex": "babel-node node_modules/.bin/knex",
-    "migrate-latest": "npm run knex migrate:latest"
+    "prisma-deploy": "prisma deploy --env-file .env"
   },
   "author": "Astronomer",
   "license": "Apache 2.0",
@@ -27,7 +26,9 @@
     "graphql-tools": "^4.0.3",
     "graphql-type-json": "^0.2.1",
     "jsonwebtoken": "^8.3.0",
-    "knex": "^0.15.2",
+    "lodash": "^4.17.11",
+    "moment": "^2.23.0",
+    "ms": "^2.1.1",
     "pg": "^7.6.1",
     "prisma-binding": "^2.1.6",
     "shortid": "^2.2.14",
