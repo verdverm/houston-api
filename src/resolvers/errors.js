@@ -25,5 +25,5 @@ export class CredentialsNotFoundError extends Error {
 }
 
 export class InvalidCredentialsError extends Error {
-  message = this.message || "Invalid username / password combination";
+  message = this.message || "Invalid username and password combination";
 }
