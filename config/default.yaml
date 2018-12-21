@@ -20,6 +20,28 @@ helm:
   releaseNamespace: ~
   releaseVersion: ~
 
+# Auth configuration.
+auth:
+  # Local database (user/pass) configuration.
+  local:
+    enabled: true
+
+  # Auth0 integration configuration.
+  auth0:
+    enabled: false
+    clientId: ~
+    baseDomain: ~
+    externalLogin: ~
+
+  # Direct oauth integration to google.
+  google:
+    enabled:  false
+    clientId: ~
+
+  # Direct oauth integration to github (WIP).
+  github:
+    enabled: false
+
 # Passphrase to sign JWTs with.
 jwtPassphrase: ~
 

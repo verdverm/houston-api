@@ -15,6 +15,39 @@ scalar JSON
 scalar Date
 
 #
+# Types
+#
+type AuthUser {
+  user: User
+  token: Token
+  permissions: JSON
+  isAdmin: Boolean
+}
+
+type Token {
+  value: String
+  payload: TokenPayload
+}
+
+type TokenPayload {
+  uuid: UUID
+  iat: Int
+  exp: Int
+}
+
+type AuthConfig {
+  publicSignup: Boolean
+  initialSignup: Boolean
+  localEnabled: Boolean
+  googleEnabled: Boolean
+  githubEnabled: Boolean
+  auth0Enabled: Boolean
+  googleOAuthUrl: String
+  githubOAuthUrl: String
+  auth0OAuthUrl: String
+}
+
+#
 # Queries
 #
 type Query {
@@ -22,7 +55,14 @@ type Query {
     userUuid: UUID,
     username: String,
     email: String
-  ): [User] @auth
+  ): [User]
+
+  authConfig(
+    redirect: String
+    duration: Int
+    extras: JSON
+    inviteToken: String
+  ): AuthConfig
 }
 
 #
@@ -43,22 +83,10 @@ type Mutation {
     identity: String!
     duration: Int
   ): AuthUser
-}
 
-type AuthUser {
-  user: User
-  token: Token
-  permissions: JSON
-  isAdmin: Boolean
-}
-
-type Token {
-  value: String
-  payload: TokenPayload
-}
-
-type TokenPayload {
-  uuid: UUID
-  iat: Int
-  exp: Int
+  resetPassword(
+    token: String!
+    password: String!
+    duration: Int
+  ): AuthUser
 }
