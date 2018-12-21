@@ -5,6 +5,4 @@
  * @param {Object} ctx The graphql context.
  * @return {AuthConfig} The auth config.
  */
-export default async function authConfig(parent, args, ctx) {
-  console.log(args);
-}
+export default async function authConfig(parent, args, ctx) {}

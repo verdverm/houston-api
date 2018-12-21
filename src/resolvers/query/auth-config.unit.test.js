@@ -59,7 +59,6 @@ describe("authConfig", () => {
 
     // Run the graphql mutation.
     const res = await graphql(schema, query, null, { db }, vars);
-    console.log(res);
 
     // Expect(users.mock.calls.length).toBe(1);
     // expect(cookie.mock.calls.length).toBe(1);
