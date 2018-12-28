@@ -35,6 +35,7 @@
     "no-var": 1,
     "no-alert": 0,
     "no-console": 0,
+    "import/no-named-as-default-member": 0,
     "import/extensions": 1,
     "import/no-unresolved": [2, { "caseSensitive": false }],
     "import/order": ["error", {"groups": ["index", "sibling", "parent", "internal", "external", "builtin"]}],

@@ -3,7 +3,7 @@ webserver:
   port: 8871
   endpoint: "/v1"
   subscriptions: "/ws"
-  debug: false
+  debug: true
 
 # Charts live here.
 # This is where the airflow chart is installed from.
@@ -35,12 +35,8 @@ auth:
 
   # Direct oauth integration to google.
   google:
-    enabled:  false
-    clientId: ~
-
-  # Direct oauth integration to github (WIP).
-  github:
     enabled: false
+    clientId: ~
 
 # Passphrase to sign JWTs with.
 jwtPassphrase: ~

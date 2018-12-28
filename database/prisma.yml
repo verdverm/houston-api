@@ -1,5 +1,6 @@
 # Pull endpoint from env
-endpoint: ${env:PRISMA_ENDPOINT}
+# endpoint: ${env:PRISMA_ENDPOINT}
+endpoint: "http://localhost:4466"
 
 # Location of datamodel
 datamodel: datamodel.graphql
@@ -14,7 +15,9 @@ datamodel: datamodel.graphql
 # Generate graphql schema
 generate:
   - generator: graphql-schema
-    output: ../src/generated
+    output: ../src/generated/schema
+  - generator: javascript-client
+    output: ../src/generated/client
 
 # Update schema
 hooks:

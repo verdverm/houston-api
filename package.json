@@ -3,13 +3,15 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "build": "babel src -d dist",
-    "start": "npm run prisma-deploy && nodemon --exec babel-node -e js,graphql src/index.js",
+    "build": "babel src -d dist && npm run prisma-generate",
+    "start": "npm run prisma-deploy && npm run prisma-generate && nodemon --exec babel-node -e js,graphql src/index.js",
     "serve": "node dist/index.js",
     "test": "jest",
     "coverage": "jest --coverage",
     "lint": "eslint src --ext .js --ext .graphql",
-    "prisma-deploy": "prisma deploy --env-file .env"
+    "prisma-deploy": "prisma deploy --env-file .env",
+    "prisma-generate": "prisma generate",
+    "playground": "graphql playground"
   },
   "author": "Astronomer",
   "license": "Apache 2.0",
@@ -19,9 +21,10 @@
     "apollo-server-express": "^2.2.2",
     "bcryptjs": "^2.4.3",
     "config": "^2.0.1",
-    "cors": "^2.8.5",
     "dotenv": "^6.1.0",
     "express": "^4.16.4",
+    "google-auth-library": "^2.0.2",
+    "googleapis": "^36.0.0",
     "graphql": "^14.0.2",
     "graphql-import": "^0.7.1",
     "graphql-tools": "^4.0.3",
@@ -31,6 +34,7 @@
     "ms": "^2.1.1",
     "pg": "^7.6.1",
     "prisma-binding": "^2.1.6",
+    "prisma-client-lib": "^1.23.2",
     "shortid": "^2.2.14",
     "winston": "^3.1.0"
   },
@@ -52,6 +56,7 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-prettier": "^3.0.0",
     "jest": "^23.6.0",
+    "nock": "^10.0.5",
     "nodemon": "^1.18.7",
     "prettier": "^1.15.1",
     "supertest": "^3.3.0"

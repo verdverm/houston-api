@@ -1,4 +1,4 @@
-# import User, Scope, AccessLevel from "./generated/prisma.graphql"
+# import User, Scope, AccessLevel from "./generated/schema/prisma.graphql"
 
 #
 # Directives

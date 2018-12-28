@@ -1,8 +1,8 @@
 import { PermissionError } from "./errors";
 import log from "logger";
+import config from "configuration";
 import { SchemaDirectiveVisitor } from "graphql-tools";
 import { defaultFieldResolver } from "graphql";
-import config from "config";
 import jwt from "jsonwebtoken";
 
 export const APP_SECRET = "BLAHHHH";

@@ -15,6 +15,18 @@ helm:
   releaseNamespace: "HELM_RELEASE_NAMESPACE"
   releaseVersion: "HELM_RELEASE_VERSION"
 
+auth:
+  local:
+    enabled: "AUTH_LOCAL_ENABLED"
+  auth0:
+    enabled: "AUTH_AUTH0_ENABLED"
+    clientId: "AUTH_AUTH0_CLIENT_ID"
+    baseDomain: "AUTH_AUTH0_BASE_DOMAIN"
+    externalLogin: "AUTH_AUTH0_EXTERNAL_LOGIN"
+  google:
+    enabled: "AUTH_GOOGLE_ENABLED"
+    clientId: "AUTH_GOOGLE_CLIENT_ID"
+
 jwtPassphrase: "JWT_PASSPHRASE"
 authDuration: "AUTH_DURATION"
 publicSignups: "PUBLIC_SIGNUPS"
