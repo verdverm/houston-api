@@ -86,6 +86,7 @@ export function githubOAuthUrl() {
 export default {
   publicSignup,
   initialSignup,
+  localEnabled,
   googleEnabled,
   googleOAuthUrl,
   auth0Enabled,
