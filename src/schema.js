@@ -7,6 +7,7 @@
  * `importSchema` function in the `graphql-import` package that does not allow
  * the `extend` syntax to work. Once that is fixed, this can be moved into the
  * preferred schema.graphql file(s).
+ * Bug reference: https://github.com/prisma/graphql-import/issues/42
  */
 export default `
   extend type User {
