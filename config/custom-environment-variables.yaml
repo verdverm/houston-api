@@ -2,7 +2,9 @@ webserver:
   port: "WEBSERVER_PORT"
   endpoint: "WEBSERVER_ENDPOINT"
   subscriptions: "WEBERVER_SUBCRIPTIONS"
-  debug: "WEBSERVER_DEBUG"
+
+prisma:
+  debug: "PRISMA_DEBUG"
 
 repository: "REPOSITORY"
 

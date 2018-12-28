@@ -1,5 +1,6 @@
 import "@babel/polyfill";
 import "dotenv/config";
+import schema from "./schema";
 import log from "logger";
 import resolvers from "resolvers";
 import directives from "directives";
@@ -23,7 +24,7 @@ app.use("/v1", v1);
 
 // Instantiate a new GraphQL Apollo Server
 const server = new ApolloServer({
-  typeDefs: importSchema("./src/schema.graphql"),
+  typeDefs: [importSchema("./src/schema.graphql"), schema],
   resolvers,
   schemaDirectives: {
     ...directives

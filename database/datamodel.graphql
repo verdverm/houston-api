@@ -20,11 +20,21 @@ type User {
   inviteTokens: [InviteToken!]!
   localCredential: LocalCredential
   roleBindings: [RoleBinding!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   # workspaces: [Workspace!]!
   # groups: [Group!]!
   # oauthCredentials: [OauthCredential!]!
   # sessionRefreshTokens: [SessionRefreshToken!]!
-  # properties: [UserProperty!]!
+  profile: [UserProperty!]!
+}
+
+type UserProperty {
+  id: UUID! @unique
+  category: String
+  key: String!
+  value: String
+  user: User
 }
 
 type RoleBinding {
@@ -38,7 +48,7 @@ type RoleBinding {
 type Email {
   id: UUID! @unique
   address: String @unique
-  main: Boolean
+  primary: Boolean
   token: String @unique
   user: User
   verified: Boolean
@@ -111,14 +121,6 @@ type InviteToken {
 # #   group: Group
 # #   role: Role
 # # }
-
-# type UserProperty {
-#   id: UUID! @unique
-#   category: String
-#   key: String!
-#   value: String
-#   user: User
-# }
 
 # type Role {
 #   id: UUID! @unique

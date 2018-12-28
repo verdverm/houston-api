@@ -16,6 +16,7 @@ export interface Exists {
   localCredential: (where?: LocalCredentialWhereInput) => Promise<boolean>;
   roleBinding: (where?: RoleBindingWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
+  userProperty: (where?: UserPropertyWhereInput) => Promise<boolean>;
   workspace: (where?: WorkspaceWhereInput) => Promise<boolean>;
   workspaceProperty: (where?: WorkspacePropertyWhereInput) => Promise<boolean>;
 }
@@ -179,6 +180,29 @@ export interface Prisma {
       last?: Int;
     }
   ) => UserConnectionPromise;
+  userProperty: (where: UserPropertyWhereUniqueInput) => UserPropertyPromise;
+  userProperties: (
+    args?: {
+      where?: UserPropertyWhereInput;
+      orderBy?: UserPropertyOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => FragmentableArray<UserProperty>;
+  userPropertiesConnection: (
+    args?: {
+      where?: UserPropertyWhereInput;
+      orderBy?: UserPropertyOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => UserPropertyConnectionPromise;
   workspace: (where: WorkspaceWhereUniqueInput) => WorkspacePromise;
   workspaces: (
     args?: {
@@ -354,6 +378,29 @@ export interface Prisma {
   ) => UserPromise;
   deleteUser: (where: UserWhereUniqueInput) => UserPromise;
   deleteManyUsers: (where?: UserWhereInput) => BatchPayloadPromise;
+  createUserProperty: (data: UserPropertyCreateInput) => UserPropertyPromise;
+  updateUserProperty: (
+    args: { data: UserPropertyUpdateInput; where: UserPropertyWhereUniqueInput }
+  ) => UserPropertyPromise;
+  updateManyUserProperties: (
+    args: {
+      data: UserPropertyUpdateManyMutationInput;
+      where?: UserPropertyWhereInput;
+    }
+  ) => BatchPayloadPromise;
+  upsertUserProperty: (
+    args: {
+      where: UserPropertyWhereUniqueInput;
+      create: UserPropertyCreateInput;
+      update: UserPropertyUpdateInput;
+    }
+  ) => UserPropertyPromise;
+  deleteUserProperty: (
+    where: UserPropertyWhereUniqueInput
+  ) => UserPropertyPromise;
+  deleteManyUserProperties: (
+    where?: UserPropertyWhereInput
+  ) => BatchPayloadPromise;
   createWorkspace: (data: WorkspaceCreateInput) => WorkspacePromise;
   updateWorkspace: (
     args: { data: WorkspaceUpdateInput; where: WorkspaceWhereUniqueInput }
@@ -428,6 +475,9 @@ export interface Subscription {
   user: (
     where?: UserSubscriptionWhereInput
   ) => UserSubscriptionPayloadSubscription;
+  userProperty: (
+    where?: UserPropertySubscriptionWhereInput
+  ) => UserPropertySubscriptionPayloadSubscription;
   workspace: (
     where?: WorkspaceSubscriptionWhereInput
   ) => WorkspaceSubscriptionPayloadSubscription;
@@ -471,8 +521,8 @@ export type EmailOrderByInput =
   | "id_DESC"
   | "address_ASC"
   | "address_DESC"
-  | "main_ASC"
-  | "main_DESC"
+  | "primary_ASC"
+  | "primary_DESC"
   | "token_ASC"
   | "token_DESC"
   | "verified_ASC"
@@ -529,6 +579,20 @@ export type RoleBindingOrderByInput =
   | "id_DESC"
   | "role_ASC"
   | "role_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
+
+export type UserPropertyOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "category_ASC"
+  | "category_DESC"
+  | "key_ASC"
+  | "key_DESC"
+  | "value_ASC"
+  | "value_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -635,8 +699,8 @@ export interface EmailWhereInput {
   address_not_starts_with?: String;
   address_ends_with?: String;
   address_not_ends_with?: String;
-  main?: Boolean;
-  main_not?: Boolean;
+  primary?: Boolean;
+  primary_not?: Boolean;
   token?: String;
   token_not?: String;
   token_in?: String[] | String;
@@ -726,6 +790,25 @@ export interface UserWhereInput {
   roleBindings_every?: RoleBindingWhereInput;
   roleBindings_some?: RoleBindingWhereInput;
   roleBindings_none?: RoleBindingWhereInput;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  profile_every?: UserPropertyWhereInput;
+  profile_some?: UserPropertyWhereInput;
+  profile_none?: UserPropertyWhereInput;
   AND?: UserWhereInput[] | UserWhereInput;
   OR?: UserWhereInput[] | UserWhereInput;
   NOT?: UserWhereInput[] | UserWhereInput;
@@ -993,6 +1076,69 @@ export interface RoleBindingWhereInput {
   NOT?: RoleBindingWhereInput[] | RoleBindingWhereInput;
 }
 
+export interface UserPropertyWhereInput {
+  id?: UUID;
+  id_not?: UUID;
+  id_in?: UUID[] | UUID;
+  id_not_in?: UUID[] | UUID;
+  id_lt?: UUID;
+  id_lte?: UUID;
+  id_gt?: UUID;
+  id_gte?: UUID;
+  id_contains?: UUID;
+  id_not_contains?: UUID;
+  id_starts_with?: UUID;
+  id_not_starts_with?: UUID;
+  id_ends_with?: UUID;
+  id_not_ends_with?: UUID;
+  category?: String;
+  category_not?: String;
+  category_in?: String[] | String;
+  category_not_in?: String[] | String;
+  category_lt?: String;
+  category_lte?: String;
+  category_gt?: String;
+  category_gte?: String;
+  category_contains?: String;
+  category_not_contains?: String;
+  category_starts_with?: String;
+  category_not_starts_with?: String;
+  category_ends_with?: String;
+  category_not_ends_with?: String;
+  key?: String;
+  key_not?: String;
+  key_in?: String[] | String;
+  key_not_in?: String[] | String;
+  key_lt?: String;
+  key_lte?: String;
+  key_gt?: String;
+  key_gte?: String;
+  key_contains?: String;
+  key_not_contains?: String;
+  key_starts_with?: String;
+  key_not_starts_with?: String;
+  key_ends_with?: String;
+  key_not_ends_with?: String;
+  value?: String;
+  value_not?: String;
+  value_in?: String[] | String;
+  value_not_in?: String[] | String;
+  value_lt?: String;
+  value_lte?: String;
+  value_gt?: String;
+  value_gte?: String;
+  value_contains?: String;
+  value_not_contains?: String;
+  value_starts_with?: String;
+  value_not_starts_with?: String;
+  value_ends_with?: String;
+  value_not_ends_with?: String;
+  user?: UserWhereInput;
+  AND?: UserPropertyWhereInput[] | UserPropertyWhereInput;
+  OR?: UserPropertyWhereInput[] | UserPropertyWhereInput;
+  NOT?: UserPropertyWhereInput[] | UserPropertyWhereInput;
+}
+
 export type InviteTokenWhereUniqueInput = AtLeastOne<{
   id: UUID;
 }>;
@@ -1009,6 +1155,10 @@ export type RoleBindingWhereUniqueInput = AtLeastOne<{
 export type UserWhereUniqueInput = AtLeastOne<{
   id: UUID;
   username?: String;
+}>;
+
+export type UserPropertyWhereUniqueInput = AtLeastOne<{
+  id: UUID;
 }>;
 
 export type WorkspaceWhereUniqueInput = AtLeastOne<{
@@ -1033,7 +1183,7 @@ export interface DeploymentUpdateManyMutationInput {
 
 export interface EmailCreateInput {
   address?: String;
-  main?: Boolean;
+  primary?: Boolean;
   token?: String;
   user?: UserCreateOneWithoutEmailsInput;
   verified?: Boolean;
@@ -1051,6 +1201,7 @@ export interface UserCreateWithoutEmailsInput {
   inviteTokens?: InviteTokenCreateManyWithoutUserInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
   roleBindings?: RoleBindingCreateManyWithoutSubjectInput;
+  profile?: UserPropertyCreateManyWithoutUserInput;
 }
 
 export interface InviteTokenCreateManyWithoutUserInput {
@@ -1108,6 +1259,7 @@ export interface UserCreateInput {
   inviteTokens?: InviteTokenCreateManyWithoutUserInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
   roleBindings?: RoleBindingCreateManyWithoutSubjectInput;
+  profile?: UserPropertyCreateManyWithoutUserInput;
 }
 
 export interface EmailCreateManyWithoutUserInput {
@@ -1117,7 +1269,7 @@ export interface EmailCreateManyWithoutUserInput {
 
 export interface EmailCreateWithoutUserInput {
   address?: String;
-  main?: Boolean;
+  primary?: Boolean;
   token?: String;
   verified?: Boolean;
 }
@@ -1185,6 +1337,20 @@ export interface UserCreateWithoutInviteTokensInput {
   status?: String;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
   roleBindings?: RoleBindingCreateManyWithoutSubjectInput;
+  profile?: UserPropertyCreateManyWithoutUserInput;
+}
+
+export interface UserPropertyCreateManyWithoutUserInput {
+  create?:
+    | UserPropertyCreateWithoutUserInput[]
+    | UserPropertyCreateWithoutUserInput;
+  connect?: UserPropertyWhereUniqueInput[] | UserPropertyWhereUniqueInput;
+}
+
+export interface UserPropertyCreateWithoutUserInput {
+  category?: String;
+  key: String;
+  value?: String;
 }
 
 export interface DeploymentCreateOneInput {
@@ -1194,7 +1360,7 @@ export interface DeploymentCreateOneInput {
 
 export interface EmailUpdateInput {
   address?: String;
-  main?: Boolean;
+  primary?: Boolean;
   token?: String;
   user?: UserUpdateOneWithoutEmailsInput;
   verified?: Boolean;
@@ -1216,6 +1382,7 @@ export interface UserUpdateWithoutEmailsDataInput {
   inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
   roleBindings?: RoleBindingUpdateManyWithoutSubjectInput;
+  profile?: UserPropertyUpdateManyWithoutUserInput;
 }
 
 export interface InviteTokenUpdateManyWithoutUserInput {
@@ -1413,6 +1580,7 @@ export interface UserUpdateDataInput {
   inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
   roleBindings?: RoleBindingUpdateManyWithoutSubjectInput;
+  profile?: UserPropertyUpdateManyWithoutUserInput;
 }
 
 export interface EmailUpdateManyWithoutUserInput {
@@ -1439,7 +1607,7 @@ export interface EmailUpdateWithWhereUniqueWithoutUserInput {
 
 export interface EmailUpdateWithoutUserDataInput {
   address?: String;
-  main?: Boolean;
+  primary?: Boolean;
   token?: String;
   verified?: Boolean;
 }
@@ -1479,8 +1647,8 @@ export interface EmailScalarWhereInput {
   address_not_starts_with?: String;
   address_ends_with?: String;
   address_not_ends_with?: String;
-  main?: Boolean;
-  main_not?: Boolean;
+  primary?: Boolean;
+  primary_not?: Boolean;
   token?: String;
   token_not?: String;
   token_in?: String[] | String;
@@ -1509,7 +1677,7 @@ export interface EmailUpdateManyWithWhereNestedInput {
 
 export interface EmailUpdateManyDataInput {
   address?: String;
-  main?: Boolean;
+  primary?: Boolean;
   token?: String;
   verified?: Boolean;
 }
@@ -1628,6 +1796,116 @@ export interface UserUpdateWithoutInviteTokensDataInput {
   status?: String;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
   roleBindings?: RoleBindingUpdateManyWithoutSubjectInput;
+  profile?: UserPropertyUpdateManyWithoutUserInput;
+}
+
+export interface UserPropertyUpdateManyWithoutUserInput {
+  create?:
+    | UserPropertyCreateWithoutUserInput[]
+    | UserPropertyCreateWithoutUserInput;
+  delete?: UserPropertyWhereUniqueInput[] | UserPropertyWhereUniqueInput;
+  connect?: UserPropertyWhereUniqueInput[] | UserPropertyWhereUniqueInput;
+  disconnect?: UserPropertyWhereUniqueInput[] | UserPropertyWhereUniqueInput;
+  update?:
+    | UserPropertyUpdateWithWhereUniqueWithoutUserInput[]
+    | UserPropertyUpdateWithWhereUniqueWithoutUserInput;
+  upsert?:
+    | UserPropertyUpsertWithWhereUniqueWithoutUserInput[]
+    | UserPropertyUpsertWithWhereUniqueWithoutUserInput;
+  deleteMany?: UserPropertyScalarWhereInput[] | UserPropertyScalarWhereInput;
+  updateMany?:
+    | UserPropertyUpdateManyWithWhereNestedInput[]
+    | UserPropertyUpdateManyWithWhereNestedInput;
+}
+
+export interface UserPropertyUpdateWithWhereUniqueWithoutUserInput {
+  where: UserPropertyWhereUniqueInput;
+  data: UserPropertyUpdateWithoutUserDataInput;
+}
+
+export interface UserPropertyUpdateWithoutUserDataInput {
+  category?: String;
+  key?: String;
+  value?: String;
+}
+
+export interface UserPropertyUpsertWithWhereUniqueWithoutUserInput {
+  where: UserPropertyWhereUniqueInput;
+  update: UserPropertyUpdateWithoutUserDataInput;
+  create: UserPropertyCreateWithoutUserInput;
+}
+
+export interface UserPropertyScalarWhereInput {
+  id?: UUID;
+  id_not?: UUID;
+  id_in?: UUID[] | UUID;
+  id_not_in?: UUID[] | UUID;
+  id_lt?: UUID;
+  id_lte?: UUID;
+  id_gt?: UUID;
+  id_gte?: UUID;
+  id_contains?: UUID;
+  id_not_contains?: UUID;
+  id_starts_with?: UUID;
+  id_not_starts_with?: UUID;
+  id_ends_with?: UUID;
+  id_not_ends_with?: UUID;
+  category?: String;
+  category_not?: String;
+  category_in?: String[] | String;
+  category_not_in?: String[] | String;
+  category_lt?: String;
+  category_lte?: String;
+  category_gt?: String;
+  category_gte?: String;
+  category_contains?: String;
+  category_not_contains?: String;
+  category_starts_with?: String;
+  category_not_starts_with?: String;
+  category_ends_with?: String;
+  category_not_ends_with?: String;
+  key?: String;
+  key_not?: String;
+  key_in?: String[] | String;
+  key_not_in?: String[] | String;
+  key_lt?: String;
+  key_lte?: String;
+  key_gt?: String;
+  key_gte?: String;
+  key_contains?: String;
+  key_not_contains?: String;
+  key_starts_with?: String;
+  key_not_starts_with?: String;
+  key_ends_with?: String;
+  key_not_ends_with?: String;
+  value?: String;
+  value_not?: String;
+  value_in?: String[] | String;
+  value_not_in?: String[] | String;
+  value_lt?: String;
+  value_lte?: String;
+  value_gt?: String;
+  value_gte?: String;
+  value_contains?: String;
+  value_not_contains?: String;
+  value_starts_with?: String;
+  value_not_starts_with?: String;
+  value_ends_with?: String;
+  value_not_ends_with?: String;
+  AND?: UserPropertyScalarWhereInput[] | UserPropertyScalarWhereInput;
+  OR?: UserPropertyScalarWhereInput[] | UserPropertyScalarWhereInput;
+  NOT?: UserPropertyScalarWhereInput[] | UserPropertyScalarWhereInput;
+}
+
+export interface UserPropertyUpdateManyWithWhereNestedInput {
+  where: UserPropertyScalarWhereInput;
+  data: UserPropertyUpdateManyDataInput;
+}
+
+export interface UserPropertyUpdateManyDataInput {
+  category?: String;
+  key?: String;
+  value?: String;
 }
 
 export interface UserUpsertWithoutInviteTokensInput {
@@ -1839,6 +2117,22 @@ export interface UserScalarWhereInput {
   status_not_starts_with?: String;
   status_ends_with?: String;
   status_not_ends_with?: String;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
   AND?: UserScalarWhereInput[] | UserScalarWhereInput;
   OR?: UserScalarWhereInput[] | UserScalarWhereInput;
   NOT?: UserScalarWhereInput[] | UserScalarWhereInput;
@@ -1873,7 +2167,7 @@ export interface UserUpsertWithoutEmailsInput {
 
 export interface EmailUpdateManyMutationInput {
   address?: String;
-  main?: Boolean;
+  primary?: Boolean;
   token?: String;
   verified?: Boolean;
 }
@@ -1918,6 +2212,7 @@ export interface UserCreateWithoutLocalCredentialInput {
   status?: String;
   inviteTokens?: InviteTokenCreateManyWithoutUserInput;
   roleBindings?: RoleBindingCreateManyWithoutSubjectInput;
+  profile?: UserPropertyCreateManyWithoutUserInput;
 }
 
 export interface LocalCredentialUpdateInput {
@@ -1942,6 +2237,7 @@ export interface UserUpdateWithoutLocalCredentialDataInput {
   status?: String;
   inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
   roleBindings?: RoleBindingUpdateManyWithoutSubjectInput;
+  profile?: UserPropertyUpdateManyWithoutUserInput;
 }
 
 export interface UserUpsertWithoutLocalCredentialInput {
@@ -1973,6 +2269,7 @@ export interface UserCreateWithoutRoleBindingsInput {
   status?: String;
   inviteTokens?: InviteTokenCreateManyWithoutUserInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
+  profile?: UserPropertyCreateManyWithoutUserInput;
 }
 
 export interface RoleBindingUpdateInput {
@@ -1998,6 +2295,7 @@ export interface UserUpdateWithoutRoleBindingsDataInput {
   status?: String;
   inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
+  profile?: UserPropertyUpdateManyWithoutUserInput;
 }
 
 export interface UserUpsertWithoutRoleBindingsInput {
@@ -2017,12 +2315,72 @@ export interface UserUpdateInput {
   inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
   roleBindings?: RoleBindingUpdateManyWithoutSubjectInput;
+  profile?: UserPropertyUpdateManyWithoutUserInput;
 }
 
 export interface UserUpdateManyMutationInput {
   username?: String;
   fullName?: String;
   status?: String;
+}
+
+export interface UserPropertyCreateInput {
+  category?: String;
+  key: String;
+  value?: String;
+  user?: UserCreateOneWithoutProfileInput;
+}
+
+export interface UserCreateOneWithoutProfileInput {
+  create?: UserCreateWithoutProfileInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserCreateWithoutProfileInput {
+  username?: String;
+  emails?: EmailCreateManyWithoutUserInput;
+  fullName?: String;
+  status?: String;
+  inviteTokens?: InviteTokenCreateManyWithoutUserInput;
+  localCredential?: LocalCredentialCreateOneWithoutUserInput;
+  roleBindings?: RoleBindingCreateManyWithoutSubjectInput;
+}
+
+export interface UserPropertyUpdateInput {
+  category?: String;
+  key?: String;
+  value?: String;
+  user?: UserUpdateOneWithoutProfileInput;
+}
+
+export interface UserUpdateOneWithoutProfileInput {
+  create?: UserCreateWithoutProfileInput;
+  update?: UserUpdateWithoutProfileDataInput;
+  upsert?: UserUpsertWithoutProfileInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserUpdateWithoutProfileDataInput {
+  username?: String;
+  emails?: EmailUpdateManyWithoutUserInput;
+  fullName?: String;
+  status?: String;
+  inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
+  localCredential?: LocalCredentialUpdateOneWithoutUserInput;
+  roleBindings?: RoleBindingUpdateManyWithoutSubjectInput;
+}
+
+export interface UserUpsertWithoutProfileInput {
+  update: UserUpdateWithoutProfileDataInput;
+  create: UserCreateWithoutProfileInput;
+}
+
+export interface UserPropertyUpdateManyMutationInput {
+  category?: String;
+  key?: String;
+  value?: String;
 }
 
 export interface WorkspaceUpdateInput {
@@ -2167,6 +2525,23 @@ export interface UserSubscriptionWhereInput {
   NOT?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
 }
 
+export interface UserPropertySubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: UserPropertyWhereInput;
+  AND?:
+    | UserPropertySubscriptionWhereInput[]
+    | UserPropertySubscriptionWhereInput;
+  OR?:
+    | UserPropertySubscriptionWhereInput[]
+    | UserPropertySubscriptionWhereInput;
+  NOT?:
+    | UserPropertySubscriptionWhereInput[]
+    | UserPropertySubscriptionWhereInput;
+}
+
 export interface WorkspaceSubscriptionWhereInput {
   mutation_in?: MutationType[] | MutationType;
   updatedFields_contains?: String;
@@ -2294,7 +2669,7 @@ export interface AggregateDeploymentSubscription
 export interface Email {
   id: UUID;
   address?: String;
-  main?: Boolean;
+  primary?: Boolean;
   token?: String;
   verified?: Boolean;
 }
@@ -2302,7 +2677,7 @@ export interface Email {
 export interface EmailPromise extends Promise<Email>, Fragmentable {
   id: () => Promise<UUID>;
   address: () => Promise<String>;
-  main: () => Promise<Boolean>;
+  primary: () => Promise<Boolean>;
   token: () => Promise<String>;
   user: <T = UserPromise>() => T;
   verified: () => Promise<Boolean>;
@@ -2313,7 +2688,7 @@ export interface EmailSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<UUID>>;
   address: () => Promise<AsyncIterator<String>>;
-  main: () => Promise<AsyncIterator<Boolean>>;
+  primary: () => Promise<AsyncIterator<Boolean>>;
   token: () => Promise<AsyncIterator<String>>;
   user: <T = UserSubscription>() => T;
   verified: () => Promise<AsyncIterator<Boolean>>;
@@ -2324,6 +2699,8 @@ export interface User {
   username?: String;
   fullName?: String;
   status?: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface UserPromise extends Promise<User>, Fragmentable {
@@ -2358,6 +2735,19 @@ export interface UserPromise extends Promise<User>, Fragmentable {
     args?: {
       where?: RoleBindingWhereInput;
       orderBy?: RoleBindingOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+  profile: <T = FragmentableArray<UserProperty>>(
+    args?: {
+      where?: UserPropertyWhereInput;
+      orderBy?: UserPropertyOrderByInput;
       skip?: Int;
       after?: String;
       before?: String;
@@ -2401,6 +2791,19 @@ export interface UserSubscription
     args?: {
       where?: RoleBindingWhereInput;
       orderBy?: RoleBindingOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  profile: <T = Promise<AsyncIterator<UserPropertySubscription>>>(
+    args?: {
+      where?: UserPropertyWhereInput;
+      orderBy?: UserPropertyOrderByInput;
       skip?: Int;
       after?: String;
       before?: String;
@@ -2598,6 +3001,33 @@ export interface RoleBindingSubscription
   role: () => Promise<AsyncIterator<Role>>;
   workspace: <T = WorkspaceSubscription>() => T;
   deployment: <T = DeploymentSubscription>() => T;
+}
+
+export interface UserProperty {
+  id: UUID;
+  category?: String;
+  key: String;
+  value?: String;
+}
+
+export interface UserPropertyPromise
+  extends Promise<UserProperty>,
+    Fragmentable {
+  id: () => Promise<UUID>;
+  category: () => Promise<String>;
+  key: () => Promise<String>;
+  value: () => Promise<String>;
+  user: <T = UserPromise>() => T;
+}
+
+export interface UserPropertySubscription
+  extends Promise<AsyncIterator<UserProperty>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<UUID>>;
+  category: () => Promise<AsyncIterator<String>>;
+  key: () => Promise<AsyncIterator<String>>;
+  value: () => Promise<AsyncIterator<String>>;
+  user: <T = UserSubscription>() => T;
 }
 
 export interface EmailConnection {}
@@ -2856,6 +3286,58 @@ export interface AggregateUserSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
+export interface UserPropertyConnection {}
+
+export interface UserPropertyConnectionPromise
+  extends Promise<UserPropertyConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<UserPropertyEdge>>() => T;
+  aggregate: <T = AggregateUserPropertyPromise>() => T;
+}
+
+export interface UserPropertyConnectionSubscription
+  extends Promise<AsyncIterator<UserPropertyConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<UserPropertyEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateUserPropertySubscription>() => T;
+}
+
+export interface UserPropertyEdge {
+  cursor: String;
+}
+
+export interface UserPropertyEdgePromise
+  extends Promise<UserPropertyEdge>,
+    Fragmentable {
+  node: <T = UserPropertyPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface UserPropertyEdgeSubscription
+  extends Promise<AsyncIterator<UserPropertyEdge>>,
+    Fragmentable {
+  node: <T = UserPropertySubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateUserProperty {
+  count: Int;
+}
+
+export interface AggregateUserPropertyPromise
+  extends Promise<AggregateUserProperty>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateUserPropertySubscription
+  extends Promise<AsyncIterator<AggregateUserProperty>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
 export interface WorkspaceConnection {}
 
 export interface WorkspaceConnectionPromise
@@ -3044,7 +3526,7 @@ export interface EmailSubscriptionPayloadSubscription
 export interface EmailPreviousValues {
   id: UUID;
   address?: String;
-  main?: Boolean;
+  primary?: Boolean;
   token?: String;
   verified?: Boolean;
 }
@@ -3054,7 +3536,7 @@ export interface EmailPreviousValuesPromise
     Fragmentable {
   id: () => Promise<UUID>;
   address: () => Promise<String>;
-  main: () => Promise<Boolean>;
+  primary: () => Promise<Boolean>;
   token: () => Promise<String>;
   verified: () => Promise<Boolean>;
 }
@@ -3064,7 +3546,7 @@ export interface EmailPreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<UUID>>;
   address: () => Promise<AsyncIterator<String>>;
-  main: () => Promise<AsyncIterator<Boolean>>;
+  primary: () => Promise<AsyncIterator<Boolean>>;
   token: () => Promise<AsyncIterator<String>>;
   verified: () => Promise<AsyncIterator<Boolean>>;
 }
@@ -3232,6 +3714,8 @@ export interface UserPreviousValues {
   username?: String;
   fullName?: String;
   status?: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface UserPreviousValuesPromise
@@ -3241,6 +3725,8 @@ export interface UserPreviousValuesPromise
   username: () => Promise<String>;
   fullName: () => Promise<String>;
   status: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface UserPreviousValuesSubscription
@@ -3250,6 +3736,56 @@ export interface UserPreviousValuesSubscription
   username: () => Promise<AsyncIterator<String>>;
   fullName: () => Promise<AsyncIterator<String>>;
   status: () => Promise<AsyncIterator<String>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface UserPropertySubscriptionPayload {
+  mutation: MutationType;
+  updatedFields?: String[];
+}
+
+export interface UserPropertySubscriptionPayloadPromise
+  extends Promise<UserPropertySubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = UserPropertyPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = UserPropertyPreviousValuesPromise>() => T;
+}
+
+export interface UserPropertySubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<UserPropertySubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = UserPropertySubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = UserPropertyPreviousValuesSubscription>() => T;
+}
+
+export interface UserPropertyPreviousValues {
+  id: UUID;
+  category?: String;
+  key: String;
+  value?: String;
+}
+
+export interface UserPropertyPreviousValuesPromise
+  extends Promise<UserPropertyPreviousValues>,
+    Fragmentable {
+  id: () => Promise<UUID>;
+  category: () => Promise<String>;
+  key: () => Promise<String>;
+  value: () => Promise<String>;
+}
+
+export interface UserPropertyPreviousValuesSubscription
+  extends Promise<AsyncIterator<UserPropertyPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<UUID>>;
+  category: () => Promise<AsyncIterator<String>>;
+  key: () => Promise<AsyncIterator<String>>;
+  value: () => Promise<AsyncIterator<String>>;
 }
 
 export interface WorkspaceSubscriptionPayload {
@@ -3366,6 +3902,16 @@ The `Boolean` scalar type represents `true` or `false`.
 export type Boolean = boolean;
 
 /*
+DateTime scalar input type, allowing Date
+*/
+export type DateTimeInput = Date | string;
+
+/*
+DateTime scalar output type, which is always a string
+*/
+export type DateTimeOutput = string;
+
+/*
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
 */
 export type ID_Input = string | number;
@@ -3404,6 +3950,10 @@ export const models = [
   },
   {
     name: "User",
+    embedded: false
+  },
+  {
+    name: "UserProperty",
     embedded: false
   },
   {

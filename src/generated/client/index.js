@@ -33,6 +33,10 @@ var models = [
     embedded: false
   },
   {
+    name: "UserProperty",
+    embedded: false
+  },
+  {
     name: "Workspace",
     embedded: false
   },
@@ -74,6 +78,10 @@ var models = [
   },
   {
     name: "User",
+    embedded: false
+  },
+  {
+    name: "UserProperty",
     embedded: false
   },
   {

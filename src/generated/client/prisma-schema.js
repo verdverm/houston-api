@@ -23,6 +23,10 @@ type AggregateUser {
   count: Int!
 }
 
+type AggregateUserProperty {
+  count: Int!
+}
+
 type AggregateWorkspace {
   count: Int!
 }
@@ -34,6 +38,8 @@ type AggregateWorkspaceProperty {
 type BatchPayload {
   count: Long!
 }
+
+scalar DateTime
 
 type Deployment {
   id: UUID!
@@ -161,7 +167,7 @@ input DeploymentWhereUniqueInput {
 type Email {
   id: UUID!
   address: String
-  main: Boolean
+  primary: Boolean
   token: String
   user: User
   verified: Boolean
@@ -175,7 +181,7 @@ type EmailConnection {
 
 input EmailCreateInput {
   address: String
-  main: Boolean
+  primary: Boolean
   token: String
   user: UserCreateOneWithoutEmailsInput
   verified: Boolean
@@ -188,7 +194,7 @@ input EmailCreateManyWithoutUserInput {
 
 input EmailCreateWithoutUserInput {
   address: String
-  main: Boolean
+  primary: Boolean
   token: String
   verified: Boolean
 }
@@ -203,8 +209,8 @@ enum EmailOrderByInput {
   id_DESC
   address_ASC
   address_DESC
-  main_ASC
-  main_DESC
+  primary_ASC
+  primary_DESC
   token_ASC
   token_DESC
   verified_ASC
@@ -218,7 +224,7 @@ enum EmailOrderByInput {
 type EmailPreviousValues {
   id: UUID!
   address: String
-  main: Boolean
+  primary: Boolean
   token: String
   verified: Boolean
 }
@@ -252,8 +258,8 @@ input EmailScalarWhereInput {
   address_not_starts_with: String
   address_ends_with: String
   address_not_ends_with: String
-  main: Boolean
-  main_not: Boolean
+  primary: Boolean
+  primary_not: Boolean
   token: String
   token_not: String
   token_in: [String!]
@@ -295,7 +301,7 @@ input EmailSubscriptionWhereInput {
 
 input EmailUpdateInput {
   address: String
-  main: Boolean
+  primary: Boolean
   token: String
   user: UserUpdateOneWithoutEmailsInput
   verified: Boolean
@@ -303,14 +309,14 @@ input EmailUpdateInput {
 
 input EmailUpdateManyDataInput {
   address: String
-  main: Boolean
+  primary: Boolean
   token: String
   verified: Boolean
 }
 
 input EmailUpdateManyMutationInput {
   address: String
-  main: Boolean
+  primary: Boolean
   token: String
   verified: Boolean
 }
@@ -333,7 +339,7 @@ input EmailUpdateManyWithWhereNestedInput {
 
 input EmailUpdateWithoutUserDataInput {
   address: String
-  main: Boolean
+  primary: Boolean
   token: String
   verified: Boolean
 }
@@ -378,8 +384,8 @@ input EmailWhereInput {
   address_not_starts_with: String
   address_ends_with: String
   address_not_ends_with: String
-  main: Boolean
-  main_not: Boolean
+  primary: Boolean
+  primary_not: Boolean
   token: String
   token_not: String
   token_in: [String!]
@@ -907,6 +913,12 @@ type Mutation {
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   deleteUser(where: UserWhereUniqueInput!): User
   deleteManyUsers(where: UserWhereInput): BatchPayload!
+  createUserProperty(data: UserPropertyCreateInput!): UserProperty!
+  updateUserProperty(data: UserPropertyUpdateInput!, where: UserPropertyWhereUniqueInput!): UserProperty
+  updateManyUserProperties(data: UserPropertyUpdateManyMutationInput!, where: UserPropertyWhereInput): BatchPayload!
+  upsertUserProperty(where: UserPropertyWhereUniqueInput!, create: UserPropertyCreateInput!, update: UserPropertyUpdateInput!): UserProperty!
+  deleteUserProperty(where: UserPropertyWhereUniqueInput!): UserProperty
+  deleteManyUserProperties(where: UserPropertyWhereInput): BatchPayload!
   createWorkspace(data: WorkspaceCreateInput!): Workspace!
   updateWorkspace(data: WorkspaceUpdateInput!, where: WorkspaceWhereUniqueInput!): Workspace
   updateManyWorkspaces(data: WorkspaceUpdateManyMutationInput!, where: WorkspaceWhereInput): BatchPayload!
@@ -957,6 +969,9 @@ type Query {
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  userProperty(where: UserPropertyWhereUniqueInput!): UserProperty
+  userProperties(where: UserPropertyWhereInput, orderBy: UserPropertyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserProperty]!
+  userPropertiesConnection(where: UserPropertyWhereInput, orderBy: UserPropertyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserPropertyConnection!
   workspace(where: WorkspaceWhereUniqueInput!): Workspace
   workspaces(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workspace]!
   workspacesConnection(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkspaceConnection!
@@ -1160,6 +1175,7 @@ type Subscription {
   localCredential(where: LocalCredentialSubscriptionWhereInput): LocalCredentialSubscriptionPayload
   roleBinding(where: RoleBindingSubscriptionWhereInput): RoleBindingSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  userProperty(where: UserPropertySubscriptionWhereInput): UserPropertySubscriptionPayload
   workspace(where: WorkspaceSubscriptionWhereInput): WorkspaceSubscriptionPayload
   workspaceProperty(where: WorkspacePropertySubscriptionWhereInput): WorkspacePropertySubscriptionPayload
 }
@@ -1173,6 +1189,9 @@ type User {
   inviteTokens(where: InviteTokenWhereInput, orderBy: InviteTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [InviteToken!]
   localCredential: LocalCredential
   roleBindings(where: RoleBindingWhereInput, orderBy: RoleBindingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleBinding!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  profile(where: UserPropertyWhereInput, orderBy: UserPropertyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserProperty!]
 }
 
 type UserConnection {
@@ -1189,6 +1208,7 @@ input UserCreateInput {
   inviteTokens: InviteTokenCreateManyWithoutUserInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
   roleBindings: RoleBindingCreateManyWithoutSubjectInput
+  profile: UserPropertyCreateManyWithoutUserInput
 }
 
 input UserCreateManyInput {
@@ -1211,6 +1231,11 @@ input UserCreateOneWithoutLocalCredentialInput {
   connect: UserWhereUniqueInput
 }
 
+input UserCreateOneWithoutProfileInput {
+  create: UserCreateWithoutProfileInput
+  connect: UserWhereUniqueInput
+}
+
 input UserCreateOneWithoutRoleBindingsInput {
   create: UserCreateWithoutRoleBindingsInput
   connect: UserWhereUniqueInput
@@ -1223,6 +1248,7 @@ input UserCreateWithoutEmailsInput {
   inviteTokens: InviteTokenCreateManyWithoutUserInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
   roleBindings: RoleBindingCreateManyWithoutSubjectInput
+  profile: UserPropertyCreateManyWithoutUserInput
 }
 
 input UserCreateWithoutInviteTokensInput {
@@ -1232,6 +1258,7 @@ input UserCreateWithoutInviteTokensInput {
   status: String
   localCredential: LocalCredentialCreateOneWithoutUserInput
   roleBindings: RoleBindingCreateManyWithoutSubjectInput
+  profile: UserPropertyCreateManyWithoutUserInput
 }
 
 input UserCreateWithoutLocalCredentialInput {
@@ -1240,6 +1267,17 @@ input UserCreateWithoutLocalCredentialInput {
   fullName: String
   status: String
   inviteTokens: InviteTokenCreateManyWithoutUserInput
+  roleBindings: RoleBindingCreateManyWithoutSubjectInput
+  profile: UserPropertyCreateManyWithoutUserInput
+}
+
+input UserCreateWithoutProfileInput {
+  username: String
+  emails: EmailCreateManyWithoutUserInput
+  fullName: String
+  status: String
+  inviteTokens: InviteTokenCreateManyWithoutUserInput
+  localCredential: LocalCredentialCreateOneWithoutUserInput
   roleBindings: RoleBindingCreateManyWithoutSubjectInput
 }
 
@@ -1250,6 +1288,7 @@ input UserCreateWithoutRoleBindingsInput {
   status: String
   inviteTokens: InviteTokenCreateManyWithoutUserInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
+  profile: UserPropertyCreateManyWithoutUserInput
 }
 
 type UserEdge {
@@ -1277,6 +1316,266 @@ type UserPreviousValues {
   username: String
   fullName: String
   status: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type UserProperty {
+  id: UUID!
+  category: String
+  key: String!
+  value: String
+  user: User
+}
+
+type UserPropertyConnection {
+  pageInfo: PageInfo!
+  edges: [UserPropertyEdge]!
+  aggregate: AggregateUserProperty!
+}
+
+input UserPropertyCreateInput {
+  category: String
+  key: String!
+  value: String
+  user: UserCreateOneWithoutProfileInput
+}
+
+input UserPropertyCreateManyWithoutUserInput {
+  create: [UserPropertyCreateWithoutUserInput!]
+  connect: [UserPropertyWhereUniqueInput!]
+}
+
+input UserPropertyCreateWithoutUserInput {
+  category: String
+  key: String!
+  value: String
+}
+
+type UserPropertyEdge {
+  node: UserProperty!
+  cursor: String!
+}
+
+enum UserPropertyOrderByInput {
+  id_ASC
+  id_DESC
+  category_ASC
+  category_DESC
+  key_ASC
+  key_DESC
+  value_ASC
+  value_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type UserPropertyPreviousValues {
+  id: UUID!
+  category: String
+  key: String!
+  value: String
+}
+
+input UserPropertyScalarWhereInput {
+  id: UUID
+  id_not: UUID
+  id_in: [UUID!]
+  id_not_in: [UUID!]
+  id_lt: UUID
+  id_lte: UUID
+  id_gt: UUID
+  id_gte: UUID
+  id_contains: UUID
+  id_not_contains: UUID
+  id_starts_with: UUID
+  id_not_starts_with: UUID
+  id_ends_with: UUID
+  id_not_ends_with: UUID
+  category: String
+  category_not: String
+  category_in: [String!]
+  category_not_in: [String!]
+  category_lt: String
+  category_lte: String
+  category_gt: String
+  category_gte: String
+  category_contains: String
+  category_not_contains: String
+  category_starts_with: String
+  category_not_starts_with: String
+  category_ends_with: String
+  category_not_ends_with: String
+  key: String
+  key_not: String
+  key_in: [String!]
+  key_not_in: [String!]
+  key_lt: String
+  key_lte: String
+  key_gt: String
+  key_gte: String
+  key_contains: String
+  key_not_contains: String
+  key_starts_with: String
+  key_not_starts_with: String
+  key_ends_with: String
+  key_not_ends_with: String
+  value: String
+  value_not: String
+  value_in: [String!]
+  value_not_in: [String!]
+  value_lt: String
+  value_lte: String
+  value_gt: String
+  value_gte: String
+  value_contains: String
+  value_not_contains: String
+  value_starts_with: String
+  value_not_starts_with: String
+  value_ends_with: String
+  value_not_ends_with: String
+  AND: [UserPropertyScalarWhereInput!]
+  OR: [UserPropertyScalarWhereInput!]
+  NOT: [UserPropertyScalarWhereInput!]
+}
+
+type UserPropertySubscriptionPayload {
+  mutation: MutationType!
+  node: UserProperty
+  updatedFields: [String!]
+  previousValues: UserPropertyPreviousValues
+}
+
+input UserPropertySubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: UserPropertyWhereInput
+  AND: [UserPropertySubscriptionWhereInput!]
+  OR: [UserPropertySubscriptionWhereInput!]
+  NOT: [UserPropertySubscriptionWhereInput!]
+}
+
+input UserPropertyUpdateInput {
+  category: String
+  key: String
+  value: String
+  user: UserUpdateOneWithoutProfileInput
+}
+
+input UserPropertyUpdateManyDataInput {
+  category: String
+  key: String
+  value: String
+}
+
+input UserPropertyUpdateManyMutationInput {
+  category: String
+  key: String
+  value: String
+}
+
+input UserPropertyUpdateManyWithoutUserInput {
+  create: [UserPropertyCreateWithoutUserInput!]
+  delete: [UserPropertyWhereUniqueInput!]
+  connect: [UserPropertyWhereUniqueInput!]
+  disconnect: [UserPropertyWhereUniqueInput!]
+  update: [UserPropertyUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [UserPropertyUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [UserPropertyScalarWhereInput!]
+  updateMany: [UserPropertyUpdateManyWithWhereNestedInput!]
+}
+
+input UserPropertyUpdateManyWithWhereNestedInput {
+  where: UserPropertyScalarWhereInput!
+  data: UserPropertyUpdateManyDataInput!
+}
+
+input UserPropertyUpdateWithoutUserDataInput {
+  category: String
+  key: String
+  value: String
+}
+
+input UserPropertyUpdateWithWhereUniqueWithoutUserInput {
+  where: UserPropertyWhereUniqueInput!
+  data: UserPropertyUpdateWithoutUserDataInput!
+}
+
+input UserPropertyUpsertWithWhereUniqueWithoutUserInput {
+  where: UserPropertyWhereUniqueInput!
+  update: UserPropertyUpdateWithoutUserDataInput!
+  create: UserPropertyCreateWithoutUserInput!
+}
+
+input UserPropertyWhereInput {
+  id: UUID
+  id_not: UUID
+  id_in: [UUID!]
+  id_not_in: [UUID!]
+  id_lt: UUID
+  id_lte: UUID
+  id_gt: UUID
+  id_gte: UUID
+  id_contains: UUID
+  id_not_contains: UUID
+  id_starts_with: UUID
+  id_not_starts_with: UUID
+  id_ends_with: UUID
+  id_not_ends_with: UUID
+  category: String
+  category_not: String
+  category_in: [String!]
+  category_not_in: [String!]
+  category_lt: String
+  category_lte: String
+  category_gt: String
+  category_gte: String
+  category_contains: String
+  category_not_contains: String
+  category_starts_with: String
+  category_not_starts_with: String
+  category_ends_with: String
+  category_not_ends_with: String
+  key: String
+  key_not: String
+  key_in: [String!]
+  key_not_in: [String!]
+  key_lt: String
+  key_lte: String
+  key_gt: String
+  key_gte: String
+  key_contains: String
+  key_not_contains: String
+  key_starts_with: String
+  key_not_starts_with: String
+  key_ends_with: String
+  key_not_ends_with: String
+  value: String
+  value_not: String
+  value_in: [String!]
+  value_not_in: [String!]
+  value_lt: String
+  value_lte: String
+  value_gt: String
+  value_gte: String
+  value_contains: String
+  value_not_contains: String
+  value_starts_with: String
+  value_not_starts_with: String
+  value_ends_with: String
+  value_not_ends_with: String
+  user: UserWhereInput
+  AND: [UserPropertyWhereInput!]
+  OR: [UserPropertyWhereInput!]
+  NOT: [UserPropertyWhereInput!]
+}
+
+input UserPropertyWhereUniqueInput {
+  id: UUID
 }
 
 input UserScalarWhereInput {
@@ -1336,6 +1635,22 @@ input UserScalarWhereInput {
   status_not_starts_with: String
   status_ends_with: String
   status_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [UserScalarWhereInput!]
   OR: [UserScalarWhereInput!]
   NOT: [UserScalarWhereInput!]
@@ -1367,6 +1682,7 @@ input UserUpdateDataInput {
   inviteTokens: InviteTokenUpdateManyWithoutUserInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
   roleBindings: RoleBindingUpdateManyWithoutSubjectInput
+  profile: UserPropertyUpdateManyWithoutUserInput
 }
 
 input UserUpdateInput {
@@ -1377,6 +1693,7 @@ input UserUpdateInput {
   inviteTokens: InviteTokenUpdateManyWithoutUserInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
   roleBindings: RoleBindingUpdateManyWithoutSubjectInput
+  profile: UserPropertyUpdateManyWithoutUserInput
 }
 
 input UserUpdateManyDataInput {
@@ -1434,6 +1751,15 @@ input UserUpdateOneWithoutLocalCredentialInput {
   connect: UserWhereUniqueInput
 }
 
+input UserUpdateOneWithoutProfileInput {
+  create: UserCreateWithoutProfileInput
+  update: UserUpdateWithoutProfileDataInput
+  upsert: UserUpsertWithoutProfileInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: UserWhereUniqueInput
+}
+
 input UserUpdateOneWithoutRoleBindingsInput {
   create: UserCreateWithoutRoleBindingsInput
   update: UserUpdateWithoutRoleBindingsDataInput
@@ -1450,6 +1776,7 @@ input UserUpdateWithoutEmailsDataInput {
   inviteTokens: InviteTokenUpdateManyWithoutUserInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
   roleBindings: RoleBindingUpdateManyWithoutSubjectInput
+  profile: UserPropertyUpdateManyWithoutUserInput
 }
 
 input UserUpdateWithoutInviteTokensDataInput {
@@ -1459,6 +1786,7 @@ input UserUpdateWithoutInviteTokensDataInput {
   status: String
   localCredential: LocalCredentialUpdateOneWithoutUserInput
   roleBindings: RoleBindingUpdateManyWithoutSubjectInput
+  profile: UserPropertyUpdateManyWithoutUserInput
 }
 
 input UserUpdateWithoutLocalCredentialDataInput {
@@ -1467,6 +1795,17 @@ input UserUpdateWithoutLocalCredentialDataInput {
   fullName: String
   status: String
   inviteTokens: InviteTokenUpdateManyWithoutUserInput
+  roleBindings: RoleBindingUpdateManyWithoutSubjectInput
+  profile: UserPropertyUpdateManyWithoutUserInput
+}
+
+input UserUpdateWithoutProfileDataInput {
+  username: String
+  emails: EmailUpdateManyWithoutUserInput
+  fullName: String
+  status: String
+  inviteTokens: InviteTokenUpdateManyWithoutUserInput
+  localCredential: LocalCredentialUpdateOneWithoutUserInput
   roleBindings: RoleBindingUpdateManyWithoutSubjectInput
 }
 
@@ -1477,6 +1816,7 @@ input UserUpdateWithoutRoleBindingsDataInput {
   status: String
   inviteTokens: InviteTokenUpdateManyWithoutUserInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
+  profile: UserPropertyUpdateManyWithoutUserInput
 }
 
 input UserUpdateWithWhereUniqueNestedInput {
@@ -1497,6 +1837,11 @@ input UserUpsertWithoutInviteTokensInput {
 input UserUpsertWithoutLocalCredentialInput {
   update: UserUpdateWithoutLocalCredentialDataInput!
   create: UserCreateWithoutLocalCredentialInput!
+}
+
+input UserUpsertWithoutProfileInput {
+  update: UserUpdateWithoutProfileDataInput!
+  create: UserCreateWithoutProfileInput!
 }
 
 input UserUpsertWithoutRoleBindingsInput {
@@ -1577,6 +1922,25 @@ input UserWhereInput {
   roleBindings_every: RoleBindingWhereInput
   roleBindings_some: RoleBindingWhereInput
   roleBindings_none: RoleBindingWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  profile_every: UserPropertyWhereInput
+  profile_some: UserPropertyWhereInput
+  profile_none: UserPropertyWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]

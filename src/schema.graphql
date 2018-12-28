@@ -1,24 +1,27 @@
-# import User, Scope, AccessLevel from "./generated/schema/prisma.graphql"
+# import User from "./generated/schema/prisma.graphql"
 
 #
 # Directives
 #
+# Implements authorization rules.
 directive @auth(
   permissions: [String!],
 ) on OBJECT | FIELD_DEFINITION
+
+# Wraps returned types, duplicating the id field into an extra uuid field.
+directive @uuid on FIELD_DEFINITION
 
 #
 # Scalars
 #
 scalar UUID
 scalar JSON
-scalar Date
 
 #
 # Types
 #
 type AuthUser {
-  user: User
+  user: User @uuid
   token: Token
   permissions: JSON
   isAdmin: Boolean

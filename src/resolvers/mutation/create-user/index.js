@@ -63,7 +63,7 @@ export default async function createUser(parent, args, ctx) {
       emails: {
         create: {
           address: args.email,
-          main: true,
+          primary: true,
           verified: !emailConfirmation,
           token: emailToken
         }
@@ -72,7 +72,8 @@ export default async function createUser(parent, args, ctx) {
         create: {
           password
         }
-      }
+      },
+      profile: {}
     }
   };
 
