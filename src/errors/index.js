@@ -31,3 +31,8 @@ export class InvalidCredentialsError extends Error {
 export class InvalidAuthenticationProviderError extends Error {
   message = this.message || "Invalid authentication provider";
 }
+
+export class PermissionError extends Error {
+  message =
+    this.message || "You do not have the appropriate permissions for that";
+}

@@ -66,6 +66,8 @@ type Query {
     extras: JSON
     inviteToken: String
   ): AuthConfig
+
+  self: AuthUser @auth
 }
 
 #

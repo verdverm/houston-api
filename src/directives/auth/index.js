@@ -1,11 +1,9 @@
-import { PermissionError } from "./errors";
+import { PermissionError } from "errors";
 import log from "logger";
 import config from "configuration";
 import { SchemaDirectiveVisitor } from "graphql-tools";
 import { defaultFieldResolver } from "graphql";
 import jwt from "jsonwebtoken";
-
-export const APP_SECRET = "BLAHHHH";
 
 export default class AuthDirective extends SchemaDirectiveVisitor {
   visitObject(type) {
@@ -29,7 +27,7 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
       const { resolve = defaultFieldResolver } = field;
 
       field.resolve = async (...args) => {
-        const permissions = field.permissions || objectType.permissions;
+        // Const permissions = field.permissions || objectType.permissions;
 
         // Set the context
         const ctx = args[2];
@@ -41,13 +39,20 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
           token,
           config.get("jwtPassphrase")
         );
-        if (!id) throw new PermissionError();
+
+        if (!id) {
+          log.info(`Received unauthorized request`);
+          throw new PermissionError();
+        }
 
         ctx.user = await ctx.db.query.user(
           { where: { id } },
-          `{ id, roleBindings { role }}`
+          `{ id, username, roleBindings { role } }`
         );
 
+        log.info(
+          `Processing authenticated request for user ${ctx.user.username}`
+        );
         return resolve.apply(this, args);
       };
     });
