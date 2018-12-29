@@ -5,57 +5,52 @@ import { SchemaDirectiveVisitor } from "graphql-tools";
 import { defaultFieldResolver } from "graphql";
 import jwt from "jsonwebtoken";
 
+/*
+ * Directive to enforce authentication and authorization
+ * Originally derived from https://www.apollographql.com/docs/graphql-tools/schema-directives.html#Enforcing-access-permissions
+ */
 export default class AuthDirective extends SchemaDirectiveVisitor {
-  visitObject(type) {
-    this.ensureFieldsWrapped(type);
-    type.permissions = this.args.permissions;
+  visitObject() {}
+
+  visitFieldDefinition(field) {
+    this.ensureFieldWrapped(field);
   }
 
-  visitFieldDefinition(field, details) {
-    this.ensureFieldsWrapped(details.objectType);
-    field.permissions = this.args.permissions;
-  }
+  ensureFieldWrapped(field) {
+    const { resolve = defaultFieldResolver } = field;
 
-  ensureFieldsWrapped(objectType) {
-    // Ensure we only wrap each field once.
-    if (objectType._authFieldsWrapped) return;
-    objectType._authFieldsWrapped = true;
+    field.resolve = async (...args) => {
+      // Const permissions = field.permissions || objectType.permissions;
 
-    const fields = objectType.getFields();
-    Object.keys(fields).forEach(fieldName => {
-      const field = fields[fieldName];
-      const { resolve = defaultFieldResolver } = field;
+      // Set the context
+      const ctx = args[2];
 
-      field.resolve = async (...args) => {
-        // Const permissions = field.permissions || objectType.permissions;
+      // Grab token from header, error if not found.
+      const auth = ctx.req.get("Authorization") || "";
+      const token = auth.replace("Bearer ", "");
+      const { uuid: userId } = await this._verify(
+        token,
+        config.get("jwtPassphrase")
+      );
 
-        // Set the context
-        const ctx = args[2];
+      if (!userId) {
+        log.info(`Request missing userId - permission denied`);
+        throw new PermissionError();
+      }
 
-        // Grab token from header, error if not found.
-        const auth = ctx.req.get("Authorization") || "";
-        const token = auth.replace("Bearer ", "");
-        const { uuid: id } = await this._verify(
-          token,
-          config.get("jwtPassphrase")
-        );
+      ctx.user = await ctx.db.query.user(
+        { where: { id: userId } },
+        `{ id, username, roleBindings { role } }`
+      );
 
-        if (!id) {
-          log.info(`Received unauthorized request`);
-          throw new PermissionError();
-        }
+      if (!ctx.user) {
+        log.info(`UserId ${userId} not found - permission denied`);
+        throw new PermissionError();
+      }
 
-        ctx.user = await ctx.db.query.user(
-          { where: { id } },
-          `{ id, username, roleBindings { role } }`
-        );
-
-        log.info(
-          `Processing authenticated request for user ${ctx.user.username}`
-        );
-        return resolve.apply(this, args);
-      };
-    });
+      log.info(`Executing authenticated request for userId ${userId}`);
+      return resolve.apply(this, args);
+    };
   }
 
   /*
