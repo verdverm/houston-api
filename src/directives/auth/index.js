@@ -40,7 +40,7 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
 
       ctx.user = await ctx.db.query.user(
         { where: { id: userId } },
-        `{ id, username, roleBindings { role } }`
+        `{ id, username, roleBindings { role, workspace { id }, deployment { id } } }`
       );
 
       if (!ctx.user) {

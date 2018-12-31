@@ -1,4 +1,4 @@
-# import User from "./generated/schema/prisma.graphql"
+# import InviteToken, LocalCredential, RoleBinding, UserProperty, WorkspaceProperty from "./generated/schema/prisma.graphql"
 
 #
 # Directives
@@ -8,20 +8,22 @@ directive @auth(
   permissions: [String!],
 ) on OBJECT | FIELD_DEFINITION
 
-# Wraps returned types, duplicating the id field into an extra uuid field.
-directive @uuid on FIELD_DEFINITION
+# Wraps fields to alias a synthetic field to an underlying actual field
+directive @alias(
+  field: String!
+) on FIELD_DEFINITION
 
 #
 # Scalars
 #
-scalar UUID
 scalar JSON
+scalar Uuid
 
 #
 # Types
 #
 type AuthUser {
-  user: User @uuid
+  user: User
   token: Token
   permissions: JSON
   isAdmin: Boolean
@@ -33,7 +35,7 @@ type Token {
 }
 
 type TokenPayload {
-  uuid: UUID
+  uuid: Uuid
   iat: Int
   exp: Int
 }
@@ -50,13 +52,61 @@ type AuthConfig {
   auth0OAuthUrl: String
 }
 
+type Invite {
+  id: ID!
+  uuid: Uuid @alias(field: "id")
+  assignments: String
+  email: String
+  # token: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Group {
+  id: ID!
+  uuid: Uuid @alias(field: "id")
+  label: String
+  active: Boolean
+  custom: Boolean
+  description: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type User {
+  id: ID!
+  uuid: Uuid @alias(field: "id")
+  username: String
+  emails: [Email!]!
+  fullName: String
+  status: String
+  profile: [UserProperty!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Workspace {
+  id: ID!
+  uuid: Uuid @alias(field: "id")
+  active: Boolean
+  description: String
+  invites: [Invite!]!
+  properties: [WorkspaceProperty!]!
+  label: String
+  users: [User]
+  groups: [Group]
+  deploymentCount: Int
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 #
 # Queries
 #
 type Query {
   users(
-    userUuid: UUID,
-    username: String,
+    userUuid: Uuid
+    username: String
     email: String
   ): [User]
 
@@ -68,6 +118,12 @@ type Query {
   ): AuthConfig
 
   self: AuthUser @auth
+
+  workspaces(
+    userUuid: Uuid
+    workspaceUuid: Uuid
+    label: String
+  ): [Workspace] @auth
 }
 
 #

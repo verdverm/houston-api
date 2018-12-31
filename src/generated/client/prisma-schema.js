@@ -42,8 +42,9 @@ type BatchPayload {
 scalar DateTime
 
 type Deployment {
-  id: UUID!
+  id: ID!
   config: String
+  workspace: Workspace
 }
 
 type DeploymentConnection {
@@ -54,11 +55,21 @@ type DeploymentConnection {
 
 input DeploymentCreateInput {
   config: String
+  workspace: WorkspaceCreateOneWithoutDeploymentsInput
+}
+
+input DeploymentCreateManyWithoutWorkspaceInput {
+  create: [DeploymentCreateWithoutWorkspaceInput!]
+  connect: [DeploymentWhereUniqueInput!]
 }
 
 input DeploymentCreateOneInput {
   create: DeploymentCreateInput
   connect: DeploymentWhereUniqueInput
+}
+
+input DeploymentCreateWithoutWorkspaceInput {
+  config: String
 }
 
 type DeploymentEdge {
@@ -78,8 +89,42 @@ enum DeploymentOrderByInput {
 }
 
 type DeploymentPreviousValues {
-  id: UUID!
+  id: ID!
   config: String
+}
+
+input DeploymentScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  config: String
+  config_not: String
+  config_in: [String!]
+  config_not_in: [String!]
+  config_lt: String
+  config_lte: String
+  config_gt: String
+  config_gte: String
+  config_contains: String
+  config_not_contains: String
+  config_starts_with: String
+  config_not_starts_with: String
+  config_ends_with: String
+  config_not_ends_with: String
+  AND: [DeploymentScalarWhereInput!]
+  OR: [DeploymentScalarWhereInput!]
+  NOT: [DeploymentScalarWhereInput!]
 }
 
 type DeploymentSubscriptionPayload {
@@ -102,14 +147,36 @@ input DeploymentSubscriptionWhereInput {
 
 input DeploymentUpdateDataInput {
   config: String
+  workspace: WorkspaceUpdateOneWithoutDeploymentsInput
 }
 
 input DeploymentUpdateInput {
+  config: String
+  workspace: WorkspaceUpdateOneWithoutDeploymentsInput
+}
+
+input DeploymentUpdateManyDataInput {
   config: String
 }
 
 input DeploymentUpdateManyMutationInput {
   config: String
+}
+
+input DeploymentUpdateManyWithoutWorkspaceInput {
+  create: [DeploymentCreateWithoutWorkspaceInput!]
+  delete: [DeploymentWhereUniqueInput!]
+  connect: [DeploymentWhereUniqueInput!]
+  disconnect: [DeploymentWhereUniqueInput!]
+  update: [DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput!]
+  upsert: [DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput!]
+  deleteMany: [DeploymentScalarWhereInput!]
+  updateMany: [DeploymentUpdateManyWithWhereNestedInput!]
+}
+
+input DeploymentUpdateManyWithWhereNestedInput {
+  where: DeploymentScalarWhereInput!
+  data: DeploymentUpdateManyDataInput!
 }
 
 input DeploymentUpdateOneInput {
@@ -121,26 +188,41 @@ input DeploymentUpdateOneInput {
   connect: DeploymentWhereUniqueInput
 }
 
+input DeploymentUpdateWithoutWorkspaceDataInput {
+  config: String
+}
+
+input DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: DeploymentWhereUniqueInput!
+  data: DeploymentUpdateWithoutWorkspaceDataInput!
+}
+
 input DeploymentUpsertNestedInput {
   update: DeploymentUpdateDataInput!
   create: DeploymentCreateInput!
 }
 
+input DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: DeploymentWhereUniqueInput!
+  update: DeploymentUpdateWithoutWorkspaceDataInput!
+  create: DeploymentCreateWithoutWorkspaceInput!
+}
+
 input DeploymentWhereInput {
-  id: UUID
-  id_not: UUID
-  id_in: [UUID!]
-  id_not_in: [UUID!]
-  id_lt: UUID
-  id_lte: UUID
-  id_gt: UUID
-  id_gte: UUID
-  id_contains: UUID
-  id_not_contains: UUID
-  id_starts_with: UUID
-  id_not_starts_with: UUID
-  id_ends_with: UUID
-  id_not_ends_with: UUID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   config: String
   config_not: String
   config_in: [String!]
@@ -155,17 +237,18 @@ input DeploymentWhereInput {
   config_not_starts_with: String
   config_ends_with: String
   config_not_ends_with: String
+  workspace: WorkspaceWhereInput
   AND: [DeploymentWhereInput!]
   OR: [DeploymentWhereInput!]
   NOT: [DeploymentWhereInput!]
 }
 
 input DeploymentWhereUniqueInput {
-  id: UUID
+  id: ID
 }
 
 type Email {
-  id: UUID!
+  id: ID!
   address: String
   primary: Boolean
   token: String
@@ -222,7 +305,7 @@ enum EmailOrderByInput {
 }
 
 type EmailPreviousValues {
-  id: UUID!
+  id: ID!
   address: String
   primary: Boolean
   token: String
@@ -230,20 +313,20 @@ type EmailPreviousValues {
 }
 
 input EmailScalarWhereInput {
-  id: UUID
-  id_not: UUID
-  id_in: [UUID!]
-  id_not_in: [UUID!]
-  id_lt: UUID
-  id_lte: UUID
-  id_gt: UUID
-  id_gte: UUID
-  id_contains: UUID
-  id_not_contains: UUID
-  id_starts_with: UUID
-  id_not_starts_with: UUID
-  id_ends_with: UUID
-  id_not_ends_with: UUID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   address: String
   address_not: String
   address_in: [String!]
@@ -356,20 +439,20 @@ input EmailUpsertWithWhereUniqueWithoutUserInput {
 }
 
 input EmailWhereInput {
-  id: UUID
-  id_not: UUID
-  id_in: [UUID!]
-  id_not_in: [UUID!]
-  id_lt: UUID
-  id_lte: UUID
-  id_gt: UUID
-  id_gte: UUID
-  id_contains: UUID
-  id_not_contains: UUID
-  id_starts_with: UUID
-  id_not_starts_with: UUID
-  id_ends_with: UUID
-  id_not_ends_with: UUID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   address: String
   address_not: String
   address_in: [String!]
@@ -409,13 +492,13 @@ input EmailWhereInput {
 }
 
 input EmailWhereUniqueInput {
-  id: UUID
+  id: ID
   address: String
   token: String
 }
 
 type InviteToken {
-  id: UUID!
+  id: ID!
   assignments: String
   email: String
   token: String
@@ -434,7 +517,7 @@ input InviteTokenCreateInput {
   email: String
   token: String
   user: UserCreateOneWithoutInviteTokensInput
-  workspace: WorkspaceCreateOneWithoutInviteTokensInput
+  workspace: WorkspaceCreateOneWithoutInvitesInput
 }
 
 input InviteTokenCreateManyWithoutUserInput {
@@ -451,7 +534,7 @@ input InviteTokenCreateWithoutUserInput {
   assignments: String
   email: String
   token: String
-  workspace: WorkspaceCreateOneWithoutInviteTokensInput
+  workspace: WorkspaceCreateOneWithoutInvitesInput
 }
 
 input InviteTokenCreateWithoutWorkspaceInput {
@@ -482,27 +565,27 @@ enum InviteTokenOrderByInput {
 }
 
 type InviteTokenPreviousValues {
-  id: UUID!
+  id: ID!
   assignments: String
   email: String
   token: String
 }
 
 input InviteTokenScalarWhereInput {
-  id: UUID
-  id_not: UUID
-  id_in: [UUID!]
-  id_not_in: [UUID!]
-  id_lt: UUID
-  id_lte: UUID
-  id_gt: UUID
-  id_gte: UUID
-  id_contains: UUID
-  id_not_contains: UUID
-  id_starts_with: UUID
-  id_not_starts_with: UUID
-  id_ends_with: UUID
-  id_not_ends_with: UUID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   assignments: String
   assignments_not: String
   assignments_in: [String!]
@@ -573,7 +656,7 @@ input InviteTokenUpdateInput {
   email: String
   token: String
   user: UserUpdateOneWithoutInviteTokensInput
-  workspace: WorkspaceUpdateOneWithoutInviteTokensInput
+  workspace: WorkspaceUpdateOneWithoutInvitesInput
 }
 
 input InviteTokenUpdateManyDataInput {
@@ -619,7 +702,7 @@ input InviteTokenUpdateWithoutUserDataInput {
   assignments: String
   email: String
   token: String
-  workspace: WorkspaceUpdateOneWithoutInviteTokensInput
+  workspace: WorkspaceUpdateOneWithoutInvitesInput
 }
 
 input InviteTokenUpdateWithoutWorkspaceDataInput {
@@ -652,20 +735,20 @@ input InviteTokenUpsertWithWhereUniqueWithoutWorkspaceInput {
 }
 
 input InviteTokenWhereInput {
-  id: UUID
-  id_not: UUID
-  id_in: [UUID!]
-  id_not_in: [UUID!]
-  id_lt: UUID
-  id_lte: UUID
-  id_gt: UUID
-  id_gte: UUID
-  id_contains: UUID
-  id_not_contains: UUID
-  id_starts_with: UUID
-  id_not_starts_with: UUID
-  id_ends_with: UUID
-  id_not_ends_with: UUID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   assignments: String
   assignments_not: String
   assignments_in: [String!]
@@ -716,11 +799,11 @@ input InviteTokenWhereInput {
 }
 
 input InviteTokenWhereUniqueInput {
-  id: UUID
+  id: ID
 }
 
 type LocalCredential {
-  id: UUID!
+  id: ID!
   user: User
   password: String
   resetToken: String
@@ -767,7 +850,7 @@ enum LocalCredentialOrderByInput {
 }
 
 type LocalCredentialPreviousValues {
-  id: UUID!
+  id: ID!
   password: String
   resetToken: String
 }
@@ -821,20 +904,20 @@ input LocalCredentialUpsertWithoutUserInput {
 }
 
 input LocalCredentialWhereInput {
-  id: UUID
-  id_not: UUID
-  id_in: [UUID!]
-  id_not_in: [UUID!]
-  id_lt: UUID
-  id_lte: UUID
-  id_gt: UUID
-  id_gte: UUID
-  id_contains: UUID
-  id_not_contains: UUID
-  id_starts_with: UUID
-  id_not_starts_with: UUID
-  id_ends_with: UUID
-  id_not_ends_with: UUID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   user: UserWhereInput
   password: String
   password_not: String
@@ -870,7 +953,7 @@ input LocalCredentialWhereInput {
 }
 
 input LocalCredentialWhereUniqueInput {
-  id: UUID
+  id: ID
   password: String
 }
 
@@ -995,7 +1078,7 @@ enum Role {
 }
 
 type RoleBinding {
-  id: UUID!
+  id: ID!
   subject: User
   role: Role
   workspace: Workspace
@@ -1011,7 +1094,7 @@ type RoleBindingConnection {
 input RoleBindingCreateInput {
   subject: UserCreateOneWithoutRoleBindingsInput
   role: Role
-  workspace: WorkspaceCreateOneInput
+  workspace: WorkspaceCreateOneWithoutRoleBindingsInput
   deployment: DeploymentCreateOneInput
 }
 
@@ -1020,9 +1103,20 @@ input RoleBindingCreateManyWithoutSubjectInput {
   connect: [RoleBindingWhereUniqueInput!]
 }
 
+input RoleBindingCreateManyWithoutWorkspaceInput {
+  create: [RoleBindingCreateWithoutWorkspaceInput!]
+  connect: [RoleBindingWhereUniqueInput!]
+}
+
 input RoleBindingCreateWithoutSubjectInput {
   role: Role
-  workspace: WorkspaceCreateOneInput
+  workspace: WorkspaceCreateOneWithoutRoleBindingsInput
+  deployment: DeploymentCreateOneInput
+}
+
+input RoleBindingCreateWithoutWorkspaceInput {
+  subject: UserCreateOneWithoutRoleBindingsInput
+  role: Role
   deployment: DeploymentCreateOneInput
 }
 
@@ -1043,25 +1137,25 @@ enum RoleBindingOrderByInput {
 }
 
 type RoleBindingPreviousValues {
-  id: UUID!
+  id: ID!
   role: Role
 }
 
 input RoleBindingScalarWhereInput {
-  id: UUID
-  id_not: UUID
-  id_in: [UUID!]
-  id_not_in: [UUID!]
-  id_lt: UUID
-  id_lte: UUID
-  id_gt: UUID
-  id_gte: UUID
-  id_contains: UUID
-  id_not_contains: UUID
-  id_starts_with: UUID
-  id_not_starts_with: UUID
-  id_ends_with: UUID
-  id_not_ends_with: UUID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   role: Role
   role_not: Role
   role_in: [Role!]
@@ -1092,7 +1186,7 @@ input RoleBindingSubscriptionWhereInput {
 input RoleBindingUpdateInput {
   subject: UserUpdateOneWithoutRoleBindingsInput
   role: Role
-  workspace: WorkspaceUpdateOneInput
+  workspace: WorkspaceUpdateOneWithoutRoleBindingsInput
   deployment: DeploymentUpdateOneInput
 }
 
@@ -1115,6 +1209,17 @@ input RoleBindingUpdateManyWithoutSubjectInput {
   updateMany: [RoleBindingUpdateManyWithWhereNestedInput!]
 }
 
+input RoleBindingUpdateManyWithoutWorkspaceInput {
+  create: [RoleBindingCreateWithoutWorkspaceInput!]
+  delete: [RoleBindingWhereUniqueInput!]
+  connect: [RoleBindingWhereUniqueInput!]
+  disconnect: [RoleBindingWhereUniqueInput!]
+  update: [RoleBindingUpdateWithWhereUniqueWithoutWorkspaceInput!]
+  upsert: [RoleBindingUpsertWithWhereUniqueWithoutWorkspaceInput!]
+  deleteMany: [RoleBindingScalarWhereInput!]
+  updateMany: [RoleBindingUpdateManyWithWhereNestedInput!]
+}
+
 input RoleBindingUpdateManyWithWhereNestedInput {
   where: RoleBindingScalarWhereInput!
   data: RoleBindingUpdateManyDataInput!
@@ -1122,7 +1227,13 @@ input RoleBindingUpdateManyWithWhereNestedInput {
 
 input RoleBindingUpdateWithoutSubjectDataInput {
   role: Role
-  workspace: WorkspaceUpdateOneInput
+  workspace: WorkspaceUpdateOneWithoutRoleBindingsInput
+  deployment: DeploymentUpdateOneInput
+}
+
+input RoleBindingUpdateWithoutWorkspaceDataInput {
+  subject: UserUpdateOneWithoutRoleBindingsInput
+  role: Role
   deployment: DeploymentUpdateOneInput
 }
 
@@ -1131,27 +1242,38 @@ input RoleBindingUpdateWithWhereUniqueWithoutSubjectInput {
   data: RoleBindingUpdateWithoutSubjectDataInput!
 }
 
+input RoleBindingUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: RoleBindingWhereUniqueInput!
+  data: RoleBindingUpdateWithoutWorkspaceDataInput!
+}
+
 input RoleBindingUpsertWithWhereUniqueWithoutSubjectInput {
   where: RoleBindingWhereUniqueInput!
   update: RoleBindingUpdateWithoutSubjectDataInput!
   create: RoleBindingCreateWithoutSubjectInput!
 }
 
+input RoleBindingUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: RoleBindingWhereUniqueInput!
+  update: RoleBindingUpdateWithoutWorkspaceDataInput!
+  create: RoleBindingCreateWithoutWorkspaceInput!
+}
+
 input RoleBindingWhereInput {
-  id: UUID
-  id_not: UUID
-  id_in: [UUID!]
-  id_not_in: [UUID!]
-  id_lt: UUID
-  id_lte: UUID
-  id_gt: UUID
-  id_gte: UUID
-  id_contains: UUID
-  id_not_contains: UUID
-  id_starts_with: UUID
-  id_not_starts_with: UUID
-  id_ends_with: UUID
-  id_not_ends_with: UUID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   subject: UserWhereInput
   role: Role
   role_not: Role
@@ -1165,7 +1287,7 @@ input RoleBindingWhereInput {
 }
 
 input RoleBindingWhereUniqueInput {
-  id: UUID
+  id: ID
 }
 
 type Subscription {
@@ -1181,7 +1303,7 @@ type Subscription {
 }
 
 type User {
-  id: UUID!
+  id: ID!
   username: String
   emails(where: EmailWhereInput, orderBy: EmailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Email!]
   fullName: String
@@ -1209,11 +1331,6 @@ input UserCreateInput {
   localCredential: LocalCredentialCreateOneWithoutUserInput
   roleBindings: RoleBindingCreateManyWithoutSubjectInput
   profile: UserPropertyCreateManyWithoutUserInput
-}
-
-input UserCreateManyInput {
-  create: [UserCreateInput!]
-  connect: [UserWhereUniqueInput!]
 }
 
 input UserCreateOneWithoutEmailsInput {
@@ -1312,7 +1429,7 @@ enum UserOrderByInput {
 }
 
 type UserPreviousValues {
-  id: UUID!
+  id: ID!
   username: String
   fullName: String
   status: String
@@ -1321,7 +1438,7 @@ type UserPreviousValues {
 }
 
 type UserProperty {
-  id: UUID!
+  id: ID!
   category: String
   key: String!
   value: String
@@ -1373,27 +1490,27 @@ enum UserPropertyOrderByInput {
 }
 
 type UserPropertyPreviousValues {
-  id: UUID!
+  id: ID!
   category: String
   key: String!
   value: String
 }
 
 input UserPropertyScalarWhereInput {
-  id: UUID
-  id_not: UUID
-  id_in: [UUID!]
-  id_not_in: [UUID!]
-  id_lt: UUID
-  id_lte: UUID
-  id_gt: UUID
-  id_gte: UUID
-  id_contains: UUID
-  id_not_contains: UUID
-  id_starts_with: UUID
-  id_not_starts_with: UUID
-  id_ends_with: UUID
-  id_not_ends_with: UUID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   category: String
   category_not: String
   category_in: [String!]
@@ -1512,20 +1629,20 @@ input UserPropertyUpsertWithWhereUniqueWithoutUserInput {
 }
 
 input UserPropertyWhereInput {
-  id: UUID
-  id_not: UUID
-  id_in: [UUID!]
-  id_not_in: [UUID!]
-  id_lt: UUID
-  id_lte: UUID
-  id_gt: UUID
-  id_gte: UUID
-  id_contains: UUID
-  id_not_contains: UUID
-  id_starts_with: UUID
-  id_not_starts_with: UUID
-  id_ends_with: UUID
-  id_not_ends_with: UUID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   category: String
   category_not: String
   category_in: [String!]
@@ -1575,85 +1692,7 @@ input UserPropertyWhereInput {
 }
 
 input UserPropertyWhereUniqueInput {
-  id: UUID
-}
-
-input UserScalarWhereInput {
-  id: UUID
-  id_not: UUID
-  id_in: [UUID!]
-  id_not_in: [UUID!]
-  id_lt: UUID
-  id_lte: UUID
-  id_gt: UUID
-  id_gte: UUID
-  id_contains: UUID
-  id_not_contains: UUID
-  id_starts_with: UUID
-  id_not_starts_with: UUID
-  id_ends_with: UUID
-  id_not_ends_with: UUID
-  username: String
-  username_not: String
-  username_in: [String!]
-  username_not_in: [String!]
-  username_lt: String
-  username_lte: String
-  username_gt: String
-  username_gte: String
-  username_contains: String
-  username_not_contains: String
-  username_starts_with: String
-  username_not_starts_with: String
-  username_ends_with: String
-  username_not_ends_with: String
-  fullName: String
-  fullName_not: String
-  fullName_in: [String!]
-  fullName_not_in: [String!]
-  fullName_lt: String
-  fullName_lte: String
-  fullName_gt: String
-  fullName_gte: String
-  fullName_contains: String
-  fullName_not_contains: String
-  fullName_starts_with: String
-  fullName_not_starts_with: String
-  fullName_ends_with: String
-  fullName_not_ends_with: String
-  status: String
-  status_not: String
-  status_in: [String!]
-  status_not_in: [String!]
-  status_lt: String
-  status_lte: String
-  status_gt: String
-  status_gte: String
-  status_contains: String
-  status_not_contains: String
-  status_starts_with: String
-  status_not_starts_with: String
-  status_ends_with: String
-  status_not_ends_with: String
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  AND: [UserScalarWhereInput!]
-  OR: [UserScalarWhereInput!]
-  NOT: [UserScalarWhereInput!]
+  id: ID
 }
 
 type UserSubscriptionPayload {
@@ -1674,17 +1713,6 @@ input UserSubscriptionWhereInput {
   NOT: [UserSubscriptionWhereInput!]
 }
 
-input UserUpdateDataInput {
-  username: String
-  emails: EmailUpdateManyWithoutUserInput
-  fullName: String
-  status: String
-  inviteTokens: InviteTokenUpdateManyWithoutUserInput
-  localCredential: LocalCredentialUpdateOneWithoutUserInput
-  roleBindings: RoleBindingUpdateManyWithoutSubjectInput
-  profile: UserPropertyUpdateManyWithoutUserInput
-}
-
 input UserUpdateInput {
   username: String
   emails: EmailUpdateManyWithoutUserInput
@@ -1696,32 +1724,10 @@ input UserUpdateInput {
   profile: UserPropertyUpdateManyWithoutUserInput
 }
 
-input UserUpdateManyDataInput {
-  username: String
-  fullName: String
-  status: String
-}
-
-input UserUpdateManyInput {
-  create: [UserCreateInput!]
-  update: [UserUpdateWithWhereUniqueNestedInput!]
-  upsert: [UserUpsertWithWhereUniqueNestedInput!]
-  delete: [UserWhereUniqueInput!]
-  connect: [UserWhereUniqueInput!]
-  disconnect: [UserWhereUniqueInput!]
-  deleteMany: [UserScalarWhereInput!]
-  updateMany: [UserUpdateManyWithWhereNestedInput!]
-}
-
 input UserUpdateManyMutationInput {
   username: String
   fullName: String
   status: String
-}
-
-input UserUpdateManyWithWhereNestedInput {
-  where: UserScalarWhereInput!
-  data: UserUpdateManyDataInput!
 }
 
 input UserUpdateOneWithoutEmailsInput {
@@ -1819,11 +1825,6 @@ input UserUpdateWithoutRoleBindingsDataInput {
   profile: UserPropertyUpdateManyWithoutUserInput
 }
 
-input UserUpdateWithWhereUniqueNestedInput {
-  where: UserWhereUniqueInput!
-  data: UserUpdateDataInput!
-}
-
 input UserUpsertWithoutEmailsInput {
   update: UserUpdateWithoutEmailsDataInput!
   create: UserCreateWithoutEmailsInput!
@@ -1849,27 +1850,21 @@ input UserUpsertWithoutRoleBindingsInput {
   create: UserCreateWithoutRoleBindingsInput!
 }
 
-input UserUpsertWithWhereUniqueNestedInput {
-  where: UserWhereUniqueInput!
-  update: UserUpdateDataInput!
-  create: UserCreateInput!
-}
-
 input UserWhereInput {
-  id: UUID
-  id_not: UUID
-  id_in: [UUID!]
-  id_not_in: [UUID!]
-  id_lt: UUID
-  id_lte: UUID
-  id_gt: UUID
-  id_gte: UUID
-  id_contains: UUID
-  id_not_contains: UUID
-  id_starts_with: UUID
-  id_not_starts_with: UUID
-  id_ends_with: UUID
-  id_not_ends_with: UUID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   username: String
   username_not: String
   username_in: [String!]
@@ -1947,20 +1942,21 @@ input UserWhereInput {
 }
 
 input UserWhereUniqueInput {
-  id: UUID
+  id: ID
   username: String
 }
 
-scalar UUID
-
 type Workspace {
-  id: UUID!
+  id: ID!
   active: Boolean
+  deployments(where: DeploymentWhereInput, orderBy: DeploymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Deployment!]
   description: String
-  inviteTokens(where: InviteTokenWhereInput, orderBy: InviteTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [InviteToken!]
+  invites(where: InviteTokenWhereInput, orderBy: InviteTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [InviteToken!]
   label: String
   properties(where: WorkspacePropertyWhereInput, orderBy: WorkspacePropertyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceProperty!]
-  users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User!]
+  roleBindings(where: RoleBindingWhereInput, orderBy: RoleBindingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleBinding!]
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type WorkspaceConnection {
@@ -1971,20 +1967,21 @@ type WorkspaceConnection {
 
 input WorkspaceCreateInput {
   active: Boolean
+  deployments: DeploymentCreateManyWithoutWorkspaceInput
   description: String
-  inviteTokens: InviteTokenCreateManyWithoutWorkspaceInput
+  invites: InviteTokenCreateManyWithoutWorkspaceInput
   label: String
   properties: WorkspacePropertyCreateManyWithoutWorkspaceInput
-  users: UserCreateManyInput
+  roleBindings: RoleBindingCreateManyWithoutWorkspaceInput
 }
 
-input WorkspaceCreateOneInput {
-  create: WorkspaceCreateInput
+input WorkspaceCreateOneWithoutDeploymentsInput {
+  create: WorkspaceCreateWithoutDeploymentsInput
   connect: WorkspaceWhereUniqueInput
 }
 
-input WorkspaceCreateOneWithoutInviteTokensInput {
-  create: WorkspaceCreateWithoutInviteTokensInput
+input WorkspaceCreateOneWithoutInvitesInput {
+  create: WorkspaceCreateWithoutInvitesInput
   connect: WorkspaceWhereUniqueInput
 }
 
@@ -1993,20 +1990,45 @@ input WorkspaceCreateOneWithoutPropertiesInput {
   connect: WorkspaceWhereUniqueInput
 }
 
-input WorkspaceCreateWithoutInviteTokensInput {
+input WorkspaceCreateOneWithoutRoleBindingsInput {
+  create: WorkspaceCreateWithoutRoleBindingsInput
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceCreateWithoutDeploymentsInput {
   active: Boolean
+  description: String
+  invites: InviteTokenCreateManyWithoutWorkspaceInput
+  label: String
+  properties: WorkspacePropertyCreateManyWithoutWorkspaceInput
+  roleBindings: RoleBindingCreateManyWithoutWorkspaceInput
+}
+
+input WorkspaceCreateWithoutInvitesInput {
+  active: Boolean
+  deployments: DeploymentCreateManyWithoutWorkspaceInput
   description: String
   label: String
   properties: WorkspacePropertyCreateManyWithoutWorkspaceInput
-  users: UserCreateManyInput
+  roleBindings: RoleBindingCreateManyWithoutWorkspaceInput
 }
 
 input WorkspaceCreateWithoutPropertiesInput {
   active: Boolean
+  deployments: DeploymentCreateManyWithoutWorkspaceInput
   description: String
-  inviteTokens: InviteTokenCreateManyWithoutWorkspaceInput
+  invites: InviteTokenCreateManyWithoutWorkspaceInput
   label: String
-  users: UserCreateManyInput
+  roleBindings: RoleBindingCreateManyWithoutWorkspaceInput
+}
+
+input WorkspaceCreateWithoutRoleBindingsInput {
+  active: Boolean
+  deployments: DeploymentCreateManyWithoutWorkspaceInput
+  description: String
+  invites: InviteTokenCreateManyWithoutWorkspaceInput
+  label: String
+  properties: WorkspacePropertyCreateManyWithoutWorkspaceInput
 }
 
 type WorkspaceEdge {
@@ -2030,14 +2052,16 @@ enum WorkspaceOrderByInput {
 }
 
 type WorkspacePreviousValues {
-  id: UUID!
+  id: ID!
   active: Boolean
   description: String
   label: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type WorkspaceProperty {
-  id: UUID!
+  id: ID!
   category: String
   key: String!
   value: String
@@ -2089,27 +2113,27 @@ enum WorkspacePropertyOrderByInput {
 }
 
 type WorkspacePropertyPreviousValues {
-  id: UUID!
+  id: ID!
   category: String
   key: String!
   value: String
 }
 
 input WorkspacePropertyScalarWhereInput {
-  id: UUID
-  id_not: UUID
-  id_in: [UUID!]
-  id_not_in: [UUID!]
-  id_lt: UUID
-  id_lte: UUID
-  id_gt: UUID
-  id_gte: UUID
-  id_contains: UUID
-  id_not_contains: UUID
-  id_starts_with: UUID
-  id_not_starts_with: UUID
-  id_ends_with: UUID
-  id_not_ends_with: UUID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   category: String
   category_not: String
   category_in: [String!]
@@ -2228,20 +2252,20 @@ input WorkspacePropertyUpsertWithWhereUniqueWithoutWorkspaceInput {
 }
 
 input WorkspacePropertyWhereInput {
-  id: UUID
-  id_not: UUID
-  id_in: [UUID!]
-  id_not_in: [UUID!]
-  id_lt: UUID
-  id_lte: UUID
-  id_gt: UUID
-  id_gte: UUID
-  id_contains: UUID
-  id_not_contains: UUID
-  id_starts_with: UUID
-  id_not_starts_with: UUID
-  id_ends_with: UUID
-  id_not_ends_with: UUID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   category: String
   category_not: String
   category_in: [String!]
@@ -2291,7 +2315,7 @@ input WorkspacePropertyWhereInput {
 }
 
 input WorkspacePropertyWhereUniqueInput {
-  id: UUID
+  id: ID
 }
 
 type WorkspaceSubscriptionPayload {
@@ -2312,22 +2336,14 @@ input WorkspaceSubscriptionWhereInput {
   NOT: [WorkspaceSubscriptionWhereInput!]
 }
 
-input WorkspaceUpdateDataInput {
-  active: Boolean
-  description: String
-  inviteTokens: InviteTokenUpdateManyWithoutWorkspaceInput
-  label: String
-  properties: WorkspacePropertyUpdateManyWithoutWorkspaceInput
-  users: UserUpdateManyInput
-}
-
 input WorkspaceUpdateInput {
   active: Boolean
+  deployments: DeploymentUpdateManyWithoutWorkspaceInput
   description: String
-  inviteTokens: InviteTokenUpdateManyWithoutWorkspaceInput
+  invites: InviteTokenUpdateManyWithoutWorkspaceInput
   label: String
   properties: WorkspacePropertyUpdateManyWithoutWorkspaceInput
-  users: UserUpdateManyInput
+  roleBindings: RoleBindingUpdateManyWithoutWorkspaceInput
 }
 
 input WorkspaceUpdateManyMutationInput {
@@ -2336,19 +2352,19 @@ input WorkspaceUpdateManyMutationInput {
   label: String
 }
 
-input WorkspaceUpdateOneInput {
-  create: WorkspaceCreateInput
-  update: WorkspaceUpdateDataInput
-  upsert: WorkspaceUpsertNestedInput
+input WorkspaceUpdateOneWithoutDeploymentsInput {
+  create: WorkspaceCreateWithoutDeploymentsInput
+  update: WorkspaceUpdateWithoutDeploymentsDataInput
+  upsert: WorkspaceUpsertWithoutDeploymentsInput
   delete: Boolean
   disconnect: Boolean
   connect: WorkspaceWhereUniqueInput
 }
 
-input WorkspaceUpdateOneWithoutInviteTokensInput {
-  create: WorkspaceCreateWithoutInviteTokensInput
-  update: WorkspaceUpdateWithoutInviteTokensDataInput
-  upsert: WorkspaceUpsertWithoutInviteTokensInput
+input WorkspaceUpdateOneWithoutInvitesInput {
+  create: WorkspaceCreateWithoutInvitesInput
+  update: WorkspaceUpdateWithoutInvitesDataInput
+  upsert: WorkspaceUpsertWithoutInvitesInput
   delete: Boolean
   disconnect: Boolean
   connect: WorkspaceWhereUniqueInput
@@ -2363,30 +2379,59 @@ input WorkspaceUpdateOneWithoutPropertiesInput {
   connect: WorkspaceWhereUniqueInput
 }
 
-input WorkspaceUpdateWithoutInviteTokensDataInput {
+input WorkspaceUpdateOneWithoutRoleBindingsInput {
+  create: WorkspaceCreateWithoutRoleBindingsInput
+  update: WorkspaceUpdateWithoutRoleBindingsDataInput
+  upsert: WorkspaceUpsertWithoutRoleBindingsInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: WorkspaceWhereUniqueInput
+}
+
+input WorkspaceUpdateWithoutDeploymentsDataInput {
   active: Boolean
+  description: String
+  invites: InviteTokenUpdateManyWithoutWorkspaceInput
+  label: String
+  properties: WorkspacePropertyUpdateManyWithoutWorkspaceInput
+  roleBindings: RoleBindingUpdateManyWithoutWorkspaceInput
+}
+
+input WorkspaceUpdateWithoutInvitesDataInput {
+  active: Boolean
+  deployments: DeploymentUpdateManyWithoutWorkspaceInput
   description: String
   label: String
   properties: WorkspacePropertyUpdateManyWithoutWorkspaceInput
-  users: UserUpdateManyInput
+  roleBindings: RoleBindingUpdateManyWithoutWorkspaceInput
 }
 
 input WorkspaceUpdateWithoutPropertiesDataInput {
   active: Boolean
+  deployments: DeploymentUpdateManyWithoutWorkspaceInput
   description: String
-  inviteTokens: InviteTokenUpdateManyWithoutWorkspaceInput
+  invites: InviteTokenUpdateManyWithoutWorkspaceInput
   label: String
-  users: UserUpdateManyInput
+  roleBindings: RoleBindingUpdateManyWithoutWorkspaceInput
 }
 
-input WorkspaceUpsertNestedInput {
-  update: WorkspaceUpdateDataInput!
-  create: WorkspaceCreateInput!
+input WorkspaceUpdateWithoutRoleBindingsDataInput {
+  active: Boolean
+  deployments: DeploymentUpdateManyWithoutWorkspaceInput
+  description: String
+  invites: InviteTokenUpdateManyWithoutWorkspaceInput
+  label: String
+  properties: WorkspacePropertyUpdateManyWithoutWorkspaceInput
 }
 
-input WorkspaceUpsertWithoutInviteTokensInput {
-  update: WorkspaceUpdateWithoutInviteTokensDataInput!
-  create: WorkspaceCreateWithoutInviteTokensInput!
+input WorkspaceUpsertWithoutDeploymentsInput {
+  update: WorkspaceUpdateWithoutDeploymentsDataInput!
+  create: WorkspaceCreateWithoutDeploymentsInput!
+}
+
+input WorkspaceUpsertWithoutInvitesInput {
+  update: WorkspaceUpdateWithoutInvitesDataInput!
+  create: WorkspaceCreateWithoutInvitesInput!
 }
 
 input WorkspaceUpsertWithoutPropertiesInput {
@@ -2394,23 +2439,31 @@ input WorkspaceUpsertWithoutPropertiesInput {
   create: WorkspaceCreateWithoutPropertiesInput!
 }
 
+input WorkspaceUpsertWithoutRoleBindingsInput {
+  update: WorkspaceUpdateWithoutRoleBindingsDataInput!
+  create: WorkspaceCreateWithoutRoleBindingsInput!
+}
+
 input WorkspaceWhereInput {
-  id: UUID
-  id_not: UUID
-  id_in: [UUID!]
-  id_not_in: [UUID!]
-  id_lt: UUID
-  id_lte: UUID
-  id_gt: UUID
-  id_gte: UUID
-  id_contains: UUID
-  id_not_contains: UUID
-  id_starts_with: UUID
-  id_not_starts_with: UUID
-  id_ends_with: UUID
-  id_not_ends_with: UUID
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
   active: Boolean
   active_not: Boolean
+  deployments_every: DeploymentWhereInput
+  deployments_some: DeploymentWhereInput
+  deployments_none: DeploymentWhereInput
   description: String
   description_not: String
   description_in: [String!]
@@ -2425,9 +2478,9 @@ input WorkspaceWhereInput {
   description_not_starts_with: String
   description_ends_with: String
   description_not_ends_with: String
-  inviteTokens_every: InviteTokenWhereInput
-  inviteTokens_some: InviteTokenWhereInput
-  inviteTokens_none: InviteTokenWhereInput
+  invites_every: InviteTokenWhereInput
+  invites_some: InviteTokenWhereInput
+  invites_none: InviteTokenWhereInput
   label: String
   label_not: String
   label_in: [String!]
@@ -2445,16 +2498,32 @@ input WorkspaceWhereInput {
   properties_every: WorkspacePropertyWhereInput
   properties_some: WorkspacePropertyWhereInput
   properties_none: WorkspacePropertyWhereInput
-  users_every: UserWhereInput
-  users_some: UserWhereInput
-  users_none: UserWhereInput
+  roleBindings_every: RoleBindingWhereInput
+  roleBindings_some: RoleBindingWhereInput
+  roleBindings_none: RoleBindingWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [WorkspaceWhereInput!]
   OR: [WorkspaceWhereInput!]
   NOT: [WorkspaceWhereInput!]
 }
 
 input WorkspaceWhereUniqueInput {
-  id: UUID
+  id: ID
 }
 `
       }

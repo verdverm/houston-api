@@ -12,7 +12,7 @@ enum Role {
 }
 
 type User {
-  id: UUID! @unique
+  id: ID! @unique
   username: String @unique
   emails: [Email!]!
   fullName: String
@@ -30,7 +30,7 @@ type User {
 }
 
 type UserProperty {
-  id: UUID! @unique
+  id: ID! @unique
   category: String
   key: String!
   value: String
@@ -38,7 +38,7 @@ type UserProperty {
 }
 
 type RoleBinding {
-  id: UUID! @unique
+  id: ID! @unique
   subject: User
   role: Role
   workspace: Workspace
@@ -46,7 +46,7 @@ type RoleBinding {
 }
 
 type Email {
-  id: UUID! @unique
+  id: ID! @unique
   address: String @unique
   primary: Boolean
   token: String @unique
@@ -55,14 +55,14 @@ type Email {
 }
 
 type LocalCredential {
-  id: UUID! @unique
+  id: ID! @unique
   user: User
   password: String @unique
   resetToken: String
 }
 
 type InviteToken {
-  id: UUID! @unique
+  id: ID! @unique
   assignments: String
   email: String
   token: String
@@ -71,7 +71,7 @@ type InviteToken {
 }
 
 # type OauthCredential {
-#   id: UUID! @unique
+#   id: ID! @unique
 #   expiresAt: DateTime
 #   oauthProvider: String!
 #   oauthUserId: String!
@@ -79,7 +79,7 @@ type InviteToken {
 # }
 
 # type SessionRefreshToken {
-#   id: UUID! @unique
+#   id: ID! @unique
 #   expiresAt: DateTime
 #   active: Boolean
 #   metadata: String
@@ -90,13 +90,13 @@ type InviteToken {
 # }
 
 # type UserGroup {
-#   id: UUID! @unique
+#   id: ID! @unique
 #   group: Group
 #   user: User
 # }
 
 # type Group {
-#   id: UUID! @unique
+#   id: ID! @unique
 #   name: String! # New static name to remove need to dynamically set ids in system settings
 #   active: Boolean
 #   custom: Boolean
@@ -110,7 +110,7 @@ type InviteToken {
 # }
 
 # type GroupProperty {
-#   id: UUID! @unique
+#   id: ID! @unique
 #   category: String
 #   group: Group
 #   key: String!
@@ -123,7 +123,7 @@ type InviteToken {
 # # }
 
 # type Role {
-#   id: UUID! @unique
+#   id: ID! @unique
 #   name: String!
 #   # category: String
 #   # entityType: String # Group / ServiceAccount
@@ -141,7 +141,7 @@ type InviteToken {
 # # }
 
 # type Permission {
-#   id: UUID! @unique
+#   id: ID! @unique
 #   name: String! @unique # This used to be id
 #   # category: String
 #   # label: String
@@ -156,7 +156,7 @@ type InviteToken {
 # # }
 
 # type ServiceAccount {
-#   id: UUID! @unique
+#   id: ID! @unique
 #   active: Boolean
 #   api_key: String
 #   category: String
@@ -176,18 +176,21 @@ type InviteToken {
 # }
 
 type Workspace {
-  id: UUID! @unique
+  id: ID! @unique
   active: Boolean
-  # deployments: [Deployment!]!
+  deployments: [Deployment!]!
   description: String
-  inviteTokens: [InviteToken!]!
+  invites: [InviteToken!]!
   label: String
   properties: [WorkspaceProperty!]!
-  users: [User!]!
+  # users: [User!]!
+  roleBindings: [RoleBinding!]!
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type WorkspaceProperty {
-  id: UUID! @unique
+  id: ID! @unique
   category: String
   key: String!
   value: String
@@ -195,7 +198,7 @@ type WorkspaceProperty {
 }
 
 type Deployment {
-  id: UUID! @unique
+  id: ID! @unique
   config: String
 #   deployment_properties: [DeploymentProperty!]!
 #   description: String
@@ -205,11 +208,11 @@ type Deployment {
 #   status: String
 #   type: String
 #   version: String
-#   workspace: Workspace
+  workspace: Workspace
 }
 
 # type DeploymentProperty {
-#   id: UUID! @unique
+#   id: ID! @unique
 #   category: String
 #   deployment: Deployment
 #   key: String!
