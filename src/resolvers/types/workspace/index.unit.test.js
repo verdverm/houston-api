@@ -15,4 +15,10 @@ describe("Workspace", () => {
     const count = deploymentCount(parent);
     expect(count).toBe(1);
   });
+
+  test("deploymentCount returns 0 when no deployments", () => {
+    const parent = {};
+    const count = deploymentCount(parent);
+    expect(count).toBe(0);
+  });
 });

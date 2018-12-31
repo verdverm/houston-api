@@ -1,3 +1,5 @@
+import { size } from "lodash";
+
 export function users() {
   return [];
 }
@@ -7,7 +9,7 @@ export function groups() {
 }
 
 export function deploymentCount(parent) {
-  return parent.deployments ? parent.deployments.length : 0;
+  return size(parent.deployments);
 }
 
 export default { users, groups, deploymentCount };
