@@ -141,7 +141,7 @@ type Mutation {
 
   createToken(
     password: String!
-    identity: String!
+    identity: String
     duration: Int
   ): AuthUser
 

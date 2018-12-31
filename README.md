@@ -11,7 +11,7 @@ Houston leverages Prisma as GraphQL backend on top of Postgres.
 
 ## Configuration
 
-Houston can be configured via YAML files under `./config`, and can be overridden via environment variables, which are defined in `/config/custom-environment-variables.yaml`.
+Houston can be configured via YAML files under `./config`, and can be overridden via environment variables, which are defined in `/config/custom-environment-variables.yaml`. To add or override any variables locally, create a `.env` file in the project directory.
 
 ## Development
 
