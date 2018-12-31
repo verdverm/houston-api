@@ -195,29 +195,35 @@ type WorkspaceProperty {
   key: String!
   value: String
   workspace: Workspace
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type Deployment {
   id: ID! @unique
   config: String
-#   deployment_properties: [DeploymentProperty!]!
-#   description: String
-#   label: String @unique
-#   registry_password: String
-#   release_name: String @unique
-#   status: String
-#   type: String
-#   version: String
+  properties: [DeploymentProperty!]!
+  description: String
+  label: String @unique
+  registryPassword: String
+  releaseName: String @unique
+  status: String
+  type: String
+  version: String
   workspace: Workspace
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
-# type DeploymentProperty {
-#   id: ID! @unique
-#   category: String
-#   deployment: Deployment
-#   key: String!
-#   value: String
-# }
+type DeploymentProperty {
+  id: ID! @unique
+  category: String
+  deployment: Deployment
+  key: String!
+  value: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
 
 # type SystemSetting @pgTable(name: "system_settings") {
 #   id: ID! @unique @pgColumn(name: "key")

@@ -15,8 +15,9 @@ export default async function workspaces(parent, args, ctx, info) {
     rb.workspace ? rb.workspace.id : null
   );
 
-  // Create a fragment to ensure that we always return the id, no matter what a user requests.
-  const fragment = `fragment EnsureId on Workspace { id, deployments }`;
+  // Create a fragment to ensure that we always return the id and deployments,
+  // no matter what a user requests.
+  const fragment = `fragment EnsureFields on Workspace { id, deployments }`;
 
   // Get the workspaces, using their ids and passing the user specified selection set.
   const workspaces = await ctx.db.query.workspaces(

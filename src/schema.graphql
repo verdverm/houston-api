@@ -1,4 +1,4 @@
-# import InviteToken, LocalCredential, RoleBinding, UserProperty, WorkspaceProperty from "./generated/schema/prisma.graphql"
+# import InviteToken, LocalCredential, RoleBinding, UserProperty, WorkspaceProperty, DeploymentProperty from "./generated/schema/prisma.graphql"
 
 #
 # Directives
@@ -91,7 +91,7 @@ type Workspace {
   active: Boolean
   description: String
   invites: [Invite!]!
-  properties: [WorkspaceProperty!]!
+  properties: JSON
   label: String
   users: [User]
   groups: [Group]
@@ -116,6 +116,29 @@ type AstroUnit {
   airflowConns: Float
   actualConns: Float
   price: Float
+}
+
+type DeploymentUrl {
+  type: String
+  url: String
+}
+
+type Deployment {
+  id: ID!
+  uuid: Uuid @alias(field: "id")
+  config: JSON
+  env: JSON
+  urls: [DeploymentUrl]
+  properties: JSON
+  description: String
+  label: String
+  releaseName: String
+  status: String
+  type: String
+  version: String
+  workspace: Workspace
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 #
@@ -149,6 +172,12 @@ type Query {
     type: String
     version: String
   ): DeploymentConfig @auth
+
+  deployments(
+    workspaceUuid:  Uuid
+    deploymentUuid: Uuid
+    releaseName: String
+  ): [Deployment] @auth
 }
 
 #

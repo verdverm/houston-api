@@ -1,5 +1,5 @@
 import config from "configuration";
-import { curry, merge } from "lodash";
+import { curry, keyBy, merge } from "lodash";
 
 /*
  * Get details on possible deployment configurations.
@@ -9,18 +9,28 @@ import { curry, merge } from "lodash";
  * @return {AuthConfig} The auth config.
  */
 export default async function deploymentConfig() {
+  // Get astroUnit object directly from config.
   const astroUnit = config.get("deployments.astroUnit");
-  const maxExtraAu = config.get("deployments.maxExtraAu");
-  const executors = config.get("deployments.executors");
-  const latestVersion = config.get("helm.releaseVersion");
 
+  // Get maximum extra AU directly from config.
+  const maxExtraAu = config.get("deployments.maxExtraAu");
+
+  // Get list of components and AU requirements directly from config.
   const components = config.get("deployments.components");
 
+  // Generate defaults.
   const defaultsFn = curry(mapResources)(astroUnit, "default");
   const defaults = merge(...components.map(defaultsFn));
 
+  // Generate limits.
   const limitsFn = curry(mapResources)(astroUnit, "limit");
   const limits = merge(...components.map(limitsFn));
+
+  // Get list of executors, transform to object, keyed by name.
+  const executors = keyBy(config.get("deployments.executors"), "name");
+
+  // Get current version of platform, passed from helm.
+  const latestVersion = config.get("helm.releaseVersion");
 
   return {
     defaults,
@@ -58,7 +68,7 @@ export function mapResources(au, auType, comp) {
         };
       });
 
-  const merged = merge(resources, ...extras);
+  const merged = merge({ resources }, ...extras);
 
   return { [comp.name]: merged };
 }
