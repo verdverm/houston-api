@@ -136,3 +136,93 @@ roles:
     name: Deployment Viewer
     permissions:
       - user.deployment.get
+
+#
+# Airflow Deployment Configurations
+#
+deployments:
+  # An astro unit defines the smallest billable unit
+  # in the system. Default values are based on
+  # the GCP n1-standard-1. CPU should always be expressed
+  # in millicpu and memory should be expressed in Mibibytes.
+  astroUnit:
+    cpu: 100
+    memory: 384
+    pods: 1
+    airflowConns: 5
+    actualConns: 0.5
+    # price: 10
+
+  # This defines how much extra capacity, in astro units,
+  # that a user can expand a deployment to. This is currently
+  # represented as a slider in the UI.
+  maxExtraAu: 400
+
+  # This defines all possible components for an airflow
+  # deployment and the default AU to use for the kubernetes 
+  # resource requests, as well as its limits.
+  components:
+    - name: scheduler
+      au:
+        default: 5
+        limit: 30
+    - name: webserver
+      au:
+        default: 2
+        limit: 30
+    - name: statsd
+      au:
+        default: 2
+        limit: 30
+    - name: pgbouncer
+      au:
+        default: 2
+        limit: 2
+    - name: flower
+      au:
+        default: 2
+        limit: 2
+    - name: redis
+      au:
+        default: 2
+        limit: 2
+    - name: workers
+      au:
+        default: 10
+        limit: 30
+      extra:
+        - name: terminationGracePeriodSeconds
+          default: 600
+          limit: 36000
+        - name: replicas
+          default: 1
+          limit: 10
+
+  # This defines which executors should be supported, as well
+  # as the components required to run a particular
+  # executor configuration.
+  executors:
+    - name: LocalExecutor
+      enabled: true
+      components:
+        - scheduler
+        - webserver
+        - statsd
+        - pgbouncer
+    - name: CeleryExecutor
+      enabled: true
+      components:
+        - scheduler
+        - webserver
+        - statsd
+        - pgbouncer
+        - workers
+        - flower
+        - redis
+    - name: KubernetesExecutor
+      enabled: false
+      components:
+        - scheduler
+        - webserver
+        - statsd
+        - pgbouncer

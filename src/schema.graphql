@@ -100,6 +100,24 @@ type Workspace {
   updatedAt: DateTime!
 }
 
+type DeploymentConfig {
+  defaults: JSON
+  limits: JSON
+  astroUnit: AstroUnit
+  maxExtraAu: Int
+  executors: JSON
+  latestVersion: String
+}
+
+type AstroUnit {
+  cpu: Int
+  memory: Int
+  pods: Float
+  airflowConns: Float
+  actualConns: Float
+  price: Float
+}
+
 #
 # Queries
 #
@@ -124,6 +142,13 @@ type Query {
     workspaceUuid: Uuid
     label: String
   ): [Workspace] @auth
+
+  deploymentConfig(
+    workspaceUuid: Uuid
+    deploymentUuid: Uuid
+    type: String
+    version: String
+  ): DeploymentConfig @auth
 }
 
 #
