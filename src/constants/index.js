@@ -1,0 +1,26 @@
+export const DEPLOYMENT_AIRFLOW = "airflow";
+
+export const DEPLOYMENT_PROPERTY_COMPONENT_VERSION = "component_version";
+export const DEPLOYMENT_PROPERTY_ALERT_EMAILS = "alert_emails";
+export const DEPLOYMENT_PROPERTY_EXTRA_AU = "extra_au";
+
+export const DEPLOYMENT_STATUS_ACTIVE = "active";
+export const DEPLOYMENT_STATUS_DELETING = "deleting";
+
+export const USER_STATUS_ACTIVE = "active";
+export const USER_STATUS_PENDING = "pending";
+export const USER_STATUS_BANNED = "banned";
+export const USER_STATUS_INACTIVE = "inactive";
+
+export const USER_PROPERTY_AVATAR_URL = "avatarUrl";
+export const USER_PROPERTY_CATEGORY_PROFILE = "profile";
+
+export const WORKSPACE_ADMIN = "WORKSPACE_ADMIN";
+export const WORKSPACE_EDITOR = "WORKSPACE_EDITOR";
+export const WORKSPACE_VIEWER = "WORKSPACE_VIEWER";
+export const DEPLOYMENT_ADMIN = "DEPLOYMENT_ADMIN";
+export const DEPLOYMENT_EDITOR = "DEPLOYMENT_EDITOR";
+export const DEPLOYMENT_VIEWER = "DEPLOYMENT_VIEWER";
+export const SYSTEM_ADMIN = "SYSTEM_ADMIN";
+export const SYSTEM_EDITOR = "SYSTEM_EDITOR";
+export const SYSTEM_VIEWER = "SYSTEM_VIEWER";
