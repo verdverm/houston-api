@@ -204,4 +204,15 @@ type Mutation {
     password: String!
     duration: Int
   ): AuthUser
+
+  createDeployment(
+    workspaceUuid: Uuid!
+    type: String!
+    label: String!
+    description: String
+    version: String
+    config: JSON
+    env: JSON
+    properties: JSON
+  ): Deployment
 }

@@ -904,7 +904,6 @@ input DeploymentWhereInput {
 
 input DeploymentWhereUniqueInput {
   id: ID
-  label: String
   releaseName: String
 }
 

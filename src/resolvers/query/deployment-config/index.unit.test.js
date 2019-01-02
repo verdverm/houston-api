@@ -71,11 +71,11 @@ describe("deploymentConfig", () => {
     };
 
     const res = mapResources(au, auType, comp);
-    expect(res).toHaveProperty("scheduler.requests.cpu");
-    expect(res.scheduler.requests.cpu).toBe(500);
+    expect(res).toHaveProperty("scheduler.resources.requests.cpu");
+    expect(res.scheduler.resources.requests.cpu).toBe(500);
 
-    expect(res).toHaveProperty("scheduler.requests.memory");
-    expect(res.scheduler.requests.memory).toBe(1920);
+    expect(res).toHaveProperty("scheduler.resources.requests.memory");
+    expect(res.scheduler.resources.requests.memory).toBe(1920);
   });
 
   test("mapResources correctly maps values with extras", () => {

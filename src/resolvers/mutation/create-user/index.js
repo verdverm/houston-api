@@ -6,7 +6,12 @@ import {
 import config from "configuration";
 import bcrypt from "bcryptjs";
 import shortid from "shortid";
-import { USER_STATUS_PENDING, USER_STATUS_ACTIVE } from "constants";
+import {
+  WORKSPACE_ADMIN,
+  SYSTEM_ADMIN,
+  USER_STATUS_PENDING,
+  USER_STATUS_ACTIVE
+} from "constants";
 
 /*
  * Create a new user. This is the singnup mutation.
@@ -80,7 +85,7 @@ export default async function createUser(parent, args, ctx) {
   // Add the default rolebinding to the users personal workspace.
   const roleBindings = [
     {
-      role: "WORKSPACE_ADMIN",
+      role: WORKSPACE_ADMIN,
       workspace: {
         create: {
           active: true,
@@ -94,7 +99,7 @@ export default async function createUser(parent, args, ctx) {
   // If we have an invite token, add user to the originating workspace.
   if (inviteToken && inviteToken.workspace) {
     roleBindings.push({
-      role: "WORKSPACE_ADMIN",
+      role: WORKSPACE_ADMIN,
       workspace: {
         connect: {
           id: inviteToken.workspace.id
@@ -106,7 +111,7 @@ export default async function createUser(parent, args, ctx) {
   // Add admin role if first signup.
   if (isFirst) {
     roleBindings.push({
-      role: "SYSTEM_ADMIN"
+      role: SYSTEM_ADMIN
     });
   }
 

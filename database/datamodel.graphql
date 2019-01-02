@@ -1,5 +1,4 @@
 enum Role {
-  USER
   WORKSPACE_ADMIN
   WORKSPACE_EDITOR
   WORKSPACE_VIEWER
@@ -204,7 +203,7 @@ type Deployment {
   config: String
   properties: [DeploymentProperty!]!
   description: String
-  label: String @unique
+  label: String
   registryPassword: String
   releaseName: String @unique
   status: String

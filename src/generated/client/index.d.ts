@@ -719,7 +719,6 @@ export type MutationType = "CREATED" | "UPDATED" | "DELETED";
 
 export type DeploymentWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
-  label?: String;
   releaseName?: String;
 }>;
 
