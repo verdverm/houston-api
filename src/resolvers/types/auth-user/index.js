@@ -1,4 +1,4 @@
-import config from "configuration";
+import config from "config";
 import jwt from "jsonwebtoken";
 import ms from "ms";
 

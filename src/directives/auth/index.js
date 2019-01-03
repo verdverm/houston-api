@@ -1,6 +1,6 @@
 import { PermissionError } from "errors";
 import log from "logger";
-import config from "configuration";
+import config from "config";
 import { SchemaDirectiveVisitor } from "graphql-tools";
 import { defaultFieldResolver } from "graphql";
 import jwt from "jsonwebtoken";

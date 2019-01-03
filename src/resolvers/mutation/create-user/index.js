@@ -3,7 +3,7 @@ import {
   InviteTokenNotFoundError,
   InviteTokenEmailError
 } from "errors";
-import config from "configuration";
+import config from "config";
 import bcrypt from "bcryptjs";
 import shortid from "shortid";
 import {
@@ -22,10 +22,10 @@ import {
  */
 export default async function createUser(parent, args, ctx) {
   // Check to see if we are requiring email confirmations.
-  const emailConfirmation = config.getBoolean("emailConfirmation");
+  const emailConfirmation = config.get("emailConfirmation");
 
   // Check to see if we are allowing public signups.
-  const publicSignups = config.getBoolean("publicSignups");
+  const publicSignups = config.get("publicSignups");
 
   // Check to see if this is the first signup.
   const first = await ctx.db.query.usersConnection(

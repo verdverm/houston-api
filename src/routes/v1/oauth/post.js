@@ -5,7 +5,7 @@ import {
 } from "errors";
 import { getProvider } from "oauth/config";
 import { prisma } from "generated/client";
-import config from "configuration";
+import config from "config";
 
 /*
  * Create a new user. This is the singnup mutation.
@@ -48,7 +48,7 @@ export default async function(req, res) {
     const isFirst = count === 0;
 
     // Check to see if we are allowing public signups.
-    const publicSignups = config.getBoolean("publicSignups");
+    const publicSignups = config.get("publicSignups");
 
     // If it's not the first signup and we're not allowing public signups, check for invite.
     if (!isFirst && !publicSignups && !state.inviteToken) {

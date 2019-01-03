@@ -4,7 +4,8 @@ import log from "logger";
 import resolvers from "resolvers";
 import directives from "directives";
 import { v1 } from "routes";
-import config from "configuration";
+import commander from "commander";
+import config from "config";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { Prisma } from "prisma-binding";
@@ -39,8 +40,10 @@ const server = new ApolloServer({
       typeDefs: "src/generated/schema/prisma.graphql",
       endpoint: "http://localhost:4466",
       secret: "supersecret",
-      debug: config.getBoolean("prisma.debug")
-    })
+      debug: config.get("prisma.debug")
+    }),
+    commander,
+    config
   })
 });
 

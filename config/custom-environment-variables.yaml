@@ -4,32 +4,61 @@ webserver:
   subscriptions: "WEBERVER_SUBCRIPTIONS"
 
 prisma:
-  debug: "PRISMA_DEBUG"
+  debug:
+    __name: "PRISMA_DEBUG"
+    __format: "json"
+
+commander:
+  enabled:
+    __name: "COMMANDER_ENABLED"
+    __format: "json"
+  host: "COMMANDER_HOST"
+  port: "COMMANDER_PORT"
 
 repository: "REPOSITORY"
 
 helm:
   baseDomain: "HELM_BASE_DOMAIN"
   registryAuthSecret: "HELM_REGISTRY_AUTH_SECRET"
-  acme: "HELM_ACME"
-  rbacEnabled: "HELM_RBAC_ENABLED"
+  acme:
+    __name: "HELM_ACME"
+    __format: "json"
+  rbacEnabled:
+    __name: "HELM_RBAC_ENABLED"
+    __format: "json"
   releaseName: "HELM_RELEASE_NAME"
   releaseNamespace: "HELM_RELEASE_NAMESPACE"
   releaseVersion: "HELM_RELEASE_VERSION"
+  singleNamespace:
+    __name: "HELM_SINGLE_NAMESPACE"
+    __format: "json"
 
 auth:
   local:
-    enabled: "AUTH_LOCAL_ENABLED"
+    enabled:
+      __name: "AUTH_LOCAL_ENABLED"
+      __format: "json"
   auth0:
-    enabled: "AUTH_AUTH0_ENABLED"
+    enabled:
+      __name: "AUTH_AUTH0_ENABLED"
+      __format: "json"
     clientId: "AUTH_AUTH0_CLIENT_ID"
     baseDomain: "AUTH_AUTH0_BASE_DOMAIN"
     externalLogin: "AUTH_AUTH0_EXTERNAL_LOGIN"
   google:
-    enabled: "AUTH_GOOGLE_ENABLED"
+    enabled:
+      __name: "AUTH_GOOGLE_ENABLED"
+      __format: "json"
     clientId: "AUTH_GOOGLE_CLIENT_ID"
 
 jwtPassphrase: "JWT_PASSPHRASE"
+
 authDuration: "AUTH_DURATION"
-publicSignups: "PUBLIC_SIGNUPS"
-emailConfirmation: "EMAIL_CONFIRMATION"
+
+publicSignups:
+  __name: "PUBLIC_SIGNUPS"
+  __format: "json"
+
+emailConfirmation:
+  __name: "EMAIL_CONFIRMATION"
+  __format: "json"

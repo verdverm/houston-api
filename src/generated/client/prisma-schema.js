@@ -1734,7 +1734,6 @@ type Query {
 }
 
 enum Role {
-  USER
   WORKSPACE_ADMIN
   WORKSPACE_EDITOR
   WORKSPACE_VIEWER

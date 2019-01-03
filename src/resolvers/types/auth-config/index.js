@@ -1,13 +1,13 @@
 import providers from "oauth/providers";
-import config from "configuration";
 import { prisma } from "generated/client";
+import config from "config";
 
 /*
  * Return a boolean indicating if public signups are enabled.
  * @return {Boolean} Public signups enabled.
  */
 export function publicSignup() {
-  return config.getBoolean("publicSignups");
+  return config.get("publicSignups");
 }
 
 /*
@@ -28,7 +28,7 @@ export async function initialSignup() {
  * @return {Boolean} Local auth enabled.
  */
 export function localEnabled() {
-  return config.getBoolean("auth.local.enabled");
+  return config.get("auth.local.enabled");
 }
 
 /*
@@ -36,7 +36,7 @@ export function localEnabled() {
  * @return {Boolean} Google auth enabled.
  */
 export function googleEnabled() {
-  return config.getBoolean("auth.google.enabled");
+  return config.get("auth.google.enabled");
 }
 
 /*
@@ -44,7 +44,7 @@ export function googleEnabled() {
  * @return {Boolean} Google OAuth url.
  */
 export function googleOAuthUrl(parent, args) {
-  return config.getBoolean("auth.google.enabled")
+  return config.get("auth.google.enabled")
     ? providers.google.authUrl(args.redirect)
     : null;
 }
@@ -54,7 +54,7 @@ export function googleOAuthUrl(parent, args) {
  * @return {Boolean} Auth0 auth enabled.
  */
 export function auth0Enabled() {
-  return config.getBoolean("auth.auth0.enabled");
+  return config.get("auth.auth0.enabled");
 }
 
 /*
@@ -62,7 +62,7 @@ export function auth0Enabled() {
  * @return {Boolean} Auth0 OAuth url.
  */
 export function auth0OAuthUrl(parent, args) {
-  return config.getBoolean("auth.auth0.enabled")
+  return config.get("auth.auth0.enabled")
     ? providers.auth0.authUrl(args.redirect)
     : null;
 }

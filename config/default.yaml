@@ -8,6 +8,12 @@ webserver:
 prisma:
   debug: false
 
+# Commander configuration.
+commander:
+  enabled: false
+  host: localhost
+  port: 50051
+
 # Charts live here.
 # This is where the airflow chart is installed from.
 repository: "https://helm.astronomer.io/"
@@ -22,6 +28,7 @@ helm:
   releaseName: ~
   releaseNamespace: ~
   releaseVersion: ~
+  singleNamespace: false
 
 # Auth configuration.
 auth:

@@ -558,7 +558,6 @@ export interface ClientConstructor<T> {
  */
 
 export type Role =
-  | "USER"
   | "WORKSPACE_ADMIN"
   | "WORKSPACE_EDITOR"
   | "WORKSPACE_VIEWER"

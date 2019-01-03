@@ -1,4 +1,4 @@
-import config from "configuration";
+import config from "config";
 import { curry, keyBy, merge } from "lodash";
 
 /*

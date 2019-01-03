@@ -1,6 +1,6 @@
 import providers from "../providers";
 import { InvalidAuthenticationProviderError } from "errors";
-import config from "configuration";
+import config from "config";
 import { get, has } from "lodash";
 
 /*

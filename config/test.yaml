@@ -4,6 +4,10 @@ webserver:
   endpoint: "/v1"
   subscriptions: "/ws"
 
+# Commander configuration.
+commander:
+  enabled: false
+
 # Charts live here.
 # This is where the airflow chart is installed from.
 repository: "https://helm.astronomer.io/"

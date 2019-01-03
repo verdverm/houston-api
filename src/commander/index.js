@@ -1,12 +1,33 @@
-// import commander from "commander";
+import protoPath from "commander-proto";
+import log from "logger";
 import grpc from "grpc";
+import caller from "grpc-caller";
+import config from "config";
 
-const c = require("commander");
-console.log(c);
+// Get the commander settings.
+const { enabled, host, port } = config.get("commander");
 
-// const proto = grpc.load({
-//   root: kj,
-//   file: "commander.proto"
-// });
+// Concat host and port.
+const authority = `${host}:${port}`;
 
-// console.log(proto);
+// Path to the Commander service definition.
+const path = `${protoPath}/commander.proto`;
+
+// Service name.
+const service = "Commander";
+
+// Credentials for Commander.
+const credentials = grpc.credentials.createInsecure();
+
+// Export the wrapped grpc client.
+const client = caller(authority, path, service, credentials);
+
+export default async function(...args) {
+  if (enabled) {
+    log.info(`Calling commander method #${args[0]}`);
+    const req = new client.Request(...args);
+    const res = await req.exec();
+    return res.response;
+  }
+  log.info(`Commander disabled, skipping call to #${args[0]}`);
+}

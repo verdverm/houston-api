@@ -1,5 +1,5 @@
 import { oauthUrl } from "../../config";
-import config from "configuration";
+import config from "config";
 import { google } from "googleapis";
 import { OAuth2Client } from "google-auth-library";
 import shortid from "shortid";
