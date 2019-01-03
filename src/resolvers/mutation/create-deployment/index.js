@@ -55,17 +55,18 @@ export default async function createDeployment(parent, args, ctx, info) {
   // Run the mutation.
   const deployment = ctx.db.mutation.createDeployment(mutation, info);
 
-  // Set secrets via commander.
-  const res = await ctx.commander("setSecret", {
-    release_name: releaseName,
-    namespace: generateNamespace(releaseName),
-    secret: {
-      name: generateEnvironmentSecretName(releaseName),
-      data: transformEnvironmentVariables(args.env)
-    }
-  });
-
-  console.log(res);
+  // If we have environment variables, send to commander.
+  if (args.env) {
+    const res = await ctx.commander("setSecret", {
+      release_name: releaseName,
+      namespace: generateNamespace(releaseName),
+      secret: {
+        name: generateEnvironmentSecretName(releaseName),
+        data: transformEnvironmentVariables(args.env)
+      }
+    });
+    console.log(res);
+  }
 
   // Return tbe deployment.
   return deployment;

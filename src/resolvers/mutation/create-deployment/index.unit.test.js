@@ -93,8 +93,6 @@ describe("createDeployment", () => {
     // Run the graphql mutation.
     const res = await graphql(schema, mutation, null, { db }, vars);
 
-    console.log(res);
-
     expect(res.errors).toBeUndefined();
     expect(createDeployment.mock.calls.length).toBe(1);
     expect(res.data.createDeployment.id).toBe(id);
