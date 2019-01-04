@@ -1,0 +1,229 @@
+import { curry, find, fromPairs, get, set, merge } from "lodash";
+import config from "config";
+import {
+  DEPLOYMENT_PROPERTY_EXTRA_AU,
+  AIRFLOW_EXECUTOR_LOCAL,
+  AIRFLOW_EXECUTOR_CELERY,
+  AIRFLOW_COMPONENT_SCHEDULER,
+  AIRFLOW_COMPONENT_WORKERS,
+  AIRFLOW_COMPONENT_PGBOUNCER
+} from "constants";
+
+/*
+ * Generate the full helm configuration for a deployment.
+ * @param {Object} deployment The deployment for this configuration.
+ * @return {Object} The final helm values.
+ */
+export function generateHelmValues(deployment) {
+  const base = config.get("deployments.helm") || {};
+  return merge(base, resources(), limits(), quotas(deployment));
+}
+
+/*
+ * Return the resource limits.
+ * @return {Object} Limits
+ */
+export function limits() {
+  const { astroUnit, maxPodAu } = config.get("deployments");
+  const max = auToResources(astroUnit, maxPodAu);
+  const min = auToResources(astroUnit, 1);
+
+  const podLimit = {
+    type: "Pod",
+    max
+  };
+
+  const containerLimit = {
+    type: "Container",
+    default: min,
+    defaultRequest: min,
+    min
+  };
+
+  return { limits: [podLimit, containerLimit] };
+}
+
+/*
+ * Return the resource quotas.
+ * @param {Object} deployment Deployment
+ * @return {Object} Quotas
+ */
+export function quotas(deployment) {
+  // Get some config settings.
+  const { astroUnit, components, executors } = config.get("deployments");
+
+  // Get the executor on this deployment.
+  const executor = get(deployment, "config.executor", AIRFLOW_EXECUTOR_CELERY);
+
+  // Get the configuration for that executor.
+  const executorConfig = find(executors, ["name", executor]);
+
+  // Calculate the total resources required.
+  const total = executorConfig.components.reduce(
+    (acc, cur) => {
+      // Get the component configuration from static config.
+      const component = find(components, ["name", cur]) || {};
+      const defaults = auToResources(astroUnit, component.au.default);
+
+      // Get cpu and memory for this component out of deployment config,
+      // falling back to static config vaules.
+      const { cpu, memory } = get(
+        deployment,
+        `${cur}.resources.limits`,
+        defaults
+      );
+
+      // Check if deployment config has replicas.
+      const replicas = get(deployment, `${cur}.replicas`, 1);
+
+      // Return combined.
+      return {
+        cpu: acc.cpu + parseInt(cpu) * replicas,
+        memory: acc.memory + parseInt(memory) * replicas,
+        pods: acc.pods + replicas
+      };
+    },
+    { cpu: 0, memory: 0, pods: 0 }
+  );
+
+  const sidecars = executorConfig.components.reduce(
+    (acc, cur) => {
+      const replicas = get(deployment, `${cur}.replicas`, 1);
+      if (
+        executor === AIRFLOW_EXECUTOR_LOCAL &&
+        cur === AIRFLOW_COMPONENT_SCHEDULER
+      ) {
+        // LocalExecutor has a log server and worker log trimming sidecars.
+        return {
+          cpu: acc.cpu + parseInt(astroUnit.cpu) * 2,
+          memory: acc.memory + parseInt(astroUnit.memory) * 2
+        };
+      } else if (cur === AIRFLOW_COMPONENT_WORKERS) {
+        // Workers have a log trimming sidecar.
+        return {
+          cpu: acc.cpu + parseInt(astroUnit.cpu) * replicas,
+          memory: acc.memory + parseInt(astroUnit.memory) * replicas
+        };
+      } else if (cur === AIRFLOW_COMPONENT_PGBOUNCER) {
+        // Pgbouncer has a sidecar metrics exporter.
+        return {
+          cpu: acc.cpu + parseInt(astroUnit.cpu),
+          memory: acc.memory + parseInt(astroUnit.memory)
+        };
+      }
+      return acc;
+    },
+    { cpu: 0, memory: 0 }
+  );
+
+  // Check for any extra Au on deployment.
+  const { value: extraAu = 0 } = find(deployment.properties, [
+    "key",
+    DEPLOYMENT_PROPERTY_EXTRA_AU
+  ]);
+
+  // Calculate total extra capacity.
+  const extra = {
+    cpu: parseInt(astroUnit.cpu) * extraAu,
+    memory: parseInt(astroUnit.memory) * extraAu,
+    pods: parseInt(astroUnit.pods) * extraAu
+  };
+
+  // Calculate toatal Au  using totalCPU / astroUnitCPU.
+  const totalAu = (total.cpu + extra.cpu) / parseInt(astroUnit.cpu);
+
+  // Build up result object.
+  const res = {};
+
+  // Set pod limit.
+  console.log(total.pods, extra.pods);
+  set(res, "quotas.pods", total.pods * 2 + extra.pods);
+
+  // Set requests/limits quotas.
+  const cpu = `${total.cpu * 2 + sidecars.cpu * 2 + extra.cpu}m`;
+  const memory = `${total.memory * 2 + sidecars.memory * 2 + extra.memory}Mi`;
+  set(res, "quotas.requests.cpu", cpu);
+  set(res, "quotas.requests.memory", memory);
+  set(res, "quotas.limits.cpu", cpu);
+  set(res, "quotas.limits.memory", memory);
+
+  // Set pgbouncer variables.
+  set(
+    res,
+    "pgbouncer.metadataPoolSize",
+    Math.floor(astroUnit.actualConns * totalAu)
+  );
+  set(
+    res,
+    "pgbouncer.maxClientConn",
+    Math.floor(astroUnit.airflowConns * totalAu)
+  );
+
+  // If we have extraAu, enable pod launching (KubeExecutor, KubePodOperator, etc).
+  if (extraAu > 0) set(res, "allowPodLaunching", true);
+
+  return res;
+}
+
+/*
+ * Return the resource defaults for each component.
+ * @param {Object} Astro Unit.
+ * @param {[]Object} List of components.
+ * @return {[]Object} List of components and resource defaults.
+ */
+export function resources(type = "default") {
+  const astroUnit = config.get("deployments.astroUnit");
+  const components = config.get("deployments.components");
+  const mapper = curry(mapResources)(astroUnit, type);
+  return merge(...components.map(mapper));
+}
+
+/*
+ * HOF to help create mergeable resources
+ * @param {Object} Astro unit config.
+ * @param {String} Default/Limit.
+ * @param {String} Component name.
+ * @return {Object} Resources for single component.
+ */
+export function mapResources(au, auType, comp) {
+  const requests = auToResources(au, comp.au[auType]);
+
+  const resources = {
+    requests,
+    limits: requests
+  };
+
+  const extras = comp.extra
+    ? comp.extra.map(extra => {
+        return {
+          [extra.name]: extra[auType]
+        };
+      })
+    : [];
+
+  const merged = merge({ resources }, ...extras);
+
+  return { [comp.name]: merged };
+}
+
+/*
+ * Convert an AU size to equivalent resources object.
+ * @param {Object} au Astro unit definition.
+ * @param {Integer} size Amount of astro units.
+ * @return {Object} The resources object.
+ */
+export function auToResources(au, size) {
+  return {
+    cpu: `${au.cpu * size}m`,
+    memory: `${au.memory * size}Mi`
+  };
+}
+
+/*
+ * Transform an array of key/value pairs to an object.
+ * @param {[]Object} An array of objects with key/value pairs.
+ * @return {Object} The object with key/value pairs.
+ */
+export function transformEnvironmentVariables(arr) {
+  return fromPairs(arr.map(i => [i.key, i.value]));
+}
