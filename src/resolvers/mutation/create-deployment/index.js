@@ -79,7 +79,6 @@ export default async function createDeployment(parent, args, ctx, info) {
 
   // console.log(deployment);
   const helmValues = generateHelmValues(deployment);
-  console.log(helmValues);
   // Console.log(helmValues);
 
   // Generate and merge the helm config.
