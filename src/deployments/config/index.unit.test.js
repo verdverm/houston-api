@@ -7,6 +7,10 @@ import {
 } from "./index";
 import { generateReleaseName } from "deployments/naming";
 import casual from "casual";
+import {
+  AIRFLOW_EXECUTOR_LOCAL,
+  DEPLOYMENT_PROPERTY_EXTRA_AU
+} from "constants";
 
 describe("generateHelmValues", () => {
   test("generates correct values with default/missing deployment config", () => {
@@ -27,20 +31,51 @@ describe("limitRange", () => {
   });
 });
 
-describe.only("constraints", () => {
+describe("constraints", () => {
   test("correctly applies constraints for missing/default config", () => {
     const deployment = {
-      id: casual.uuid,
-      releaseName: generateReleaseName()
+      id: casual.uuid
     };
     const config = constraints(deployment);
     expect(config.quotas.pods).toBe(14); // Default celery (7 pods), doubled.
-    expect(config.quotas.requests.cpu).toBe("5400m"); // 2.5 doubled + 2 sidecar doubled
-    expect(config.quotas.requests.memory).toBe("20736Mi"); // 9600 doubled + 768 doubled
+    expect(config.quotas.requests.cpu).toBe("5400m"); // 2500 doubled + 200 sidecar doubled
+    expect(config.quotas.requests.memory).toBe("20736Mi"); // 9600 doubled + 768 sidecar doubled
     expect(config.quotas.requests.cpu).toBe(config.quotas.requests.cpu);
     expect(config.quotas.requests.memory).toBe(config.quotas.requests.memory);
     expect(config.pgbouncer.metadataPoolSize).toBe(12);
     expect(config.pgbouncer.maxClientConn).toBe(125);
+    expect(config).not.toHaveProperty("allowPodLaunching");
+  });
+
+  test("correctly applies constraints for extra au property", () => {
+    const deployment = {
+      id: casual.uuid,
+      properties: [{ key: DEPLOYMENT_PROPERTY_EXTRA_AU, value: 10 }]
+    };
+    const config = constraints(deployment);
+    expect(config.quotas.pods).toBe(24); // Same as default celery + 10 extra
+    expect(config.quotas.requests.cpu).toBe("6400m"); // Same as default celery + 1000 extra
+    expect(config.quotas.requests.memory).toBe("24576Mi"); // Same as default celery + 3840 extra
+    expect(config.quotas.requests.cpu).toBe(config.quotas.requests.cpu);
+    expect(config.quotas.requests.memory).toBe(config.quotas.requests.memory);
+    expect(config.pgbouncer.metadataPoolSize).toBe(17); // Same as celery default + 5 (.5 * 10)
+    expect(config.pgbouncer.maxClientConn).toBe(175); // Same as celery default + 50 (5 * 10)
+    expect(config.allowPodLaunching).toBeTruthy();
+  });
+
+  test("correctly applies constraints for LocalExecutor config", () => {
+    const deployment = {
+      id: casual.uuid,
+      config: { executor: AIRFLOW_EXECUTOR_LOCAL }
+    };
+    const config = constraints(deployment);
+    expect(config.quotas.pods).toBe(8); // Local (4 pods), doubled.
+    expect(config.quotas.requests.cpu).toBe("2800m"); // 1100 doubled + 300 sidecar doubled
+    expect(config.quotas.requests.memory).toBe("10752Mi"); // 4224 doubled + 1152 sidecar doubled
+    expect(config.quotas.requests.cpu).toBe(config.quotas.requests.cpu);
+    expect(config.quotas.requests.memory).toBe(config.quotas.requests.memory);
+    expect(config.pgbouncer.metadataPoolSize).toBe(5);
+    expect(config.pgbouncer.maxClientConn).toBe(55);
     expect(config).not.toHaveProperty("allowPodLaunching");
   });
 });
