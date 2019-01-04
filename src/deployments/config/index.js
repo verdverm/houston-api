@@ -16,7 +16,13 @@ import {
  */
 export function generateHelmValues(deployment) {
   const base = config.get("deployments.helm") || {};
-  return merge(base, resources(), limitRange(), constraints(deployment));
+  return merge(
+    base, // Apply base settings from config YAML.
+    resources(), // Apply resource requests and limits.
+    limitRange(), // Apply the limit range.
+    constraints(deployment), // Apply any constraints (quotas, pgbouncer, etc).
+    deployment.config // The deployment level config.
+  );
 }
 
 /*

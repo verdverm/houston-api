@@ -70,12 +70,12 @@ describe("createToken", () => {
 
     expect(users.mock.calls.length).toBe(1);
     expect(cookie.mock.calls.length).toBe(1);
-    expect(res.data.createToken.token.payload.iat).toBe(
-      Math.floor(new Date() / 1000)
-    );
-    expect(res.data.createToken.token.payload.exp).toBeGreaterThan(
-      Math.floor(new Date() / 1000)
-    );
+
+    const now = Math.floor(new Date() / 1000);
+    const { iat, exp } = res.data.createToken.token.payload;
+
+    expect(iat).toBe(now);
+    expect(exp).toBeGreaterThan(now);
   });
 
   test("throws error if user not found", async () => {
