@@ -16,14 +16,14 @@ import {
  */
 export function generateHelmValues(deployment) {
   const base = config.get("deployments.helm") || {};
-  return merge(base, resources(), limits(), quotas(deployment));
+  return merge(base, resources(), limitRange(), constraints(deployment));
 }
 
 /*
- * Return the resource limits.
- * @return {Object} Limits
+ * Return the resource LimitRange.
+ * @return {Object} LimitRange values.
  */
-export function limits() {
+export function limitRange() {
   const { astroUnit, maxPodAu } = config.get("deployments");
   const max = auToResources(astroUnit, maxPodAu);
   const min = auToResources(astroUnit, 1);
@@ -44,11 +44,12 @@ export function limits() {
 }
 
 /*
- * Return the resource quotas.
+ * Return the resource quotas, pgbouncer limits, and other settings
+ * based on the totals calculated from this deployment.
  * @param {Object} deployment Deployment
- * @return {Object} Quotas
+ * @return {Object} Quotas, etc.
  */
-export function quotas(deployment) {
+export function constraints(deployment) {
   // Get some config settings.
   const { astroUnit, components, executors } = config.get("deployments");
 
@@ -117,10 +118,11 @@ export function quotas(deployment) {
   );
 
   // Check for any extra Au on deployment.
-  const { value: extraAu = 0 } = find(deployment.properties, [
+  const extraProp = find(deployment.properties, [
     "key",
     DEPLOYMENT_PROPERTY_EXTRA_AU
   ]);
+  const extraAu = extraProp ? extraProp.value : 0;
 
   // Calculate total extra capacity.
   const extra = {
@@ -136,7 +138,6 @@ export function quotas(deployment) {
   const res = {};
 
   // Set pod limit.
-  console.log(total.pods, extra.pods);
   set(res, "quotas.pods", total.pods * 2 + extra.pods);
 
   // Set requests/limits quotas.
@@ -162,6 +163,7 @@ export function quotas(deployment) {
   // If we have extraAu, enable pod launching (KubeExecutor, KubePodOperator, etc).
   if (extraAu > 0) set(res, "allowPodLaunching", true);
 
+  // Return the final object.
   return res;
 }
 

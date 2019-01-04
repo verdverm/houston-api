@@ -25,10 +25,10 @@ describe("mapResources", () => {
 
     const res = mapResources(au, auType, comp);
     expect(res).toHaveProperty("scheduler.resources.requests.cpu");
-    expect(res.scheduler.resources.requests.cpu).toBe(500);
+    expect(res.scheduler.resources.requests.cpu).toBe("500m");
 
     expect(res).toHaveProperty("scheduler.resources.requests.memory");
-    expect(res.scheduler.resources.requests.memory).toBe(1920);
+    expect(res.scheduler.resources.requests.memory).toBe("1920Mi");
   });
 
   test("mapResources correctly maps values with extras", () => {
