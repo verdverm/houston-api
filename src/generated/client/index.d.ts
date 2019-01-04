@@ -815,20 +815,6 @@ export interface DeploymentWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
-  config?: String;
-  config_not?: String;
-  config_in?: String[] | String;
-  config_not_in?: String[] | String;
-  config_lt?: String;
-  config_lte?: String;
-  config_gt?: String;
-  config_gte?: String;
-  config_contains?: String;
-  config_not_contains?: String;
-  config_starts_with?: String;
-  config_not_starts_with?: String;
-  config_ends_with?: String;
-  config_not_ends_with?: String;
   properties_every?: DeploymentPropertyWhereInput;
   properties_some?: DeploymentPropertyWhereInput;
   properties_none?: DeploymentPropertyWhereInput;
@@ -1497,7 +1483,7 @@ export type WorkspacePropertyWhereUniqueInput = AtLeastOne<{
 }>;
 
 export interface DeploymentCreateInput {
-  config?: String;
+  config?: Json;
   properties?: DeploymentPropertyCreateManyWithoutDeploymentInput;
   description?: String;
   label?: String;
@@ -1624,7 +1610,7 @@ export interface DeploymentCreateManyWithoutWorkspaceInput {
 }
 
 export interface DeploymentCreateWithoutWorkspaceInput {
-  config?: String;
+  config?: Json;
   properties?: DeploymentPropertyCreateManyWithoutDeploymentInput;
   description?: String;
   label?: String;
@@ -1725,7 +1711,7 @@ export interface WorkspaceCreateWithoutInvitesInput {
 }
 
 export interface DeploymentUpdateInput {
-  config?: String;
+  config?: Json;
   properties?: DeploymentPropertyUpdateManyWithoutDeploymentInput;
   description?: String;
   label?: String;
@@ -2135,7 +2121,7 @@ export interface DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput {
 }
 
 export interface DeploymentUpdateWithoutWorkspaceDataInput {
-  config?: String;
+  config?: Json;
   properties?: DeploymentPropertyUpdateManyWithoutDeploymentInput;
   description?: String;
   label?: String;
@@ -2167,20 +2153,6 @@ export interface DeploymentScalarWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
-  config?: String;
-  config_not?: String;
-  config_in?: String[] | String;
-  config_not_in?: String[] | String;
-  config_lt?: String;
-  config_lte?: String;
-  config_gt?: String;
-  config_gte?: String;
-  config_contains?: String;
-  config_not_contains?: String;
-  config_starts_with?: String;
-  config_not_starts_with?: String;
-  config_ends_with?: String;
-  config_not_ends_with?: String;
   description?: String;
   description_not?: String;
   description_in?: String[] | String;
@@ -2306,7 +2278,7 @@ export interface DeploymentUpdateManyWithWhereNestedInput {
 }
 
 export interface DeploymentUpdateManyDataInput {
-  config?: String;
+  config?: Json;
   description?: String;
   label?: String;
   registryPassword?: String;
@@ -2464,7 +2436,7 @@ export interface DeploymentUpdateOneInput {
 }
 
 export interface DeploymentUpdateDataInput {
-  config?: String;
+  config?: Json;
   properties?: DeploymentPropertyUpdateManyWithoutDeploymentInput;
   description?: String;
   label?: String;
@@ -2839,7 +2811,7 @@ export interface WorkspaceUpsertWithoutDeploymentsInput {
 }
 
 export interface DeploymentUpdateManyMutationInput {
-  config?: String;
+  config?: Json;
   description?: String;
   label?: String;
   registryPassword?: String;
@@ -2862,7 +2834,7 @@ export interface DeploymentCreateOneWithoutPropertiesInput {
 }
 
 export interface DeploymentCreateWithoutPropertiesInput {
-  config?: String;
+  config?: Json;
   description?: String;
   label?: String;
   registryPassword?: String;
@@ -2890,7 +2862,7 @@ export interface DeploymentUpdateOneWithoutPropertiesInput {
 }
 
 export interface DeploymentUpdateWithoutPropertiesDataInput {
-  config?: String;
+  config?: Json;
   description?: String;
   label?: String;
   registryPassword?: String;
@@ -3380,7 +3352,7 @@ export interface NodeNode {
 
 export interface Deployment {
   id: ID_Output;
-  config?: String;
+  config?: Json;
   description?: String;
   label?: String;
   registryPassword?: String;
@@ -3394,7 +3366,7 @@ export interface Deployment {
 
 export interface DeploymentPromise extends Promise<Deployment>, Fragmentable {
   id: () => Promise<ID_Output>;
-  config: () => Promise<String>;
+  config: () => Promise<Json>;
   properties: <T = FragmentableArray<DeploymentProperty>>(
     args?: {
       where?: DeploymentPropertyWhereInput;
@@ -3422,7 +3394,7 @@ export interface DeploymentSubscription
   extends Promise<AsyncIterator<Deployment>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  config: () => Promise<AsyncIterator<String>>;
+  config: () => Promise<AsyncIterator<Json>>;
   properties: <T = Promise<AsyncIterator<DeploymentPropertySubscription>>>(
     args?: {
       where?: DeploymentPropertyWhereInput;
@@ -4501,7 +4473,7 @@ export interface DeploymentSubscriptionPayloadSubscription
 
 export interface DeploymentPreviousValues {
   id: ID_Output;
-  config?: String;
+  config?: Json;
   description?: String;
   label?: String;
   registryPassword?: String;
@@ -4517,7 +4489,7 @@ export interface DeploymentPreviousValuesPromise
   extends Promise<DeploymentPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  config: () => Promise<String>;
+  config: () => Promise<Json>;
   description: () => Promise<String>;
   label: () => Promise<String>;
   registryPassword: () => Promise<String>;
@@ -4533,7 +4505,7 @@ export interface DeploymentPreviousValuesSubscription
   extends Promise<AsyncIterator<DeploymentPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  config: () => Promise<AsyncIterator<String>>;
+  config: () => Promise<AsyncIterator<Json>>;
   description: () => Promise<AsyncIterator<String>>;
   label: () => Promise<AsyncIterator<String>>;
   registryPassword: () => Promise<AsyncIterator<String>>;
@@ -5023,6 +4995,8 @@ export type ID_Output = string;
 The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
 */
 export type String = string;
+
+export type Json = any;
 
 /*
 The `Boolean` scalar type represents `true` or `false`.

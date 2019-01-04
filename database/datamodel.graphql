@@ -200,7 +200,7 @@ type WorkspaceProperty {
 
 type Deployment {
   id: ID! @unique
-  config: String
+  config: Json
   properties: [DeploymentProperty!]!
   description: String
   label: String

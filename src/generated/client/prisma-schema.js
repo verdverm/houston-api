@@ -47,7 +47,7 @@ scalar DateTime
 
 type Deployment {
   id: ID!
-  config: String
+  config: Json
   properties(where: DeploymentPropertyWhereInput, orderBy: DeploymentPropertyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DeploymentProperty!]
   description: String
   label: String
@@ -68,7 +68,7 @@ type DeploymentConnection {
 }
 
 input DeploymentCreateInput {
-  config: String
+  config: Json
   properties: DeploymentPropertyCreateManyWithoutDeploymentInput
   description: String
   label: String
@@ -96,7 +96,7 @@ input DeploymentCreateOneWithoutPropertiesInput {
 }
 
 input DeploymentCreateWithoutPropertiesInput {
-  config: String
+  config: Json
   description: String
   label: String
   registryPassword: String
@@ -108,7 +108,7 @@ input DeploymentCreateWithoutPropertiesInput {
 }
 
 input DeploymentCreateWithoutWorkspaceInput {
-  config: String
+  config: Json
   properties: DeploymentPropertyCreateManyWithoutDeploymentInput
   description: String
   label: String
@@ -151,7 +151,7 @@ enum DeploymentOrderByInput {
 
 type DeploymentPreviousValues {
   id: ID!
-  config: String
+  config: Json
   description: String
   label: String
   registryPassword: String
@@ -472,20 +472,6 @@ input DeploymentScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  config: String
-  config_not: String
-  config_in: [String!]
-  config_not_in: [String!]
-  config_lt: String
-  config_lte: String
-  config_gt: String
-  config_gte: String
-  config_contains: String
-  config_not_contains: String
-  config_starts_with: String
-  config_not_starts_with: String
-  config_ends_with: String
-  config_not_ends_with: String
   description: String
   description_not: String
   description_in: [String!]
@@ -624,7 +610,7 @@ input DeploymentSubscriptionWhereInput {
 }
 
 input DeploymentUpdateDataInput {
-  config: String
+  config: Json
   properties: DeploymentPropertyUpdateManyWithoutDeploymentInput
   description: String
   label: String
@@ -637,7 +623,7 @@ input DeploymentUpdateDataInput {
 }
 
 input DeploymentUpdateInput {
-  config: String
+  config: Json
   properties: DeploymentPropertyUpdateManyWithoutDeploymentInput
   description: String
   label: String
@@ -650,7 +636,7 @@ input DeploymentUpdateInput {
 }
 
 input DeploymentUpdateManyDataInput {
-  config: String
+  config: Json
   description: String
   label: String
   registryPassword: String
@@ -661,7 +647,7 @@ input DeploymentUpdateManyDataInput {
 }
 
 input DeploymentUpdateManyMutationInput {
-  config: String
+  config: Json
   description: String
   label: String
   registryPassword: String
@@ -706,7 +692,7 @@ input DeploymentUpdateOneWithoutPropertiesInput {
 }
 
 input DeploymentUpdateWithoutPropertiesDataInput {
-  config: String
+  config: Json
   description: String
   label: String
   registryPassword: String
@@ -718,7 +704,7 @@ input DeploymentUpdateWithoutPropertiesDataInput {
 }
 
 input DeploymentUpdateWithoutWorkspaceDataInput {
-  config: String
+  config: Json
   properties: DeploymentPropertyUpdateManyWithoutDeploymentInput
   description: String
   label: String
@@ -765,20 +751,6 @@ input DeploymentWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  config: String
-  config_not: String
-  config_in: [String!]
-  config_not_in: [String!]
-  config_lt: String
-  config_lte: String
-  config_gt: String
-  config_gte: String
-  config_contains: String
-  config_not_contains: String
-  config_starts_with: String
-  config_not_starts_with: String
-  config_ends_with: String
-  config_not_ends_with: String
   properties_every: DeploymentPropertyWhereInput
   properties_some: DeploymentPropertyWhereInput
   properties_none: DeploymentPropertyWhereInput
@@ -1461,6 +1433,8 @@ input InviteTokenWhereInput {
 input InviteTokenWhereUniqueInput {
   id: ID
 }
+
+scalar Json
 
 type LocalCredential {
   id: ID!

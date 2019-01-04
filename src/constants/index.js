@@ -7,6 +7,18 @@ export const DEPLOYMENT_PROPERTY_EXTRA_AU = "extra_au";
 export const DEPLOYMENT_STATUS_ACTIVE = "active";
 export const DEPLOYMENT_STATUS_DELETING = "deleting";
 
+export const AIRFLOW_EXECUTOR_LOCAL = "LocalExecutor";
+export const AIRFLOW_EXECUTOR_CELERY = "CeleryExecutor";
+export const AIRFLOW_EXECUTOR_KUBERNETES = "KubernetesExecutor";
+
+export const AIRFLOW_COMPONENT_SCHEDULER = "scheduler";
+export const AIRFLOW_COMPONENT_WEBSERVER = "webserver";
+export const AIRFLOW_COMPONENT_STATSD = "statsd";
+export const AIRFLOW_COMPONENT_PGBOUNCER = "pgbouncer";
+export const AIRFLOW_COMPONENT_WORKERS = "workers";
+export const AIRFLOW_COMPONENT_FLOWER = "flower";
+export const AIRFLOW_COMPONENT_REDIS = "redis";
+
 export const USER_STATUS_ACTIVE = "active";
 export const USER_STATUS_PENDING = "pending";
 export const USER_STATUS_BANNED = "banned";

@@ -23,8 +23,6 @@ repository: "https://helm.astronomer.io/"
 helm:
   baseDomain: ~
   registryAuthSecret: ~
-  acme: ~
-  rbacEnabled: ~
   releaseName: ~
   releaseNamespace: ~
   releaseVersion: ~
@@ -165,9 +163,21 @@ deployments:
   # represented as a slider in the UI.
   maxExtraAu: 400
 
+  # This defines the maximum size a pod can be in astro units.
+  maxPodAu: 35
+
   # This defines all possible components for an airflow
   # deployment and the default AU to use for the kubernetes 
   # resource requests, as well as its limits.
+  #
+  # Pod resources (requests/limits)
+  # Secrets (custom env vars)
+  # Namespace quotas / limits
+  # Executor
+  # Based on Deployment
+  # Based on Houston config
+  #
+  # Create db for some of these
   components:
     - name: scheduler
       au:
@@ -233,3 +243,15 @@ deployments:
         - webserver
         - statsd
         - pgbouncer
+
+  # These are static configs that get merged directly into the values
+  # passed to helm for each deployment.
+  helm:
+    rbacEnabled: true
+    ingress:
+      enabled: true
+      acme: false
+    networkPolicies:
+      enabled: true
+    pgbouncer:
+      enabled: true
