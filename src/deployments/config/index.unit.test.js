@@ -13,13 +13,21 @@ import {
 } from "constants";
 
 describe("generateHelmValues", () => {
-  test("generates correct values with default/missing deployment config", () => {
+  test("generates correct shape with default/missing deployment config", () => {
     const deployment = {
       id: casual.uuid,
       releaseName: generateReleaseName()
     };
     const config = generateHelmValues(deployment);
-    console.log(config);
+    expect(config).toHaveProperty("ingress");
+    expect(config).toHaveProperty("networkPolicies");
+    expect(config).toHaveProperty("scheduler.resources.requests");
+    expect(config).toHaveProperty("scheduler.resources.limits");
+    expect(config).toHaveProperty("webserver.resources.requests");
+    expect(config).toHaveProperty("webserver.resources.limits");
+    expect(config).toHaveProperty("pgbouncer");
+    expect(config).toHaveProperty("limits");
+    expect(config).toHaveProperty("quotas");
   });
 });
 
