@@ -74,20 +74,6 @@ export default async function createDeployment(parent, args, ctx, info) {
     addFragmentToInfo(info, fragment)
   );
 
-  // If we have environment variables, send to commander.
-  // args.env &&
-  //   (await ctx.commander("setSecret", {
-  //     release_name: releaseName,
-  //     namespace: generateNamespace(releaseName),
-  //     secret: {
-  //       name: generateEnvironmentSecretName(releaseName),
-  //       data: transformEnvironmentVariables(args.env)
-  //     }
-  //   }));
-
-  // Generate and merge the helm values.
-  const helmValues = generateHelmValues(deployment);
-
   // Fire off createDeployment to commander.
   await ctx.commander.request("createDeployment", {
     releaseName: releaseName,
@@ -96,8 +82,23 @@ export default async function createDeployment(parent, args, ctx, info) {
       version: version
     },
     namespace: generateNamespace(releaseName),
-    rawConfig: JSON.stringify(helmValues)
+    rawConfig: JSON.stringify(generateHelmValues(deployment))
   });
+
+  // If we have environment variables, send to commander.
+  // TODO: The createDeployment commander method currently allows you to pass
+  // secrets to get created, but the implementation does not quite work.
+  // This call can be consolidated once that is fixed up in commander.
+  if (args.env) {
+    await ctx.commander.request("setSecret", {
+      release_name: releaseName,
+      namespace: generateNamespace(releaseName),
+      secret: {
+        name: generateEnvironmentSecretName(releaseName),
+        data: transformEnvironmentVariables(args.env)
+      }
+    });
+  }
 
   // Return the deployment.
   return deployment;
