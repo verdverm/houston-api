@@ -79,7 +79,9 @@ describe("createDeployment", () => {
     };
 
     // Create mock commander client.
-    const commander = jest.fn();
+    const commander = {
+      request: jest.fn()
+    };
 
     // Vars for the gql mutation.
     const vars = {

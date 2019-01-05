@@ -89,7 +89,7 @@ export default async function createDeployment(parent, args, ctx, info) {
   const helmValues = generateHelmValues(deployment);
 
   // Fire off createDeployment to commander.
-  await ctx.commander("createDeployment", {
+  await ctx.commander.request("createDeployment", {
     releaseName: releaseName,
     chart: {
       name: type,

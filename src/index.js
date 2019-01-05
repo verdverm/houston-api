@@ -42,8 +42,7 @@ const server = new ApolloServer({
       secret: "supersecret",
       debug: config.get("prisma.debug")
     }),
-    commander,
-    config
+    commander
   })
 });
 

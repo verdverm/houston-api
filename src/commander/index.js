@@ -27,7 +27,7 @@ const client = caller(authority, path, service, credentials);
  * @param {String} methodName The commander method.
  * @return {Response} The response.
  */
-export default async function(...args) {
+export async function request(...args) {
   // Method name is first arg as a string.
   const method = `#${args[0]}`;
 
@@ -41,3 +41,5 @@ export default async function(...args) {
   }
   log.info(`Commander disabled, skipping call to ${method}`);
 }
+
+export default { request };
