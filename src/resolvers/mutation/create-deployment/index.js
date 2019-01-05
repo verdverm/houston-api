@@ -9,6 +9,7 @@ import {
 } from "deployments/config";
 import { addFragmentToInfo } from "graphql-binding";
 import { pick, map, filter, startsWith } from "lodash";
+import config from "config";
 import crypto from "crypto";
 import * as constants from "constants";
 
@@ -20,7 +21,14 @@ import * as constants from "constants";
  * @return {Deployment} The newly created Deployment.
  */
 export default async function createDeployment(parent, args, ctx, info) {
-  console.log(args);
+  // This API supports a type parameter, but we only support airflow now,
+  // so we're just ignoring it for now.
+  const type = "airflow";
+
+  // Default version to platform version.
+  const version = args.version
+    ? args.version
+    : config.get("helm.releaseVersion");
 
   // Generate a unique registry password for this deployment.
   const registryPassword = crypto.randomBytes(16).toString("hex");
@@ -45,8 +53,8 @@ export default async function createDeployment(parent, args, ctx, info) {
   // Create the base mutation.
   const mutation = {
     data: {
-      type: args.type,
-      version: args.version,
+      type,
+      version,
       label: args.label,
       description: args.description,
       config: args.config,
@@ -77,13 +85,19 @@ export default async function createDeployment(parent, args, ctx, info) {
   //     }
   //   }));
 
-  // console.log(deployment);
+  // Generate and merge the helm values.
   const helmValues = generateHelmValues(deployment);
-  // Console.log(helmValues);
 
-  // Generate and merge the helm config.
-
-  // Send the config to commander.
+  // Fire off createDeployment to commander.
+  await ctx.commander("createDeployment", {
+    releaseName: releaseName,
+    chart: {
+      name: type,
+      version: version
+    },
+    namespace: generateNamespace(releaseName),
+    rawConfig: JSON.stringify(helmValues)
+  });
 
   // Return the deployment.
   return deployment;

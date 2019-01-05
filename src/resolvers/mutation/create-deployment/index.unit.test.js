@@ -78,6 +78,9 @@ describe("createDeployment", () => {
       mutation: { createDeployment }
     };
 
+    // Create mock commander client.
+    const commander = jest.fn();
+
     // Vars for the gql mutation.
     const vars = {
       workspaceUuid: casual.uuid,
@@ -91,7 +94,7 @@ describe("createDeployment", () => {
     };
 
     // Run the graphql mutation.
-    const res = await graphql(schema, mutation, null, { db }, vars);
+    const res = await graphql(schema, mutation, null, { db, commander }, vars);
 
     expect(res.errors).toBeUndefined();
     expect(createDeployment.mock.calls.length).toBe(1);

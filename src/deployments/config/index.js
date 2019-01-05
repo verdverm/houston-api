@@ -18,6 +18,7 @@ export function generateHelmValues(deployment) {
   const base = config.get("deployments.helm") || {};
   return merge(
     base, // Apply base settings from config YAML.
+    ingress(), // Apply ingress settings.
     resources(), // Apply resource requests and limits.
     limitRange(), // Apply the limit range.
     constraints(deployment), // Apply any constraints (quotas, pgbouncer, etc).
@@ -26,7 +27,22 @@ export function generateHelmValues(deployment) {
 }
 
 /*
- * Return the resource LimitRange.
+ * Return the Ingress configuration.
+ * @return {Object} Ingress values.
+ */
+export function ingress() {
+  const { baseDomain, releaseName } = config.get("helm");
+
+  return {
+    ingress: {
+      baseDomain,
+      class: `${releaseName}-nginx`
+    }
+  };
+}
+
+/*
+ * Return the LimitRange configuration.
  * @return {Object} LimitRange values.
  */
 export function limitRange() {
@@ -140,19 +156,19 @@ export function constraints(deployment) {
   // Calculate toatal Au  using totalCPU / astroUnitCPU.
   const totalAu = (total.cpu + extra.cpu) / parseInt(astroUnit.cpu);
 
-  // Build up result object.
-  const res = {};
-
-  // Set pod limit.
-  set(res, "quotas.pods", total.pods * 2 + extra.pods);
-
   // Set requests/limits quotas.
   const cpu = `${total.cpu * 2 + sidecars.cpu * 2 + extra.cpu}m`;
   const memory = `${total.memory * 2 + sidecars.memory * 2 + extra.memory}Mi`;
-  set(res, "quotas.requests.cpu", cpu);
-  set(res, "quotas.requests.memory", memory);
-  set(res, "quotas.limits.cpu", cpu);
-  set(res, "quotas.limits.memory", memory);
+
+  const res = {
+    quotas: {
+      pods: total.pods * 2 + extra.pods,
+      "requests.cpu": cpu,
+      "requests.memory": memory,
+      "limits.cpu": cpu,
+      "limits.memory": memory
+    }
+  };
 
   // Set pgbouncer variables.
   set(
@@ -232,6 +248,6 @@ export function auToResources(au, size) {
  * @param {[]Object} An array of objects with key/value pairs.
  * @return {Object} The object with key/value pairs.
  */
-export function transformEnvironmentVariables(arr) {
+export function transformEnvironmentVariables(arr = []) {
   return fromPairs(arr.map(i => [i.key, i.value]));
 }
