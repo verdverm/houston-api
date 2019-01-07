@@ -17,10 +17,10 @@ export default async function deploymentConfig() {
   const maxExtraAu = config.get("deployments.maxExtraAu");
 
   // Generate defaults.
-  const defaults = resources("default");
+  const defaults = resources("default", false);
 
   // Generate limits.
-  const limits = resources("limit");
+  const limits = resources("limit", false);
 
   // Get list of executors, transform to object, keyed by name.
   const executors = keyBy(config.get("deployments.executors"), "name");

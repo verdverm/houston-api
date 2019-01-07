@@ -152,7 +152,10 @@ deployments:
   # and create other databases/schemas/users for each
   # individual airflow deployment.
   database:
+    # If disabled, skip db creation.
     enabled: true
+
+    # Connection details for root user.
     connection:
       user: postgres
       password: postgres

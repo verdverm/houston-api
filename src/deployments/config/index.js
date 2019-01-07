@@ -197,10 +197,10 @@ export function constraints(deployment) {
  * @param {[]Object} List of components.
  * @return {[]Object} List of components and resource defaults.
  */
-export function resources(type = "default") {
+export function resources(type = "default", includeUnits = true) {
   const astroUnit = config.get("deployments.astroUnit");
   const components = config.get("deployments.components");
-  const mapper = curry(mapResources)(astroUnit, type);
+  const mapper = curry(mapResources)(astroUnit, type, includeUnits);
   return merge(...components.map(mapper));
 }
 
@@ -219,8 +219,8 @@ export function platform(deployment) {
  * @param {String} Component name.
  * @return {Object} Resources for single component.
  */
-export function mapResources(au, auType, comp) {
-  const requests = auToResources(au, comp.au[auType]);
+export function mapResources(au, auType, includeUnits, comp) {
+  const requests = auToResources(au, comp.au[auType], includeUnits);
 
   const resources = {
     requests,
@@ -246,11 +246,11 @@ export function mapResources(au, auType, comp) {
  * @param {Integer} size Amount of astro units.
  * @return {Object} The resources object.
  */
-export function auToResources(au, size) {
-  return {
-    cpu: `${au.cpu * size}m`,
-    memory: `${au.memory * size}Mi`
-  };
+export function auToResources(au, size, includeUnits = true) {
+  if (includeUnits) {
+    return { cpu: `${au.cpu * size}m`, memory: `${au.memory * size}Mi` };
+  }
+  return { cpu: au.cpu * size, memory: au.memory * size };
 }
 
 /*

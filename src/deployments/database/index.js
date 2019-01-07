@@ -70,15 +70,23 @@ export async function createDatabaseForDeployment(deployment) {
   // Kill connection to the deployments db.
   deploymentDb.destroy();
 
-  // Construct url for airflow db.
-  const metadataConnection = `postgres://${airflowUserName}:${airflowPassword}@${
-    connection.host
-  }:${connection.port}/${dbName}`;
+  // Construct connection details for airflow schema.
+  const metadataConnection = {
+    user: airflowUserName,
+    pass: airflowPassword,
+    host: connection.host,
+    port: connection.port,
+    db: dbName
+  };
 
-  // Construt url for celery db.
-  const resultBackendConnection = `postgres://${celeryUserName}:${celeryPassword}@${
-    connection.host
-  }:${connection.port}/${dbName}`;
+  // Construt connection details for celery schema.
+  const resultBackendConnection = merge(clone(connection), {
+    user: celeryUserName,
+    pass: celeryPassword,
+    host: connection.host,
+    port: connection.port,
+    db: dbName
+  });
 
   // Return both urls.
   return { metadataConnection, resultBackendConnection };

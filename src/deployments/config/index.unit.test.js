@@ -111,7 +111,7 @@ describe("mapResources", () => {
       }
     };
 
-    const res = mapResources(au, auType, comp);
+    const res = mapResources(au, auType, true, comp);
     expect(res).toHaveProperty("scheduler.resources.requests.cpu");
     expect(res.scheduler.resources.requests.cpu).toBe("500m");
 
@@ -142,7 +142,7 @@ describe("mapResources", () => {
       ]
     };
 
-    const res = mapResources(au, auType, comp);
+    const res = mapResources(au, auType, true, comp);
     expect(res).toHaveProperty("webserver.replicas");
     expect(res.webserver.replicas).toBe(1);
   });
