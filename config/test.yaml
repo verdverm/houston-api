@@ -50,3 +50,8 @@ jwtPassphrase: "abcdefg"
 
 # JWT / Cookie duration in milliseconds.
 authDuration: 86400000
+
+# Deployment configuration.
+deployments:
+  database:
+    enabled: false

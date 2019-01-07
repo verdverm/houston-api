@@ -1,4 +1,5 @@
 import resolvers from "resolvers";
+import { generateReleaseName } from "deployments/naming";
 import casual from "casual";
 import { graphql } from "graphql";
 import { makeExecutableSchema } from "graphql-tools";
@@ -69,6 +70,7 @@ describe("createDeployment", () => {
     // Mock up some db functions.
     const createDeployment = jest.fn().mockReturnValue({
       id,
+      releaseName: generateReleaseName(),
       createdAt: new Date(),
       updatedAt: new Date()
     });

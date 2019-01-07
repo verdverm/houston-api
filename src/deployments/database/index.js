@@ -3,21 +3,29 @@ import {
   generateAirflowUsername,
   generateCeleryUsername
 } from "deployments/naming";
+import log from "logger";
 import knex from "knex";
 import { clone, merge } from "lodash";
 import config from "config";
 import passwordGenerator from "generate-password";
-import url from "url";
 
 /*
  * Create a new database for a given deployment
  * @param {Object} deployment The deployment this database is for.
  */
 export async function createDatabaseForDeployment(deployment) {
-  const cfg = config.get("deployments.connection");
-  const rootConn = createConnection(cfg);
+  const { enabled, connection } = config.get("deployments.database");
 
-  // Replace dashes with underscores.
+  // Exit early if we have database creation disabled.
+  if (!enabled) {
+    log.info("Deployment database creation disabled, skipping");
+    return {};
+  }
+
+  // Create connection as root user.
+  const rootConn = createConnection(connection);
+
+  // Generate some data.
   const dbName = generateDatabaseName(deployment.releaseName);
   const airflowSchemaName = "airflow";
   const celerySchemaName = "celery";
@@ -36,7 +44,7 @@ export async function createDatabaseForDeployment(deployment) {
   await createDatabase(rootConn, dbName);
 
   // Connect to the newly created database.
-  const deploymentCfg = merge(clone(cfg), { database: dbName });
+  const deploymentCfg = merge(clone(connection), { database: dbName });
   const deploymentDb = createConnection(deploymentCfg);
 
   // Create schema for airflow metadata.
@@ -46,7 +54,7 @@ export async function createDatabaseForDeployment(deployment) {
     airflowSchemaName,
     airflowUserName,
     airflowPassword,
-    cfg.user
+    connection.user
   );
 
   // Create schema for celery result backend.
@@ -56,7 +64,7 @@ export async function createDatabaseForDeployment(deployment) {
     celerySchemaName,
     celeryUserName,
     celeryPassword,
-    cfg.user
+    connection.user
   );
 
   // Kill connection to the deployments db.
@@ -64,13 +72,13 @@ export async function createDatabaseForDeployment(deployment) {
 
   // Construct url for airflow db.
   const metadataConnection = `postgres://${airflowUserName}:${airflowPassword}@${
-    cfg.host
-  }:${cfg.port}/${dbName}`;
+    connection.host
+  }:${connection.port}/${dbName}`;
 
   // Construt url for celery db.
   const resultBackendConnection = `postgres://${celeryUserName}:${celeryPassword}@${
-    cfg.host
-  }:${cfg.port}/${dbName}`;
+    connection.host
+  }:${connection.port}/${dbName}`;
 
   // Return both urls.
   return { metadataConnection, resultBackendConnection };

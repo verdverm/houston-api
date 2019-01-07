@@ -151,12 +151,14 @@ deployments:
   # This is the database connection that we use to connect
   # and create other databases/schemas/users for each
   # individual airflow deployment.
-  connection:
-    user: postgres
-    password: postgres
-    host: localhost
-    port: 5432
-    database: postgres
+  database:
+    enabled: true
+    connection:
+      user: postgres
+      password: postgres
+      host: localhost
+      port: 5432
+      database: postgres
 
   # An astro unit defines the smallest billable unit
   # in the system. Default values are based on
