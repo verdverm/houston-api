@@ -6,6 +6,8 @@ webserver:
 
 # Prisma configuration.
 prisma:
+  endpoint: "http://localhost:4466/houston"
+  secret: ~
   debug: false
 
 # Commander configuration.
@@ -146,6 +148,16 @@ roles:
 # Airflow Deployment Configurations
 #
 deployments:
+  # This is the database connection that we use to connect
+  # and create other databases/schemas/users for each
+  # individual airflow deployment.
+  connection:
+    user: postgres
+    password: postgres
+    host: localhost
+    port: 5432
+    database: postgres
+
   # An astro unit defines the smallest billable unit
   # in the system. Default values are based on
   # the GCP n1-standard-1. CPU should always be expressed

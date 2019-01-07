@@ -3,6 +3,7 @@ import {
   generateNamespace,
   generateEnvironmentSecretName
 } from "deployments/naming";
+import { createDatabaseForDeployment } from "deployments/database";
 import {
   transformEnvironmentVariables,
   generateHelmValues
@@ -74,6 +75,15 @@ export default async function createDeployment(parent, args, ctx, info) {
     addFragmentToInfo(info, fragment)
   );
 
+  // Create the database for this deployment.
+  const {
+    metadataConnection,
+    resultBackendConnection
+  } = await createDatabaseForDeployment(deployment);
+
+  // Create some ad-hoc values to get passed into helm.
+  const values = { data: { metadataConnection, resultBackendConnection } };
+
   // Fire off createDeployment to commander.
   await ctx.commander.request("createDeployment", {
     releaseName: releaseName,
@@ -82,7 +92,7 @@ export default async function createDeployment(parent, args, ctx, info) {
       version: version
     },
     namespace: generateNamespace(releaseName),
-    rawConfig: JSON.stringify(generateHelmValues(deployment))
+    rawConfig: JSON.stringify(generateHelmValues(deployment, values))
   });
 
   // If we have environment variables, send to commander.

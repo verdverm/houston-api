@@ -33,3 +33,33 @@ export function generateNamespace(releaseName) {
 export function generateEnvironmentSecretName(releaseName) {
   return `${releaseName}-env`;
 }
+
+/*
+ * Generate the database name for a release.
+ * @param {String} releaseName A release name.
+ * @return {String} The database name.
+ */
+export function generateDatabaseName(releaseName) {
+  const rel = releaseName.replace(/-/g, "_");
+  return `${rel}_airflow`;
+}
+
+/*
+ * Generate the airflow user name for a release.
+ * @param {String} releaseName A release name.
+ * @return {String} The user name.
+ */
+export function generateAirflowUsername(releaseName) {
+  const rel = releaseName.replace(/-/g, "_");
+  return `${rel}_airflow`;
+}
+
+/*
+ * Generate the celery user name for a release.
+ * @param {String} releaseName A release name.
+ * @return {String} The user name.
+ */
+export function generateCeleryUsername(releaseName) {
+  const rel = releaseName.replace(/-/g, "_");
+  return `${rel}_celery`;
+}

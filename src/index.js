@@ -15,6 +15,7 @@ import { createServer } from "http";
 // Get configuration from config dir and environment
 const serverConfig = config.get("webserver");
 const helmConfig = config.get("helm");
+const prismaConfig = config.get("prisma");
 
 // Create express server
 const app = express();
@@ -38,9 +39,9 @@ const server = new ApolloServer({
     ...req,
     db: new Prisma({
       typeDefs: "src/generated/schema/prisma.graphql",
-      endpoint: "http://localhost:4466",
-      secret: "supersecret",
-      debug: config.get("prisma.debug")
+      endpoint: prismaConfig.endpoint,
+      secret: prismaConfig.secret,
+      debug: prismaConfig.debug
     }),
     commander: commander()
   })

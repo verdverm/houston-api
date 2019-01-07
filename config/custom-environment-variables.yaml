@@ -4,6 +4,8 @@ webserver:
   subscriptions: "WEBERVER_SUBCRIPTIONS"
 
 prisma:
+  endpoint: "PRISMA_ENDPOINT"
+  secret: "PRISMA_SECRET"
   debug:
     __name: "PRISMA_DEBUG"
     __format: "json"

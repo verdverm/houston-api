@@ -14,14 +14,16 @@ import {
  * @param {Object} deployment The deployment for this configuration.
  * @return {Object} The final helm values.
  */
-export function generateHelmValues(deployment) {
+export function generateHelmValues(deployment, values = {}) {
   const base = config.get("deployments.helm") || {};
   return merge(
     base, // Apply base settings from config YAML.
+    values, // Apply any settings passed in directly.
     ingress(), // Apply ingress settings.
     resources(), // Apply resource requests and limits.
     limitRange(), // Apply the limit range.
     constraints(deployment), // Apply any constraints (quotas, pgbouncer, etc).
+    platform(deployment), // Apply astronomer platform specific values.
     deployment.config // The deployment level config.
   );
 }
@@ -200,6 +202,14 @@ export function resources(type = "default") {
   const components = config.get("deployments.components");
   const mapper = curry(mapResources)(astroUnit, type);
   return merge(...components.map(mapper));
+}
+
+/* Return the platform specific settings.
+ * @param {Object} deployment A deployment object.
+ * @return {Object} Helm values.
+ */
+export function platform(deployment) {
+  return { platform: { release: deployment.releaseName } };
 }
 
 /*
