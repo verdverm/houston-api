@@ -36,3 +36,10 @@ export class PermissionError extends Error {
   message =
     this.message || "You do not have the appropriate permissions for that";
 }
+
+export class DuplicateDeploymentLabelError extends Error {
+  constructor(deploymentName) {
+    super();
+    this.message = `Workspace already has a deployment named ${deploymentName}`;
+  }
+}

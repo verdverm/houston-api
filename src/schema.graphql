@@ -214,5 +214,5 @@ type Mutation {
     config: JSON
     env: JSON
     properties: JSON
-  ): Deployment
+  ): Deployment @auth
 }

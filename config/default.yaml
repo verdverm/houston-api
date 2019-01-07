@@ -10,6 +10,16 @@ prisma:
   secret: ~
   debug: false
 
+# Database connection.
+# This is mostly for knexfile now.
+# Also defined for Prisma service separately.
+database:
+  user: postgres
+  password: postgres
+  host: localhost
+  port: 5432
+  database: postgres
+
 # Commander configuration.
 commander:
   enabled: false

@@ -4,14 +4,16 @@
   "description": "",
   "scripts": {
     "build": "babel src -d dist && npm run prisma-generate",
-    "start": "npm run prisma-deploy && npm run prisma-generate && nodemon --exec babel-node -e js,graphql src/index.js",
+    "start": "npm run prisma-deploy && npm run prisma-generate && npm run migrate-latest && nodemon --exec babel-node -e js,graphql src/index.js",
     "serve": "node dist/index.js",
     "test": "jest",
     "coverage": "jest --coverage",
     "lint": "eslint src --ext .js --ext .graphql",
     "prisma-deploy": "prisma deploy --env-file .env",
     "prisma-generate": "prisma generate",
-    "playground": "graphql playground"
+    "playground": "graphql playground",
+    "knex": "babel-node node_modules/.bin/knex",
+    "migrate-latest": "npm run knex migrate:latest"
   },
   "author": "Astronomer",
   "license": "Apache 2.0",
