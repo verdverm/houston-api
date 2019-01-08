@@ -2,7 +2,6 @@ import router from "./index";
 import * as exports from "generated/client";
 import request from "supertest";
 import express from "express";
-// import nock from "nock";
 
 // Create test application.
 const app = express().use(router);
