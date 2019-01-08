@@ -124,4 +124,31 @@ describe("createDeployment", () => {
     expect(createDeployment.mock.calls.length).toBe(1);
     expect(res.data.createDeployment.id).toBe(id);
   });
+
+  test("request fails if deployment with same label exists", async () => {
+    const deploymentExists = jest.fn().mockReturnValue(true);
+    const createDeployment = jest.fn();
+
+    // Construct db object for context.
+    const db = {
+      exists: { Deployment: deploymentExists },
+      mutation: { createDeployment }
+    };
+
+    // Vars for the gql mutation.
+    const vars = {
+      workspaceUuid: casual.uuid,
+      type: DEPLOYMENT_AIRFLOW,
+      label: casual.word
+    };
+
+    // Run the graphql mutation.
+    const res = await graphql(schema, mutation, null, { db }, vars);
+
+    expect(res.errors.length).toBe(1);
+    expect(res.errors[0].message).toEqual(
+      expect.stringMatching(/^Workspace already has a deployment named/)
+    );
+    expect(createDeployment).toHaveBeenCalledTimes(0);
+  });
 });

@@ -268,8 +268,5 @@ export function envArrayToObject(arr = []) {
  * @return {[]Object} The object with key/value pairs.
  */
 export function envObjectToArray(obj = {}) {
-  return map(obj, (val, key) => {
-    console.log(val, key);
-    return { [key]: val };
-  });
+  return map(obj, (val, key) => ({ [key]: val }));
 }
