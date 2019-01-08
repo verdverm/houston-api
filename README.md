@@ -5,7 +5,7 @@
 
 ## Description
 
-Houston is the command and control API for the Astronomer Platform. It is primarily a GraphQL server built with `apollo-server2` and `prisma`. It also supports several RESTful endpoints using the same express server that apollo is using. These endpoints are primarily used for integrating with external authentication, docker registry and other external dependencies. This is the second iteration of this API. This version was built to support the same external API, and is just an internal
+Houston is the command and control API for the [Astronomer Platform](https://github.com/astronomer/astronomer). It is primarily a [GraphQL](https://graphql.org) server built with [Apollo Server 2](https://www.apollographql.com) and [Prisma](https://www.prisma.io/docs/). It also supports several RESTful endpoints using the same express server that apollo is using. These endpoints are primarily used for integrating with external authentication, docker registry and other external dependencies. This is the second iteration of this API. This version was built to support the same external API, and is just an internal
 re-implementation.
 
 ## Database
