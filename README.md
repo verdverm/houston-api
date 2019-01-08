@@ -10,7 +10,7 @@ re-implementation.
 
 ## Database
 
-Houston leverages Prisma as GraphQL backend on top of Postgres.
+Houston leverages [Prisma](https://www.prisma.io/docs/) as [GraphQL](https://graphql.org) backend on top of Postgres. The Prisma service sits between Houston and Postgres and exposes a secure CRUD API on top of the Datamodel defined in this project.
 
 ## Configuration
 
