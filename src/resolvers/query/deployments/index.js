@@ -1,3 +1,4 @@
+import { addFragmentToInfo } from "graphql-binding";
 import { compact } from "lodash";
 
 /*
@@ -37,6 +38,12 @@ export default async function deployments(parent, args, ctx, info) {
     query.where.AND.push({ id_in: compact(deploymentIds) });
   }
 
+  // Create a fragment to ensure that we always return the id.
+  const fragment = `fragment EnsureFields on Deployment { id }`;
+
   // Run final query
-  return await ctx.db.query.deployments(query, info);
+  return await ctx.db.query.deployments(
+    query,
+    addFragmentToInfo(info, fragment)
+  );
 }
