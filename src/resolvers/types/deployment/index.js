@@ -1,9 +1,17 @@
+import {
+  generateNamespace,
+  generateEnvironmentSecretName
+} from "deployments/naming";
+import { envObjectToArray } from "deployments/config";
+import { get } from "lodash";
+import config from "config";
 import { AIRFLOW_EXECUTOR_CELERY } from "constants";
 
-export function urls(parent, args, ctx) {
-  const { config, releaseName } = parent;
-  const baseDomain = ctx.config.get("helm.baseDomain");
+export function urls(parent) {
+  const { config: cfg, releaseName } = parent;
+  const baseDomain = config.get("helm.baseDomain");
 
+  // All deployments will have the airflow url.
   const urls = [
     {
       type: `airflow`,
@@ -11,7 +19,8 @@ export function urls(parent, args, ctx) {
     }
   ];
 
-  if (config.executor === AIRFLOW_EXECUTOR_CELERY) {
+  // Celery deployments will also have flower url.
+  if (cfg.executor === AIRFLOW_EXECUTOR_CELERY) {
     urls.push({
       type: `flower`,
       url: `https://${releaseName}-flower.${baseDomain}`
@@ -21,6 +30,17 @@ export function urls(parent, args, ctx) {
   return urls;
 }
 
-export function env() {}
+export async function env(parent, args, ctx) {
+  const { releaseName } = parent;
+
+  // Query commander for the environment variables.
+  const envs = await ctx.commander.request("getSecret", {
+    namespace: generateNamespace(releaseName),
+    name: generateEnvironmentSecretName(releaseName)
+  });
+
+  // Transform the returned object into an array.
+  return envObjectToArray(get(envs, "envs.secret.data"));
+}
 
 export default { urls, env };

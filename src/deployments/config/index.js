@@ -1,4 +1,4 @@
-import { curry, find, fromPairs, get, set, merge } from "lodash";
+import { curry, find, fromPairs, get, map, set, merge } from "lodash";
 import config from "config";
 import {
   DEPLOYMENT_PROPERTY_EXTRA_AU,
@@ -258,6 +258,18 @@ export function auToResources(au, size, includeUnits = true) {
  * @param {[]Object} An array of objects with key/value pairs.
  * @return {Object} The object with key/value pairs.
  */
-export function transformEnvironmentVariables(arr = []) {
+export function envArrayToObject(arr = []) {
   return fromPairs(arr.map(i => [i.key, i.value]));
+}
+
+/*
+ * Transform an object of key/value pairs to an array.
+ * @param {Object} An array of objects with key/value pairs.
+ * @return {[]Object} The object with key/value pairs.
+ */
+export function envObjectToArray(obj = {}) {
+  return map(obj, (val, key) => {
+    console.log(val, key);
+    return { [key]: val };
+  });
 }

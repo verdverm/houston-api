@@ -4,10 +4,7 @@ import {
   generateEnvironmentSecretName
 } from "deployments/naming";
 import { createDatabaseForDeployment } from "deployments/database";
-import {
-  transformEnvironmentVariables,
-  generateHelmValues
-} from "deployments/config";
+import { envArrayToObject, generateHelmValues } from "deployments/config";
 import { DuplicateDeploymentLabelError } from "errors";
 import { addFragmentToInfo } from "graphql-binding";
 import { pick, map, filter, startsWith } from "lodash";
@@ -136,7 +133,7 @@ export default async function createDeployment(parent, args, ctx, info) {
       namespace: generateNamespace(releaseName),
       secret: {
         name: generateEnvironmentSecretName(releaseName),
-        data: transformEnvironmentVariables(args.env)
+        data: envArrayToObject(args.env)
       }
     });
   }

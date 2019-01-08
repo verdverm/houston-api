@@ -1,6 +1,7 @@
 import {
   mapResources,
-  transformEnvironmentVariables,
+  envObjectToArray,
+  envArrayToObject,
   generateHelmValues,
   limitRange,
   constraints
@@ -148,7 +149,7 @@ describe("mapResources", () => {
   });
 });
 
-describe("transformEnvironmentVariables", () => {
+describe("envArrayToObject", () => {
   test("correctly transforms array to object", () => {
     // Create a test array.
     const arr = [
@@ -157,7 +158,7 @@ describe("transformEnvironmentVariables", () => {
     ];
 
     // Run the transformation.
-    const obj = transformEnvironmentVariables(arr);
+    const obj = envArrayToObject(arr);
 
     // Test for object keys and values.
     expect(obj).toHaveProperty("AIRFLOW_HOME", "/tmp");
@@ -166,7 +167,30 @@ describe("transformEnvironmentVariables", () => {
 
   test("correctly handles an undefined environment list", () => {
     // Run the transformation.
-    const obj = transformEnvironmentVariables();
+    const obj = envArrayToObject();
     expect(obj).toEqual({});
+  });
+});
+
+describe("envObjectToArary", () => {
+  test("correctly transforms object to array", () => {
+    // Create a test object.
+    const obj = {
+      AIRFLOW_HOME: "/tmp",
+      SCHEDULER_HEARTBEAT: "5"
+    };
+
+    // Run the transformation.
+    const arr = envObjectToArray(obj);
+
+    expect(arr.length).toBe(2);
+    expect(arr[0]).toHaveProperty("AIRFLOW_HOME", "/tmp");
+    expect(arr[1]).toHaveProperty("SCHEDULER_HEARTBEAT", "5");
+  });
+
+  test("correctly handles an undefined environment list", () => {
+    // Run the transformation.
+    const obj = envObjectToArray();
+    expect(obj).toEqual([]);
   });
 });

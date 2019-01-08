@@ -74,7 +74,11 @@ describe("createToken", () => {
     const now = Math.floor(new Date() / 1000);
     const { iat, exp } = res.data.createToken.token.payload;
 
-    expect(iat).toBe(now);
+    // Testing exact equality can sometimes be off by a millisecond.
+    // This gives us a small range to test within instead.
+    expect(iat).toBeGreaterThan(now - 5);
+    expect(iat).toBeLessThan(now + 5);
+
     expect(exp).toBeGreaterThan(now);
   });
 

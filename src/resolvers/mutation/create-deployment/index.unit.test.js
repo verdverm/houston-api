@@ -5,6 +5,7 @@ import { graphql } from "graphql";
 import { makeExecutableSchema } from "graphql-tools";
 import { importSchema } from "graphql-import";
 import {
+  AIRFLOW_EXECUTOR_CELERY,
   DEPLOYMENT_AIRFLOW,
   DEPLOYMENT_PROPERTY_COMPONENT_VERSION,
   DEPLOYMENT_PROPERTY_ALERT_EMAILS,
@@ -64,6 +65,11 @@ const mutation = `
 
 describe("createDeployment", () => {
   test("typical request is successful", async () => {
+    // Create mock user.
+    const user = {
+      id: casual.uuid
+    };
+
     // Create some deployment vars.
     const id = casual.uuid;
 
@@ -71,13 +77,21 @@ describe("createDeployment", () => {
     const createDeployment = jest.fn().mockReturnValue({
       id,
       releaseName: generateReleaseName(),
+      config: { executor: AIRFLOW_EXECUTOR_CELERY },
       createdAt: new Date(),
       updatedAt: new Date()
     });
 
+    const createRoleBinding = jest.fn().mockReturnValue({
+      id: casual.uuid
+    });
+
+    const deploymentExists = jest.fn().mockReturnValue(false);
+
     // Construct db object for context.
     const db = {
-      mutation: { createDeployment }
+      mutation: { createDeployment, createRoleBinding },
+      exists: { Deployment: deploymentExists }
     };
 
     // Create mock commander client.
@@ -98,7 +112,13 @@ describe("createDeployment", () => {
     };
 
     // Run the graphql mutation.
-    const res = await graphql(schema, mutation, null, { db, commander }, vars);
+    const res = await graphql(
+      schema,
+      mutation,
+      null,
+      { db, commander, user },
+      vars
+    );
 
     expect(res.errors).toBeUndefined();
     expect(createDeployment.mock.calls.length).toBe(1);
