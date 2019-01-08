@@ -1,0 +1,42 @@
+pipeline:
+  build:
+    image: astronomerio/ap-build:0.1.1
+    commands:
+      - docker build -t astronomerinc/ap-houston-api:dev .
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    when:
+      event: push
+
+  test:
+    image: astronomerinc/ap-houston-api:dev
+    commands:
+      - cd /opt/houston-api
+      - npm run test
+    when:
+      event: push
+
+  lint:
+    image: astronomerinc/ap-houston-api:dev
+    commands:
+      - cd /opt/houston-api
+      - npm run lint
+    when:
+      event: push
+
+  # trigger:
+  #   image: plugins/downstream
+  #   server: http://drone.astronomer.io
+  #   fork: true
+  #   secrets: [ downstream_token ]
+  #   repositories:
+  #     - astronomer/astronomer
+  #   when:
+  #     branch: [ master ]
+
+  # notify:
+  #   image: plugins/slack
+  #   secrets: [ slack_webhook ]
+  #   channel: engineering
+  #   when:
+  #     status: [ failure ]
