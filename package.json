@@ -8,7 +8,7 @@
     "serve": "node dist/index.js",
     "test": "jest",
     "coverage": "jest --coverage",
-    "lint": "eslint src --ext .js --ext .graphql",
+    "lint": "eslint src --ignore-pattern src/generated --ext .js --ext .graphql",
     "prisma-deploy": "prisma deploy --env-file .env",
     "prisma-generate": "prisma generate",
     "playground": "graphql playground",
