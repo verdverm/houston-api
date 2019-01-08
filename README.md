@@ -1,5 +1,8 @@
 # Houston API
 
+[![Maintainability](https://api.codeclimate.com/v1/badges/fa7e3822ab433568f524/maintainability)](https://codeclimate.com/github/astronomer/houston-api-2/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/fa7e3822ab433568f524/test_coverage)](https://codeclimate.com/github/astronomer/houston-api-2/test_coverage)
+
 ## Description
 
 Houston is the command and control API for the Astronomer Platform. It is primarily a GraphQL server built with `apollo-server2` and `prisma`. It also supports several RESTful endpoints using the same express server that apollo is using. These endpoints are primarily used for integrating with external authentication, docker registry and other external dependencies. This is the second iteration of this API. This version was built to support the same external API, and is just an internal
