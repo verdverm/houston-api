@@ -128,8 +128,8 @@ type Deployment {
   uuid: Uuid @alias(field: "id")
   config: JSON
   env: JSON
-  urls: [DeploymentUrl]
   properties: JSON
+  urls: [DeploymentUrl]
   description: String
   label: String
   releaseName: String
@@ -217,10 +217,10 @@ type Mutation {
   ): Deployment @auth
 
   updateDeployment(
-    deploymentUuid: Uuid
+    deploymentUuid: Uuid!
     payload: JSON
     config: JSON
     env: JSON
     sync: Boolean
-  ): [Deployment] @auth
+  ): Deployment @auth
 }

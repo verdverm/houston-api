@@ -14,11 +14,18 @@ prisma:
 # This is mostly for knexfile now.
 # Also defined for Prisma service separately.
 database:
-  user: postgres
-  password: postgres
-  host: localhost
-  port: 5432
-  database: postgres
+  # Knex migrations
+  migrations:
+    tableName: migrations
+    schemaName: houston$default
+
+  # Knex connection
+  connection:
+    user: postgres
+    password: postgres
+    host: localhost
+    port: 5432
+    database: postgres
 
 # Commander configuration.
 commander:

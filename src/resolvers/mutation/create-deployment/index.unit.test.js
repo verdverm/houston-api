@@ -75,6 +75,9 @@ describe("createDeployment", () => {
     // Create some deployment vars.
     const id = casual.uuid;
 
+    // Override and not throw any error.
+    jest.spyOn(validate, "default").mockReturnValue();
+
     // Mock up some db functions.
     const createDeployment = jest.fn().mockReturnValue({
       id,
@@ -88,12 +91,9 @@ describe("createDeployment", () => {
       id: casual.uuid
     });
 
-    const deploymentExists = jest.fn().mockReturnValue(false);
-
     // Construct db object for context.
     const db = {
-      mutation: { createDeployment, createRoleBinding },
-      exists: { Deployment: deploymentExists }
+      mutation: { createDeployment, createRoleBinding }
     };
 
     // Create mock commander client.

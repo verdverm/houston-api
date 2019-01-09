@@ -2,7 +2,7 @@ import {
   generateNamespace,
   generateEnvironmentSecretName
 } from "deployments/naming";
-import { envObjectToArray } from "deployments/config";
+import { envObjectToArray, propertiesArrayToObject } from "deployments/config";
 import { get } from "lodash";
 import config from "config";
 import { AIRFLOW_EXECUTOR_CELERY } from "constants";
@@ -43,4 +43,8 @@ export async function env(parent, args, ctx) {
   return envObjectToArray(get(envs, "envs.secret.data"));
 }
 
-export default { urls, env };
+export async function properties(parent) {
+  return propertiesArrayToObject(parent.properties);
+}
+
+export default { urls, env, properties };

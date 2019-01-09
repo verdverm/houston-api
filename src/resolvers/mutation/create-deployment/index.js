@@ -24,7 +24,7 @@ import { DEPLOYMENT_ADMIN } from "constants";
  */
 export default async function createDeployment(parent, args, ctx, info) {
   // Validate deployment args.
-  await validate(args);
+  await validate(args.workspaceUuid, args);
 
   // This API supports a type parameter, but we only support airflow now,
   // so we're just ignoring it for now.
