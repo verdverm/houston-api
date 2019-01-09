@@ -270,3 +270,15 @@ export function envArrayToObject(arr = []) {
 export function envObjectToArray(obj = {}) {
   return map(obj, (val, key) => ({ [key]: val }));
 }
+
+/*
+ * Transform an object of key/value pairs to an array with key/value fields.
+ * @param {Object} An array of objects with key/value pairs.
+ * @return {[]Object} The object with key/value pairs.
+ */
+export function propertiesObjectToArray(obj = {}) {
+  return map(obj, (val, key) => ({
+    key,
+    value: val.toString()
+  }));
+}

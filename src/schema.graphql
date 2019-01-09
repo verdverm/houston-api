@@ -215,4 +215,12 @@ type Mutation {
     env: JSON
     properties: JSON
   ): Deployment @auth
+
+  updateDeployment(
+    deploymentUuid: Uuid
+    payload: JSON
+    config: JSON
+    env: JSON
+    sync: Boolean
+  ): [Deployment] @auth
 }

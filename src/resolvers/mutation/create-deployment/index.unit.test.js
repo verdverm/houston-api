@@ -1,4 +1,6 @@
+import { DuplicateDeploymentLabelError } from "errors";
 import resolvers from "resolvers";
+import * as validate from "deployments/validate";
 import { generateReleaseName } from "deployments/naming";
 import casual from "casual";
 import { graphql } from "graphql";
@@ -126,12 +128,15 @@ describe("createDeployment", () => {
   });
 
   test("request fails if deployment with same label exists", async () => {
-    const deploymentExists = jest.fn().mockReturnValue(true);
     const createDeployment = jest.fn();
+
+    // Set up our spy.
+    jest
+      .spyOn(validate, "default")
+      .mockImplementation(() => throw new DuplicateDeploymentLabelError());
 
     // Construct db object for context.
     const db = {
-      exists: { Deployment: deploymentExists },
       mutation: { createDeployment }
     };
 

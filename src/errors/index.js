@@ -43,3 +43,7 @@ export class DuplicateDeploymentLabelError extends Error {
     this.message = `Workspace already has a deployment named ${deploymentName}`;
   }
 }
+
+export class InvalidDeploymentError extends Error {
+  message = this.message || "Invalid deployment";
+}

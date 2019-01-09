@@ -14,5 +14,10 @@ export default createLogger({
     }),
     format.printf(info => `${info.timestamp} ${info.level} ${info.message}`)
   ),
-  transports: [new transports.Console()]
+  transports: [
+    new transports.Console({
+      // Supress logs if running `jest --silent`.
+      silent: process.argv.indexOf("--silent") >= 0
+    })
+  ]
 });

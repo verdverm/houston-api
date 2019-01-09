@@ -4,13 +4,16 @@ import {
   generateEnvironmentSecretName
 } from "deployments/naming";
 import { createDatabaseForDeployment } from "deployments/database";
-import { envArrayToObject, generateHelmValues } from "deployments/config";
-import { DuplicateDeploymentLabelError } from "errors";
+import {
+  envArrayToObject,
+  propertiesObjectToArray,
+  generateHelmValues
+} from "deployments/config";
+import validate from "deployments/validate";
 import { addFragmentToInfo } from "graphql-binding";
-import { pick, map, filter, startsWith } from "lodash";
 import config from "config";
 import crypto from "crypto";
-import * as constants from "constants";
+import { DEPLOYMENT_ADMIN } from "constants";
 
 /*
  * Create a deployment.
@@ -20,18 +23,8 @@ import * as constants from "constants";
  * @return {Deployment} The newly created Deployment.
  */
 export default async function createDeployment(parent, args, ctx, info) {
-  // Check if this label exists for this workspace.
-  // Houston 1 relied on a multi-column unique index, which prisma does not currently support.
-  // This is the workaround for now. Issues for this are opened here:
-  // https://github.com/prisma/prisma/issues/171
-  // https://github.com/prisma/prisma/issues/1300
-  const exists = await ctx.db.exists.Deployment({
-    label: args.label,
-    workspace: { id: args.workspaceUuid }
-  });
-
-  // Throw error if one already exists.
-  if (exists) throw new DuplicateDeploymentLabelError(args.label);
+  // Validate deployment args.
+  await validate(args);
 
   // This API supports a type parameter, but we only support airflow now,
   // so we're just ignoring it for now.
@@ -48,19 +41,8 @@ export default async function createDeployment(parent, args, ctx, info) {
   // Generate a random space-themed release name.
   const releaseName = generateReleaseName();
 
-  // Filter down whitelisted deployment properties.
-  const allowedProps = filter(constants, (_, name) =>
-    startsWith(name, "DEPLOYMENT_PROPERTY")
-  );
-
-  // Remove any invalid properties.
-  const validProps = args.properties ? pick(args.properties, allowedProps) : {};
-
   // Generate a list of properties to add to mutation.
-  const properties = map(validProps, (val, key) => ({
-    key,
-    value: val.toString()
-  }));
+  const properties = propertiesObjectToArray(args.properties);
 
   // Create the base mutation.
   const mutation = {
@@ -95,7 +77,7 @@ export default async function createDeployment(parent, args, ctx, info) {
   await ctx.db.mutation.createRoleBinding(
     {
       data: {
-        role: constants.DEPLOYMENT_ADMIN,
+        role: DEPLOYMENT_ADMIN,
         subject: { connect: { id: ctx.user.id } },
         deployment: { connect: { id: deployment.id } }
       }
@@ -124,8 +106,9 @@ export default async function createDeployment(parent, args, ctx, info) {
   });
 
   // If we have environment variables, send to commander.
-  // TODO: The createDeployment commander method currently allows you to pass
-  // secrets to get created, but the implementation does not quite work.
+  // TODO: The createDeployment commander method currently
+  // allows you to pass secrets to get created,
+  // but the implementation does not quite work.
   // This call can be consolidated once that is fixed up in commander.
   if (args.env) {
     await ctx.commander.request("setSecret", {

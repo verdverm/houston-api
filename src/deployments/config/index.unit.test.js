@@ -2,6 +2,7 @@ import {
   mapResources,
   envObjectToArray,
   envArrayToObject,
+  propertiesObjectToArray,
   generateHelmValues,
   limitRange,
   constraints
@@ -190,7 +191,32 @@ describe("envObjectToArary", () => {
 
   test("correctly handles an undefined environment list", () => {
     // Run the transformation.
-    const obj = envObjectToArray();
-    expect(obj).toEqual([]);
+    const arr = envObjectToArray();
+    expect(arr).toEqual([]);
+  });
+});
+
+describe("propertiesObjectToArary", () => {
+  test("correctly transforms object to array", () => {
+    // Create a test object.
+    const obj = {
+      component_version: "1.10.1",
+      extra_au: 5
+    };
+
+    // Run the transformation.
+    const arr = propertiesObjectToArray(obj);
+
+    expect(arr.length).toBe(2);
+    expect(arr[0]).toHaveProperty("key", "component_version");
+    expect(arr[0]).toHaveProperty("value", "1.10.1");
+    expect(arr[1]).toHaveProperty("key", "extra_au");
+    expect(arr[1]).toHaveProperty("value", "5");
+  });
+
+  test("correctly handles an undefined properties list", () => {
+    // Run the transformation.
+    const arr = propertiesObjectToArray();
+    expect(arr).toEqual([]);
   });
 });
