@@ -1,57 +1,57 @@
 webserver:
-  port: "WEBSERVER_PORT"
-  endpoint: "WEBSERVER_ENDPOINT"
-  subscriptions: "WEBERVER_SUBCRIPTIONS"
+  port: "WEBSERVER__PORT"
+  endpoint: "WEBSERVER__ENDPOINT"
+  subscriptions: "WEBERVER__SUBCRIPTIONS"
 
 prisma:
-  endpoint: "PRISMA_ENDPOINT"
-  secret: "PRISMA_SECRET"
+  endpoint: "PRISMA__ENDPOINT"
+  secret: "PRISMA__SECRET"
   debug:
-    __name: "PRISMA_DEBUG"
+    __name: "PRISMA__DEBUG"
     __format: "json"
 
 commander:
   enabled:
-    __name: "COMMANDER_ENABLED"
+    __name: "COMMANDER__ENABLED"
     __format: "json"
-  host: "COMMANDER_HOST"
-  port: "COMMANDER_PORT"
+  host: "COMMANDER__HOST"
+  port: "COMMANDER__PORT"
 
 repository: "REPOSITORY"
 
 helm:
-  baseDomain: "HELM_BASE_DOMAIN"
-  registryAuthSecret: "HELM_REGISTRY_AUTH_SECRET"
+  baseDomain: "HELM__BASE_DOMAIN"
+  registryAuthSecret: "HELM__REGISTRY_AUTH_SECRET"
   acme:
-    __name: "HELM_ACME"
+    __name: "HELM__ACME"
     __format: "json"
   rbacEnabled:
-    __name: "HELM_RBAC_ENABLED"
+    __name: "HELM__RBAC_ENABLED"
     __format: "json"
-  releaseName: "HELM_RELEASE_NAME"
-  releaseNamespace: "HELM_RELEASE_NAMESPACE"
-  releaseVersion: "HELM_RELEASE_VERSION"
+  releaseName: "HELM__RELEASE_NAME"
+  releaseNamespace: "HELM__RELEASE_NAMESPACE"
+  releaseVersion: "HELM__RELEASE_VERSION"
   singleNamespace:
-    __name: "HELM_SINGLE_NAMESPACE"
+    __name: "HELM__SINGLE_NAMESPACE"
     __format: "json"
 
 auth:
   local:
     enabled:
-      __name: "AUTH_LOCAL_ENABLED"
+      __name: "AUTH__LOCAL__ENABLED"
       __format: "json"
   auth0:
     enabled:
-      __name: "AUTH_AUTH0_ENABLED"
+      __name: "AUTH__AUTH0__ENABLED"
       __format: "json"
-    clientId: "AUTH_AUTH0_CLIENT_ID"
-    baseDomain: "AUTH_AUTH0_BASE_DOMAIN"
-    externalLogin: "AUTH_AUTH0_EXTERNAL_LOGIN"
+    clientId: "AUTH__AUTH0__CLIENT_ID"
+    baseDomain: "AUTH__AUTH0__BASE_DOMAIN"
+    externalLogin: "AUTH__AUTH0__EXTERNAL_LOGIN"
   google:
     enabled:
-      __name: "AUTH_GOOGLE_ENABLED"
+      __name: "AUTH__GOOGLE__ENABLED"
       __format: "json"
-    clientId: "AUTH_GOOGLE_CLIENT_ID"
+    clientId: "AUTH__GOOGLE__CLIENT_ID"
 
 jwtPassphrase: "JWT_PASSPHRASE"
 
