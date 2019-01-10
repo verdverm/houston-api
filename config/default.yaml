@@ -172,6 +172,11 @@ deployments:
     # If disabled, skip db creation.
     enabled: true
 
+    # If true, leave GRANTs in place for root user.
+    # This lets users log in with the root creds and query
+    # deployment databases.
+    allowRootAccess: false
+
     # Connection details for root user.
     connection:
       user: postgres
@@ -203,15 +208,6 @@ deployments:
   # This defines all possible components for an airflow
   # deployment and the default AU to use for the kubernetes 
   # resource requests, as well as its limits.
-  #
-  # Pod resources (requests/limits)
-  # Secrets (custom env vars)
-  # Namespace quotas / limits
-  # Executor
-  # Based on Deployment
-  # Based on Houston config
-  #
-  # Create db for some of these
   components:
     - name: scheduler
       au:

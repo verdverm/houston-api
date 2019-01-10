@@ -14,7 +14,9 @@ import passwordGenerator from "generate-password";
  * @param {Object} deployment The deployment this database is for.
  */
 export async function createDatabaseForDeployment(deployment) {
-  const { enabled, connection } = config.get("deployments.database");
+  const { allowRootAccess, enabled, connection } = config.get(
+    "deployments.database"
+  );
 
   // Exit early if we have database creation disabled.
   if (!enabled) {
@@ -54,7 +56,8 @@ export async function createDatabaseForDeployment(deployment) {
     airflowSchemaName,
     airflowUserName,
     airflowPassword,
-    connection.user
+    connection.user,
+    allowRootAccess
   );
 
   // Create schema for celery result backend.
@@ -64,7 +67,8 @@ export async function createDatabaseForDeployment(deployment) {
     celerySchemaName,
     celeryUserName,
     celeryPassword,
-    connection.user
+    connection.user,
+    allowRootAccess
   );
 
   // Kill connection to the deployments db.
@@ -125,7 +129,8 @@ export async function createSchema(
   schema,
   user,
   password,
-  creator
+  creator,
+  allowRootAccess
 ) {
   // Create a new limited access user, with random password.
   await conn.raw(
@@ -153,5 +158,7 @@ export async function createSchema(
   await conn.raw(`ALTER ROLE ${user} SET search_path = ${schema};`);
 
   // Revoke the root users access from the new schema.
-  await conn.raw(`REVOKE ${user} FROM ${creator}`);
+  if (!allowRootAccess) {
+    await conn.raw(`REVOKE ${user} FROM ${creator}`);
+  }
 }
