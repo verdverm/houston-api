@@ -174,6 +174,10 @@ deployments:
     # If disabled, skip db creation.
     enabled: true
 
+    # Keep the airflow databases around after a
+    # deployment is deleted.
+    retainOnDelete: false
+
     # If true, leave GRANTs in place for root user.
     # This lets users log in with the root creds and query
     # deployment databases.

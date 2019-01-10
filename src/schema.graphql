@@ -223,4 +223,8 @@ type Mutation {
     env: JSON
     sync: Boolean
   ): Deployment @auth
+
+  deleteDeployment(
+    deploymentUuid: Uuid!
+  ): Deployment @auth
 }

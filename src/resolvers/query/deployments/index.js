@@ -41,7 +41,7 @@ export default async function deployments(parent, args, ctx, info) {
   // Create a fragment to ensure that we always return the id.
   // We also need properties, because Houston 1 defined the schema
   // as a JSON, so it does not corretly map to the stronger typed backend.
-  const fragment = `fragment EnsureFields on Deployment { id, properties { key, value } }`;
+  const fragment = `fragment EnsureFields on Deployment { id, workspace { id }, properties { key, value } }`;
 
   // Run final query
   return await ctx.db.query.deployments(
