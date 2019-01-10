@@ -7,7 +7,8 @@ import {
   generateHelmValues,
   limitRange,
   constraints,
-  combinePropsForUpdate
+  combinePropsForUpdate,
+  parseJSON
 } from "./index";
 import { generateReleaseName } from "deployments/naming";
 import casual from "casual";
@@ -236,7 +237,7 @@ describe("propertiesArrayToObject", () => {
 
     // Test for object keys and values.
     expect(obj).toHaveProperty("component_version", "10.0.1");
-    expect(obj).toHaveProperty("extra_au", "5");
+    expect(obj).toHaveProperty("extra_au", 5);
   });
 
   test("correctly handles an undefined properties list", () => {
@@ -287,5 +288,25 @@ describe("combinePropsForUpdate", () => {
     expect(combinedProps.update[1].where.id).toBe(existingProps[1].id);
     expect(combinedProps.update[1].data).toHaveProperty("key", "extra_au");
     expect(combinedProps.update[1].data).toHaveProperty("value", "10");
+  });
+});
+
+describe("parseJSON", () => {
+  test("correctly parses a valid JSON object", () => {
+    const str = '{"something":"somevalue"}';
+    const res = parseJSON(str);
+    expect(res).toHaveProperty("something", "somevalue");
+  });
+
+  test("correctly parses a valid JSON array", () => {
+    const str = '["someone@somewhere.com"]';
+    const res = parseJSON(str);
+    expect(res).toHaveLength(1);
+  });
+
+  test("correctly returns a non JSON string", () => {
+    const str = "someone@somewhere.com";
+    const res = parseJSON(str);
+    expect(res).toBe(str);
   });
 });
