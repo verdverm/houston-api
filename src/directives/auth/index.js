@@ -48,7 +48,7 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
         throw new PermissionError();
       }
 
-      log.info(`Executing authenticated request for userId ${userId}`);
+      log.debug(`Executing authenticated request for userId ${userId}`);
       return resolve.apply(this, args);
     };
   }

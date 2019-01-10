@@ -3,6 +3,7 @@ import "dotenv/config";
 import log from "logger";
 import resolvers from "resolvers";
 import directives from "directives";
+import { formatError } from "errors";
 import { v1 } from "routes";
 import commander from "commander";
 import config from "config";
@@ -35,6 +36,7 @@ const server = new ApolloServer({
   subscriptions: {
     path: serverConfig.subscriptions
   },
+  formatError,
   context: req => ({
     ...req,
     db: new Prisma({
