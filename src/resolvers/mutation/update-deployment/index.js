@@ -1,8 +1,15 @@
 import validate from "deployments/validate";
 import {
+  envArrayToObject,
   combinePropsForUpdate,
+  generateHelmValues,
   propertiesObjectToArray
 } from "deployments/config";
+import {
+  generateEnvironmentSecretName,
+  generateNamespace
+} from "deployments/naming";
+import { addFragmentToInfo } from "graphql-binding";
 import { get, merge, pick } from "lodash";
 
 /*
@@ -16,7 +23,7 @@ export default async function updateDeployment(parent, args, ctx, info) {
   // Get the deployment first.
   const deployment = await ctx.db.query.deployment(
     { where: { id: args.deploymentUuid } },
-    `{ properties { id, key, value }, workspace { id } }`
+    `{ releaseName, properties { id, key, value }, workspace { id } }`
   );
 
   // This should be directly defined in the schema, rather than nested
@@ -42,6 +49,7 @@ export default async function updateDeployment(parent, args, ctx, info) {
   await validate(deployment.workspace.id, mungedArgs, args.deploymentUuid);
 
   // Create the update statement.
+  const where = { id: args.deploymentUuid };
   const data = merge({}, updatablePayload, {
     config: mungedArgs.config,
     properties: combinePropsForUpdate(
@@ -50,14 +58,39 @@ export default async function updateDeployment(parent, args, ctx, info) {
     )
   });
 
+  // Ensure some required fields for usage.
+  const fragment = `fragment EnsureFields on Deployment { id, releaseName, type, version }`;
+
   // Update the deployment in the database.
   const updatedDeployment = await ctx.db.mutation.updateDeployment(
-    {
-      where: { id: args.deploymentUuid },
-      data
-    },
-    info
+    { where, data },
+    addFragmentToInfo(info, fragment)
   );
 
+  // Set any environment variables.
+  if (args.env) {
+    await ctx.commander.request("setSecret", {
+      releaseNname: updatedDeployment.releaseName,
+      namespace: generateNamespace(updatedDeployment.releaseName),
+      secret: {
+        name: generateEnvironmentSecretName(updatedDeployment.releaseName),
+        data: envArrayToObject(args.env)
+      }
+    });
+  }
+
+  // If we're syncing to kubernetes, fire update to commander.
+  if (args.sync) {
+    await ctx.commander.request("updateDeployment", {
+      releaseName: updatedDeployment.releaseName,
+      chart: {
+        name: updateDeployment.type,
+        version: updateDeployment.version
+      },
+      rawConfig: JSON.stringify(generateHelmValues(updatedDeployment))
+    });
+  }
+
+  // Return the updated deployment object.
   return updatedDeployment;
 }
