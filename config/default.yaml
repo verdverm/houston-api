@@ -1,3 +1,5 @@
+# This file contains non-secret configurations.
+
 # API webserver configuration.
 webserver:
   port: 8871

@@ -2,5 +2,4 @@
 coverage
 dist
 node_modules
-config/development.yaml
-config/production.yaml
+config/local.yaml

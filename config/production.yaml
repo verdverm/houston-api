@@ -1,0 +1,5 @@
+# This file contains non-secret configurations that differ
+# from the default configuration for production environments.
+
+commander:
+  enabled: true
