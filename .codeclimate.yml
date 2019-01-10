@@ -1,2 +1,6 @@
 exclude_patterns:
   - "src/generated/**"
+checks:
+  method-lines:
+    config:
+      threshold: 50
