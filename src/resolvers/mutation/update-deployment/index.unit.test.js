@@ -7,7 +7,6 @@ import { makeExecutableSchema } from "graphql-tools";
 import { importSchema } from "graphql-import";
 import {
   AIRFLOW_EXECUTOR_CELERY,
-  DEPLOYMENT_AIRFLOW,
   DEPLOYMENT_PROPERTY_COMPONENT_VERSION,
   DEPLOYMENT_PROPERTY_ALERT_EMAILS,
   DEPLOYMENT_PROPERTY_EXTRA_AU
