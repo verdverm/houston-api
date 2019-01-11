@@ -1,3 +1,4 @@
+import fragment from "./fragment";
 import { serviceAccountRoleMappings } from "rbac";
 import { addFragmentToInfo } from "graphql-binding";
 import crypto from "crypto";
@@ -30,9 +31,6 @@ export default async function createServiceAccount(parent, args, ctx, info) {
       }
     }
   };
-
-  // Create a fragment to ensure that we always return the id.
-  const fragment = `fragment EnsureFields on ServiceAccount { id, roleBinding { role, workspace { id } }, deployment { id } }`;
 
   // Run the mutation.
   return ctx.db.mutation.createServiceAccount(

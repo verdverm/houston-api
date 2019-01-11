@@ -1,3 +1,4 @@
+import fragment from "./fragment";
 import { compact } from "lodash";
 import { addFragmentToInfo } from "graphql-binding";
 
@@ -24,10 +25,6 @@ export default async function workspaces(parent, args, ctx, info) {
     );
     query.where = { id_in: compact(workspaceIds) };
   }
-
-  // Create a fragment to ensure that we always return the id and deployments,
-  // no matter what a user requests.
-  const fragment = `fragment EnsureFields on Workspace { id, deployments }`;
 
   // Get the workspaces, using their ids and passing the user specified selection set.
   return await ctx.db.query.workspaces(

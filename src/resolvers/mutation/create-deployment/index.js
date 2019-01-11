@@ -1,3 +1,4 @@
+import fragment from "./fragment";
 import {
   generateReleaseName,
   generateNamespace,
@@ -62,10 +63,6 @@ export default async function createDeployment(parent, args, ctx, info) {
       }
     }
   };
-
-  // Create a fragment to ensure that we always return the id, config, releaseName
-  // and properties, no matter what a user requests.
-  const fragment = `fragment EnsureFields on Deployment { id, config, releaseName, properties { key, value } }`;
 
   // Run the mutation.
   const deployment = await ctx.db.mutation.createDeployment(

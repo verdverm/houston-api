@@ -1,3 +1,4 @@
+import fragment from "./fragment";
 import validate from "deployments/validate";
 import {
   envArrayToObject,
@@ -57,9 +58,6 @@ export default async function updateDeployment(parent, args, ctx, info) {
       deployment.properties
     )
   });
-
-  // Ensure some required fields for usage.
-  const fragment = `fragment EnsureFields on Deployment { id, releaseName, type, version }`;
 
   // Update the deployment in the database.
   const updatedDeployment = await ctx.db.mutation.updateDeployment(
