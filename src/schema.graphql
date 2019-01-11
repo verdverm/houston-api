@@ -1,4 +1,4 @@
-# import InviteToken, LocalCredential, RoleBinding, UserProperty, WorkspaceProperty, DeploymentProperty from "./generated/schema/prisma.graphql"
+# import DeploymentProperty, InviteToken, LocalCredential, RoleBinding, ServiceAccount, UserProperty, WorkspaceProperty from "./generated/schema/prisma.graphql"
 
 #
 # Directives
@@ -18,6 +18,15 @@ directive @alias(
 #
 scalar JSON
 scalar Uuid
+
+#
+# Enums
+#
+enum EntityType {
+  WORKSPACE
+  DEPLOYMENT
+  SYSTEM
+}
 
 #
 # Types
@@ -141,6 +150,20 @@ type Deployment {
   updatedAt: DateTime!
 }
 
+type ServiceAccount {
+  id: ID!
+  uuid: Uuid @alias(field: "id")
+  apiKey: String
+  label: String
+  category: String
+  entityType: String
+  entityUuid: Uuid
+  active: Boolean
+  lastUsedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
 #
 # Queries
 #
@@ -178,6 +201,12 @@ type Query {
     deploymentUuid: Uuid
     releaseName: String
   ): [Deployment] @auth
+
+  serviceAccounts(
+    serviceAccountUuid: Uuid
+    entityType: EntityType
+    entityUuid: Uuid
+  ): [ServiceAccount] @auth
 }
 
 #
@@ -227,4 +256,11 @@ type Mutation {
   deleteDeployment(
     deploymentUuid: Uuid!
   ): Deployment @auth
+
+  createServiceAccount(
+    label: String!
+    category: String
+    entityType: EntityType!
+    entityUuid: Uuid
+  ): ServiceAccount
 }

@@ -78,7 +78,7 @@ export default async function createDeployment(parent, args, ctx, info) {
     {
       data: {
         role: DEPLOYMENT_ADMIN,
-        subject: { connect: { id: ctx.user.id } },
+        user: { connect: { id: ctx.user.id } },
         deployment: { connect: { id: deployment.id } }
       }
     },

@@ -23,6 +23,10 @@ type AggregateRoleBinding {
   count: Int!
 }
 
+type AggregateServiceAccount {
+  count: Int!
+}
+
 type AggregateUser {
   count: Int!
 }
@@ -1630,6 +1634,12 @@ type Mutation {
   upsertRoleBinding(where: RoleBindingWhereUniqueInput!, create: RoleBindingCreateInput!, update: RoleBindingUpdateInput!): RoleBinding!
   deleteRoleBinding(where: RoleBindingWhereUniqueInput!): RoleBinding
   deleteManyRoleBindings(where: RoleBindingWhereInput): BatchPayload!
+  createServiceAccount(data: ServiceAccountCreateInput!): ServiceAccount!
+  updateServiceAccount(data: ServiceAccountUpdateInput!, where: ServiceAccountWhereUniqueInput!): ServiceAccount
+  updateManyServiceAccounts(data: ServiceAccountUpdateManyMutationInput!, where: ServiceAccountWhereInput): BatchPayload!
+  upsertServiceAccount(where: ServiceAccountWhereUniqueInput!, create: ServiceAccountCreateInput!, update: ServiceAccountUpdateInput!): ServiceAccount!
+  deleteServiceAccount(where: ServiceAccountWhereUniqueInput!): ServiceAccount
+  deleteManyServiceAccounts(where: ServiceAccountWhereInput): BatchPayload!
   createUser(data: UserCreateInput!): User!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
@@ -1692,6 +1702,9 @@ type Query {
   roleBinding(where: RoleBindingWhereUniqueInput!): RoleBinding
   roleBindings(where: RoleBindingWhereInput, orderBy: RoleBindingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleBinding]!
   roleBindingsConnection(where: RoleBindingWhereInput, orderBy: RoleBindingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleBindingConnection!
+  serviceAccount(where: ServiceAccountWhereUniqueInput!): ServiceAccount
+  serviceAccounts(where: ServiceAccountWhereInput, orderBy: ServiceAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ServiceAccount]!
+  serviceAccountsConnection(where: ServiceAccountWhereInput, orderBy: ServiceAccountOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ServiceAccountConnection!
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
@@ -1721,8 +1734,9 @@ enum Role {
 
 type RoleBinding {
   id: ID!
-  subject: User
   role: Role
+  user: User
+  serviceAccount: ServiceAccount
   workspace: Workspace
   deployment: Deployment
 }
@@ -1734,14 +1748,15 @@ type RoleBindingConnection {
 }
 
 input RoleBindingCreateInput {
-  subject: UserCreateOneWithoutRoleBindingsInput
   role: Role
+  user: UserCreateOneWithoutRoleBindingsInput
+  serviceAccount: ServiceAccountCreateOneWithoutRoleBindingInput
   workspace: WorkspaceCreateOneWithoutRoleBindingsInput
   deployment: DeploymentCreateOneInput
 }
 
-input RoleBindingCreateManyWithoutSubjectInput {
-  create: [RoleBindingCreateWithoutSubjectInput!]
+input RoleBindingCreateManyWithoutUserInput {
+  create: [RoleBindingCreateWithoutUserInput!]
   connect: [RoleBindingWhereUniqueInput!]
 }
 
@@ -1750,15 +1765,29 @@ input RoleBindingCreateManyWithoutWorkspaceInput {
   connect: [RoleBindingWhereUniqueInput!]
 }
 
-input RoleBindingCreateWithoutSubjectInput {
+input RoleBindingCreateOneWithoutServiceAccountInput {
+  create: RoleBindingCreateWithoutServiceAccountInput
+  connect: RoleBindingWhereUniqueInput
+}
+
+input RoleBindingCreateWithoutServiceAccountInput {
   role: Role
+  user: UserCreateOneWithoutRoleBindingsInput
+  workspace: WorkspaceCreateOneWithoutRoleBindingsInput
+  deployment: DeploymentCreateOneInput
+}
+
+input RoleBindingCreateWithoutUserInput {
+  role: Role
+  serviceAccount: ServiceAccountCreateOneWithoutRoleBindingInput
   workspace: WorkspaceCreateOneWithoutRoleBindingsInput
   deployment: DeploymentCreateOneInput
 }
 
 input RoleBindingCreateWithoutWorkspaceInput {
-  subject: UserCreateOneWithoutRoleBindingsInput
   role: Role
+  user: UserCreateOneWithoutRoleBindingsInput
+  serviceAccount: ServiceAccountCreateOneWithoutRoleBindingInput
   deployment: DeploymentCreateOneInput
 }
 
@@ -1826,8 +1855,9 @@ input RoleBindingSubscriptionWhereInput {
 }
 
 input RoleBindingUpdateInput {
-  subject: UserUpdateOneWithoutRoleBindingsInput
   role: Role
+  user: UserUpdateOneWithoutRoleBindingsInput
+  serviceAccount: ServiceAccountUpdateOneWithoutRoleBindingInput
   workspace: WorkspaceUpdateOneWithoutRoleBindingsInput
   deployment: DeploymentUpdateOneInput
 }
@@ -1840,13 +1870,13 @@ input RoleBindingUpdateManyMutationInput {
   role: Role
 }
 
-input RoleBindingUpdateManyWithoutSubjectInput {
-  create: [RoleBindingCreateWithoutSubjectInput!]
+input RoleBindingUpdateManyWithoutUserInput {
+  create: [RoleBindingCreateWithoutUserInput!]
   delete: [RoleBindingWhereUniqueInput!]
   connect: [RoleBindingWhereUniqueInput!]
   disconnect: [RoleBindingWhereUniqueInput!]
-  update: [RoleBindingUpdateWithWhereUniqueWithoutSubjectInput!]
-  upsert: [RoleBindingUpsertWithWhereUniqueWithoutSubjectInput!]
+  update: [RoleBindingUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [RoleBindingUpsertWithWhereUniqueWithoutUserInput!]
   deleteMany: [RoleBindingScalarWhereInput!]
   updateMany: [RoleBindingUpdateManyWithWhereNestedInput!]
 }
@@ -1867,21 +1897,39 @@ input RoleBindingUpdateManyWithWhereNestedInput {
   data: RoleBindingUpdateManyDataInput!
 }
 
-input RoleBindingUpdateWithoutSubjectDataInput {
+input RoleBindingUpdateOneWithoutServiceAccountInput {
+  create: RoleBindingCreateWithoutServiceAccountInput
+  update: RoleBindingUpdateWithoutServiceAccountDataInput
+  upsert: RoleBindingUpsertWithoutServiceAccountInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: RoleBindingWhereUniqueInput
+}
+
+input RoleBindingUpdateWithoutServiceAccountDataInput {
   role: Role
+  user: UserUpdateOneWithoutRoleBindingsInput
+  workspace: WorkspaceUpdateOneWithoutRoleBindingsInput
+  deployment: DeploymentUpdateOneInput
+}
+
+input RoleBindingUpdateWithoutUserDataInput {
+  role: Role
+  serviceAccount: ServiceAccountUpdateOneWithoutRoleBindingInput
   workspace: WorkspaceUpdateOneWithoutRoleBindingsInput
   deployment: DeploymentUpdateOneInput
 }
 
 input RoleBindingUpdateWithoutWorkspaceDataInput {
-  subject: UserUpdateOneWithoutRoleBindingsInput
   role: Role
+  user: UserUpdateOneWithoutRoleBindingsInput
+  serviceAccount: ServiceAccountUpdateOneWithoutRoleBindingInput
   deployment: DeploymentUpdateOneInput
 }
 
-input RoleBindingUpdateWithWhereUniqueWithoutSubjectInput {
+input RoleBindingUpdateWithWhereUniqueWithoutUserInput {
   where: RoleBindingWhereUniqueInput!
-  data: RoleBindingUpdateWithoutSubjectDataInput!
+  data: RoleBindingUpdateWithoutUserDataInput!
 }
 
 input RoleBindingUpdateWithWhereUniqueWithoutWorkspaceInput {
@@ -1889,10 +1937,15 @@ input RoleBindingUpdateWithWhereUniqueWithoutWorkspaceInput {
   data: RoleBindingUpdateWithoutWorkspaceDataInput!
 }
 
-input RoleBindingUpsertWithWhereUniqueWithoutSubjectInput {
+input RoleBindingUpsertWithoutServiceAccountInput {
+  update: RoleBindingUpdateWithoutServiceAccountDataInput!
+  create: RoleBindingCreateWithoutServiceAccountInput!
+}
+
+input RoleBindingUpsertWithWhereUniqueWithoutUserInput {
   where: RoleBindingWhereUniqueInput!
-  update: RoleBindingUpdateWithoutSubjectDataInput!
-  create: RoleBindingCreateWithoutSubjectInput!
+  update: RoleBindingUpdateWithoutUserDataInput!
+  create: RoleBindingCreateWithoutUserInput!
 }
 
 input RoleBindingUpsertWithWhereUniqueWithoutWorkspaceInput {
@@ -1916,11 +1969,12 @@ input RoleBindingWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  subject: UserWhereInput
   role: Role
   role_not: Role
   role_in: [Role!]
   role_not_in: [Role!]
+  user: UserWhereInput
+  serviceAccount: ServiceAccountWhereInput
   workspace: WorkspaceWhereInput
   deployment: DeploymentWhereInput
   AND: [RoleBindingWhereInput!]
@@ -1932,6 +1986,231 @@ input RoleBindingWhereUniqueInput {
   id: ID
 }
 
+type ServiceAccount {
+  id: ID!
+  apiKey: String
+  label: String
+  category: String
+  active: Boolean
+  roleBinding: RoleBinding
+  lastUsedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ServiceAccountConnection {
+  pageInfo: PageInfo!
+  edges: [ServiceAccountEdge]!
+  aggregate: AggregateServiceAccount!
+}
+
+input ServiceAccountCreateInput {
+  apiKey: String
+  label: String
+  category: String
+  active: Boolean
+  roleBinding: RoleBindingCreateOneWithoutServiceAccountInput
+  lastUsedAt: DateTime
+}
+
+input ServiceAccountCreateOneWithoutRoleBindingInput {
+  create: ServiceAccountCreateWithoutRoleBindingInput
+  connect: ServiceAccountWhereUniqueInput
+}
+
+input ServiceAccountCreateWithoutRoleBindingInput {
+  apiKey: String
+  label: String
+  category: String
+  active: Boolean
+  lastUsedAt: DateTime
+}
+
+type ServiceAccountEdge {
+  node: ServiceAccount!
+  cursor: String!
+}
+
+enum ServiceAccountOrderByInput {
+  id_ASC
+  id_DESC
+  apiKey_ASC
+  apiKey_DESC
+  label_ASC
+  label_DESC
+  category_ASC
+  category_DESC
+  active_ASC
+  active_DESC
+  lastUsedAt_ASC
+  lastUsedAt_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type ServiceAccountPreviousValues {
+  id: ID!
+  apiKey: String
+  label: String
+  category: String
+  active: Boolean
+  lastUsedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type ServiceAccountSubscriptionPayload {
+  mutation: MutationType!
+  node: ServiceAccount
+  updatedFields: [String!]
+  previousValues: ServiceAccountPreviousValues
+}
+
+input ServiceAccountSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: ServiceAccountWhereInput
+  AND: [ServiceAccountSubscriptionWhereInput!]
+  OR: [ServiceAccountSubscriptionWhereInput!]
+  NOT: [ServiceAccountSubscriptionWhereInput!]
+}
+
+input ServiceAccountUpdateInput {
+  apiKey: String
+  label: String
+  category: String
+  active: Boolean
+  roleBinding: RoleBindingUpdateOneWithoutServiceAccountInput
+  lastUsedAt: DateTime
+}
+
+input ServiceAccountUpdateManyMutationInput {
+  apiKey: String
+  label: String
+  category: String
+  active: Boolean
+  lastUsedAt: DateTime
+}
+
+input ServiceAccountUpdateOneWithoutRoleBindingInput {
+  create: ServiceAccountCreateWithoutRoleBindingInput
+  update: ServiceAccountUpdateWithoutRoleBindingDataInput
+  upsert: ServiceAccountUpsertWithoutRoleBindingInput
+  delete: Boolean
+  disconnect: Boolean
+  connect: ServiceAccountWhereUniqueInput
+}
+
+input ServiceAccountUpdateWithoutRoleBindingDataInput {
+  apiKey: String
+  label: String
+  category: String
+  active: Boolean
+  lastUsedAt: DateTime
+}
+
+input ServiceAccountUpsertWithoutRoleBindingInput {
+  update: ServiceAccountUpdateWithoutRoleBindingDataInput!
+  create: ServiceAccountCreateWithoutRoleBindingInput!
+}
+
+input ServiceAccountWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  apiKey: String
+  apiKey_not: String
+  apiKey_in: [String!]
+  apiKey_not_in: [String!]
+  apiKey_lt: String
+  apiKey_lte: String
+  apiKey_gt: String
+  apiKey_gte: String
+  apiKey_contains: String
+  apiKey_not_contains: String
+  apiKey_starts_with: String
+  apiKey_not_starts_with: String
+  apiKey_ends_with: String
+  apiKey_not_ends_with: String
+  label: String
+  label_not: String
+  label_in: [String!]
+  label_not_in: [String!]
+  label_lt: String
+  label_lte: String
+  label_gt: String
+  label_gte: String
+  label_contains: String
+  label_not_contains: String
+  label_starts_with: String
+  label_not_starts_with: String
+  label_ends_with: String
+  label_not_ends_with: String
+  category: String
+  category_not: String
+  category_in: [String!]
+  category_not_in: [String!]
+  category_lt: String
+  category_lte: String
+  category_gt: String
+  category_gte: String
+  category_contains: String
+  category_not_contains: String
+  category_starts_with: String
+  category_not_starts_with: String
+  category_ends_with: String
+  category_not_ends_with: String
+  active: Boolean
+  active_not: Boolean
+  roleBinding: RoleBindingWhereInput
+  lastUsedAt: DateTime
+  lastUsedAt_not: DateTime
+  lastUsedAt_in: [DateTime!]
+  lastUsedAt_not_in: [DateTime!]
+  lastUsedAt_lt: DateTime
+  lastUsedAt_lte: DateTime
+  lastUsedAt_gt: DateTime
+  lastUsedAt_gte: DateTime
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
+  AND: [ServiceAccountWhereInput!]
+  OR: [ServiceAccountWhereInput!]
+  NOT: [ServiceAccountWhereInput!]
+}
+
+input ServiceAccountWhereUniqueInput {
+  id: ID
+}
+
 type Subscription {
   deployment(where: DeploymentSubscriptionWhereInput): DeploymentSubscriptionPayload
   deploymentProperty(where: DeploymentPropertySubscriptionWhereInput): DeploymentPropertySubscriptionPayload
@@ -1939,6 +2218,7 @@ type Subscription {
   inviteToken(where: InviteTokenSubscriptionWhereInput): InviteTokenSubscriptionPayload
   localCredential(where: LocalCredentialSubscriptionWhereInput): LocalCredentialSubscriptionPayload
   roleBinding(where: RoleBindingSubscriptionWhereInput): RoleBindingSubscriptionPayload
+  serviceAccount(where: ServiceAccountSubscriptionWhereInput): ServiceAccountSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   userProperty(where: UserPropertySubscriptionWhereInput): UserPropertySubscriptionPayload
   workspace(where: WorkspaceSubscriptionWhereInput): WorkspaceSubscriptionPayload
@@ -1972,7 +2252,7 @@ input UserCreateInput {
   status: String
   inviteTokens: InviteTokenCreateManyWithoutUserInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
-  roleBindings: RoleBindingCreateManyWithoutSubjectInput
+  roleBindings: RoleBindingCreateManyWithoutUserInput
   profile: UserPropertyCreateManyWithoutUserInput
 }
 
@@ -2007,7 +2287,7 @@ input UserCreateWithoutEmailsInput {
   status: String
   inviteTokens: InviteTokenCreateManyWithoutUserInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
-  roleBindings: RoleBindingCreateManyWithoutSubjectInput
+  roleBindings: RoleBindingCreateManyWithoutUserInput
   profile: UserPropertyCreateManyWithoutUserInput
 }
 
@@ -2017,7 +2297,7 @@ input UserCreateWithoutInviteTokensInput {
   fullName: String
   status: String
   localCredential: LocalCredentialCreateOneWithoutUserInput
-  roleBindings: RoleBindingCreateManyWithoutSubjectInput
+  roleBindings: RoleBindingCreateManyWithoutUserInput
   profile: UserPropertyCreateManyWithoutUserInput
 }
 
@@ -2027,7 +2307,7 @@ input UserCreateWithoutLocalCredentialInput {
   fullName: String
   status: String
   inviteTokens: InviteTokenCreateManyWithoutUserInput
-  roleBindings: RoleBindingCreateManyWithoutSubjectInput
+  roleBindings: RoleBindingCreateManyWithoutUserInput
   profile: UserPropertyCreateManyWithoutUserInput
 }
 
@@ -2038,7 +2318,7 @@ input UserCreateWithoutProfileInput {
   status: String
   inviteTokens: InviteTokenCreateManyWithoutUserInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
-  roleBindings: RoleBindingCreateManyWithoutSubjectInput
+  roleBindings: RoleBindingCreateManyWithoutUserInput
 }
 
 input UserCreateWithoutRoleBindingsInput {
@@ -2363,7 +2643,7 @@ input UserUpdateInput {
   status: String
   inviteTokens: InviteTokenUpdateManyWithoutUserInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
-  roleBindings: RoleBindingUpdateManyWithoutSubjectInput
+  roleBindings: RoleBindingUpdateManyWithoutUserInput
   profile: UserPropertyUpdateManyWithoutUserInput
 }
 
@@ -2424,7 +2704,7 @@ input UserUpdateWithoutEmailsDataInput {
   status: String
   inviteTokens: InviteTokenUpdateManyWithoutUserInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
-  roleBindings: RoleBindingUpdateManyWithoutSubjectInput
+  roleBindings: RoleBindingUpdateManyWithoutUserInput
   profile: UserPropertyUpdateManyWithoutUserInput
 }
 
@@ -2434,7 +2714,7 @@ input UserUpdateWithoutInviteTokensDataInput {
   fullName: String
   status: String
   localCredential: LocalCredentialUpdateOneWithoutUserInput
-  roleBindings: RoleBindingUpdateManyWithoutSubjectInput
+  roleBindings: RoleBindingUpdateManyWithoutUserInput
   profile: UserPropertyUpdateManyWithoutUserInput
 }
 
@@ -2444,7 +2724,7 @@ input UserUpdateWithoutLocalCredentialDataInput {
   fullName: String
   status: String
   inviteTokens: InviteTokenUpdateManyWithoutUserInput
-  roleBindings: RoleBindingUpdateManyWithoutSubjectInput
+  roleBindings: RoleBindingUpdateManyWithoutUserInput
   profile: UserPropertyUpdateManyWithoutUserInput
 }
 
@@ -2455,7 +2735,7 @@ input UserUpdateWithoutProfileDataInput {
   status: String
   inviteTokens: InviteTokenUpdateManyWithoutUserInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
-  roleBindings: RoleBindingUpdateManyWithoutSubjectInput
+  roleBindings: RoleBindingUpdateManyWithoutUserInput
 }
 
 input UserUpdateWithoutRoleBindingsDataInput {

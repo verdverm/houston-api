@@ -1,13 +1,15 @@
-import createUser from "./create-user";
-import createToken from "./create-token";
 import createDeployment from "./create-deployment";
+import createServiceAccount from "./create-service-account";
+import createToken from "./create-token";
+import createUser from "./create-user";
 import deleteDeployment from "./delete-deployment";
 import updateDeployment from "./update-deployment";
 
 export default {
-  createUser,
-  createToken,
   createDeployment,
+  createServiceAccount,
+  createToken,
+  createUser,
   deleteDeployment,
   updateDeployment
 };

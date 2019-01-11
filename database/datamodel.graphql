@@ -36,10 +36,15 @@ type UserProperty {
   user: User
 }
 
+# Ideally this type uses a union type once prisma supports it.
+# subject: User | ServiceAccount
+# principal: Workspace | Deployment
+# https://github.com/prisma/prisma/issues/165
 type RoleBinding {
   id: ID! @unique
-  subject: User
   role: Role
+  user: User
+  serviceAccount: ServiceAccount
   workspace: Workspace
   deployment: Deployment
 }
@@ -154,18 +159,17 @@ type InviteToken {
 # #   serviceAccount: ServiceAccount
 # # }
 
-# type ServiceAccount {
-#   id: ID! @unique
-#   active: Boolean
-#   api_key: String
-#   category: String
-#   entity_type: String
-#   entity_uuid: UUID
-#   label: String
-#   lastUsedAt: DateTime
-#   roles: [Role!]!
-#   # serviceAccountRoles: [ServiceAccountRole!]!
-# }
+type ServiceAccount {
+  id: ID! @unique
+  apiKey: String
+  label: String
+  category: String
+  active: Boolean
+  roleBinding: RoleBinding
+  lastUsedAt: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
 
 # type UserWorkspace @pgTable(name: "user_workspace_map") {
 #   user: User @pgRelation(column: "user_uuid")

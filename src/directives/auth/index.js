@@ -33,20 +33,14 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
         config.get("jwtPassphrase")
       );
 
-      if (!userId) {
-        log.info(`Request missing userId - permission denied`);
-        throw new PermissionError();
-      }
+      if (!userId) throw new PermissionError();
 
       ctx.user = await ctx.db.query.user(
         { where: { id: userId } },
         `{ id, username, roleBindings { role, workspace { id }, deployment { id } } }`
       );
 
-      if (!ctx.user) {
-        log.info(`UserId ${userId} not found - permission denied`);
-        throw new PermissionError();
-      }
+      if (!ctx.user) throw new PermissionError();
 
       log.debug(`Executing authenticated request for userId ${userId}`);
       return resolve.apply(this, args);

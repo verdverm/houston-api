@@ -1,11 +1,13 @@
 import AuthConfig from "./auth-config";
 import AuthUser from "./auth-user";
-import Workspace from "./workspace";
 import Deployment from "./deployment";
+import ServiceAccount from "./service-account";
+import Workspace from "./workspace";
 
 export default {
   AuthConfig,
   AuthUser,
-  Workspace,
-  Deployment
+  Deployment,
+  ServiceAccount,
+  Workspace
 };

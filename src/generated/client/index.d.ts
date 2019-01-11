@@ -22,6 +22,7 @@ export interface Exists {
   inviteToken: (where?: InviteTokenWhereInput) => Promise<boolean>;
   localCredential: (where?: LocalCredentialWhereInput) => Promise<boolean>;
   roleBinding: (where?: RoleBindingWhereInput) => Promise<boolean>;
+  serviceAccount: (where?: ServiceAccountWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
   userProperty: (where?: UserPropertyWhereInput) => Promise<boolean>;
   workspace: (where?: WorkspaceWhereInput) => Promise<boolean>;
@@ -189,6 +190,31 @@ export interface Prisma {
       last?: Int;
     }
   ) => RoleBindingConnectionPromise;
+  serviceAccount: (
+    where: ServiceAccountWhereUniqueInput
+  ) => ServiceAccountPromise;
+  serviceAccounts: (
+    args?: {
+      where?: ServiceAccountWhereInput;
+      orderBy?: ServiceAccountOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => FragmentableArray<ServiceAccount>;
+  serviceAccountsConnection: (
+    args?: {
+      where?: ServiceAccountWhereInput;
+      orderBy?: ServiceAccountOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => ServiceAccountConnectionPromise;
   user: (where: UserWhereUniqueInput) => UserPromise;
   users: (
     args?: {
@@ -422,6 +448,34 @@ export interface Prisma {
   deleteManyRoleBindings: (
     where?: RoleBindingWhereInput
   ) => BatchPayloadPromise;
+  createServiceAccount: (
+    data: ServiceAccountCreateInput
+  ) => ServiceAccountPromise;
+  updateServiceAccount: (
+    args: {
+      data: ServiceAccountUpdateInput;
+      where: ServiceAccountWhereUniqueInput;
+    }
+  ) => ServiceAccountPromise;
+  updateManyServiceAccounts: (
+    args: {
+      data: ServiceAccountUpdateManyMutationInput;
+      where?: ServiceAccountWhereInput;
+    }
+  ) => BatchPayloadPromise;
+  upsertServiceAccount: (
+    args: {
+      where: ServiceAccountWhereUniqueInput;
+      create: ServiceAccountCreateInput;
+      update: ServiceAccountUpdateInput;
+    }
+  ) => ServiceAccountPromise;
+  deleteServiceAccount: (
+    where: ServiceAccountWhereUniqueInput
+  ) => ServiceAccountPromise;
+  deleteManyServiceAccounts: (
+    where?: ServiceAccountWhereInput
+  ) => BatchPayloadPromise;
   createUser: (data: UserCreateInput) => UserPromise;
   updateUser: (
     args: { data: UserUpdateInput; where: UserWhereUniqueInput }
@@ -535,6 +589,9 @@ export interface Subscription {
   roleBinding: (
     where?: RoleBindingSubscriptionWhereInput
   ) => RoleBindingSubscriptionPayloadSubscription;
+  serviceAccount: (
+    where?: ServiceAccountSubscriptionWhereInput
+  ) => ServiceAccountSubscriptionPayloadSubscription;
   user: (
     where?: UserSubscriptionWhereInput
   ) => UserSubscriptionPayloadSubscription;
@@ -681,6 +738,24 @@ export type LocalCredentialOrderByInput =
   | "password_DESC"
   | "resetToken_ASC"
   | "resetToken_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
+
+export type ServiceAccountOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "apiKey_ASC"
+  | "apiKey_DESC"
+  | "label_ASC"
+  | "label_DESC"
+  | "category_ASC"
+  | "category_DESC"
+  | "active_ASC"
+  | "active_DESC"
+  | "lastUsedAt_ASC"
+  | "lastUsedAt_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -1288,16 +1363,106 @@ export interface RoleBindingWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
-  subject?: UserWhereInput;
   role?: Role;
   role_not?: Role;
   role_in?: Role[] | Role;
   role_not_in?: Role[] | Role;
+  user?: UserWhereInput;
+  serviceAccount?: ServiceAccountWhereInput;
   workspace?: WorkspaceWhereInput;
   deployment?: DeploymentWhereInput;
   AND?: RoleBindingWhereInput[] | RoleBindingWhereInput;
   OR?: RoleBindingWhereInput[] | RoleBindingWhereInput;
   NOT?: RoleBindingWhereInput[] | RoleBindingWhereInput;
+}
+
+export interface ServiceAccountWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  apiKey?: String;
+  apiKey_not?: String;
+  apiKey_in?: String[] | String;
+  apiKey_not_in?: String[] | String;
+  apiKey_lt?: String;
+  apiKey_lte?: String;
+  apiKey_gt?: String;
+  apiKey_gte?: String;
+  apiKey_contains?: String;
+  apiKey_not_contains?: String;
+  apiKey_starts_with?: String;
+  apiKey_not_starts_with?: String;
+  apiKey_ends_with?: String;
+  apiKey_not_ends_with?: String;
+  label?: String;
+  label_not?: String;
+  label_in?: String[] | String;
+  label_not_in?: String[] | String;
+  label_lt?: String;
+  label_lte?: String;
+  label_gt?: String;
+  label_gte?: String;
+  label_contains?: String;
+  label_not_contains?: String;
+  label_starts_with?: String;
+  label_not_starts_with?: String;
+  label_ends_with?: String;
+  label_not_ends_with?: String;
+  category?: String;
+  category_not?: String;
+  category_in?: String[] | String;
+  category_not_in?: String[] | String;
+  category_lt?: String;
+  category_lte?: String;
+  category_gt?: String;
+  category_gte?: String;
+  category_contains?: String;
+  category_not_contains?: String;
+  category_starts_with?: String;
+  category_not_starts_with?: String;
+  category_ends_with?: String;
+  category_not_ends_with?: String;
+  active?: Boolean;
+  active_not?: Boolean;
+  roleBinding?: RoleBindingWhereInput;
+  lastUsedAt?: DateTimeInput;
+  lastUsedAt_not?: DateTimeInput;
+  lastUsedAt_in?: DateTimeInput[] | DateTimeInput;
+  lastUsedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  lastUsedAt_lt?: DateTimeInput;
+  lastUsedAt_lte?: DateTimeInput;
+  lastUsedAt_gt?: DateTimeInput;
+  lastUsedAt_gte?: DateTimeInput;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  AND?: ServiceAccountWhereInput[] | ServiceAccountWhereInput;
+  OR?: ServiceAccountWhereInput[] | ServiceAccountWhereInput;
+  NOT?: ServiceAccountWhereInput[] | ServiceAccountWhereInput;
 }
 
 export interface UserPropertyWhereInput {
@@ -1465,6 +1630,10 @@ export type RoleBindingWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
+export type ServiceAccountWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+}>;
+
 export type UserWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
   username?: String;
@@ -1549,7 +1718,7 @@ export interface UserCreateWithoutInviteTokensInput {
   fullName?: String;
   status?: String;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
-  roleBindings?: RoleBindingCreateManyWithoutSubjectInput;
+  roleBindings?: RoleBindingCreateManyWithoutUserInput;
   profile?: UserPropertyCreateManyWithoutUserInput;
 }
 
@@ -1575,17 +1744,31 @@ export interface LocalCredentialCreateWithoutUserInput {
   resetToken?: String;
 }
 
-export interface RoleBindingCreateManyWithoutSubjectInput {
+export interface RoleBindingCreateManyWithoutUserInput {
   create?:
-    | RoleBindingCreateWithoutSubjectInput[]
-    | RoleBindingCreateWithoutSubjectInput;
+    | RoleBindingCreateWithoutUserInput[]
+    | RoleBindingCreateWithoutUserInput;
   connect?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
 }
 
-export interface RoleBindingCreateWithoutSubjectInput {
+export interface RoleBindingCreateWithoutUserInput {
   role?: Role;
+  serviceAccount?: ServiceAccountCreateOneWithoutRoleBindingInput;
   workspace?: WorkspaceCreateOneWithoutRoleBindingsInput;
   deployment?: DeploymentCreateOneInput;
+}
+
+export interface ServiceAccountCreateOneWithoutRoleBindingInput {
+  create?: ServiceAccountCreateWithoutRoleBindingInput;
+  connect?: ServiceAccountWhereUniqueInput;
+}
+
+export interface ServiceAccountCreateWithoutRoleBindingInput {
+  apiKey?: String;
+  label?: String;
+  category?: String;
+  active?: Boolean;
+  lastUsedAt?: DateTimeInput;
 }
 
 export interface WorkspaceCreateOneWithoutRoleBindingsInput {
@@ -1662,8 +1845,9 @@ export interface RoleBindingCreateManyWithoutWorkspaceInput {
 }
 
 export interface RoleBindingCreateWithoutWorkspaceInput {
-  subject?: UserCreateOneWithoutRoleBindingsInput;
   role?: Role;
+  user?: UserCreateOneWithoutRoleBindingsInput;
+  serviceAccount?: ServiceAccountCreateOneWithoutRoleBindingInput;
   deployment?: DeploymentCreateOneInput;
 }
 
@@ -1926,7 +2110,7 @@ export interface UserUpdateWithoutInviteTokensDataInput {
   fullName?: String;
   status?: String;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
-  roleBindings?: RoleBindingUpdateManyWithoutSubjectInput;
+  roleBindings?: RoleBindingUpdateManyWithoutUserInput;
   profile?: UserPropertyUpdateManyWithoutUserInput;
 }
 
@@ -2048,34 +2232,57 @@ export interface LocalCredentialUpsertWithoutUserInput {
   create: LocalCredentialCreateWithoutUserInput;
 }
 
-export interface RoleBindingUpdateManyWithoutSubjectInput {
+export interface RoleBindingUpdateManyWithoutUserInput {
   create?:
-    | RoleBindingCreateWithoutSubjectInput[]
-    | RoleBindingCreateWithoutSubjectInput;
+    | RoleBindingCreateWithoutUserInput[]
+    | RoleBindingCreateWithoutUserInput;
   delete?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
   connect?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
   disconnect?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
   update?:
-    | RoleBindingUpdateWithWhereUniqueWithoutSubjectInput[]
-    | RoleBindingUpdateWithWhereUniqueWithoutSubjectInput;
+    | RoleBindingUpdateWithWhereUniqueWithoutUserInput[]
+    | RoleBindingUpdateWithWhereUniqueWithoutUserInput;
   upsert?:
-    | RoleBindingUpsertWithWhereUniqueWithoutSubjectInput[]
-    | RoleBindingUpsertWithWhereUniqueWithoutSubjectInput;
+    | RoleBindingUpsertWithWhereUniqueWithoutUserInput[]
+    | RoleBindingUpsertWithWhereUniqueWithoutUserInput;
   deleteMany?: RoleBindingScalarWhereInput[] | RoleBindingScalarWhereInput;
   updateMany?:
     | RoleBindingUpdateManyWithWhereNestedInput[]
     | RoleBindingUpdateManyWithWhereNestedInput;
 }
 
-export interface RoleBindingUpdateWithWhereUniqueWithoutSubjectInput {
+export interface RoleBindingUpdateWithWhereUniqueWithoutUserInput {
   where: RoleBindingWhereUniqueInput;
-  data: RoleBindingUpdateWithoutSubjectDataInput;
+  data: RoleBindingUpdateWithoutUserDataInput;
 }
 
-export interface RoleBindingUpdateWithoutSubjectDataInput {
+export interface RoleBindingUpdateWithoutUserDataInput {
   role?: Role;
+  serviceAccount?: ServiceAccountUpdateOneWithoutRoleBindingInput;
   workspace?: WorkspaceUpdateOneWithoutRoleBindingsInput;
   deployment?: DeploymentUpdateOneInput;
+}
+
+export interface ServiceAccountUpdateOneWithoutRoleBindingInput {
+  create?: ServiceAccountCreateWithoutRoleBindingInput;
+  update?: ServiceAccountUpdateWithoutRoleBindingDataInput;
+  upsert?: ServiceAccountUpsertWithoutRoleBindingInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: ServiceAccountWhereUniqueInput;
+}
+
+export interface ServiceAccountUpdateWithoutRoleBindingDataInput {
+  apiKey?: String;
+  label?: String;
+  category?: String;
+  active?: Boolean;
+  lastUsedAt?: DateTimeInput;
+}
+
+export interface ServiceAccountUpsertWithoutRoleBindingInput {
+  update: ServiceAccountUpdateWithoutRoleBindingDataInput;
+  create: ServiceAccountCreateWithoutRoleBindingInput;
 }
 
 export interface WorkspaceUpdateOneWithoutRoleBindingsInput {
@@ -2453,10 +2660,10 @@ export interface DeploymentUpsertNestedInput {
   create: DeploymentCreateInput;
 }
 
-export interface RoleBindingUpsertWithWhereUniqueWithoutSubjectInput {
+export interface RoleBindingUpsertWithWhereUniqueWithoutUserInput {
   where: RoleBindingWhereUniqueInput;
-  update: RoleBindingUpdateWithoutSubjectDataInput;
-  create: RoleBindingCreateWithoutSubjectInput;
+  update: RoleBindingUpdateWithoutUserDataInput;
+  create: RoleBindingCreateWithoutUserInput;
 }
 
 export interface RoleBindingScalarWhereInput {
@@ -2710,8 +2917,9 @@ export interface RoleBindingUpdateWithWhereUniqueWithoutWorkspaceInput {
 }
 
 export interface RoleBindingUpdateWithoutWorkspaceDataInput {
-  subject?: UserUpdateOneWithoutRoleBindingsInput;
   role?: Role;
+  user?: UserUpdateOneWithoutRoleBindingsInput;
+  serviceAccount?: ServiceAccountUpdateOneWithoutRoleBindingInput;
   deployment?: DeploymentUpdateOneInput;
 }
 
@@ -2903,7 +3111,7 @@ export interface UserCreateWithoutEmailsInput {
   status?: String;
   inviteTokens?: InviteTokenCreateManyWithoutUserInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
-  roleBindings?: RoleBindingCreateManyWithoutSubjectInput;
+  roleBindings?: RoleBindingCreateManyWithoutUserInput;
   profile?: UserPropertyCreateManyWithoutUserInput;
 }
 
@@ -2930,7 +3138,7 @@ export interface UserUpdateWithoutEmailsDataInput {
   status?: String;
   inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
-  roleBindings?: RoleBindingUpdateManyWithoutSubjectInput;
+  roleBindings?: RoleBindingUpdateManyWithoutUserInput;
   profile?: UserPropertyUpdateManyWithoutUserInput;
 }
 
@@ -2985,7 +3193,7 @@ export interface UserCreateWithoutLocalCredentialInput {
   fullName?: String;
   status?: String;
   inviteTokens?: InviteTokenCreateManyWithoutUserInput;
-  roleBindings?: RoleBindingCreateManyWithoutSubjectInput;
+  roleBindings?: RoleBindingCreateManyWithoutUserInput;
   profile?: UserPropertyCreateManyWithoutUserInput;
 }
 
@@ -3010,7 +3218,7 @@ export interface UserUpdateWithoutLocalCredentialDataInput {
   fullName?: String;
   status?: String;
   inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
-  roleBindings?: RoleBindingUpdateManyWithoutSubjectInput;
+  roleBindings?: RoleBindingUpdateManyWithoutUserInput;
   profile?: UserPropertyUpdateManyWithoutUserInput;
 }
 
@@ -3025,21 +3233,82 @@ export interface LocalCredentialUpdateManyMutationInput {
 }
 
 export interface RoleBindingCreateInput {
-  subject?: UserCreateOneWithoutRoleBindingsInput;
   role?: Role;
+  user?: UserCreateOneWithoutRoleBindingsInput;
+  serviceAccount?: ServiceAccountCreateOneWithoutRoleBindingInput;
   workspace?: WorkspaceCreateOneWithoutRoleBindingsInput;
   deployment?: DeploymentCreateOneInput;
 }
 
 export interface RoleBindingUpdateInput {
-  subject?: UserUpdateOneWithoutRoleBindingsInput;
   role?: Role;
+  user?: UserUpdateOneWithoutRoleBindingsInput;
+  serviceAccount?: ServiceAccountUpdateOneWithoutRoleBindingInput;
   workspace?: WorkspaceUpdateOneWithoutRoleBindingsInput;
   deployment?: DeploymentUpdateOneInput;
 }
 
 export interface RoleBindingUpdateManyMutationInput {
   role?: Role;
+}
+
+export interface ServiceAccountCreateInput {
+  apiKey?: String;
+  label?: String;
+  category?: String;
+  active?: Boolean;
+  roleBinding?: RoleBindingCreateOneWithoutServiceAccountInput;
+  lastUsedAt?: DateTimeInput;
+}
+
+export interface RoleBindingCreateOneWithoutServiceAccountInput {
+  create?: RoleBindingCreateWithoutServiceAccountInput;
+  connect?: RoleBindingWhereUniqueInput;
+}
+
+export interface RoleBindingCreateWithoutServiceAccountInput {
+  role?: Role;
+  user?: UserCreateOneWithoutRoleBindingsInput;
+  workspace?: WorkspaceCreateOneWithoutRoleBindingsInput;
+  deployment?: DeploymentCreateOneInput;
+}
+
+export interface ServiceAccountUpdateInput {
+  apiKey?: String;
+  label?: String;
+  category?: String;
+  active?: Boolean;
+  roleBinding?: RoleBindingUpdateOneWithoutServiceAccountInput;
+  lastUsedAt?: DateTimeInput;
+}
+
+export interface RoleBindingUpdateOneWithoutServiceAccountInput {
+  create?: RoleBindingCreateWithoutServiceAccountInput;
+  update?: RoleBindingUpdateWithoutServiceAccountDataInput;
+  upsert?: RoleBindingUpsertWithoutServiceAccountInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: RoleBindingWhereUniqueInput;
+}
+
+export interface RoleBindingUpdateWithoutServiceAccountDataInput {
+  role?: Role;
+  user?: UserUpdateOneWithoutRoleBindingsInput;
+  workspace?: WorkspaceUpdateOneWithoutRoleBindingsInput;
+  deployment?: DeploymentUpdateOneInput;
+}
+
+export interface RoleBindingUpsertWithoutServiceAccountInput {
+  update: RoleBindingUpdateWithoutServiceAccountDataInput;
+  create: RoleBindingCreateWithoutServiceAccountInput;
+}
+
+export interface ServiceAccountUpdateManyMutationInput {
+  apiKey?: String;
+  label?: String;
+  category?: String;
+  active?: Boolean;
+  lastUsedAt?: DateTimeInput;
 }
 
 export interface UserCreateInput {
@@ -3049,7 +3318,7 @@ export interface UserCreateInput {
   status?: String;
   inviteTokens?: InviteTokenCreateManyWithoutUserInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
-  roleBindings?: RoleBindingCreateManyWithoutSubjectInput;
+  roleBindings?: RoleBindingCreateManyWithoutUserInput;
   profile?: UserPropertyCreateManyWithoutUserInput;
 }
 
@@ -3060,7 +3329,7 @@ export interface UserUpdateInput {
   status?: String;
   inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
-  roleBindings?: RoleBindingUpdateManyWithoutSubjectInput;
+  roleBindings?: RoleBindingUpdateManyWithoutUserInput;
   profile?: UserPropertyUpdateManyWithoutUserInput;
 }
 
@@ -3089,7 +3358,7 @@ export interface UserCreateWithoutProfileInput {
   status?: String;
   inviteTokens?: InviteTokenCreateManyWithoutUserInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
-  roleBindings?: RoleBindingCreateManyWithoutSubjectInput;
+  roleBindings?: RoleBindingCreateManyWithoutUserInput;
 }
 
 export interface UserPropertyUpdateInput {
@@ -3115,7 +3384,7 @@ export interface UserUpdateWithoutProfileDataInput {
   status?: String;
   inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
-  roleBindings?: RoleBindingUpdateManyWithoutSubjectInput;
+  roleBindings?: RoleBindingUpdateManyWithoutUserInput;
 }
 
 export interface UserUpsertWithoutProfileInput {
@@ -3288,6 +3557,23 @@ export interface RoleBindingSubscriptionWhereInput {
   AND?: RoleBindingSubscriptionWhereInput[] | RoleBindingSubscriptionWhereInput;
   OR?: RoleBindingSubscriptionWhereInput[] | RoleBindingSubscriptionWhereInput;
   NOT?: RoleBindingSubscriptionWhereInput[] | RoleBindingSubscriptionWhereInput;
+}
+
+export interface ServiceAccountSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: ServiceAccountWhereInput;
+  AND?:
+    | ServiceAccountSubscriptionWhereInput[]
+    | ServiceAccountSubscriptionWhereInput;
+  OR?:
+    | ServiceAccountSubscriptionWhereInput[]
+    | ServiceAccountSubscriptionWhereInput;
+  NOT?:
+    | ServiceAccountSubscriptionWhereInput[]
+    | ServiceAccountSubscriptionWhereInput;
 }
 
 export interface UserSubscriptionWhereInput {
@@ -3773,8 +4059,9 @@ export interface RoleBinding {
 
 export interface RoleBindingPromise extends Promise<RoleBinding>, Fragmentable {
   id: () => Promise<ID_Output>;
-  subject: <T = UserPromise>() => T;
   role: () => Promise<Role>;
+  user: <T = UserPromise>() => T;
+  serviceAccount: <T = ServiceAccountPromise>() => T;
   workspace: <T = WorkspacePromise>() => T;
   deployment: <T = DeploymentPromise>() => T;
 }
@@ -3783,10 +4070,50 @@ export interface RoleBindingSubscription
   extends Promise<AsyncIterator<RoleBinding>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  subject: <T = UserSubscription>() => T;
   role: () => Promise<AsyncIterator<Role>>;
+  user: <T = UserSubscription>() => T;
+  serviceAccount: <T = ServiceAccountSubscription>() => T;
   workspace: <T = WorkspaceSubscription>() => T;
   deployment: <T = DeploymentSubscription>() => T;
+}
+
+export interface ServiceAccount {
+  id: ID_Output;
+  apiKey?: String;
+  label?: String;
+  category?: String;
+  active?: Boolean;
+  lastUsedAt?: DateTimeOutput;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface ServiceAccountPromise
+  extends Promise<ServiceAccount>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  apiKey: () => Promise<String>;
+  label: () => Promise<String>;
+  category: () => Promise<String>;
+  active: () => Promise<Boolean>;
+  roleBinding: <T = RoleBindingPromise>() => T;
+  lastUsedAt: () => Promise<DateTimeOutput>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface ServiceAccountSubscription
+  extends Promise<AsyncIterator<ServiceAccount>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  apiKey: () => Promise<AsyncIterator<String>>;
+  label: () => Promise<AsyncIterator<String>>;
+  category: () => Promise<AsyncIterator<String>>;
+  active: () => Promise<AsyncIterator<Boolean>>;
+  roleBinding: <T = RoleBindingSubscription>() => T;
+  lastUsedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface UserProperty {
@@ -4204,6 +4531,62 @@ export interface AggregateRoleBindingPromise
 
 export interface AggregateRoleBindingSubscription
   extends Promise<AsyncIterator<AggregateRoleBinding>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface ServiceAccountConnection {
+  pageInfo: PageInfo;
+  edges: ServiceAccountEdge[];
+}
+
+export interface ServiceAccountConnectionPromise
+  extends Promise<ServiceAccountConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ServiceAccountEdge>>() => T;
+  aggregate: <T = AggregateServiceAccountPromise>() => T;
+}
+
+export interface ServiceAccountConnectionSubscription
+  extends Promise<AsyncIterator<ServiceAccountConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ServiceAccountEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateServiceAccountSubscription>() => T;
+}
+
+export interface ServiceAccountEdge {
+  node: ServiceAccount;
+  cursor: String;
+}
+
+export interface ServiceAccountEdgePromise
+  extends Promise<ServiceAccountEdge>,
+    Fragmentable {
+  node: <T = ServiceAccountPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface ServiceAccountEdgeSubscription
+  extends Promise<AsyncIterator<ServiceAccountEdge>>,
+    Fragmentable {
+  node: <T = ServiceAccountSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateServiceAccount {
+  count: Int;
+}
+
+export interface AggregateServiceAccountPromise
+  extends Promise<AggregateServiceAccount>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateServiceAccountSubscription
+  extends Promise<AsyncIterator<AggregateServiceAccount>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
@@ -4767,6 +5150,68 @@ export interface RoleBindingPreviousValuesSubscription
   role: () => Promise<AsyncIterator<Role>>;
 }
 
+export interface ServiceAccountSubscriptionPayload {
+  mutation: MutationType;
+  node: ServiceAccount;
+  updatedFields: String[];
+  previousValues: ServiceAccountPreviousValues;
+}
+
+export interface ServiceAccountSubscriptionPayloadPromise
+  extends Promise<ServiceAccountSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = ServiceAccountPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ServiceAccountPreviousValuesPromise>() => T;
+}
+
+export interface ServiceAccountSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ServiceAccountSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ServiceAccountSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ServiceAccountPreviousValuesSubscription>() => T;
+}
+
+export interface ServiceAccountPreviousValues {
+  id: ID_Output;
+  apiKey?: String;
+  label?: String;
+  category?: String;
+  active?: Boolean;
+  lastUsedAt?: DateTimeOutput;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface ServiceAccountPreviousValuesPromise
+  extends Promise<ServiceAccountPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  apiKey: () => Promise<String>;
+  label: () => Promise<String>;
+  category: () => Promise<String>;
+  active: () => Promise<Boolean>;
+  lastUsedAt: () => Promise<DateTimeOutput>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface ServiceAccountPreviousValuesSubscription
+  extends Promise<AsyncIterator<ServiceAccountPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  apiKey: () => Promise<AsyncIterator<String>>;
+  label: () => Promise<AsyncIterator<String>>;
+  category: () => Promise<AsyncIterator<String>>;
+  active: () => Promise<AsyncIterator<Boolean>>;
+  lastUsedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
 export interface UserSubscriptionPayload {
   mutation: MutationType;
   node: User;
@@ -5051,6 +5496,10 @@ export const models: Model[] = [
   },
   {
     name: "RoleBinding",
+    embedded: false
+  },
+  {
+    name: "ServiceAccount",
     embedded: false
   },
   {

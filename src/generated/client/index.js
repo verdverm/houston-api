@@ -33,6 +33,10 @@ var models = [
     embedded: false
   },
   {
+    name: "ServiceAccount",
+    embedded: false
+  },
+  {
     name: "User",
     embedded: false
   },
