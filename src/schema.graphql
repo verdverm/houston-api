@@ -1,11 +1,11 @@
-# import DeploymentProperty, InviteToken, LocalCredential, RoleBinding, ServiceAccount, UserProperty, WorkspaceProperty from "./generated/schema/prisma.graphql"
+# import DeploymentProperty, InviteToken, LocalCredential, RoleBinding, UserProperty, WorkspaceProperty from "./generated/schema/prisma.graphql"
 
 #
 # Directives
 #
 # Implements authorization rules.
 directive @auth(
-  permissions: [String!],
+  permission: String,
 ) on OBJECT | FIELD_DEFINITION
 
 # Wraps fields to alias a synthetic field to an underlying actual field
@@ -200,11 +200,11 @@ type Query {
     workspaceUuid:  Uuid
     deploymentUuid: Uuid
     releaseName: String
-  ): [Deployment] @auth
+  ): [Deployment] @auth(permission: "user.deployment.list")
 
   serviceAccounts(
     serviceAccountUuid: Uuid
-    entityType: EntityType
+    entityType: EntityType!
     entityUuid: Uuid
   ): [ServiceAccount] @auth
 }
@@ -243,7 +243,7 @@ type Mutation {
     config: JSON
     env: JSON
     properties: JSON
-  ): Deployment @auth
+  ): Deployment @auth(permission: "user.deployment.create")
 
   updateDeployment(
     deploymentUuid: Uuid!
@@ -251,16 +251,16 @@ type Mutation {
     config: JSON
     env: JSON
     sync: Boolean
-  ): Deployment @auth
+  ): Deployment @auth(permission: "user.deployment.update")
 
   deleteDeployment(
     deploymentUuid: Uuid!
-  ): Deployment @auth
+  ): Deployment @auth(permission: "user.deployment.delete")
 
   createServiceAccount(
     label: String!
     category: String
     entityType: EntityType!
     entityUuid: Uuid
-  ): ServiceAccount
+  ): ServiceAccount @auth(permission: "user.serviceAccount.create")
 }

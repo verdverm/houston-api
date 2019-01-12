@@ -115,36 +115,34 @@ roles:
       - global.systemSettings.list
 
   #
-  # User
-  #
-  - id: USER
-    name: User
-    permissions:
-      - user.workspace.create
-      - user.workspace.list
-      - user.deployment.create
-      - user.deployment.list
-
   # Workspace
+  #
   - id: WORKSPACE_ADMIN
     name: Workspace Admin
     permissions:
       - user.workspace.get
       - user.workspace.update
       - user.workspace.delete
+      - user.deployment.create
+      - user.deployment.list
 
   - id: WORKSPACE_EDITOR
     name: Workspace Editor
     permissions:
       - user.workspace.get
       - user.workspace.update
+      - user.deployment.create
+      - user.deployment.list
 
   - id: WORKSPACE_VIEWER
     name: Workspace Viewer
     permissions:
       - user.workspace.get
+      - user.deployment.list
 
+  #
   # Deployment
+  #
   - id: DEPLOYMENT_ADMIN
     name: Deployment Admin
     permissions:

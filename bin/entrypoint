@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+set -e
+
+while ! nc -w 1 -z "${HOST}" "${PORT}"; do
+    sleep 0.001
+done

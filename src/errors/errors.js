@@ -47,3 +47,10 @@ export class DuplicateDeploymentLabelError extends Error {
 export class InvalidDeploymentError extends Error {
   message = this.message || "Invalid deployment";
 }
+
+export class MissingArgumentError extends Error {
+  constructor(argName) {
+    super();
+    this.message = `A required argument was not sent: ${argName}`;
+  }
+}

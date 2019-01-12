@@ -23,7 +23,7 @@ export default async function deployments(parent, args, ctx, info) {
 
   // If we have releaseName, add to filter.
   if (releaseName) {
-    query.where.AND.push({ releaseName: releaseName });
+    query.where.AND.push({ releaseName });
   }
 
   // If we have workspaceUuid, add to filter.
