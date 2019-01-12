@@ -38,13 +38,16 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
       ctx.user = await ctx.db.query.user({ where: { id: userId } }, fragment);
       if (!ctx.user) throw new PermissionError();
 
+      // Pull out some vars for checking permissions.
       const { workspaceUuid, deploymentUuid } = args[1];
       const { permission } = this.args;
 
+      // If we have a permission and a workspace, ensure we have an appropriate role.
       permission &&
         workspaceUuid &&
         this.checkPermission(ctx.user, permission, "workspace");
 
+      // If we have a permission and a deployment, ensure we have an appropriate role.
       permission &&
         deploymentUuid &&
         this.checkPermission(ctx.user, permission, "deployment");
