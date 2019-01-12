@@ -73,6 +73,11 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
     });
   }
 
+  /*
+   * Check if the user has the given permission for the entity.
+   * @param {Object} user The current user.
+   * @param {String} permission The required permission.
+   */
   checkPermission(user, permission, entityType) {
     const binding = find(user.roleBindings, binding =>
       binding[entityType] ? binding[entityType].id : null
