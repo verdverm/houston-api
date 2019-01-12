@@ -6,6 +6,7 @@ import { SchemaDirectiveVisitor } from "graphql-tools";
 import { defaultFieldResolver } from "graphql";
 import jwt from "jsonwebtoken";
 import { find, includes } from "lodash";
+import { ENTITY_WORKSPACE, ENTITY_DEPLOYMENT } from "constants";
 
 /*
  * Directive to enforce authentication and authorization
@@ -45,12 +46,20 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
       // If we have a permission and a workspace, ensure we have an appropriate role.
       permission &&
         workspaceUuid &&
-        this.checkPermission(ctx.user, permission, "workspace");
+        this.checkPermission(
+          ctx.user,
+          permission,
+          ENTITY_WORKSPACE.toLowerCase()
+        );
 
       // If we have a permission and a deployment, ensure we have an appropriate role.
       permission &&
         deploymentUuid &&
-        this.checkPermission(ctx.user, permission, "deployment");
+        this.checkPermission(
+          ctx.user,
+          permission,
+          ENTITY_DEPLOYMENT.toLowerCase()
+        );
 
       // Execute the actual request.
       log.debug(`Executing authenticated request for userId ${userId}`);

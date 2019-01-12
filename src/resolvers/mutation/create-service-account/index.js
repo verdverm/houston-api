@@ -27,7 +27,7 @@ export default async function createServiceAccount(parent, args, ctx, info) {
   );
 
   // Throw error if the incoming entityId is not in the list of ids for this user.
-  if (!includes(ids, entityUuid)) {
+  if (entityUuid && !includes(ids, entityUuid)) {
     throw new PermissionError();
   }
 

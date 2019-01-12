@@ -1,5 +1,5 @@
 import fragment from "./fragment";
-import { MissingArgumentError } from "errors";
+import { PermissionError, MissingArgumentError } from "errors";
 import { compact, includes } from "lodash";
 import { addFragmentToInfo } from "graphql-binding";
 
@@ -19,8 +19,8 @@ export default async function serviceAccounts(parent, args, ctx, info) {
 
   // Unfortunately not captured in schema, but throw error if we are missing
   // a required argument.
-  if (!serviceAccountUuid && !entityUuid) {
-    throw new MissingArgumentError("serviceAccountUuid or entityType");
+  if (!(serviceAccountUuid || entityUuid)) {
+    throw new MissingArgumentError("serviceAccountUuid or entityUuid");
   }
 
   // Get a list of ids of entityType that this user has access to.
@@ -44,8 +44,13 @@ export default async function serviceAccounts(parent, args, ctx, info) {
     });
   }
 
+  // Throw an error if the entityUuid is not in the list of ids.
+  if (entityUuid && !includes(ids, entityUuid)) {
+    throw new PermissionError();
+  }
+
   // If we have entityUuid, add to filter.
-  if (entityUuid && includes(ids, entityUuid)) {
+  if (entityUuid) {
     query.where.AND.push({
       roleBinding: {
         [entityType]: { id: entityUuid }
