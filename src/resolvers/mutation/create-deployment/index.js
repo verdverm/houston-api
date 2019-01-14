@@ -13,6 +13,7 @@ import {
 import validate from "deployments/validate";
 import { addFragmentToInfo } from "graphql-binding";
 import config from "config";
+import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import { DEPLOYMENT_ADMIN } from "constants";
 
@@ -37,7 +38,10 @@ export default async function createDeployment(parent, args, ctx, info) {
     : config.get("helm.releaseVersion");
 
   // Generate a unique registry password for this deployment.
-  const registryPassword = crypto.randomBytes(16).toString("hex");
+  const registryPassword = await bcrypt.hash(
+    crypto.randomBytes(16).toString("hex"),
+    10
+  );
 
   // Generate a random space-themed release name.
   const releaseName = generateReleaseName();

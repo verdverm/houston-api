@@ -200,7 +200,7 @@ type Query {
     workspaceUuid:  Uuid
     deploymentUuid: Uuid
     releaseName: String
-  ): [Deployment] @auth(permission: "user.deployment.list")
+  ): [Deployment] @auth(permission: "user.deployment.get")
 
   serviceAccounts(
     serviceAccountUuid: Uuid
@@ -267,4 +267,14 @@ type Mutation {
   deleteWorkspace(
     workspaceUuid: Uuid
   ): Workspace @auth(permission: "user.workspace.delete")
+
+  updateUser(
+    userId: Uuid,
+    payload: JSON!
+  ): User @auth
+
+  createWorkspace(
+    label: String!
+    description: String
+  ): Workspace @auth
 }

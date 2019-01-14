@@ -10,7 +10,7 @@ const schema = makeExecutableSchema({
   resolvers
 });
 
-// Define our mutation
+// Define our query
 const query = `
   query self {
     self {

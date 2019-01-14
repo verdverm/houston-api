@@ -89,15 +89,12 @@ roles:
     permissions:
       - global.systemSettings.create
       - global.systemSettings.get
-      - global.systemSettings.list
       - global.systemSettings.update
       - global.systemSettings.delete
       - global.workspace.get
-      - global.workspace.list
       - global.workspace.update
       - global.workspace.delete
       - global.deployment.get
-      - global.deployment.list
       - global.deployment.update
       - global.deployment.delete
 
@@ -112,7 +109,6 @@ roles:
     name: System Viewer
     permissions:
       - global.systemSettings.get
-      - global.systemSettings.list
 
   #
   # Workspace
@@ -124,7 +120,7 @@ roles:
       - user.workspace.update
       - user.workspace.delete
       - user.deployment.create
-      - user.deployment.list
+      - user.deployment.get
 
   - id: WORKSPACE_EDITOR
     name: Workspace Editor
@@ -132,13 +128,13 @@ roles:
       - user.workspace.get
       - user.workspace.update
       - user.deployment.create
-      - user.deployment.list
+      - user.deployment.get
 
   - id: WORKSPACE_VIEWER
     name: Workspace Viewer
     permissions:
       - user.workspace.get
-      - user.deployment.list
+      - user.deployment.get
 
   #
   # Deployment
@@ -146,7 +142,6 @@ roles:
   - id: DEPLOYMENT_ADMIN
     name: Deployment Admin
     permissions:
-      - user.deployment.list
       - user.deployment.get
       - user.deployment.update
       - user.deployment.delete
@@ -154,14 +149,12 @@ roles:
   - id: DEPLOYMENT_EDITOR
     name: Deployment Editor
     permissions:
-      - user.deployment.list
       - user.deployment.get
       - user.deployment.update
 
   - id: DEPLOYMENT_VIEWER
     name: Deployment Viewer
     permissions:
-      - user.deployment.list
       - user.deployment.get
 
 #
@@ -202,7 +195,7 @@ deployments:
     pods: 1
     airflowConns: 5
     actualConns: 0.5
-    # price: 10
+    price: ~
 
   # This defines how much extra capacity, in astro units,
   # that a user can expand a deployment to. This is currently

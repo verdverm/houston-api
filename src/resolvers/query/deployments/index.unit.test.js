@@ -125,7 +125,6 @@ describe("deploymentsQuery", () => {
 
     // Run the graphql mutation.
     const query = deploymentsQuery(args, ctx);
-    console.log(query.where);
 
     expect(query).toHaveProperty("where.AND");
     expect(query.where.AND).toHaveLength(1);
