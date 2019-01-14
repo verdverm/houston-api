@@ -40,7 +40,7 @@ export async function env(parent, args, ctx) {
   });
 
   // Transform the returned object into an array.
-  return envObjectToArray(get(envs, "envs.secret.data"));
+  return envObjectToArray(get(envs, "secret.data"));
 }
 
 export async function properties(parent) {
