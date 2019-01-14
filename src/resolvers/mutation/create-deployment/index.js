@@ -5,11 +5,8 @@ import {
   generateEnvironmentSecretName
 } from "deployments/naming";
 import { createDatabaseForDeployment } from "deployments/database";
-import {
-  envArrayToObject,
-  propertiesObjectToArray,
-  generateHelmValues
-} from "deployments/config";
+import { envArrayToObject, generateHelmValues } from "deployments/config";
+import { propertiesObjectToArray } from "utilities";
 import validate from "deployments/validate";
 import { addFragmentToInfo } from "graphql-binding";
 import config from "config";

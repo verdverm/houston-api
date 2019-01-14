@@ -2,7 +2,8 @@ import {
   generateNamespace,
   generateEnvironmentSecretName
 } from "deployments/naming";
-import { envObjectToArray, propertiesArrayToObject } from "deployments/config";
+import { envObjectToArray } from "deployments/config";
+import { propertiesArrayToObject } from "utilities";
 import { get } from "lodash";
 import config from "config";
 import { AIRFLOW_EXECUTOR_CELERY } from "constants";

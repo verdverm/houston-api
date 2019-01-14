@@ -1,11 +1,7 @@
 import fragment from "./fragment";
 import validate from "deployments/validate";
-import {
-  envArrayToObject,
-  combinePropsForUpdate,
-  generateHelmValues,
-  propertiesObjectToArray
-} from "deployments/config";
+import { envArrayToObject, generateHelmValues } from "deployments/config";
+import { combinePropsForUpdate, propertiesObjectToArray } from "utilities";
 import {
   generateEnvironmentSecretName,
   generateNamespace
@@ -54,8 +50,8 @@ export default async function updateDeployment(parent, args, ctx, info) {
   const data = merge({}, updatablePayload, {
     config: mungedArgs.config,
     properties: combinePropsForUpdate(
-      propertiesObjectToArray(mungedArgs.properties),
-      deployment.properties
+      deployment.properties,
+      propertiesObjectToArray(mungedArgs.properties)
     )
   });
 
