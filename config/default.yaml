@@ -146,6 +146,7 @@ roles:
   - id: DEPLOYMENT_ADMIN
     name: Deployment Admin
     permissions:
+      - user.deployment.list
       - user.deployment.get
       - user.deployment.update
       - user.deployment.delete
@@ -153,12 +154,14 @@ roles:
   - id: DEPLOYMENT_EDITOR
     name: Deployment Editor
     permissions:
+      - user.deployment.list
       - user.deployment.get
       - user.deployment.update
 
   - id: DEPLOYMENT_VIEWER
     name: Deployment Viewer
     permissions:
+      - user.deployment.list
       - user.deployment.get
 
 #

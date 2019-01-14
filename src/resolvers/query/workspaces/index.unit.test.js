@@ -21,7 +21,7 @@ const query = `
   }
 `;
 
-describe("Workspaces", () => {
+describe("workspaces", () => {
   test("typical request is successful", async () => {
     // Const password = casual.password;
     // const hash = await bcrypt.hash(password, 10);
