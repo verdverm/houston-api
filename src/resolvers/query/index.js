@@ -3,6 +3,7 @@ import deploymentConfig from "./deployment-config";
 import deployments from "./deployments";
 import self from "./self";
 import serviceAccounts from "./service-accounts";
+import users from "./users";
 import workspaces from "./workspaces";
 
 export default {
@@ -11,5 +12,6 @@ export default {
   deployments,
   self,
   serviceAccounts,
+  users,
   workspaces
 };
