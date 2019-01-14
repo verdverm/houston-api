@@ -3,7 +3,12 @@ import casual from "casual";
 
 describe("Workspace", () => {
   test("users returns an empty array", () => {
-    expect(users()).toEqual([]);
+    const parent = { id: casual.uuid };
+    const db = {
+      query: { users: jest.fn() }
+    };
+    users(parent, {}, { db });
+    expect(db.query.users.mock.calls).toHaveLength(1);
   });
 
   test("groups returns an empty array", () => {

@@ -1,7 +1,18 @@
+import fragment from "./fragment";
+import { addFragmentToInfo } from "graphql-binding";
 import { size } from "lodash";
 
-export function users() {
-  return [];
+export function users(parent, args, ctx, info) {
+  return ctx.db.query.users(
+    {
+      where: {
+        roleBindings_some: {
+          workspace: { id: parent.id }
+        }
+      }
+    },
+    info ? addFragmentToInfo(info, fragment) : info
+  );
 }
 
 export function groups() {
