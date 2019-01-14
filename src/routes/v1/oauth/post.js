@@ -8,7 +8,7 @@ import { prisma } from "generated/client";
 import config from "config";
 
 /*
- * Create a new user. This is the singnup mutation.
+ * Create a new user.
  * @param {Object} parent The result of the parent resolver.
  * @param {Object} args The graphql arguments.
  * @param {Object} ctx The graphql context.
