@@ -3,6 +3,7 @@ import createServiceAccount from "./create-service-account";
 import createToken from "./create-token";
 import createUser from "./create-user";
 import deleteDeployment from "./delete-deployment";
+import deleteWorkspace from "./delete-workspace";
 import updateDeployment from "./update-deployment";
 
 export default {
@@ -11,5 +12,6 @@ export default {
   createToken,
   createUser,
   deleteDeployment,
+  deleteWorkspace,
   updateDeployment
 };

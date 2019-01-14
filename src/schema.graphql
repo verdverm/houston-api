@@ -263,4 +263,8 @@ type Mutation {
     entityType: EntityType!
     entityUuid: Uuid
   ): ServiceAccount @auth(permission: "user.serviceAccount.create")
+
+  deleteWorkspace(
+    workspaceUuid: Uuid
+  ): Workspace @auth(permission: "user.workspace.delete")
 }
