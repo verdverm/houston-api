@@ -5,7 +5,6 @@ describe("createJWT", () => {
   test("successfully creates a jwt for a userId", () => {
     const id = casual.uuid;
     const token = createJWT(id);
-    console.log(token);
     expect(token).toHaveProperty("token");
     expect(token).toHaveProperty("payload");
     expect(token.payload.uuid).toBe(id);

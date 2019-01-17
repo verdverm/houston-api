@@ -6,9 +6,11 @@
     [
       "module-resolver",
       {
-        "root": ["./src"],
+        "root": ["./src/lib"],
         "alias": {
-            "commander-proto": "commander"
+            "commander-proto": "commander",
+            "resolvers": "./src/resolvers",
+            "routes": "./src/routes"
         }
       }
     ]

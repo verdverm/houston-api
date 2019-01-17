@@ -1,10 +1,10 @@
 import "@babel/polyfill";
 import "dotenv/config";
+import resolvers from "./resolvers";
+import { v1 } from "./routes";
 import log from "logger";
-import resolvers from "resolvers";
 import directives from "directives";
 import { formatError } from "errors";
-import { v1 } from "routes";
 import commander from "commander";
 import config from "config";
 import express from "express";
@@ -40,7 +40,7 @@ const server = new ApolloServer({
   context: req => ({
     ...req,
     db: new Prisma({
-      typeDefs: "src/generated/schema/prisma.graphql",
+      typeDefs: "src/lib/generated/schema/prisma.graphql",
       endpoint: prismaConfig.endpoint,
       secret: prismaConfig.secret,
       debug: prismaConfig.debug

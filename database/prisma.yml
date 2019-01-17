@@ -15,9 +15,9 @@ datamodel: datamodel.graphql
 # Generate graphql schema
 generate:
   - generator: graphql-schema
-    output: ../src/generated/schema
+    output: ../src/lib/generated/schema
   - generator: javascript-client
-    output: ../src/generated/client
+    output: ../src/lib/generated/client
 
 # Update schema
 hooks:

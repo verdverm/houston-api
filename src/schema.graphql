@@ -1,4 +1,4 @@
-# import DeploymentProperty, InviteToken, LocalCredential, RoleBinding, WorkspaceProperty from "./generated/schema/prisma.graphql"
+# import DeploymentProperty, InviteToken, LocalCredential, RoleBinding, WorkspaceProperty from "./lib/generated/schema/prisma.graphql"
 
 #
 # Directives
