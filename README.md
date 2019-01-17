@@ -20,6 +20,10 @@ Houston can be configured via YAML files under `./config`, and can be overridden
 
 Houston is written in ES6 and beyond. It's currently built with [Babel](https://babeljs.io). It's also using a module plugin so imports can be written relative to `./src/lib` and avoid imports like `../../some-module`. Use `npm start` to run the API locally. This uses nodemon and will restart when any source files change. The only exception is `./database/datamodel.graphql`. Changes to this file requies you to restart, triggering a `prisma deploy` and `prisma generate`. We could probably automate that process on change as well.
 
+## Testing
+
+Houston is currently using [Jest](https://jestjs.io) for running tests. Typically test files will live near the unit being tested and be named similarly with `.unit.test.js` as its extension. Jest can be ran as a one-off or can be run in watch mode. Both modes allow you to specify a regex path to limit what tests are running. `npm run test` will run all tests once and report back. `npm run test -- src/resolvers/create-user --watch` will run in watch mode, and only for the tests for the `create-user` resolver.
+
 ## Commands
 
 * `npm start` - Start the develpment server. Restarts automatically with nodemon.
