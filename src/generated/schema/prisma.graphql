@@ -18,6 +18,10 @@ type AggregateLocalCredential {
   count: Int!
 }
 
+type AggregateOAuthCredential {
+  count: Int!
+}
+
 type AggregateRoleBinding {
   count: Int!
 }
@@ -27,10 +31,6 @@ type AggregateServiceAccount {
 }
 
 type AggregateUser {
-  count: Int!
-}
-
-type AggregateUserProperty {
   count: Int!
 }
 
@@ -1627,6 +1627,12 @@ type Mutation {
   upsertLocalCredential(where: LocalCredentialWhereUniqueInput!, create: LocalCredentialCreateInput!, update: LocalCredentialUpdateInput!): LocalCredential!
   deleteLocalCredential(where: LocalCredentialWhereUniqueInput!): LocalCredential
   deleteManyLocalCredentials(where: LocalCredentialWhereInput): BatchPayload!
+  createOAuthCredential(data: OAuthCredentialCreateInput!): OAuthCredential!
+  updateOAuthCredential(data: OAuthCredentialUpdateInput!, where: OAuthCredentialWhereUniqueInput!): OAuthCredential
+  updateManyOAuthCredentials(data: OAuthCredentialUpdateManyMutationInput!, where: OAuthCredentialWhereInput): BatchPayload!
+  upsertOAuthCredential(where: OAuthCredentialWhereUniqueInput!, create: OAuthCredentialCreateInput!, update: OAuthCredentialUpdateInput!): OAuthCredential!
+  deleteOAuthCredential(where: OAuthCredentialWhereUniqueInput!): OAuthCredential
+  deleteManyOAuthCredentials(where: OAuthCredentialWhereInput): BatchPayload!
   createRoleBinding(data: RoleBindingCreateInput!): RoleBinding!
   updateRoleBinding(data: RoleBindingUpdateInput!, where: RoleBindingWhereUniqueInput!): RoleBinding
   updateManyRoleBindings(data: RoleBindingUpdateManyMutationInput!, where: RoleBindingWhereInput): BatchPayload!
@@ -1645,12 +1651,6 @@ type Mutation {
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   deleteUser(where: UserWhereUniqueInput!): User
   deleteManyUsers(where: UserWhereInput): BatchPayload!
-  createUserProperty(data: UserPropertyCreateInput!): UserProperty!
-  updateUserProperty(data: UserPropertyUpdateInput!, where: UserPropertyWhereUniqueInput!): UserProperty
-  updateManyUserProperties(data: UserPropertyUpdateManyMutationInput!, where: UserPropertyWhereInput): BatchPayload!
-  upsertUserProperty(where: UserPropertyWhereUniqueInput!, create: UserPropertyCreateInput!, update: UserPropertyUpdateInput!): UserProperty!
-  deleteUserProperty(where: UserPropertyWhereUniqueInput!): UserProperty
-  deleteManyUserProperties(where: UserPropertyWhereInput): BatchPayload!
   createWorkspace(data: WorkspaceCreateInput!): Workspace!
   updateWorkspace(data: WorkspaceUpdateInput!, where: WorkspaceWhereUniqueInput!): Workspace
   updateManyWorkspaces(data: WorkspaceUpdateManyMutationInput!, where: WorkspaceWhereInput): BatchPayload!
@@ -1673,6 +1673,252 @@ enum MutationType {
 
 interface Node {
   id: ID!
+}
+
+type OAuthCredential {
+  id: ID!
+  expiresAt: DateTime
+  oauthProvider: String!
+  oauthUserId: String!
+  user: User
+}
+
+type OAuthCredentialConnection {
+  pageInfo: PageInfo!
+  edges: [OAuthCredentialEdge]!
+  aggregate: AggregateOAuthCredential!
+}
+
+input OAuthCredentialCreateInput {
+  expiresAt: DateTime
+  oauthProvider: String!
+  oauthUserId: String!
+  user: UserCreateOneWithoutOauthCredentialsInput
+}
+
+input OAuthCredentialCreateManyWithoutUserInput {
+  create: [OAuthCredentialCreateWithoutUserInput!]
+  connect: [OAuthCredentialWhereUniqueInput!]
+}
+
+input OAuthCredentialCreateWithoutUserInput {
+  expiresAt: DateTime
+  oauthProvider: String!
+  oauthUserId: String!
+}
+
+type OAuthCredentialEdge {
+  node: OAuthCredential!
+  cursor: String!
+}
+
+enum OAuthCredentialOrderByInput {
+  id_ASC
+  id_DESC
+  expiresAt_ASC
+  expiresAt_DESC
+  oauthProvider_ASC
+  oauthProvider_DESC
+  oauthUserId_ASC
+  oauthUserId_DESC
+  createdAt_ASC
+  createdAt_DESC
+  updatedAt_ASC
+  updatedAt_DESC
+}
+
+type OAuthCredentialPreviousValues {
+  id: ID!
+  expiresAt: DateTime
+  oauthProvider: String!
+  oauthUserId: String!
+}
+
+input OAuthCredentialScalarWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  expiresAt: DateTime
+  expiresAt_not: DateTime
+  expiresAt_in: [DateTime!]
+  expiresAt_not_in: [DateTime!]
+  expiresAt_lt: DateTime
+  expiresAt_lte: DateTime
+  expiresAt_gt: DateTime
+  expiresAt_gte: DateTime
+  oauthProvider: String
+  oauthProvider_not: String
+  oauthProvider_in: [String!]
+  oauthProvider_not_in: [String!]
+  oauthProvider_lt: String
+  oauthProvider_lte: String
+  oauthProvider_gt: String
+  oauthProvider_gte: String
+  oauthProvider_contains: String
+  oauthProvider_not_contains: String
+  oauthProvider_starts_with: String
+  oauthProvider_not_starts_with: String
+  oauthProvider_ends_with: String
+  oauthProvider_not_ends_with: String
+  oauthUserId: String
+  oauthUserId_not: String
+  oauthUserId_in: [String!]
+  oauthUserId_not_in: [String!]
+  oauthUserId_lt: String
+  oauthUserId_lte: String
+  oauthUserId_gt: String
+  oauthUserId_gte: String
+  oauthUserId_contains: String
+  oauthUserId_not_contains: String
+  oauthUserId_starts_with: String
+  oauthUserId_not_starts_with: String
+  oauthUserId_ends_with: String
+  oauthUserId_not_ends_with: String
+  AND: [OAuthCredentialScalarWhereInput!]
+  OR: [OAuthCredentialScalarWhereInput!]
+  NOT: [OAuthCredentialScalarWhereInput!]
+}
+
+type OAuthCredentialSubscriptionPayload {
+  mutation: MutationType!
+  node: OAuthCredential
+  updatedFields: [String!]
+  previousValues: OAuthCredentialPreviousValues
+}
+
+input OAuthCredentialSubscriptionWhereInput {
+  mutation_in: [MutationType!]
+  updatedFields_contains: String
+  updatedFields_contains_every: [String!]
+  updatedFields_contains_some: [String!]
+  node: OAuthCredentialWhereInput
+  AND: [OAuthCredentialSubscriptionWhereInput!]
+  OR: [OAuthCredentialSubscriptionWhereInput!]
+  NOT: [OAuthCredentialSubscriptionWhereInput!]
+}
+
+input OAuthCredentialUpdateInput {
+  expiresAt: DateTime
+  oauthProvider: String
+  oauthUserId: String
+  user: UserUpdateOneWithoutOauthCredentialsInput
+}
+
+input OAuthCredentialUpdateManyDataInput {
+  expiresAt: DateTime
+  oauthProvider: String
+  oauthUserId: String
+}
+
+input OAuthCredentialUpdateManyMutationInput {
+  expiresAt: DateTime
+  oauthProvider: String
+  oauthUserId: String
+}
+
+input OAuthCredentialUpdateManyWithoutUserInput {
+  create: [OAuthCredentialCreateWithoutUserInput!]
+  delete: [OAuthCredentialWhereUniqueInput!]
+  connect: [OAuthCredentialWhereUniqueInput!]
+  disconnect: [OAuthCredentialWhereUniqueInput!]
+  update: [OAuthCredentialUpdateWithWhereUniqueWithoutUserInput!]
+  upsert: [OAuthCredentialUpsertWithWhereUniqueWithoutUserInput!]
+  deleteMany: [OAuthCredentialScalarWhereInput!]
+  updateMany: [OAuthCredentialUpdateManyWithWhereNestedInput!]
+}
+
+input OAuthCredentialUpdateManyWithWhereNestedInput {
+  where: OAuthCredentialScalarWhereInput!
+  data: OAuthCredentialUpdateManyDataInput!
+}
+
+input OAuthCredentialUpdateWithoutUserDataInput {
+  expiresAt: DateTime
+  oauthProvider: String
+  oauthUserId: String
+}
+
+input OAuthCredentialUpdateWithWhereUniqueWithoutUserInput {
+  where: OAuthCredentialWhereUniqueInput!
+  data: OAuthCredentialUpdateWithoutUserDataInput!
+}
+
+input OAuthCredentialUpsertWithWhereUniqueWithoutUserInput {
+  where: OAuthCredentialWhereUniqueInput!
+  update: OAuthCredentialUpdateWithoutUserDataInput!
+  create: OAuthCredentialCreateWithoutUserInput!
+}
+
+input OAuthCredentialWhereInput {
+  id: ID
+  id_not: ID
+  id_in: [ID!]
+  id_not_in: [ID!]
+  id_lt: ID
+  id_lte: ID
+  id_gt: ID
+  id_gte: ID
+  id_contains: ID
+  id_not_contains: ID
+  id_starts_with: ID
+  id_not_starts_with: ID
+  id_ends_with: ID
+  id_not_ends_with: ID
+  expiresAt: DateTime
+  expiresAt_not: DateTime
+  expiresAt_in: [DateTime!]
+  expiresAt_not_in: [DateTime!]
+  expiresAt_lt: DateTime
+  expiresAt_lte: DateTime
+  expiresAt_gt: DateTime
+  expiresAt_gte: DateTime
+  oauthProvider: String
+  oauthProvider_not: String
+  oauthProvider_in: [String!]
+  oauthProvider_not_in: [String!]
+  oauthProvider_lt: String
+  oauthProvider_lte: String
+  oauthProvider_gt: String
+  oauthProvider_gte: String
+  oauthProvider_contains: String
+  oauthProvider_not_contains: String
+  oauthProvider_starts_with: String
+  oauthProvider_not_starts_with: String
+  oauthProvider_ends_with: String
+  oauthProvider_not_ends_with: String
+  oauthUserId: String
+  oauthUserId_not: String
+  oauthUserId_in: [String!]
+  oauthUserId_not_in: [String!]
+  oauthUserId_lt: String
+  oauthUserId_lte: String
+  oauthUserId_gt: String
+  oauthUserId_gte: String
+  oauthUserId_contains: String
+  oauthUserId_not_contains: String
+  oauthUserId_starts_with: String
+  oauthUserId_not_starts_with: String
+  oauthUserId_ends_with: String
+  oauthUserId_not_ends_with: String
+  user: UserWhereInput
+  AND: [OAuthCredentialWhereInput!]
+  OR: [OAuthCredentialWhereInput!]
+  NOT: [OAuthCredentialWhereInput!]
+}
+
+input OAuthCredentialWhereUniqueInput {
+  id: ID
 }
 
 type PageInfo {
@@ -1698,6 +1944,9 @@ type Query {
   localCredential(where: LocalCredentialWhereUniqueInput!): LocalCredential
   localCredentials(where: LocalCredentialWhereInput, orderBy: LocalCredentialOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LocalCredential]!
   localCredentialsConnection(where: LocalCredentialWhereInput, orderBy: LocalCredentialOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LocalCredentialConnection!
+  oAuthCredential(where: OAuthCredentialWhereUniqueInput!): OAuthCredential
+  oAuthCredentials(where: OAuthCredentialWhereInput, orderBy: OAuthCredentialOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OAuthCredential]!
+  oAuthCredentialsConnection(where: OAuthCredentialWhereInput, orderBy: OAuthCredentialOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): OAuthCredentialConnection!
   roleBinding(where: RoleBindingWhereUniqueInput!): RoleBinding
   roleBindings(where: RoleBindingWhereInput, orderBy: RoleBindingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleBinding]!
   roleBindingsConnection(where: RoleBindingWhereInput, orderBy: RoleBindingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RoleBindingConnection!
@@ -1707,9 +1956,6 @@ type Query {
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
-  userProperty(where: UserPropertyWhereUniqueInput!): UserProperty
-  userProperties(where: UserPropertyWhereInput, orderBy: UserPropertyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserProperty]!
-  userPropertiesConnection(where: UserPropertyWhereInput, orderBy: UserPropertyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserPropertyConnection!
   workspace(where: WorkspaceWhereUniqueInput!): Workspace
   workspaces(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workspace]!
   workspacesConnection(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkspaceConnection!
@@ -2216,10 +2462,10 @@ type Subscription {
   email(where: EmailSubscriptionWhereInput): EmailSubscriptionPayload
   inviteToken(where: InviteTokenSubscriptionWhereInput): InviteTokenSubscriptionPayload
   localCredential(where: LocalCredentialSubscriptionWhereInput): LocalCredentialSubscriptionPayload
+  oAuthCredential(where: OAuthCredentialSubscriptionWhereInput): OAuthCredentialSubscriptionPayload
   roleBinding(where: RoleBindingSubscriptionWhereInput): RoleBindingSubscriptionPayload
   serviceAccount(where: ServiceAccountSubscriptionWhereInput): ServiceAccountSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
-  userProperty(where: UserPropertySubscriptionWhereInput): UserPropertySubscriptionPayload
   workspace(where: WorkspaceSubscriptionWhereInput): WorkspaceSubscriptionPayload
   workspaceProperty(where: WorkspacePropertySubscriptionWhereInput): WorkspacePropertySubscriptionPayload
 }
@@ -2227,15 +2473,16 @@ type Subscription {
 type User {
   id: ID!
   username: String
-  emails(where: EmailWhereInput, orderBy: EmailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Email!]
-  fullName: String
   status: String
+  fullName: String
+  avatarUrl: String
+  emails(where: EmailWhereInput, orderBy: EmailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Email!]
+  roleBindings(where: RoleBindingWhereInput, orderBy: RoleBindingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleBinding!]
   inviteTokens(where: InviteTokenWhereInput, orderBy: InviteTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [InviteToken!]
   localCredential: LocalCredential
-  roleBindings(where: RoleBindingWhereInput, orderBy: RoleBindingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleBinding!]
+  oauthCredentials(where: OAuthCredentialWhereInput, orderBy: OAuthCredentialOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OAuthCredential!]
   createdAt: DateTime!
   updatedAt: DateTime!
-  profile(where: UserPropertyWhereInput, orderBy: UserPropertyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [UserProperty!]
 }
 
 type UserConnection {
@@ -2246,13 +2493,14 @@ type UserConnection {
 
 input UserCreateInput {
   username: String
-  emails: EmailCreateManyWithoutUserInput
-  fullName: String
   status: String
+  fullName: String
+  avatarUrl: String
+  emails: EmailCreateManyWithoutUserInput
+  roleBindings: RoleBindingCreateManyWithoutUserInput
   inviteTokens: InviteTokenCreateManyWithoutUserInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
-  roleBindings: RoleBindingCreateManyWithoutUserInput
-  profile: UserPropertyCreateManyWithoutUserInput
+  oauthCredentials: OAuthCredentialCreateManyWithoutUserInput
 }
 
 input UserCreateOneWithoutEmailsInput {
@@ -2270,8 +2518,8 @@ input UserCreateOneWithoutLocalCredentialInput {
   connect: UserWhereUniqueInput
 }
 
-input UserCreateOneWithoutProfileInput {
-  create: UserCreateWithoutProfileInput
+input UserCreateOneWithoutOauthCredentialsInput {
+  create: UserCreateWithoutOauthCredentialsInput
   connect: UserWhereUniqueInput
 }
 
@@ -2282,52 +2530,57 @@ input UserCreateOneWithoutRoleBindingsInput {
 
 input UserCreateWithoutEmailsInput {
   username: String
-  fullName: String
   status: String
+  fullName: String
+  avatarUrl: String
+  roleBindings: RoleBindingCreateManyWithoutUserInput
   inviteTokens: InviteTokenCreateManyWithoutUserInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
-  roleBindings: RoleBindingCreateManyWithoutUserInput
-  profile: UserPropertyCreateManyWithoutUserInput
+  oauthCredentials: OAuthCredentialCreateManyWithoutUserInput
 }
 
 input UserCreateWithoutInviteTokensInput {
   username: String
-  emails: EmailCreateManyWithoutUserInput
-  fullName: String
   status: String
-  localCredential: LocalCredentialCreateOneWithoutUserInput
+  fullName: String
+  avatarUrl: String
+  emails: EmailCreateManyWithoutUserInput
   roleBindings: RoleBindingCreateManyWithoutUserInput
-  profile: UserPropertyCreateManyWithoutUserInput
+  localCredential: LocalCredentialCreateOneWithoutUserInput
+  oauthCredentials: OAuthCredentialCreateManyWithoutUserInput
 }
 
 input UserCreateWithoutLocalCredentialInput {
   username: String
-  emails: EmailCreateManyWithoutUserInput
-  fullName: String
   status: String
-  inviteTokens: InviteTokenCreateManyWithoutUserInput
+  fullName: String
+  avatarUrl: String
+  emails: EmailCreateManyWithoutUserInput
   roleBindings: RoleBindingCreateManyWithoutUserInput
-  profile: UserPropertyCreateManyWithoutUserInput
+  inviteTokens: InviteTokenCreateManyWithoutUserInput
+  oauthCredentials: OAuthCredentialCreateManyWithoutUserInput
 }
 
-input UserCreateWithoutProfileInput {
+input UserCreateWithoutOauthCredentialsInput {
   username: String
-  emails: EmailCreateManyWithoutUserInput
-  fullName: String
   status: String
+  fullName: String
+  avatarUrl: String
+  emails: EmailCreateManyWithoutUserInput
+  roleBindings: RoleBindingCreateManyWithoutUserInput
   inviteTokens: InviteTokenCreateManyWithoutUserInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
-  roleBindings: RoleBindingCreateManyWithoutUserInput
 }
 
 input UserCreateWithoutRoleBindingsInput {
   username: String
-  emails: EmailCreateManyWithoutUserInput
-  fullName: String
   status: String
+  fullName: String
+  avatarUrl: String
+  emails: EmailCreateManyWithoutUserInput
   inviteTokens: InviteTokenCreateManyWithoutUserInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
-  profile: UserPropertyCreateManyWithoutUserInput
+  oauthCredentials: OAuthCredentialCreateManyWithoutUserInput
 }
 
 type UserEdge {
@@ -2340,10 +2593,12 @@ enum UserOrderByInput {
   id_DESC
   username_ASC
   username_DESC
-  fullName_ASC
-  fullName_DESC
   status_ASC
   status_DESC
+  fullName_ASC
+  fullName_DESC
+  avatarUrl_ASC
+  avatarUrl_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -2353,268 +2608,11 @@ enum UserOrderByInput {
 type UserPreviousValues {
   id: ID!
   username: String
-  fullName: String
   status: String
+  fullName: String
+  avatarUrl: String
   createdAt: DateTime!
   updatedAt: DateTime!
-}
-
-type UserProperty {
-  id: ID!
-  category: String
-  key: String!
-  value: String
-  user: User
-}
-
-type UserPropertyConnection {
-  pageInfo: PageInfo!
-  edges: [UserPropertyEdge]!
-  aggregate: AggregateUserProperty!
-}
-
-input UserPropertyCreateInput {
-  category: String
-  key: String!
-  value: String
-  user: UserCreateOneWithoutProfileInput
-}
-
-input UserPropertyCreateManyWithoutUserInput {
-  create: [UserPropertyCreateWithoutUserInput!]
-  connect: [UserPropertyWhereUniqueInput!]
-}
-
-input UserPropertyCreateWithoutUserInput {
-  category: String
-  key: String!
-  value: String
-}
-
-type UserPropertyEdge {
-  node: UserProperty!
-  cursor: String!
-}
-
-enum UserPropertyOrderByInput {
-  id_ASC
-  id_DESC
-  category_ASC
-  category_DESC
-  key_ASC
-  key_DESC
-  value_ASC
-  value_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type UserPropertyPreviousValues {
-  id: ID!
-  category: String
-  key: String!
-  value: String
-}
-
-input UserPropertyScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  category: String
-  category_not: String
-  category_in: [String!]
-  category_not_in: [String!]
-  category_lt: String
-  category_lte: String
-  category_gt: String
-  category_gte: String
-  category_contains: String
-  category_not_contains: String
-  category_starts_with: String
-  category_not_starts_with: String
-  category_ends_with: String
-  category_not_ends_with: String
-  key: String
-  key_not: String
-  key_in: [String!]
-  key_not_in: [String!]
-  key_lt: String
-  key_lte: String
-  key_gt: String
-  key_gte: String
-  key_contains: String
-  key_not_contains: String
-  key_starts_with: String
-  key_not_starts_with: String
-  key_ends_with: String
-  key_not_ends_with: String
-  value: String
-  value_not: String
-  value_in: [String!]
-  value_not_in: [String!]
-  value_lt: String
-  value_lte: String
-  value_gt: String
-  value_gte: String
-  value_contains: String
-  value_not_contains: String
-  value_starts_with: String
-  value_not_starts_with: String
-  value_ends_with: String
-  value_not_ends_with: String
-  AND: [UserPropertyScalarWhereInput!]
-  OR: [UserPropertyScalarWhereInput!]
-  NOT: [UserPropertyScalarWhereInput!]
-}
-
-type UserPropertySubscriptionPayload {
-  mutation: MutationType!
-  node: UserProperty
-  updatedFields: [String!]
-  previousValues: UserPropertyPreviousValues
-}
-
-input UserPropertySubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: UserPropertyWhereInput
-  AND: [UserPropertySubscriptionWhereInput!]
-  OR: [UserPropertySubscriptionWhereInput!]
-  NOT: [UserPropertySubscriptionWhereInput!]
-}
-
-input UserPropertyUpdateInput {
-  category: String
-  key: String
-  value: String
-  user: UserUpdateOneWithoutProfileInput
-}
-
-input UserPropertyUpdateManyDataInput {
-  category: String
-  key: String
-  value: String
-}
-
-input UserPropertyUpdateManyMutationInput {
-  category: String
-  key: String
-  value: String
-}
-
-input UserPropertyUpdateManyWithoutUserInput {
-  create: [UserPropertyCreateWithoutUserInput!]
-  delete: [UserPropertyWhereUniqueInput!]
-  connect: [UserPropertyWhereUniqueInput!]
-  disconnect: [UserPropertyWhereUniqueInput!]
-  update: [UserPropertyUpdateWithWhereUniqueWithoutUserInput!]
-  upsert: [UserPropertyUpsertWithWhereUniqueWithoutUserInput!]
-  deleteMany: [UserPropertyScalarWhereInput!]
-  updateMany: [UserPropertyUpdateManyWithWhereNestedInput!]
-}
-
-input UserPropertyUpdateManyWithWhereNestedInput {
-  where: UserPropertyScalarWhereInput!
-  data: UserPropertyUpdateManyDataInput!
-}
-
-input UserPropertyUpdateWithoutUserDataInput {
-  category: String
-  key: String
-  value: String
-}
-
-input UserPropertyUpdateWithWhereUniqueWithoutUserInput {
-  where: UserPropertyWhereUniqueInput!
-  data: UserPropertyUpdateWithoutUserDataInput!
-}
-
-input UserPropertyUpsertWithWhereUniqueWithoutUserInput {
-  where: UserPropertyWhereUniqueInput!
-  update: UserPropertyUpdateWithoutUserDataInput!
-  create: UserPropertyCreateWithoutUserInput!
-}
-
-input UserPropertyWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  category: String
-  category_not: String
-  category_in: [String!]
-  category_not_in: [String!]
-  category_lt: String
-  category_lte: String
-  category_gt: String
-  category_gte: String
-  category_contains: String
-  category_not_contains: String
-  category_starts_with: String
-  category_not_starts_with: String
-  category_ends_with: String
-  category_not_ends_with: String
-  key: String
-  key_not: String
-  key_in: [String!]
-  key_not_in: [String!]
-  key_lt: String
-  key_lte: String
-  key_gt: String
-  key_gte: String
-  key_contains: String
-  key_not_contains: String
-  key_starts_with: String
-  key_not_starts_with: String
-  key_ends_with: String
-  key_not_ends_with: String
-  value: String
-  value_not: String
-  value_in: [String!]
-  value_not_in: [String!]
-  value_lt: String
-  value_lte: String
-  value_gt: String
-  value_gte: String
-  value_contains: String
-  value_not_contains: String
-  value_starts_with: String
-  value_not_starts_with: String
-  value_ends_with: String
-  value_not_ends_with: String
-  user: UserWhereInput
-  AND: [UserPropertyWhereInput!]
-  OR: [UserPropertyWhereInput!]
-  NOT: [UserPropertyWhereInput!]
-}
-
-input UserPropertyWhereUniqueInput {
-  id: ID
 }
 
 type UserSubscriptionPayload {
@@ -2637,19 +2635,21 @@ input UserSubscriptionWhereInput {
 
 input UserUpdateInput {
   username: String
-  emails: EmailUpdateManyWithoutUserInput
-  fullName: String
   status: String
+  fullName: String
+  avatarUrl: String
+  emails: EmailUpdateManyWithoutUserInput
+  roleBindings: RoleBindingUpdateManyWithoutUserInput
   inviteTokens: InviteTokenUpdateManyWithoutUserInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
-  roleBindings: RoleBindingUpdateManyWithoutUserInput
-  profile: UserPropertyUpdateManyWithoutUserInput
+  oauthCredentials: OAuthCredentialUpdateManyWithoutUserInput
 }
 
 input UserUpdateManyMutationInput {
   username: String
-  fullName: String
   status: String
+  fullName: String
+  avatarUrl: String
 }
 
 input UserUpdateOneWithoutEmailsInput {
@@ -2679,10 +2679,10 @@ input UserUpdateOneWithoutLocalCredentialInput {
   connect: UserWhereUniqueInput
 }
 
-input UserUpdateOneWithoutProfileInput {
-  create: UserCreateWithoutProfileInput
-  update: UserUpdateWithoutProfileDataInput
-  upsert: UserUpsertWithoutProfileInput
+input UserUpdateOneWithoutOauthCredentialsInput {
+  create: UserCreateWithoutOauthCredentialsInput
+  update: UserUpdateWithoutOauthCredentialsDataInput
+  upsert: UserUpsertWithoutOauthCredentialsInput
   delete: Boolean
   disconnect: Boolean
   connect: UserWhereUniqueInput
@@ -2699,52 +2699,57 @@ input UserUpdateOneWithoutRoleBindingsInput {
 
 input UserUpdateWithoutEmailsDataInput {
   username: String
-  fullName: String
   status: String
+  fullName: String
+  avatarUrl: String
+  roleBindings: RoleBindingUpdateManyWithoutUserInput
   inviteTokens: InviteTokenUpdateManyWithoutUserInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
-  roleBindings: RoleBindingUpdateManyWithoutUserInput
-  profile: UserPropertyUpdateManyWithoutUserInput
+  oauthCredentials: OAuthCredentialUpdateManyWithoutUserInput
 }
 
 input UserUpdateWithoutInviteTokensDataInput {
   username: String
-  emails: EmailUpdateManyWithoutUserInput
-  fullName: String
   status: String
-  localCredential: LocalCredentialUpdateOneWithoutUserInput
+  fullName: String
+  avatarUrl: String
+  emails: EmailUpdateManyWithoutUserInput
   roleBindings: RoleBindingUpdateManyWithoutUserInput
-  profile: UserPropertyUpdateManyWithoutUserInput
+  localCredential: LocalCredentialUpdateOneWithoutUserInput
+  oauthCredentials: OAuthCredentialUpdateManyWithoutUserInput
 }
 
 input UserUpdateWithoutLocalCredentialDataInput {
   username: String
-  emails: EmailUpdateManyWithoutUserInput
-  fullName: String
   status: String
-  inviteTokens: InviteTokenUpdateManyWithoutUserInput
+  fullName: String
+  avatarUrl: String
+  emails: EmailUpdateManyWithoutUserInput
   roleBindings: RoleBindingUpdateManyWithoutUserInput
-  profile: UserPropertyUpdateManyWithoutUserInput
+  inviteTokens: InviteTokenUpdateManyWithoutUserInput
+  oauthCredentials: OAuthCredentialUpdateManyWithoutUserInput
 }
 
-input UserUpdateWithoutProfileDataInput {
+input UserUpdateWithoutOauthCredentialsDataInput {
   username: String
-  emails: EmailUpdateManyWithoutUserInput
-  fullName: String
   status: String
+  fullName: String
+  avatarUrl: String
+  emails: EmailUpdateManyWithoutUserInput
+  roleBindings: RoleBindingUpdateManyWithoutUserInput
   inviteTokens: InviteTokenUpdateManyWithoutUserInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
-  roleBindings: RoleBindingUpdateManyWithoutUserInput
 }
 
 input UserUpdateWithoutRoleBindingsDataInput {
   username: String
-  emails: EmailUpdateManyWithoutUserInput
-  fullName: String
   status: String
+  fullName: String
+  avatarUrl: String
+  emails: EmailUpdateManyWithoutUserInput
   inviteTokens: InviteTokenUpdateManyWithoutUserInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
-  profile: UserPropertyUpdateManyWithoutUserInput
+  oauthCredentials: OAuthCredentialUpdateManyWithoutUserInput
 }
 
 input UserUpsertWithoutEmailsInput {
@@ -2762,9 +2767,9 @@ input UserUpsertWithoutLocalCredentialInput {
   create: UserCreateWithoutLocalCredentialInput!
 }
 
-input UserUpsertWithoutProfileInput {
-  update: UserUpdateWithoutProfileDataInput!
-  create: UserCreateWithoutProfileInput!
+input UserUpsertWithoutOauthCredentialsInput {
+  update: UserUpdateWithoutOauthCredentialsDataInput!
+  create: UserCreateWithoutOauthCredentialsInput!
 }
 
 input UserUpsertWithoutRoleBindingsInput {
@@ -2801,23 +2806,6 @@ input UserWhereInput {
   username_not_starts_with: String
   username_ends_with: String
   username_not_ends_with: String
-  emails_every: EmailWhereInput
-  emails_some: EmailWhereInput
-  emails_none: EmailWhereInput
-  fullName: String
-  fullName_not: String
-  fullName_in: [String!]
-  fullName_not_in: [String!]
-  fullName_lt: String
-  fullName_lte: String
-  fullName_gt: String
-  fullName_gte: String
-  fullName_contains: String
-  fullName_not_contains: String
-  fullName_starts_with: String
-  fullName_not_starts_with: String
-  fullName_ends_with: String
-  fullName_not_ends_with: String
   status: String
   status_not: String
   status_in: [String!]
@@ -2832,13 +2820,47 @@ input UserWhereInput {
   status_not_starts_with: String
   status_ends_with: String
   status_not_ends_with: String
+  fullName: String
+  fullName_not: String
+  fullName_in: [String!]
+  fullName_not_in: [String!]
+  fullName_lt: String
+  fullName_lte: String
+  fullName_gt: String
+  fullName_gte: String
+  fullName_contains: String
+  fullName_not_contains: String
+  fullName_starts_with: String
+  fullName_not_starts_with: String
+  fullName_ends_with: String
+  fullName_not_ends_with: String
+  avatarUrl: String
+  avatarUrl_not: String
+  avatarUrl_in: [String!]
+  avatarUrl_not_in: [String!]
+  avatarUrl_lt: String
+  avatarUrl_lte: String
+  avatarUrl_gt: String
+  avatarUrl_gte: String
+  avatarUrl_contains: String
+  avatarUrl_not_contains: String
+  avatarUrl_starts_with: String
+  avatarUrl_not_starts_with: String
+  avatarUrl_ends_with: String
+  avatarUrl_not_ends_with: String
+  emails_every: EmailWhereInput
+  emails_some: EmailWhereInput
+  emails_none: EmailWhereInput
+  roleBindings_every: RoleBindingWhereInput
+  roleBindings_some: RoleBindingWhereInput
+  roleBindings_none: RoleBindingWhereInput
   inviteTokens_every: InviteTokenWhereInput
   inviteTokens_some: InviteTokenWhereInput
   inviteTokens_none: InviteTokenWhereInput
   localCredential: LocalCredentialWhereInput
-  roleBindings_every: RoleBindingWhereInput
-  roleBindings_some: RoleBindingWhereInput
-  roleBindings_none: RoleBindingWhereInput
+  oauthCredentials_every: OAuthCredentialWhereInput
+  oauthCredentials_some: OAuthCredentialWhereInput
+  oauthCredentials_none: OAuthCredentialWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -2855,9 +2877,6 @@ input UserWhereInput {
   updatedAt_lte: DateTime
   updatedAt_gt: DateTime
   updatedAt_gte: DateTime
-  profile_every: UserPropertyWhereInput
-  profile_some: UserPropertyWhereInput
-  profile_none: UserPropertyWhereInput
   AND: [UserWhereInput!]
   OR: [UserWhereInput!]
   NOT: [UserWhereInput!]

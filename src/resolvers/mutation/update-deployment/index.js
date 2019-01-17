@@ -64,7 +64,7 @@ export default async function updateDeployment(parent, args, ctx, info) {
   // Set any environment variables.
   if (args.env) {
     await ctx.commander.request("setSecret", {
-      releaseNname: updatedDeployment.releaseName,
+      releaseName: updatedDeployment.releaseName,
       namespace: generateNamespace(updatedDeployment.releaseName),
       secret: {
         name: generateEnvironmentSecretName(updatedDeployment.releaseName),

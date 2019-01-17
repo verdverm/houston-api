@@ -1,6 +1,6 @@
 export default `fragment EnsureFields on Deployment {
-  id,
-  releaseName,
-  type,
+  id
+  releaseName
+  type
   version
 }`;

@@ -7,7 +7,8 @@ const router = new express.Router();
 router.use(
   express.json({
     type: ["application/json"]
-  })
+  }),
+  express.urlencoded({ extended: false })
 );
 
 // Setup the POST route.

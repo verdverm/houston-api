@@ -13,27 +13,16 @@ enum Role {
 type User {
   id: ID! @unique
   username: String @unique
-  emails: [Email!]!
-  fullName: String
   status: String
+  fullName: String
+  avatarUrl: String
+  emails: [Email!]!
+  roleBindings: [RoleBinding!]!
   inviteTokens: [InviteToken!]!
   localCredential: LocalCredential
-  roleBindings: [RoleBinding!]!
+  oauthCredentials: [OAuthCredential!]!
   createdAt: DateTime!
   updatedAt: DateTime!
-  # workspaces: [Workspace!]!
-  # groups: [Group!]!
-  # oauthCredentials: [OauthCredential!]!
-  # sessionRefreshTokens: [SessionRefreshToken!]!
-  profile: [UserProperty!]!
-}
-
-type UserProperty {
-  id: ID! @unique
-  category: String
-  key: String!
-  value: String
-  user: User
 }
 
 # Ideally this type uses a union type once prisma supports it.
@@ -65,6 +54,15 @@ type LocalCredential {
   resetToken: String
 }
 
+type OAuthCredential {
+  id: ID! @unique
+  expiresAt: DateTime
+  oauthProvider: String!
+  oauthUserId: String!
+  user: User
+}
+
+
 type InviteToken {
   id: ID! @unique
   assignments: String
@@ -73,91 +71,6 @@ type InviteToken {
   user: User
   workspace: Workspace
 }
-
-# type OauthCredential {
-#   id: ID! @unique
-#   expiresAt: DateTime
-#   oauthProvider: String!
-#   oauthUserId: String!
-#   user: User
-# }
-
-# type SessionRefreshToken {
-#   id: ID! @unique
-#   expiresAt: DateTime
-#   active: Boolean
-#   metadata: String
-#   refreshToken: String @unique
-#   refreshedAt: DateTime
-#   source: String
-#   user: User
-# }
-
-# type UserGroup {
-#   id: ID! @unique
-#   group: Group
-#   user: User
-# }
-
-# type Group {
-#   id: ID! @unique
-#   name: String! # New static name to remove need to dynamically set ids in system settings
-#   active: Boolean
-#   custom: Boolean
-#   description: String
-#   entityType: String # System, Workspace, Deployment
-#   entityId: UUID
-#   properties: [GroupProperty!]!
-#   label: String
-#   users: [User!]!
-#   roles: [Role!]!
-# }
-
-# type GroupProperty {
-#   id: ID! @unique
-#   category: String
-#   group: Group
-#   key: String!
-#   value: String
-# }
-
-# # type GroupRole {
-# #   group: Group
-# #   role: Role
-# # }
-
-# type Role {
-#   id: ID! @unique
-#   name: String!
-#   # category: String
-#   # entityType: String # Group / ServiceAccount
-#   # entityId: UUID
-#   label: String!
-#   # scope: String
-#   permissions: [Permission!]!
-#   # groups: [Group!]!
-#   # serviceAccounts: [ServiceAccount!]!
-# }
-
-# # type RolePermission {
-# #   permission: Permission
-# #   role: Role
-# # }
-
-# type Permission {
-#   id: ID! @unique
-#   name: String! @unique # This used to be id
-#   # category: String
-#   # label: String
-#   # scope: String!
-#   roles: [Role!]!
-#   # rolePermissions: [RolePermission!]!
-# }
-
-# # type ServiceAccountRole {
-# #   role: Role
-# #   serviceAccount: ServiceAccount
-# # }
 
 type ServiceAccount {
   id: ID! @unique
@@ -171,13 +84,6 @@ type ServiceAccount {
   updatedAt: DateTime!
 }
 
-# type UserWorkspace @pgTable(name: "user_workspace_map") {
-#   user: User @pgRelation(column: "user_uuid")
-#   workspace: Workspace @pgRelation(column: "workspace_uuid")
-#   createdAt: DateTime! @pgColumn(name: "created_at")
-#   updatedAt: DateTime! @pgColumn(name: "updated_at")
-# }
-
 type Workspace {
   id: ID! @unique
   active: Boolean
@@ -186,7 +92,6 @@ type Workspace {
   invites: [InviteToken!]!
   label: String
   properties: [WorkspaceProperty!]!
-  # users: [User!]!
   roleBindings: [RoleBinding!]!
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -227,13 +132,3 @@ type DeploymentProperty {
   createdAt: DateTime!
   updatedAt: DateTime!
 }
-
-# type SystemSetting @pgTable(name: "system_settings") {
-#   id: ID! @unique @pgColumn(name: "key")
-#   key: String
-#   value: String
-#   category: String
-#   isEncrypted: Boolean @pgColumn(name: "is_encrypted")
-#   createdAt: DateTime! @pgColumn(name: "created_at")
-#   updatedAt: DateTime! @pgColumn(name: "updated_at")
-# }

@@ -1,31 +1,22 @@
-import config from "config";
-import jwt from "jsonwebtoken";
-import ms from "ms";
+import fragment from "./fragment";
+import { createJWT, setJWTCookie } from "jwt";
+import { addFragmentToInfo } from "graphql-binding";
 
 // Grab the user object for this id.
 export function user(parent, args, ctx, info) {
-  return ctx.db.query.user({ where: { id: parent.userId } }, info);
+  return ctx.db.query.user(
+    { where: { id: parent.userId } },
+    addFragmentToInfo(info, fragment)
+  );
 }
 
 // Generate a JWT using the user id.
 export function token(parent, args, ctx) {
   // Create our JWT.
-  const millis = config.get("authDuration");
-
-  // Create the payload.
-  const payload = { uuid: parent.userId };
-  const token = jwt.sign(payload, config.get("jwtPassphrase"), {
-    expiresIn: ms(millis),
-    mutatePayload: true
-  });
+  const { token, payload } = createJWT(parent.userId);
 
   // Set the cookie.
-  ctx.res.cookie("astronomer_auth", token, {
-    domain: `.${config.get("helm.baseDomain")}`,
-    path: "/",
-    expires: new Date(millis),
-    secure: true
-  });
+  setJWTCookie(ctx.res, token);
 
   // Return in the legacy format.
   return { value: token, payload };

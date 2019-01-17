@@ -1,5 +1,5 @@
 export default `fragment EnsureFields on Deployment {
-  id,
-  workspace { id },
+  id
+  workspace { id }
   properties { key, value }
 }`;

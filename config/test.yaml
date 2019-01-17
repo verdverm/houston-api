@@ -15,7 +15,7 @@ repository: "https://helm.astronomer.io/"
 # Helm configuration.
 # These values are set at runtime and used for airflow deployments.
 helm:
-  baseDomain: ~
+  baseDomain: astronomer.io
   registryAuthSecret: ~
   acme: ~
   rbacEnabled: ~

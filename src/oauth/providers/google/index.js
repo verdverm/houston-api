@@ -1,9 +1,10 @@
-import { oauthUrl } from "../../config";
+import { oauthUrl } from "oauth/config";
 import config from "config";
 import { google } from "googleapis";
 import { OAuth2Client } from "google-auth-library";
 import shortid from "shortid";
 import moment from "moment";
+import { merge } from "lodash";
 
 // Grab the configuration.
 const cfg = config.get("auth.google");
@@ -12,7 +13,7 @@ const cfg = config.get("auth.google");
  * Generate the authentication url for Google.
  * @return {String} The authentication url.
  */
-export function authUrl(redirectUrl) {
+export function authUrl(state, redirectUrl) {
   // Create oauth client.
   const client = new google.auth.OAuth2(cfg.clientId, null, redirectUrl);
 
@@ -22,11 +23,16 @@ export function authUrl(redirectUrl) {
     response_type: "token id_token",
     scope: ["profile", "email"],
     nonce: shortid.generate(),
-    state: JSON.stringify({
-      provider: "google",
-      integration: "self",
-      origin: oauthUrl()
-    })
+    state: JSON.stringify(
+      merge(
+        {
+          provider: "google",
+          integration: "self",
+          origin: oauthUrl()
+        },
+        state
+      )
+    )
   });
 }
 
@@ -70,11 +76,9 @@ export async function validate(data) {
 export function userData(jwt) {
   return {
     providerUserId: jwt.sub,
-    profile: {
-      email: jwt.email,
-      fullName: jwt.name,
-      pictureUrl: jwt.picture
-    }
+    email: jwt.email,
+    fullName: jwt.name,
+    avatarUrl: jwt.picture
   };
 }
 

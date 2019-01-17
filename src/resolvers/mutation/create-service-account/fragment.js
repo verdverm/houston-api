@@ -1,8 +1,8 @@
 export default `fragment EnsureFields on ServiceAccount {
-  id,
+  id
   roleBinding {
-    role,
-    workspace { id },
+    role
+    workspace { id }
     deployment { id }
   }
 }

@@ -24,6 +24,7 @@ export const USER_STATUS_PENDING = "pending";
 export const USER_STATUS_BANNED = "banned";
 export const USER_STATUS_INACTIVE = "inactive";
 
+export const USER_PROPERTY_FULL_NAME = "fullName";
 export const USER_PROPERTY_AVATAR_URL = "avatarUrl";
 export const USER_PROPERTY_CATEGORY_PROFILE = "profile";
 

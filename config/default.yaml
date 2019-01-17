@@ -35,6 +35,11 @@ commander:
   host: localhost
   port: 50051
 
+# Orbit configuration.
+orbit:
+  subdomain: app
+  port: 5000
+
 # Charts live here.
 # This is where the airflow chart is installed from.
 repository: "https://helm.astronomer.io/"
@@ -78,6 +83,9 @@ publicSignups: false
 
 # Require email confirmation.
 emailConfirmation: true
+
+# Subdomain under base domain.
+subdomain: houston
 
 # Format: ${SCOPE}.${RESOURCE}.${VERB}
 roles:

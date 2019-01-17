@@ -21,10 +21,10 @@ export interface Exists {
   email: (where?: EmailWhereInput) => Promise<boolean>;
   inviteToken: (where?: InviteTokenWhereInput) => Promise<boolean>;
   localCredential: (where?: LocalCredentialWhereInput) => Promise<boolean>;
+  oAuthCredential: (where?: OAuthCredentialWhereInput) => Promise<boolean>;
   roleBinding: (where?: RoleBindingWhereInput) => Promise<boolean>;
   serviceAccount: (where?: ServiceAccountWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
-  userProperty: (where?: UserPropertyWhereInput) => Promise<boolean>;
   workspace: (where?: WorkspaceWhereInput) => Promise<boolean>;
   workspaceProperty: (where?: WorkspacePropertyWhereInput) => Promise<boolean>;
 }
@@ -167,6 +167,31 @@ export interface Prisma {
       last?: Int;
     }
   ) => LocalCredentialConnectionPromise;
+  oAuthCredential: (
+    where: OAuthCredentialWhereUniqueInput
+  ) => OAuthCredentialPromise;
+  oAuthCredentials: (
+    args?: {
+      where?: OAuthCredentialWhereInput;
+      orderBy?: OAuthCredentialOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => FragmentableArray<OAuthCredential>;
+  oAuthCredentialsConnection: (
+    args?: {
+      where?: OAuthCredentialWhereInput;
+      orderBy?: OAuthCredentialOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => OAuthCredentialConnectionPromise;
   roleBinding: (where: RoleBindingWhereUniqueInput) => RoleBindingPromise;
   roleBindings: (
     args?: {
@@ -238,29 +263,6 @@ export interface Prisma {
       last?: Int;
     }
   ) => UserConnectionPromise;
-  userProperty: (where: UserPropertyWhereUniqueInput) => UserPropertyPromise;
-  userProperties: (
-    args?: {
-      where?: UserPropertyWhereInput;
-      orderBy?: UserPropertyOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => FragmentableArray<UserProperty>;
-  userPropertiesConnection: (
-    args?: {
-      where?: UserPropertyWhereInput;
-      orderBy?: UserPropertyOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => UserPropertyConnectionPromise;
   workspace: (where: WorkspaceWhereUniqueInput) => WorkspacePromise;
   workspaces: (
     args?: {
@@ -427,6 +429,34 @@ export interface Prisma {
   deleteManyLocalCredentials: (
     where?: LocalCredentialWhereInput
   ) => BatchPayloadPromise;
+  createOAuthCredential: (
+    data: OAuthCredentialCreateInput
+  ) => OAuthCredentialPromise;
+  updateOAuthCredential: (
+    args: {
+      data: OAuthCredentialUpdateInput;
+      where: OAuthCredentialWhereUniqueInput;
+    }
+  ) => OAuthCredentialPromise;
+  updateManyOAuthCredentials: (
+    args: {
+      data: OAuthCredentialUpdateManyMutationInput;
+      where?: OAuthCredentialWhereInput;
+    }
+  ) => BatchPayloadPromise;
+  upsertOAuthCredential: (
+    args: {
+      where: OAuthCredentialWhereUniqueInput;
+      create: OAuthCredentialCreateInput;
+      update: OAuthCredentialUpdateInput;
+    }
+  ) => OAuthCredentialPromise;
+  deleteOAuthCredential: (
+    where: OAuthCredentialWhereUniqueInput
+  ) => OAuthCredentialPromise;
+  deleteManyOAuthCredentials: (
+    where?: OAuthCredentialWhereInput
+  ) => BatchPayloadPromise;
   createRoleBinding: (data: RoleBindingCreateInput) => RoleBindingPromise;
   updateRoleBinding: (
     args: { data: RoleBindingUpdateInput; where: RoleBindingWhereUniqueInput }
@@ -492,29 +522,6 @@ export interface Prisma {
   ) => UserPromise;
   deleteUser: (where: UserWhereUniqueInput) => UserPromise;
   deleteManyUsers: (where?: UserWhereInput) => BatchPayloadPromise;
-  createUserProperty: (data: UserPropertyCreateInput) => UserPropertyPromise;
-  updateUserProperty: (
-    args: { data: UserPropertyUpdateInput; where: UserPropertyWhereUniqueInput }
-  ) => UserPropertyPromise;
-  updateManyUserProperties: (
-    args: {
-      data: UserPropertyUpdateManyMutationInput;
-      where?: UserPropertyWhereInput;
-    }
-  ) => BatchPayloadPromise;
-  upsertUserProperty: (
-    args: {
-      where: UserPropertyWhereUniqueInput;
-      create: UserPropertyCreateInput;
-      update: UserPropertyUpdateInput;
-    }
-  ) => UserPropertyPromise;
-  deleteUserProperty: (
-    where: UserPropertyWhereUniqueInput
-  ) => UserPropertyPromise;
-  deleteManyUserProperties: (
-    where?: UserPropertyWhereInput
-  ) => BatchPayloadPromise;
   createWorkspace: (data: WorkspaceCreateInput) => WorkspacePromise;
   updateWorkspace: (
     args: { data: WorkspaceUpdateInput; where: WorkspaceWhereUniqueInput }
@@ -586,6 +593,9 @@ export interface Subscription {
   localCredential: (
     where?: LocalCredentialSubscriptionWhereInput
   ) => LocalCredentialSubscriptionPayloadSubscription;
+  oAuthCredential: (
+    where?: OAuthCredentialSubscriptionWhereInput
+  ) => OAuthCredentialSubscriptionPayloadSubscription;
   roleBinding: (
     where?: RoleBindingSubscriptionWhereInput
   ) => RoleBindingSubscriptionPayloadSubscription;
@@ -595,9 +605,6 @@ export interface Subscription {
   user: (
     where?: UserSubscriptionWhereInput
   ) => UserSubscriptionPayloadSubscription;
-  userProperty: (
-    where?: UserPropertySubscriptionWhereInput
-  ) => UserPropertySubscriptionPayloadSubscription;
   workspace: (
     where?: WorkspaceSubscriptionWhereInput
   ) => WorkspaceSubscriptionPayloadSubscription;
@@ -703,15 +710,15 @@ export type RoleBindingOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC";
 
-export type UserPropertyOrderByInput =
+export type OAuthCredentialOrderByInput =
   | "id_ASC"
   | "id_DESC"
-  | "category_ASC"
-  | "category_DESC"
-  | "key_ASC"
-  | "key_DESC"
-  | "value_ASC"
-  | "value_DESC"
+  | "expiresAt_ASC"
+  | "expiresAt_DESC"
+  | "oauthProvider_ASC"
+  | "oauthProvider_DESC"
+  | "oauthUserId_ASC"
+  | "oauthUserId_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -766,10 +773,12 @@ export type UserOrderByInput =
   | "id_DESC"
   | "username_ASC"
   | "username_DESC"
-  | "fullName_ASC"
-  | "fullName_DESC"
   | "status_ASC"
   | "status_DESC"
+  | "fullName_ASC"
+  | "fullName_DESC"
+  | "avatarUrl_ASC"
+  | "avatarUrl_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -1184,23 +1193,6 @@ export interface UserWhereInput {
   username_not_starts_with?: String;
   username_ends_with?: String;
   username_not_ends_with?: String;
-  emails_every?: EmailWhereInput;
-  emails_some?: EmailWhereInput;
-  emails_none?: EmailWhereInput;
-  fullName?: String;
-  fullName_not?: String;
-  fullName_in?: String[] | String;
-  fullName_not_in?: String[] | String;
-  fullName_lt?: String;
-  fullName_lte?: String;
-  fullName_gt?: String;
-  fullName_gte?: String;
-  fullName_contains?: String;
-  fullName_not_contains?: String;
-  fullName_starts_with?: String;
-  fullName_not_starts_with?: String;
-  fullName_ends_with?: String;
-  fullName_not_ends_with?: String;
   status?: String;
   status_not?: String;
   status_in?: String[] | String;
@@ -1215,13 +1207,47 @@ export interface UserWhereInput {
   status_not_starts_with?: String;
   status_ends_with?: String;
   status_not_ends_with?: String;
+  fullName?: String;
+  fullName_not?: String;
+  fullName_in?: String[] | String;
+  fullName_not_in?: String[] | String;
+  fullName_lt?: String;
+  fullName_lte?: String;
+  fullName_gt?: String;
+  fullName_gte?: String;
+  fullName_contains?: String;
+  fullName_not_contains?: String;
+  fullName_starts_with?: String;
+  fullName_not_starts_with?: String;
+  fullName_ends_with?: String;
+  fullName_not_ends_with?: String;
+  avatarUrl?: String;
+  avatarUrl_not?: String;
+  avatarUrl_in?: String[] | String;
+  avatarUrl_not_in?: String[] | String;
+  avatarUrl_lt?: String;
+  avatarUrl_lte?: String;
+  avatarUrl_gt?: String;
+  avatarUrl_gte?: String;
+  avatarUrl_contains?: String;
+  avatarUrl_not_contains?: String;
+  avatarUrl_starts_with?: String;
+  avatarUrl_not_starts_with?: String;
+  avatarUrl_ends_with?: String;
+  avatarUrl_not_ends_with?: String;
+  emails_every?: EmailWhereInput;
+  emails_some?: EmailWhereInput;
+  emails_none?: EmailWhereInput;
+  roleBindings_every?: RoleBindingWhereInput;
+  roleBindings_some?: RoleBindingWhereInput;
+  roleBindings_none?: RoleBindingWhereInput;
   inviteTokens_every?: InviteTokenWhereInput;
   inviteTokens_some?: InviteTokenWhereInput;
   inviteTokens_none?: InviteTokenWhereInput;
   localCredential?: LocalCredentialWhereInput;
-  roleBindings_every?: RoleBindingWhereInput;
-  roleBindings_some?: RoleBindingWhereInput;
-  roleBindings_none?: RoleBindingWhereInput;
+  oauthCredentials_every?: OAuthCredentialWhereInput;
+  oauthCredentials_some?: OAuthCredentialWhereInput;
+  oauthCredentials_none?: OAuthCredentialWhereInput;
   createdAt?: DateTimeInput;
   createdAt_not?: DateTimeInput;
   createdAt_in?: DateTimeInput[] | DateTimeInput;
@@ -1238,9 +1264,6 @@ export interface UserWhereInput {
   updatedAt_lte?: DateTimeInput;
   updatedAt_gt?: DateTimeInput;
   updatedAt_gte?: DateTimeInput;
-  profile_every?: UserPropertyWhereInput;
-  profile_some?: UserPropertyWhereInput;
-  profile_none?: UserPropertyWhereInput;
   AND?: UserWhereInput[] | UserWhereInput;
   OR?: UserWhereInput[] | UserWhereInput;
   NOT?: UserWhereInput[] | UserWhereInput;
@@ -1297,55 +1320,6 @@ export interface EmailWhereInput {
   AND?: EmailWhereInput[] | EmailWhereInput;
   OR?: EmailWhereInput[] | EmailWhereInput;
   NOT?: EmailWhereInput[] | EmailWhereInput;
-}
-
-export interface LocalCredentialWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  user?: UserWhereInput;
-  password?: String;
-  password_not?: String;
-  password_in?: String[] | String;
-  password_not_in?: String[] | String;
-  password_lt?: String;
-  password_lte?: String;
-  password_gt?: String;
-  password_gte?: String;
-  password_contains?: String;
-  password_not_contains?: String;
-  password_starts_with?: String;
-  password_not_starts_with?: String;
-  password_ends_with?: String;
-  password_not_ends_with?: String;
-  resetToken?: String;
-  resetToken_not?: String;
-  resetToken_in?: String[] | String;
-  resetToken_not_in?: String[] | String;
-  resetToken_lt?: String;
-  resetToken_lte?: String;
-  resetToken_gt?: String;
-  resetToken_gte?: String;
-  resetToken_contains?: String;
-  resetToken_not_contains?: String;
-  resetToken_starts_with?: String;
-  resetToken_not_starts_with?: String;
-  resetToken_ends_with?: String;
-  resetToken_not_ends_with?: String;
-  AND?: LocalCredentialWhereInput[] | LocalCredentialWhereInput;
-  OR?: LocalCredentialWhereInput[] | LocalCredentialWhereInput;
-  NOT?: LocalCredentialWhereInput[] | LocalCredentialWhereInput;
 }
 
 export interface RoleBindingWhereInput {
@@ -1465,7 +1439,7 @@ export interface ServiceAccountWhereInput {
   NOT?: ServiceAccountWhereInput[] | ServiceAccountWhereInput;
 }
 
-export interface UserPropertyWhereInput {
+export interface LocalCredentialWhereInput {
   id?: ID_Input;
   id_not?: ID_Input;
   id_in?: ID_Input[] | ID_Input;
@@ -1480,52 +1454,95 @@ export interface UserPropertyWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
-  category?: String;
-  category_not?: String;
-  category_in?: String[] | String;
-  category_not_in?: String[] | String;
-  category_lt?: String;
-  category_lte?: String;
-  category_gt?: String;
-  category_gte?: String;
-  category_contains?: String;
-  category_not_contains?: String;
-  category_starts_with?: String;
-  category_not_starts_with?: String;
-  category_ends_with?: String;
-  category_not_ends_with?: String;
-  key?: String;
-  key_not?: String;
-  key_in?: String[] | String;
-  key_not_in?: String[] | String;
-  key_lt?: String;
-  key_lte?: String;
-  key_gt?: String;
-  key_gte?: String;
-  key_contains?: String;
-  key_not_contains?: String;
-  key_starts_with?: String;
-  key_not_starts_with?: String;
-  key_ends_with?: String;
-  key_not_ends_with?: String;
-  value?: String;
-  value_not?: String;
-  value_in?: String[] | String;
-  value_not_in?: String[] | String;
-  value_lt?: String;
-  value_lte?: String;
-  value_gt?: String;
-  value_gte?: String;
-  value_contains?: String;
-  value_not_contains?: String;
-  value_starts_with?: String;
-  value_not_starts_with?: String;
-  value_ends_with?: String;
-  value_not_ends_with?: String;
   user?: UserWhereInput;
-  AND?: UserPropertyWhereInput[] | UserPropertyWhereInput;
-  OR?: UserPropertyWhereInput[] | UserPropertyWhereInput;
-  NOT?: UserPropertyWhereInput[] | UserPropertyWhereInput;
+  password?: String;
+  password_not?: String;
+  password_in?: String[] | String;
+  password_not_in?: String[] | String;
+  password_lt?: String;
+  password_lte?: String;
+  password_gt?: String;
+  password_gte?: String;
+  password_contains?: String;
+  password_not_contains?: String;
+  password_starts_with?: String;
+  password_not_starts_with?: String;
+  password_ends_with?: String;
+  password_not_ends_with?: String;
+  resetToken?: String;
+  resetToken_not?: String;
+  resetToken_in?: String[] | String;
+  resetToken_not_in?: String[] | String;
+  resetToken_lt?: String;
+  resetToken_lte?: String;
+  resetToken_gt?: String;
+  resetToken_gte?: String;
+  resetToken_contains?: String;
+  resetToken_not_contains?: String;
+  resetToken_starts_with?: String;
+  resetToken_not_starts_with?: String;
+  resetToken_ends_with?: String;
+  resetToken_not_ends_with?: String;
+  AND?: LocalCredentialWhereInput[] | LocalCredentialWhereInput;
+  OR?: LocalCredentialWhereInput[] | LocalCredentialWhereInput;
+  NOT?: LocalCredentialWhereInput[] | LocalCredentialWhereInput;
+}
+
+export interface OAuthCredentialWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  expiresAt?: DateTimeInput;
+  expiresAt_not?: DateTimeInput;
+  expiresAt_in?: DateTimeInput[] | DateTimeInput;
+  expiresAt_not_in?: DateTimeInput[] | DateTimeInput;
+  expiresAt_lt?: DateTimeInput;
+  expiresAt_lte?: DateTimeInput;
+  expiresAt_gt?: DateTimeInput;
+  expiresAt_gte?: DateTimeInput;
+  oauthProvider?: String;
+  oauthProvider_not?: String;
+  oauthProvider_in?: String[] | String;
+  oauthProvider_not_in?: String[] | String;
+  oauthProvider_lt?: String;
+  oauthProvider_lte?: String;
+  oauthProvider_gt?: String;
+  oauthProvider_gte?: String;
+  oauthProvider_contains?: String;
+  oauthProvider_not_contains?: String;
+  oauthProvider_starts_with?: String;
+  oauthProvider_not_starts_with?: String;
+  oauthProvider_ends_with?: String;
+  oauthProvider_not_ends_with?: String;
+  oauthUserId?: String;
+  oauthUserId_not?: String;
+  oauthUserId_in?: String[] | String;
+  oauthUserId_not_in?: String[] | String;
+  oauthUserId_lt?: String;
+  oauthUserId_lte?: String;
+  oauthUserId_gt?: String;
+  oauthUserId_gte?: String;
+  oauthUserId_contains?: String;
+  oauthUserId_not_contains?: String;
+  oauthUserId_starts_with?: String;
+  oauthUserId_not_starts_with?: String;
+  oauthUserId_ends_with?: String;
+  oauthUserId_not_ends_with?: String;
+  user?: UserWhereInput;
+  AND?: OAuthCredentialWhereInput[] | OAuthCredentialWhereInput;
+  OR?: OAuthCredentialWhereInput[] | OAuthCredentialWhereInput;
+  NOT?: OAuthCredentialWhereInput[] | OAuthCredentialWhereInput;
 }
 
 export interface WorkspacePropertyWhereInput {
@@ -1626,6 +1643,10 @@ export type LocalCredentialWhereUniqueInput = AtLeastOne<{
   password?: String;
 }>;
 
+export type OAuthCredentialWhereUniqueInput = AtLeastOne<{
+  id: ID_Input;
+}>;
+
 export type RoleBindingWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
@@ -1637,10 +1658,6 @@ export type ServiceAccountWhereUniqueInput = AtLeastOne<{
 export type UserWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
   username?: String;
-}>;
-
-export type UserPropertyWhereUniqueInput = AtLeastOne<{
-  id: ID_Input;
 }>;
 
 export type WorkspaceWhereUniqueInput = AtLeastOne<{
@@ -1714,12 +1731,13 @@ export interface UserCreateOneWithoutInviteTokensInput {
 
 export interface UserCreateWithoutInviteTokensInput {
   username?: String;
-  emails?: EmailCreateManyWithoutUserInput;
-  fullName?: String;
   status?: String;
-  localCredential?: LocalCredentialCreateOneWithoutUserInput;
+  fullName?: String;
+  avatarUrl?: String;
+  emails?: EmailCreateManyWithoutUserInput;
   roleBindings?: RoleBindingCreateManyWithoutUserInput;
-  profile?: UserPropertyCreateManyWithoutUserInput;
+  localCredential?: LocalCredentialCreateOneWithoutUserInput;
+  oauthCredentials?: OAuthCredentialCreateManyWithoutUserInput;
 }
 
 export interface EmailCreateManyWithoutUserInput {
@@ -1732,16 +1750,6 @@ export interface EmailCreateWithoutUserInput {
   primary?: Boolean;
   token?: String;
   verified?: Boolean;
-}
-
-export interface LocalCredentialCreateOneWithoutUserInput {
-  create?: LocalCredentialCreateWithoutUserInput;
-  connect?: LocalCredentialWhereUniqueInput;
-}
-
-export interface LocalCredentialCreateWithoutUserInput {
-  password?: String;
-  resetToken?: String;
 }
 
 export interface RoleBindingCreateManyWithoutUserInput {
@@ -1824,17 +1832,27 @@ export interface DeploymentCreateOneInput {
   connect?: DeploymentWhereUniqueInput;
 }
 
-export interface UserPropertyCreateManyWithoutUserInput {
-  create?:
-    | UserPropertyCreateWithoutUserInput[]
-    | UserPropertyCreateWithoutUserInput;
-  connect?: UserPropertyWhereUniqueInput[] | UserPropertyWhereUniqueInput;
+export interface LocalCredentialCreateOneWithoutUserInput {
+  create?: LocalCredentialCreateWithoutUserInput;
+  connect?: LocalCredentialWhereUniqueInput;
 }
 
-export interface UserPropertyCreateWithoutUserInput {
-  category?: String;
-  key: String;
-  value?: String;
+export interface LocalCredentialCreateWithoutUserInput {
+  password?: String;
+  resetToken?: String;
+}
+
+export interface OAuthCredentialCreateManyWithoutUserInput {
+  create?:
+    | OAuthCredentialCreateWithoutUserInput[]
+    | OAuthCredentialCreateWithoutUserInput;
+  connect?: OAuthCredentialWhereUniqueInput[] | OAuthCredentialWhereUniqueInput;
+}
+
+export interface OAuthCredentialCreateWithoutUserInput {
+  expiresAt?: DateTimeInput;
+  oauthProvider: String;
+  oauthUserId: String;
 }
 
 export interface RoleBindingCreateManyWithoutWorkspaceInput {
@@ -1858,12 +1876,13 @@ export interface UserCreateOneWithoutRoleBindingsInput {
 
 export interface UserCreateWithoutRoleBindingsInput {
   username?: String;
-  emails?: EmailCreateManyWithoutUserInput;
-  fullName?: String;
   status?: String;
+  fullName?: String;
+  avatarUrl?: String;
+  emails?: EmailCreateManyWithoutUserInput;
   inviteTokens?: InviteTokenCreateManyWithoutUserInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
-  profile?: UserPropertyCreateManyWithoutUserInput;
+  oauthCredentials?: OAuthCredentialCreateManyWithoutUserInput;
 }
 
 export interface InviteTokenCreateManyWithoutUserInput {
@@ -2106,12 +2125,13 @@ export interface UserUpdateOneWithoutInviteTokensInput {
 
 export interface UserUpdateWithoutInviteTokensDataInput {
   username?: String;
-  emails?: EmailUpdateManyWithoutUserInput;
-  fullName?: String;
   status?: String;
-  localCredential?: LocalCredentialUpdateOneWithoutUserInput;
+  fullName?: String;
+  avatarUrl?: String;
+  emails?: EmailUpdateManyWithoutUserInput;
   roleBindings?: RoleBindingUpdateManyWithoutUserInput;
-  profile?: UserPropertyUpdateManyWithoutUserInput;
+  localCredential?: LocalCredentialUpdateOneWithoutUserInput;
+  oauthCredentials?: OAuthCredentialUpdateManyWithoutUserInput;
 }
 
 export interface EmailUpdateManyWithoutUserInput {
@@ -2211,25 +2231,6 @@ export interface EmailUpdateManyDataInput {
   primary?: Boolean;
   token?: String;
   verified?: Boolean;
-}
-
-export interface LocalCredentialUpdateOneWithoutUserInput {
-  create?: LocalCredentialCreateWithoutUserInput;
-  update?: LocalCredentialUpdateWithoutUserDataInput;
-  upsert?: LocalCredentialUpsertWithoutUserInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
-  connect?: LocalCredentialWhereUniqueInput;
-}
-
-export interface LocalCredentialUpdateWithoutUserDataInput {
-  password?: String;
-  resetToken?: String;
-}
-
-export interface LocalCredentialUpsertWithoutUserInput {
-  update: LocalCredentialUpdateWithoutUserDataInput;
-  create: LocalCredentialCreateWithoutUserInput;
 }
 
 export interface RoleBindingUpdateManyWithoutUserInput {
@@ -2699,43 +2700,66 @@ export interface RoleBindingUpdateManyDataInput {
   role?: Role;
 }
 
-export interface UserPropertyUpdateManyWithoutUserInput {
+export interface LocalCredentialUpdateOneWithoutUserInput {
+  create?: LocalCredentialCreateWithoutUserInput;
+  update?: LocalCredentialUpdateWithoutUserDataInput;
+  upsert?: LocalCredentialUpsertWithoutUserInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: LocalCredentialWhereUniqueInput;
+}
+
+export interface LocalCredentialUpdateWithoutUserDataInput {
+  password?: String;
+  resetToken?: String;
+}
+
+export interface LocalCredentialUpsertWithoutUserInput {
+  update: LocalCredentialUpdateWithoutUserDataInput;
+  create: LocalCredentialCreateWithoutUserInput;
+}
+
+export interface OAuthCredentialUpdateManyWithoutUserInput {
   create?:
-    | UserPropertyCreateWithoutUserInput[]
-    | UserPropertyCreateWithoutUserInput;
-  delete?: UserPropertyWhereUniqueInput[] | UserPropertyWhereUniqueInput;
-  connect?: UserPropertyWhereUniqueInput[] | UserPropertyWhereUniqueInput;
-  disconnect?: UserPropertyWhereUniqueInput[] | UserPropertyWhereUniqueInput;
+    | OAuthCredentialCreateWithoutUserInput[]
+    | OAuthCredentialCreateWithoutUserInput;
+  delete?: OAuthCredentialWhereUniqueInput[] | OAuthCredentialWhereUniqueInput;
+  connect?: OAuthCredentialWhereUniqueInput[] | OAuthCredentialWhereUniqueInput;
+  disconnect?:
+    | OAuthCredentialWhereUniqueInput[]
+    | OAuthCredentialWhereUniqueInput;
   update?:
-    | UserPropertyUpdateWithWhereUniqueWithoutUserInput[]
-    | UserPropertyUpdateWithWhereUniqueWithoutUserInput;
+    | OAuthCredentialUpdateWithWhereUniqueWithoutUserInput[]
+    | OAuthCredentialUpdateWithWhereUniqueWithoutUserInput;
   upsert?:
-    | UserPropertyUpsertWithWhereUniqueWithoutUserInput[]
-    | UserPropertyUpsertWithWhereUniqueWithoutUserInput;
-  deleteMany?: UserPropertyScalarWhereInput[] | UserPropertyScalarWhereInput;
+    | OAuthCredentialUpsertWithWhereUniqueWithoutUserInput[]
+    | OAuthCredentialUpsertWithWhereUniqueWithoutUserInput;
+  deleteMany?:
+    | OAuthCredentialScalarWhereInput[]
+    | OAuthCredentialScalarWhereInput;
   updateMany?:
-    | UserPropertyUpdateManyWithWhereNestedInput[]
-    | UserPropertyUpdateManyWithWhereNestedInput;
+    | OAuthCredentialUpdateManyWithWhereNestedInput[]
+    | OAuthCredentialUpdateManyWithWhereNestedInput;
 }
 
-export interface UserPropertyUpdateWithWhereUniqueWithoutUserInput {
-  where: UserPropertyWhereUniqueInput;
-  data: UserPropertyUpdateWithoutUserDataInput;
+export interface OAuthCredentialUpdateWithWhereUniqueWithoutUserInput {
+  where: OAuthCredentialWhereUniqueInput;
+  data: OAuthCredentialUpdateWithoutUserDataInput;
 }
 
-export interface UserPropertyUpdateWithoutUserDataInput {
-  category?: String;
-  key?: String;
-  value?: String;
+export interface OAuthCredentialUpdateWithoutUserDataInput {
+  expiresAt?: DateTimeInput;
+  oauthProvider?: String;
+  oauthUserId?: String;
 }
 
-export interface UserPropertyUpsertWithWhereUniqueWithoutUserInput {
-  where: UserPropertyWhereUniqueInput;
-  update: UserPropertyUpdateWithoutUserDataInput;
-  create: UserPropertyCreateWithoutUserInput;
+export interface OAuthCredentialUpsertWithWhereUniqueWithoutUserInput {
+  where: OAuthCredentialWhereUniqueInput;
+  update: OAuthCredentialUpdateWithoutUserDataInput;
+  create: OAuthCredentialCreateWithoutUserInput;
 }
 
-export interface UserPropertyScalarWhereInput {
+export interface OAuthCredentialScalarWhereInput {
   id?: ID_Input;
   id_not?: ID_Input;
   id_in?: ID_Input[] | ID_Input;
@@ -2750,62 +2774,56 @@ export interface UserPropertyScalarWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
-  category?: String;
-  category_not?: String;
-  category_in?: String[] | String;
-  category_not_in?: String[] | String;
-  category_lt?: String;
-  category_lte?: String;
-  category_gt?: String;
-  category_gte?: String;
-  category_contains?: String;
-  category_not_contains?: String;
-  category_starts_with?: String;
-  category_not_starts_with?: String;
-  category_ends_with?: String;
-  category_not_ends_with?: String;
-  key?: String;
-  key_not?: String;
-  key_in?: String[] | String;
-  key_not_in?: String[] | String;
-  key_lt?: String;
-  key_lte?: String;
-  key_gt?: String;
-  key_gte?: String;
-  key_contains?: String;
-  key_not_contains?: String;
-  key_starts_with?: String;
-  key_not_starts_with?: String;
-  key_ends_with?: String;
-  key_not_ends_with?: String;
-  value?: String;
-  value_not?: String;
-  value_in?: String[] | String;
-  value_not_in?: String[] | String;
-  value_lt?: String;
-  value_lte?: String;
-  value_gt?: String;
-  value_gte?: String;
-  value_contains?: String;
-  value_not_contains?: String;
-  value_starts_with?: String;
-  value_not_starts_with?: String;
-  value_ends_with?: String;
-  value_not_ends_with?: String;
-  AND?: UserPropertyScalarWhereInput[] | UserPropertyScalarWhereInput;
-  OR?: UserPropertyScalarWhereInput[] | UserPropertyScalarWhereInput;
-  NOT?: UserPropertyScalarWhereInput[] | UserPropertyScalarWhereInput;
+  expiresAt?: DateTimeInput;
+  expiresAt_not?: DateTimeInput;
+  expiresAt_in?: DateTimeInput[] | DateTimeInput;
+  expiresAt_not_in?: DateTimeInput[] | DateTimeInput;
+  expiresAt_lt?: DateTimeInput;
+  expiresAt_lte?: DateTimeInput;
+  expiresAt_gt?: DateTimeInput;
+  expiresAt_gte?: DateTimeInput;
+  oauthProvider?: String;
+  oauthProvider_not?: String;
+  oauthProvider_in?: String[] | String;
+  oauthProvider_not_in?: String[] | String;
+  oauthProvider_lt?: String;
+  oauthProvider_lte?: String;
+  oauthProvider_gt?: String;
+  oauthProvider_gte?: String;
+  oauthProvider_contains?: String;
+  oauthProvider_not_contains?: String;
+  oauthProvider_starts_with?: String;
+  oauthProvider_not_starts_with?: String;
+  oauthProvider_ends_with?: String;
+  oauthProvider_not_ends_with?: String;
+  oauthUserId?: String;
+  oauthUserId_not?: String;
+  oauthUserId_in?: String[] | String;
+  oauthUserId_not_in?: String[] | String;
+  oauthUserId_lt?: String;
+  oauthUserId_lte?: String;
+  oauthUserId_gt?: String;
+  oauthUserId_gte?: String;
+  oauthUserId_contains?: String;
+  oauthUserId_not_contains?: String;
+  oauthUserId_starts_with?: String;
+  oauthUserId_not_starts_with?: String;
+  oauthUserId_ends_with?: String;
+  oauthUserId_not_ends_with?: String;
+  AND?: OAuthCredentialScalarWhereInput[] | OAuthCredentialScalarWhereInput;
+  OR?: OAuthCredentialScalarWhereInput[] | OAuthCredentialScalarWhereInput;
+  NOT?: OAuthCredentialScalarWhereInput[] | OAuthCredentialScalarWhereInput;
 }
 
-export interface UserPropertyUpdateManyWithWhereNestedInput {
-  where: UserPropertyScalarWhereInput;
-  data: UserPropertyUpdateManyDataInput;
+export interface OAuthCredentialUpdateManyWithWhereNestedInput {
+  where: OAuthCredentialScalarWhereInput;
+  data: OAuthCredentialUpdateManyDataInput;
 }
 
-export interface UserPropertyUpdateManyDataInput {
-  category?: String;
-  key?: String;
-  value?: String;
+export interface OAuthCredentialUpdateManyDataInput {
+  expiresAt?: DateTimeInput;
+  oauthProvider?: String;
+  oauthUserId?: String;
 }
 
 export interface UserUpsertWithoutInviteTokensInput {
@@ -2934,12 +2952,13 @@ export interface UserUpdateOneWithoutRoleBindingsInput {
 
 export interface UserUpdateWithoutRoleBindingsDataInput {
   username?: String;
-  emails?: EmailUpdateManyWithoutUserInput;
-  fullName?: String;
   status?: String;
+  fullName?: String;
+  avatarUrl?: String;
+  emails?: EmailUpdateManyWithoutUserInput;
   inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
-  profile?: UserPropertyUpdateManyWithoutUserInput;
+  oauthCredentials?: OAuthCredentialUpdateManyWithoutUserInput;
 }
 
 export interface InviteTokenUpdateManyWithoutUserInput {
@@ -3107,12 +3126,13 @@ export interface UserCreateOneWithoutEmailsInput {
 
 export interface UserCreateWithoutEmailsInput {
   username?: String;
-  fullName?: String;
   status?: String;
+  fullName?: String;
+  avatarUrl?: String;
+  roleBindings?: RoleBindingCreateManyWithoutUserInput;
   inviteTokens?: InviteTokenCreateManyWithoutUserInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
-  roleBindings?: RoleBindingCreateManyWithoutUserInput;
-  profile?: UserPropertyCreateManyWithoutUserInput;
+  oauthCredentials?: OAuthCredentialCreateManyWithoutUserInput;
 }
 
 export interface EmailUpdateInput {
@@ -3134,12 +3154,13 @@ export interface UserUpdateOneWithoutEmailsInput {
 
 export interface UserUpdateWithoutEmailsDataInput {
   username?: String;
-  fullName?: String;
   status?: String;
+  fullName?: String;
+  avatarUrl?: String;
+  roleBindings?: RoleBindingUpdateManyWithoutUserInput;
   inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
-  roleBindings?: RoleBindingUpdateManyWithoutUserInput;
-  profile?: UserPropertyUpdateManyWithoutUserInput;
+  oauthCredentials?: OAuthCredentialUpdateManyWithoutUserInput;
 }
 
 export interface UserUpsertWithoutEmailsInput {
@@ -3189,12 +3210,13 @@ export interface UserCreateOneWithoutLocalCredentialInput {
 
 export interface UserCreateWithoutLocalCredentialInput {
   username?: String;
-  emails?: EmailCreateManyWithoutUserInput;
-  fullName?: String;
   status?: String;
-  inviteTokens?: InviteTokenCreateManyWithoutUserInput;
+  fullName?: String;
+  avatarUrl?: String;
+  emails?: EmailCreateManyWithoutUserInput;
   roleBindings?: RoleBindingCreateManyWithoutUserInput;
-  profile?: UserPropertyCreateManyWithoutUserInput;
+  inviteTokens?: InviteTokenCreateManyWithoutUserInput;
+  oauthCredentials?: OAuthCredentialCreateManyWithoutUserInput;
 }
 
 export interface LocalCredentialUpdateInput {
@@ -3214,12 +3236,13 @@ export interface UserUpdateOneWithoutLocalCredentialInput {
 
 export interface UserUpdateWithoutLocalCredentialDataInput {
   username?: String;
-  emails?: EmailUpdateManyWithoutUserInput;
-  fullName?: String;
   status?: String;
-  inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
+  fullName?: String;
+  avatarUrl?: String;
+  emails?: EmailUpdateManyWithoutUserInput;
   roleBindings?: RoleBindingUpdateManyWithoutUserInput;
-  profile?: UserPropertyUpdateManyWithoutUserInput;
+  inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
+  oauthCredentials?: OAuthCredentialUpdateManyWithoutUserInput;
 }
 
 export interface UserUpsertWithoutLocalCredentialInput {
@@ -3230,6 +3253,67 @@ export interface UserUpsertWithoutLocalCredentialInput {
 export interface LocalCredentialUpdateManyMutationInput {
   password?: String;
   resetToken?: String;
+}
+
+export interface OAuthCredentialCreateInput {
+  expiresAt?: DateTimeInput;
+  oauthProvider: String;
+  oauthUserId: String;
+  user?: UserCreateOneWithoutOauthCredentialsInput;
+}
+
+export interface UserCreateOneWithoutOauthCredentialsInput {
+  create?: UserCreateWithoutOauthCredentialsInput;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserCreateWithoutOauthCredentialsInput {
+  username?: String;
+  status?: String;
+  fullName?: String;
+  avatarUrl?: String;
+  emails?: EmailCreateManyWithoutUserInput;
+  roleBindings?: RoleBindingCreateManyWithoutUserInput;
+  inviteTokens?: InviteTokenCreateManyWithoutUserInput;
+  localCredential?: LocalCredentialCreateOneWithoutUserInput;
+}
+
+export interface OAuthCredentialUpdateInput {
+  expiresAt?: DateTimeInput;
+  oauthProvider?: String;
+  oauthUserId?: String;
+  user?: UserUpdateOneWithoutOauthCredentialsInput;
+}
+
+export interface UserUpdateOneWithoutOauthCredentialsInput {
+  create?: UserCreateWithoutOauthCredentialsInput;
+  update?: UserUpdateWithoutOauthCredentialsDataInput;
+  upsert?: UserUpsertWithoutOauthCredentialsInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: UserWhereUniqueInput;
+}
+
+export interface UserUpdateWithoutOauthCredentialsDataInput {
+  username?: String;
+  status?: String;
+  fullName?: String;
+  avatarUrl?: String;
+  emails?: EmailUpdateManyWithoutUserInput;
+  roleBindings?: RoleBindingUpdateManyWithoutUserInput;
+  inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
+  localCredential?: LocalCredentialUpdateOneWithoutUserInput;
+}
+
+export interface UserUpsertWithoutOauthCredentialsInput {
+  update: UserUpdateWithoutOauthCredentialsDataInput;
+  create: UserCreateWithoutOauthCredentialsInput;
+}
+
+export interface OAuthCredentialUpdateManyMutationInput {
+  expiresAt?: DateTimeInput;
+  oauthProvider?: String;
+  oauthUserId?: String;
 }
 
 export interface RoleBindingCreateInput {
@@ -3313,89 +3397,33 @@ export interface ServiceAccountUpdateManyMutationInput {
 
 export interface UserCreateInput {
   username?: String;
-  emails?: EmailCreateManyWithoutUserInput;
-  fullName?: String;
   status?: String;
+  fullName?: String;
+  avatarUrl?: String;
+  emails?: EmailCreateManyWithoutUserInput;
+  roleBindings?: RoleBindingCreateManyWithoutUserInput;
   inviteTokens?: InviteTokenCreateManyWithoutUserInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
-  roleBindings?: RoleBindingCreateManyWithoutUserInput;
-  profile?: UserPropertyCreateManyWithoutUserInput;
+  oauthCredentials?: OAuthCredentialCreateManyWithoutUserInput;
 }
 
 export interface UserUpdateInput {
   username?: String;
-  emails?: EmailUpdateManyWithoutUserInput;
-  fullName?: String;
   status?: String;
+  fullName?: String;
+  avatarUrl?: String;
+  emails?: EmailUpdateManyWithoutUserInput;
+  roleBindings?: RoleBindingUpdateManyWithoutUserInput;
   inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
-  roleBindings?: RoleBindingUpdateManyWithoutUserInput;
-  profile?: UserPropertyUpdateManyWithoutUserInput;
+  oauthCredentials?: OAuthCredentialUpdateManyWithoutUserInput;
 }
 
 export interface UserUpdateManyMutationInput {
   username?: String;
-  fullName?: String;
   status?: String;
-}
-
-export interface UserPropertyCreateInput {
-  category?: String;
-  key: String;
-  value?: String;
-  user?: UserCreateOneWithoutProfileInput;
-}
-
-export interface UserCreateOneWithoutProfileInput {
-  create?: UserCreateWithoutProfileInput;
-  connect?: UserWhereUniqueInput;
-}
-
-export interface UserCreateWithoutProfileInput {
-  username?: String;
-  emails?: EmailCreateManyWithoutUserInput;
   fullName?: String;
-  status?: String;
-  inviteTokens?: InviteTokenCreateManyWithoutUserInput;
-  localCredential?: LocalCredentialCreateOneWithoutUserInput;
-  roleBindings?: RoleBindingCreateManyWithoutUserInput;
-}
-
-export interface UserPropertyUpdateInput {
-  category?: String;
-  key?: String;
-  value?: String;
-  user?: UserUpdateOneWithoutProfileInput;
-}
-
-export interface UserUpdateOneWithoutProfileInput {
-  create?: UserCreateWithoutProfileInput;
-  update?: UserUpdateWithoutProfileDataInput;
-  upsert?: UserUpsertWithoutProfileInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
-  connect?: UserWhereUniqueInput;
-}
-
-export interface UserUpdateWithoutProfileDataInput {
-  username?: String;
-  emails?: EmailUpdateManyWithoutUserInput;
-  fullName?: String;
-  status?: String;
-  inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
-  localCredential?: LocalCredentialUpdateOneWithoutUserInput;
-  roleBindings?: RoleBindingUpdateManyWithoutUserInput;
-}
-
-export interface UserUpsertWithoutProfileInput {
-  update: UserUpdateWithoutProfileDataInput;
-  create: UserCreateWithoutProfileInput;
-}
-
-export interface UserPropertyUpdateManyMutationInput {
-  category?: String;
-  key?: String;
-  value?: String;
+  avatarUrl?: String;
 }
 
 export interface WorkspaceCreateInput {
@@ -3548,6 +3576,23 @@ export interface LocalCredentialSubscriptionWhereInput {
     | LocalCredentialSubscriptionWhereInput;
 }
 
+export interface OAuthCredentialSubscriptionWhereInput {
+  mutation_in?: MutationType[] | MutationType;
+  updatedFields_contains?: String;
+  updatedFields_contains_every?: String[] | String;
+  updatedFields_contains_some?: String[] | String;
+  node?: OAuthCredentialWhereInput;
+  AND?:
+    | OAuthCredentialSubscriptionWhereInput[]
+    | OAuthCredentialSubscriptionWhereInput;
+  OR?:
+    | OAuthCredentialSubscriptionWhereInput[]
+    | OAuthCredentialSubscriptionWhereInput;
+  NOT?:
+    | OAuthCredentialSubscriptionWhereInput[]
+    | OAuthCredentialSubscriptionWhereInput;
+}
+
 export interface RoleBindingSubscriptionWhereInput {
   mutation_in?: MutationType[] | MutationType;
   updatedFields_contains?: String;
@@ -3585,23 +3630,6 @@ export interface UserSubscriptionWhereInput {
   AND?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
   OR?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
   NOT?: UserSubscriptionWhereInput[] | UserSubscriptionWhereInput;
-}
-
-export interface UserPropertySubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: UserPropertyWhereInput;
-  AND?:
-    | UserPropertySubscriptionWhereInput[]
-    | UserPropertySubscriptionWhereInput;
-  OR?:
-    | UserPropertySubscriptionWhereInput[]
-    | UserPropertySubscriptionWhereInput;
-  NOT?:
-    | UserPropertySubscriptionWhereInput[]
-    | UserPropertySubscriptionWhereInput;
 }
 
 export interface WorkspaceSubscriptionWhereInput {
@@ -3884,8 +3912,9 @@ export interface InviteTokenSubscription
 export interface User {
   id: ID_Output;
   username?: String;
-  fullName?: String;
   status?: String;
+  fullName?: String;
+  avatarUrl?: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -3893,6 +3922,9 @@ export interface User {
 export interface UserPromise extends Promise<User>, Fragmentable {
   id: () => Promise<ID_Output>;
   username: () => Promise<String>;
+  status: () => Promise<String>;
+  fullName: () => Promise<String>;
+  avatarUrl: () => Promise<String>;
   emails: <T = FragmentableArray<Email>>(
     args?: {
       where?: EmailWhereInput;
@@ -3904,8 +3936,17 @@ export interface UserPromise extends Promise<User>, Fragmentable {
       last?: Int;
     }
   ) => T;
-  fullName: () => Promise<String>;
-  status: () => Promise<String>;
+  roleBindings: <T = FragmentableArray<RoleBinding>>(
+    args?: {
+      where?: RoleBindingWhereInput;
+      orderBy?: RoleBindingOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
   inviteTokens: <T = FragmentableArray<InviteToken>>(
     args?: {
       where?: InviteTokenWhereInput;
@@ -3918,10 +3959,10 @@ export interface UserPromise extends Promise<User>, Fragmentable {
     }
   ) => T;
   localCredential: <T = LocalCredentialPromise>() => T;
-  roleBindings: <T = FragmentableArray<RoleBinding>>(
+  oauthCredentials: <T = FragmentableArray<OAuthCredential>>(
     args?: {
-      where?: RoleBindingWhereInput;
-      orderBy?: RoleBindingOrderByInput;
+      where?: OAuthCredentialWhereInput;
+      orderBy?: OAuthCredentialOrderByInput;
       skip?: Int;
       after?: String;
       before?: String;
@@ -3931,17 +3972,6 @@ export interface UserPromise extends Promise<User>, Fragmentable {
   ) => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
-  profile: <T = FragmentableArray<UserProperty>>(
-    args?: {
-      where?: UserPropertyWhereInput;
-      orderBy?: UserPropertyOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
 }
 
 export interface UserSubscription
@@ -3949,6 +3979,9 @@ export interface UserSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   username: () => Promise<AsyncIterator<String>>;
+  status: () => Promise<AsyncIterator<String>>;
+  fullName: () => Promise<AsyncIterator<String>>;
+  avatarUrl: () => Promise<AsyncIterator<String>>;
   emails: <T = Promise<AsyncIterator<EmailSubscription>>>(
     args?: {
       where?: EmailWhereInput;
@@ -3960,8 +3993,17 @@ export interface UserSubscription
       last?: Int;
     }
   ) => T;
-  fullName: () => Promise<AsyncIterator<String>>;
-  status: () => Promise<AsyncIterator<String>>;
+  roleBindings: <T = Promise<AsyncIterator<RoleBindingSubscription>>>(
+    args?: {
+      where?: RoleBindingWhereInput;
+      orderBy?: RoleBindingOrderByInput;
+      skip?: Int;
+      after?: String;
+      before?: String;
+      first?: Int;
+      last?: Int;
+    }
+  ) => T;
   inviteTokens: <T = Promise<AsyncIterator<InviteTokenSubscription>>>(
     args?: {
       where?: InviteTokenWhereInput;
@@ -3974,10 +4016,10 @@ export interface UserSubscription
     }
   ) => T;
   localCredential: <T = LocalCredentialSubscription>() => T;
-  roleBindings: <T = Promise<AsyncIterator<RoleBindingSubscription>>>(
+  oauthCredentials: <T = Promise<AsyncIterator<OAuthCredentialSubscription>>>(
     args?: {
-      where?: RoleBindingWhereInput;
-      orderBy?: RoleBindingOrderByInput;
+      where?: OAuthCredentialWhereInput;
+      orderBy?: OAuthCredentialOrderByInput;
       skip?: Int;
       after?: String;
       before?: String;
@@ -3987,17 +4029,6 @@ export interface UserSubscription
   ) => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  profile: <T = Promise<AsyncIterator<UserPropertySubscription>>>(
-    args?: {
-      where?: UserPropertyWhereInput;
-      orderBy?: UserPropertyOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
 }
 
 export interface Email {
@@ -4026,30 +4057,6 @@ export interface EmailSubscription
   token: () => Promise<AsyncIterator<String>>;
   user: <T = UserSubscription>() => T;
   verified: () => Promise<AsyncIterator<Boolean>>;
-}
-
-export interface LocalCredential {
-  id: ID_Output;
-  password?: String;
-  resetToken?: String;
-}
-
-export interface LocalCredentialPromise
-  extends Promise<LocalCredential>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  user: <T = UserPromise>() => T;
-  password: () => Promise<String>;
-  resetToken: () => Promise<String>;
-}
-
-export interface LocalCredentialSubscription
-  extends Promise<AsyncIterator<LocalCredential>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  user: <T = UserSubscription>() => T;
-  password: () => Promise<AsyncIterator<String>>;
-  resetToken: () => Promise<AsyncIterator<String>>;
 }
 
 export interface RoleBinding {
@@ -4116,30 +4123,54 @@ export interface ServiceAccountSubscription
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface UserProperty {
+export interface LocalCredential {
   id: ID_Output;
-  category?: String;
-  key: String;
-  value?: String;
+  password?: String;
+  resetToken?: String;
 }
 
-export interface UserPropertyPromise
-  extends Promise<UserProperty>,
+export interface LocalCredentialPromise
+  extends Promise<LocalCredential>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  category: () => Promise<String>;
-  key: () => Promise<String>;
-  value: () => Promise<String>;
+  user: <T = UserPromise>() => T;
+  password: () => Promise<String>;
+  resetToken: () => Promise<String>;
+}
+
+export interface LocalCredentialSubscription
+  extends Promise<AsyncIterator<LocalCredential>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  user: <T = UserSubscription>() => T;
+  password: () => Promise<AsyncIterator<String>>;
+  resetToken: () => Promise<AsyncIterator<String>>;
+}
+
+export interface OAuthCredential {
+  id: ID_Output;
+  expiresAt?: DateTimeOutput;
+  oauthProvider: String;
+  oauthUserId: String;
+}
+
+export interface OAuthCredentialPromise
+  extends Promise<OAuthCredential>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  expiresAt: () => Promise<DateTimeOutput>;
+  oauthProvider: () => Promise<String>;
+  oauthUserId: () => Promise<String>;
   user: <T = UserPromise>() => T;
 }
 
-export interface UserPropertySubscription
-  extends Promise<AsyncIterator<UserProperty>>,
+export interface OAuthCredentialSubscription
+  extends Promise<AsyncIterator<OAuthCredential>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  category: () => Promise<AsyncIterator<String>>;
-  key: () => Promise<AsyncIterator<String>>;
-  value: () => Promise<AsyncIterator<String>>;
+  expiresAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  oauthProvider: () => Promise<AsyncIterator<String>>;
+  oauthUserId: () => Promise<AsyncIterator<String>>;
   user: <T = UserSubscription>() => T;
 }
 
@@ -4479,6 +4510,62 @@ export interface AggregateLocalCredentialSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
+export interface OAuthCredentialConnection {
+  pageInfo: PageInfo;
+  edges: OAuthCredentialEdge[];
+}
+
+export interface OAuthCredentialConnectionPromise
+  extends Promise<OAuthCredentialConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<OAuthCredentialEdge>>() => T;
+  aggregate: <T = AggregateOAuthCredentialPromise>() => T;
+}
+
+export interface OAuthCredentialConnectionSubscription
+  extends Promise<AsyncIterator<OAuthCredentialConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<OAuthCredentialEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateOAuthCredentialSubscription>() => T;
+}
+
+export interface OAuthCredentialEdge {
+  node: OAuthCredential;
+  cursor: String;
+}
+
+export interface OAuthCredentialEdgePromise
+  extends Promise<OAuthCredentialEdge>,
+    Fragmentable {
+  node: <T = OAuthCredentialPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface OAuthCredentialEdgeSubscription
+  extends Promise<AsyncIterator<OAuthCredentialEdge>>,
+    Fragmentable {
+  node: <T = OAuthCredentialSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateOAuthCredential {
+  count: Int;
+}
+
+export interface AggregateOAuthCredentialPromise
+  extends Promise<AggregateOAuthCredential>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateOAuthCredentialSubscription
+  extends Promise<AsyncIterator<AggregateOAuthCredential>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
 export interface RoleBindingConnection {
   pageInfo: PageInfo;
   edges: RoleBindingEdge[];
@@ -4641,62 +4728,6 @@ export interface AggregateUserPromise
 
 export interface AggregateUserSubscription
   extends Promise<AsyncIterator<AggregateUser>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface UserPropertyConnection {
-  pageInfo: PageInfo;
-  edges: UserPropertyEdge[];
-}
-
-export interface UserPropertyConnectionPromise
-  extends Promise<UserPropertyConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<UserPropertyEdge>>() => T;
-  aggregate: <T = AggregateUserPropertyPromise>() => T;
-}
-
-export interface UserPropertyConnectionSubscription
-  extends Promise<AsyncIterator<UserPropertyConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<UserPropertyEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateUserPropertySubscription>() => T;
-}
-
-export interface UserPropertyEdge {
-  node: UserProperty;
-  cursor: String;
-}
-
-export interface UserPropertyEdgePromise
-  extends Promise<UserPropertyEdge>,
-    Fragmentable {
-  node: <T = UserPropertyPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface UserPropertyEdgeSubscription
-  extends Promise<AsyncIterator<UserPropertyEdge>>,
-    Fragmentable {
-  node: <T = UserPropertySubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateUserProperty {
-  count: Int;
-}
-
-export interface AggregateUserPropertyPromise
-  extends Promise<AggregateUserProperty>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateUserPropertySubscription
-  extends Promise<AsyncIterator<AggregateUserProperty>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
@@ -5106,6 +5137,56 @@ export interface LocalCredentialPreviousValuesSubscription
   resetToken: () => Promise<AsyncIterator<String>>;
 }
 
+export interface OAuthCredentialSubscriptionPayload {
+  mutation: MutationType;
+  node: OAuthCredential;
+  updatedFields: String[];
+  previousValues: OAuthCredentialPreviousValues;
+}
+
+export interface OAuthCredentialSubscriptionPayloadPromise
+  extends Promise<OAuthCredentialSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = OAuthCredentialPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = OAuthCredentialPreviousValuesPromise>() => T;
+}
+
+export interface OAuthCredentialSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<OAuthCredentialSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = OAuthCredentialSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = OAuthCredentialPreviousValuesSubscription>() => T;
+}
+
+export interface OAuthCredentialPreviousValues {
+  id: ID_Output;
+  expiresAt?: DateTimeOutput;
+  oauthProvider: String;
+  oauthUserId: String;
+}
+
+export interface OAuthCredentialPreviousValuesPromise
+  extends Promise<OAuthCredentialPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  expiresAt: () => Promise<DateTimeOutput>;
+  oauthProvider: () => Promise<String>;
+  oauthUserId: () => Promise<String>;
+}
+
+export interface OAuthCredentialPreviousValuesSubscription
+  extends Promise<AsyncIterator<OAuthCredentialPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  expiresAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  oauthProvider: () => Promise<AsyncIterator<String>>;
+  oauthUserId: () => Promise<AsyncIterator<String>>;
+}
+
 export interface RoleBindingSubscriptionPayload {
   mutation: MutationType;
   node: RoleBinding;
@@ -5240,8 +5321,9 @@ export interface UserSubscriptionPayloadSubscription
 export interface UserPreviousValues {
   id: ID_Output;
   username?: String;
-  fullName?: String;
   status?: String;
+  fullName?: String;
+  avatarUrl?: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -5251,8 +5333,9 @@ export interface UserPreviousValuesPromise
     Fragmentable {
   id: () => Promise<ID_Output>;
   username: () => Promise<String>;
-  fullName: () => Promise<String>;
   status: () => Promise<String>;
+  fullName: () => Promise<String>;
+  avatarUrl: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
@@ -5262,60 +5345,11 @@ export interface UserPreviousValuesSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   username: () => Promise<AsyncIterator<String>>;
-  fullName: () => Promise<AsyncIterator<String>>;
   status: () => Promise<AsyncIterator<String>>;
+  fullName: () => Promise<AsyncIterator<String>>;
+  avatarUrl: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface UserPropertySubscriptionPayload {
-  mutation: MutationType;
-  node: UserProperty;
-  updatedFields: String[];
-  previousValues: UserPropertyPreviousValues;
-}
-
-export interface UserPropertySubscriptionPayloadPromise
-  extends Promise<UserPropertySubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = UserPropertyPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = UserPropertyPreviousValuesPromise>() => T;
-}
-
-export interface UserPropertySubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<UserPropertySubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = UserPropertySubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = UserPropertyPreviousValuesSubscription>() => T;
-}
-
-export interface UserPropertyPreviousValues {
-  id: ID_Output;
-  category?: String;
-  key: String;
-  value?: String;
-}
-
-export interface UserPropertyPreviousValuesPromise
-  extends Promise<UserPropertyPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  category: () => Promise<String>;
-  key: () => Promise<String>;
-  value: () => Promise<String>;
-}
-
-export interface UserPropertyPreviousValuesSubscription
-  extends Promise<AsyncIterator<UserPropertyPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  category: () => Promise<AsyncIterator<String>>;
-  key: () => Promise<AsyncIterator<String>>;
-  value: () => Promise<AsyncIterator<String>>;
 }
 
 export interface WorkspaceSubscriptionPayload {
@@ -5491,6 +5525,10 @@ export const models: Model[] = [
     embedded: false
   },
   {
+    name: "OAuthCredential",
+    embedded: false
+  },
+  {
     name: "Role",
     embedded: false
   },
@@ -5504,10 +5542,6 @@ export const models: Model[] = [
   },
   {
     name: "User",
-    embedded: false
-  },
-  {
-    name: "UserProperty",
     embedded: false
   },
   {

@@ -1,4 +1,4 @@
-import { combinePropsForUpdate, propertiesObjectToArray } from "utilities";
+import { pick } from "lodash";
 
 /*
  * Update a User.
@@ -8,16 +8,9 @@ import { combinePropsForUpdate, propertiesObjectToArray } from "utilities";
  * @return {User} The updated User.
  */
 export default async function updateUser(parent, args, ctx, info) {
-  const currentProps = await ctx.db.query.userProperties({
-    where: { user: { id: ctx.user.id } }
-  });
-
-  const combinedProps = combinePropsForUpdate(
-    currentProps,
-    propertiesObjectToArray(args.payload)
-  );
-
+  // The external facing schema is too loose as JSON.
+  // For now, we just pluck out any props that are not in this list.
+  const data = pick(args.payload, ["fullName"]);
   const where = { id: ctx.user.id };
-  const data = { profile: combinedProps };
   return ctx.db.mutation.updateUser({ where, data }, info);
 }

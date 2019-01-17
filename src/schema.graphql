@@ -1,4 +1,4 @@
-# import DeploymentProperty, InviteToken, LocalCredential, RoleBinding, UserProperty, WorkspaceProperty from "./generated/schema/prisma.graphql"
+# import DeploymentProperty, InviteToken, LocalCredential, RoleBinding, WorkspaceProperty from "./generated/schema/prisma.graphql"
 
 #
 # Directives
@@ -82,6 +82,12 @@ type Group {
   updatedAt: DateTime!
 }
 
+type UserProp {
+  key: String
+  value: String
+  category: String
+}
+
 type User {
   id: ID!
   uuid: Uuid @alias(field: "id")
@@ -89,7 +95,7 @@ type User {
   emails: [Email!]!
   fullName: String
   status: String
-  profile: [UserProperty!]!
+  profile: [UserProp!]!
   createdAt: DateTime!
   updatedAt: DateTime!
 }

@@ -1,22 +1,26 @@
-import {
-  PublicSignupsDisabledError,
-  InviteTokenNotFoundError,
-  InviteTokenEmailError
-} from "errors";
-import { getProvider } from "oauth/config";
+import fragment from "./fragment";
+import { createUser as _createUser } from "users";
+import { getProvider, orbit } from "oauth/config";
 import { prisma } from "generated/client";
-import config from "config";
+import { createJWT, setJWTCookie } from "jwt";
+import { first } from "lodash";
+import querystring from "querystring";
 
 /*
- * Create a new user.
- * @param {Object} parent The result of the parent resolver.
- * @param {Object} args The graphql arguments.
- * @param {Object} ctx The graphql context.
- * @return {AuthToken} The auth token.
+ * Handle oauth request.
+ * @param {Object} req The request.
+ * @param {Object} res The response.
  */
 export default async function(req, res) {
   // Grab params out of the request body.
-  const { id_token: idToken, expires_in: expiration, state } = req.body;
+  const {
+    id_token: idToken,
+    expires_in: expiration,
+    state: rawState
+  } = req.body;
+
+  // Parse the state object.
+  const state = JSON.parse(decodeURIComponent(rawState));
 
   // Get the provider module.
   const provider = getProvider(state.provider);
@@ -31,59 +35,57 @@ export default async function(req, res) {
   const jwt = await provider.validate(data);
 
   // Grab user data
-  const userData = provider.userData(jwt);
+  const { providerUserId, email, fullName, avatarUrl } = provider.userData(jwt);
 
   // Search for user in our system using email address.
-  const user = await prisma.users({
-    where: { emails_some: { address: userData.profile.email } }
-  });
-
-  if (!user) {
-    // Check to see if this is the first signup.
-    const count = await prisma
-      .usersConnection({})
-      .aggregate()
-      .count();
-
-    const isFirst = count === 0;
-
-    // Check to see if we are allowing public signups.
-    const publicSignups = config.get("publicSignups");
-
-    // If it's not the first signup and we're not allowing public signups, check for invite.
-    if (!isFirst && !publicSignups && !state.inviteToken) {
-      throw new PublicSignupsDisabledError();
-    }
-
-    // Validate our invite token if exists.
-    // const inviteToken = validateInviteToken(args, ctx);
-  }
-
-  res.status(200).send({});
-}
-
-/*
- * Validates that an invite token is valid, throws otherwise.
- * @param {GraphQLArguments} args The graphql arguments.
- * @param {GraphQLContext} ctx The graphql context.
- * @return {InviteToken} The invite token.
- */
-export function validateInviteToken(query) {
-  // Return early if no token found.
-  if (!query.inviteToken) return;
-
-  // Grab the invite token.
-  const token = prisma.inviteTokensConnection(
-    { where: { token: query.token } },
-    `{ workspace { id }, email }`
+  const user = first(
+    await prisma
+      .users({ where: { emails_some: { address: email } } })
+      .$fragment(fragment)
   );
 
-  // Throw error if token not found.
-  if (!token) throw new InviteTokenNotFoundError();
+  // Set the userId, either the existing, or the newly created one.
+  const userId = user
+    ? user.id
+    : await _createUser({
+        username: email,
+        fullName,
+        email,
+        inviteToken: state.inviteToken
+      });
 
-  // Throw error if email does not match.
-  if (token.email !== query.email) throw new InviteTokenEmailError();
+  // If we already have a user, update it.
+  if (user) {
+    await prisma.updateUser({
+      where: { id: userId },
+      data: { fullName, avatarUrl }
+    });
+  }
 
-  // Return validated token.
-  return token;
+  // If we just created the user, also create and connect the oauth cred.
+  if (!user) {
+    await prisma.createOAuthCredential({
+      oauthProvider: state.provider,
+      oauthUserId: providerUserId,
+      user: { connect: { id: userId } }
+    });
+  }
+
+  // Create the JWT.
+  const { token } = createJWT(userId);
+
+  // Set the cookie.
+  setJWTCookie(res, token);
+
+  // Build redirect query string.
+  const qs = querystring.stringify({
+    extras: JSON.stringify(state.extras),
+    strategy: state.provider,
+    token
+  });
+
+  // Respond with redirect to orbit.
+  const url = `${orbit()}/${state.redirect}?${qs}`;
+  const cleanUrl = url.replace(/([^:]\/)\/+/g, "$1");
+  res.redirect(cleanUrl);
 }

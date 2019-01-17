@@ -1,16 +1,38 @@
-import { domain, oauthUrl, oauthRedirectUrl, getProvider } from "./index";
+import {
+  version,
+  scheme,
+  houston,
+  orbit,
+  oauthUrl,
+  oauthRedirectUrl,
+  getProvider
+} from "./index";
 
 describe("oauth configuration", () => {
-  test("houston url is generated successfully", () => {
-    expect(domain()).toContain("houston.");
+  test("version is correctly set by config", () => {
+    expect(version()).toEqual("v1");
+  });
+
+  test("scheme is correctly set by environment", () => {
+    expect(scheme()).toEqual("http");
   });
 
   test("houston url is generated successfully", () => {
-    expect(oauthUrl()).toContain("https://houston.");
+    expect(houston()).toContain("houston.");
+  });
+
+  test("orbit url is generated successfully", () => {
+    expect(orbit()).toContain("app.");
   });
 
   test("houston url is generated successfully", () => {
-    expect(oauthRedirectUrl()).toContain("https://houston.");
+    expect(oauthUrl()).toEqual(expect.stringMatching(/https?:\/\/houston./));
+  });
+
+  test("houston url is generated successfully", () => {
+    expect(oauthRedirectUrl()).toEqual(
+      expect.stringMatching(/https?:\/\/houston./)
+    );
   });
 
   test("provider is returned for valid provider string", () => {

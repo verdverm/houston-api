@@ -25,6 +25,10 @@ var models = [
     embedded: false
   },
   {
+    name: "OAuthCredential",
+    embedded: false
+  },
+  {
     name: "Role",
     embedded: false
   },
@@ -38,10 +42,6 @@ var models = [
   },
   {
     name: "User",
-    embedded: false
-  },
-  {
-    name: "UserProperty",
     embedded: false
   },
   {

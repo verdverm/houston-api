@@ -1,3 +1,4 @@
+import { oauthRedirectUrl } from "oauth/config";
 import providers from "oauth/providers";
 import { prisma } from "generated/client";
 import config from "config";
@@ -43,9 +44,9 @@ export function googleEnabled() {
  * Return a string for google OAuth url.
  * @return {Boolean} Google OAuth url.
  */
-export function googleOAuthUrl(parent, args) {
+export function googleOAuthUrl(parent) {
   return config.get("auth.google.enabled")
-    ? providers.google.authUrl(args.redirect)
+    ? providers.google.authUrl(parent, oauthRedirectUrl())
     : null;
 }
 

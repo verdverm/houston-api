@@ -6,6 +6,7 @@
  * @param {Object} ctx The graphql context.
  * @return {AuthConfig} The auth config.
  */
-export default async function authConfig() {
-  return {};
+export default async function authConfig(parent, args) {
+  // Pass args down to the AuthConfig type resolver.
+  return args;
 }
