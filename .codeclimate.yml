@@ -1,5 +1,5 @@
 exclude_patterns:
-  - "src/generated/**"
+  - "src/lib/generated/**"
 checks:
   method-lines:
     config:
