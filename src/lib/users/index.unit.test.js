@@ -5,7 +5,11 @@ import {
   validateInviteToken
 } from "./index";
 import * as exports from "generated/client";
-import { PublicSignupsDisabledError } from "errors";
+import {
+  InviteTokenNotFoundError,
+  InviteTokenEmailError,
+  PublicSignupsDisabledError
+} from "errors";
 import casual from "casual";
 
 describe("createUser", () => {
@@ -37,21 +41,35 @@ describe("createUser", () => {
   });
 });
 
-describe("verifyInviteToken", () => {
+describe("validateInviteToken", () => {
   test("return nothing if nothing passed", async () => {
     const res = await validateInviteToken(undefined, casual.email);
     expect(res).toBeUndefined();
   });
 
-  // test("return nothing if nothing passed", async () => {
-  //   const res = await validateInviteToken(undefined, casual.email);
+  test("throws if token is not found", async () => {
+    jest.spyOn(exports.prisma, "inviteTokens").mockReturnValue([]);
+    await expect(
+      validateInviteToken(casual.word, casual.email)
+    ).rejects.toThrow(new InviteTokenNotFoundError());
+  });
 
-  //   jest
-  //     .spyOn(exports.prisma, "inviteTokensConnection")
-  //     .mockReturnValue();
+  test("throws if email does not match token email", async () => {
+    jest
+      .spyOn(exports.prisma, "inviteTokens")
+      .mockReturnValue([{ email: casual.email }]);
+    await expect(
+      validateInviteToken(casual.word, casual.email)
+    ).rejects.toThrow(new InviteTokenEmailError());
+  });
 
-  //   expect(res).toBeUndefined();
-  // });
+  test("does not throw if token found and email matches", async () => {
+    const email = casual.email;
+    jest.spyOn(exports.prisma, "inviteTokens").mockReturnValue([{ email }]);
+    await expect(
+      validateInviteToken(casual.word, email)
+    ).resolves.toBeDefined();
+  });
 });
 
 describe("defaultWorkspaceLabel", () => {

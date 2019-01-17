@@ -6,6 +6,7 @@ import {
 import { prisma } from "generated/client";
 import config from "config";
 import shortid from "shortid";
+import { first } from "lodash";
 import {
   WORKSPACE_ADMIN,
   SYSTEM_ADMIN,
@@ -60,9 +61,7 @@ export async function createUser(opts) {
 
   // If we have an invite token, delete it.
   if (inviteToken) {
-    await prisma.deleteInviteToken({
-      where: { id: inviteToken.id }
-    });
+    await prisma.deleteInviteToken({ id: inviteToken.id });
   }
 
   // Run the mutation and return id.
@@ -136,9 +135,8 @@ export async function validateInviteToken(inviteToken, email) {
   if (!inviteToken) return;
 
   // Grab the invite token.
-  const token = await prisma.inviteTokensConnection(
-    { where: { token: inviteToken } },
-    `{ workspace { id }, email }`
+  const token = first(
+    await prisma.inviteTokens({ where: { token: inviteToken } })
   );
 
   // Throw error if token not found.
