@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html style="font-weight: 300">
+<head style="font-weight: 300">
+  <meta charset="utf-8" style="font-weight: 300">
+  <meta name="viewport" content="width=device-width, initial-scale=1" style="font-weight: 300">
+<style type="text/css" style="font-weight: 300">
+  @import url(https://fonts.googleapis.com/css?family=Lato:400,700);
+</style>
+</head>
+<body class="" style='font-size: 16px; color: #2f2936; padding: 0; font-family: "Lato", "Helvetica Neue", helvetica, sans-serif; -webkit-font-smoothing: antialiased; width: 100%; font-weight: 300; margin: 0; background-color: #fff'>
+  <div class="preheader" style="padding: 0; font-size: 0; display: none; max-height: 0; font-weight: 300; mso-hide: all; line-height: 0">
+    New alert from {{ alert.labels.deployment }}
+  </div>
+  <table class="main" style='border-radius: 4px; font-size: 16px; color: #2f2936; border-collapse: separate; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); border-spacing: 0; max-width: 700px; font-family: "Lato", "Helvetica Neue", helvetica, sans-serif; border: 1px solid #c7d0d4; padding: 0; -webkit-font-smoothing: antialiased; width: 100%; font-weight: 300; margin: 15px auto; background-color: #fff'>
+    <tr style="font-weight: 300">
+      <td style="padding: 0; font-weight: 300; margin: 0; text-align: center">
+        <div class="header" style="padding: 23px 0; font-size: 14px; font-weight: 300; border-bottom: 1px solid #dee7eb">
+          <div class="container" style="padding: 0 20px; max-width: 600px; font-weight: 300; margin: 0 auto; text-align: left">
+            <a href="{{ orbitUrl }}/deployments/{{ alert.labels.deployment }}" class="btn" style="border-radius: 4px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.08); color: #fff; float: right; font-size: 16px; padding: 8px 15px; text-decoration: none; border: 1px solid #09acc6; display: inline-block; font-weight: 600; margin: -3px 0 0; line-height: 18px; background-color: #09acc6">View on Astronomer</a>
+            <h1 style="font-size: 38px; color: #000; letter-spacing: -1px; padding: 0; font-weight: normal; margin: 0; line-height: 42px">
+              <a href="https://astronomer.io" style="color: #4674ca; font-weight: 500; text-decoration: none"><img src="https://cdn.astronomer.io/app/img/Logo_BigStarsLightBg.png" height="40px" alt="Astronomer" style="font-weight: 300"></a>
+            </h1>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr style="font-weight: 300">
+      <td style="padding: 0; font-weight: 300; margin: 0; text-align: center">
+        <div class="container" style="padding: 0 20px; max-width: 600px; font-weight: 300; margin: 0 auto; text-align: left">
+          <div class="inner" style="padding: 30px 0 20px; font-weight: 300; background-color: #fff">
+            <h2 style="font-size: 22px; font-weight: 700; margin: 0 0 15px">
+              New alert from <a href="{{ orbitUrl }}/deployments/{{ alert.labels.deployment }}" style="color: #4674ca; font-weight: inherit; text-decoration: none">{{ alert.labels.deployment }}</a>
+            </h2>
+            <table class="event-list" style="border-collapse: collapse; width: 100%; font-weight: 300; margin: 0 0 15px; text-align: left">
+              <tr style="font-weight: 300">
+                <th colspan="2" style="font-size: 12px; font-weight: bold; color: #9CA3AD; margin: 0 0 5px; min-width: 60px; border-bottom: 2px solid #E7EBEE; padding: 5px 0 10px; text-transform: uppercase; text-align: left">Issue</th>
+              </tr>
+              <tr style="font-weight: 300">
+                <td class="error-level" style="padding: 10px 0; width: 70px; border-top: 1px solid #E7EBEE; font-weight: 300; margin: 0; text-align: left">
+                  {{#if alert.isFiring }}
+                  <span class="level level-error" style="border-radius: 3px; font-size: 16px; color: #fff; padding: 0 6px 2px; font-weight: 300; text-transform: capitalize; background-color: #f4362c">alert</span>
+                {{else}}
+                  <span class="level level-error" style="border-radius: 3px; font-size: 16px; color: #fff; padding: 0 6px 2px; font-weight: 300; text-transform: capitalize; background-color: #00ac6b">resolved</span>
+                {{/if}}
+                </td>
+                <td class="event-detail" style="padding: 10px 0; width: 400px; border-top: 1px solid #E7EBEE; font-weight: 300; margin: 0; line-height: 22px; text-align: left">
+                  <div class="issue" style="font-weight: 300; line-height: 22px">
+                    <div class="event-type error" style="font-weight: 300">
+                      <h3 style="font-size: 18px; font-weight: 700; line-height: 22px; margin: 0">
+                        <a href="{{ orbitUrl }}/deployments/{{ alert.labels.deployment }}" style="color: #4674ca; font-size: 16px; font-weight: 600; text-decoration: none; margin-right: 10px">Alert</a>
+                        <br style="font-weight: 300">
+                        <small style="color: #968ba0; font-size: 14px; font-weight: 300">{{ alert.annotations.summary }}</small>
+                      </h3>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+            <div class="event" style="font-weight: 300; margin-bottom: 30px">
+              <div class="event-date" style="color: #889092; font-weight: 300">{{ alert.startsAt }}</div>
+            </div>
+            {{#if alert.isFiring }}
+            <div class="interface" style="font-weight: 300; margin-bottom: 30px">
+              <h3 class="title" style="font-size: 18px; font-weight: 700; margin: 0 0 15px">Message</h3>
+              <pre style='border-radius: 4px; font-size: 14px; color: #3D4649; word-wrap: break-word; padding: 15px; white-space: pre-wrap; font-family: Menlo, Monaco, "Courier New", monospace; overflow-wrap: break-word; font-weight: normal; margin: 0 0 15px; background-color: #F4F5F6'>{{ alert.annotations.description }}</pre>
+            </div>
+          {{/if}}
+            <h3 style="font-size: 18px; font-weight: 700; margin: 0 0 20px">Labels</h3>
+            <ul class="label-list" style="list-style: none; padding: 0; font-weight: 300; margin: 0 0 20px">
+              {{#each alert.labels}}
+              <li style="border-radius: 3px; margin-right: 5px; margin-bottom: 10px; padding: 5px 10px 6px; font-weight: 300; display: inline-block; background-color: #F4F5F6">
+                <strong style="font-weight: 200">{{@key}}</strong>
+                  <em style="font-weight: 300">=</em>
+                  <span style="font-weight: 300; color: #4674ca; font-weight: 500; text-decoration: none">
+                    {{this}}
+                  </span>
+              </li>
+            {{/each}}
+            </ul>
+          </div>
+        </div>
+        <div class="container" style="padding: 0 20px; max-width: 600px; font-weight: 300; margin: 0 auto; text-align: left">
+          <div class="footer" style="padding: 35px 0; border-top: 1px solid #E7EBEE; font-weight: 300">
+            <a href="https://astronomer.io" style="color: #687276; float: right; font-weight: 500; text-decoration: none">Home</a>
+            <a href="{{ orbitUrl }}/deployments/{{ alert.labels.deployment }}" style="color: #687276; font-weight: 500; text-decoration: none">Notification Settings</a>
+            &#183;
+            <a href="{{ orbitUrl }}/deployments/{{ alert.labels.deployment }}" style="color: #687276; font-weight: 500; text-decoration: none">Unsubscribe</a>
+          </div>
+        </div>
+      </td>
+    </tr>
+  </table>
+</html>
