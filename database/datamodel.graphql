@@ -65,11 +65,11 @@ type OAuthCredential {
 
 type InviteToken {
   id: ID! @unique
-  assignments: String
   email: String
   token: String
-  user: User
   workspace: Workspace
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type ServiceAccount {

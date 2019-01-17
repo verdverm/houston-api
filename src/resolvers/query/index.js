@@ -1,6 +1,7 @@
 import authConfig from "./auth-config";
 import deploymentConfig from "./deployment-config";
 import deployments from "./deployments";
+import invites from "./invites";
 import self from "./self";
 import serviceAccounts from "./service-accounts";
 import users from "./users";
@@ -10,6 +11,7 @@ export default {
   authConfig,
   deploymentConfig,
   deployments,
+  invites,
   self,
   serviceAccounts,
   users,

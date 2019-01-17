@@ -1,4 +1,4 @@
-import { users, groups, deploymentCount } from "./index";
+import { users, groups, invites, deploymentCount } from "./index";
 import casual from "casual";
 
 describe("Workspace", () => {
@@ -13,6 +13,15 @@ describe("Workspace", () => {
 
   test("groups returns an empty array", () => {
     expect(groups()).toEqual([]);
+  });
+
+  test("invites queries invites with parent workspace id", () => {
+    const parent = { id: casual.uuid };
+    const db = {
+      query: { inviteTokens: jest.fn() }
+    };
+    invites(parent, {}, { db });
+    expect(db.query.inviteTokens.mock.calls).toHaveLength(1);
   });
 
   test("deploymentCount returns length of deployments", () => {

@@ -673,12 +673,34 @@ export type DeploymentOrderByInput =
 export type InviteTokenOrderByInput =
   | "id_ASC"
   | "id_DESC"
-  | "assignments_ASC"
-  | "assignments_DESC"
   | "email_ASC"
   | "email_DESC"
   | "token_ASC"
   | "token_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
+
+export type WorkspacePropertyOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "category_ASC"
+  | "category_DESC"
+  | "key_ASC"
+  | "key_DESC"
+  | "value_ASC"
+  | "value_DESC"
+  | "createdAt_ASC"
+  | "createdAt_DESC"
+  | "updatedAt_ASC"
+  | "updatedAt_DESC";
+
+export type RoleBindingOrderByInput =
+  | "id_ASC"
+  | "id_DESC"
+  | "role_ASC"
+  | "role_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -700,16 +722,6 @@ export type EmailOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC";
 
-export type RoleBindingOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "role_ASC"
-  | "role_DESC"
-  | "createdAt_ASC"
-  | "createdAt_DESC"
-  | "updatedAt_ASC"
-  | "updatedAt_DESC";
-
 export type OAuthCredentialOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -719,20 +731,6 @@ export type OAuthCredentialOrderByInput =
   | "oauthProvider_DESC"
   | "oauthUserId_ASC"
   | "oauthUserId_DESC"
-  | "createdAt_ASC"
-  | "createdAt_DESC"
-  | "updatedAt_ASC"
-  | "updatedAt_DESC";
-
-export type WorkspacePropertyOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "category_ASC"
-  | "category_DESC"
-  | "key_ASC"
-  | "key_DESC"
-  | "value_ASC"
-  | "value_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -1115,20 +1113,6 @@ export interface InviteTokenWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
-  assignments?: String;
-  assignments_not?: String;
-  assignments_in?: String[] | String;
-  assignments_not_in?: String[] | String;
-  assignments_lt?: String;
-  assignments_lte?: String;
-  assignments_gt?: String;
-  assignments_gte?: String;
-  assignments_contains?: String;
-  assignments_not_contains?: String;
-  assignments_starts_with?: String;
-  assignments_not_starts_with?: String;
-  assignments_ends_with?: String;
-  assignments_not_ends_with?: String;
   email?: String;
   email_not?: String;
   email_in?: String[] | String;
@@ -1157,11 +1141,133 @@ export interface InviteTokenWhereInput {
   token_not_starts_with?: String;
   token_ends_with?: String;
   token_not_ends_with?: String;
-  user?: UserWhereInput;
   workspace?: WorkspaceWhereInput;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
   AND?: InviteTokenWhereInput[] | InviteTokenWhereInput;
   OR?: InviteTokenWhereInput[] | InviteTokenWhereInput;
   NOT?: InviteTokenWhereInput[] | InviteTokenWhereInput;
+}
+
+export interface WorkspacePropertyWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  category?: String;
+  category_not?: String;
+  category_in?: String[] | String;
+  category_not_in?: String[] | String;
+  category_lt?: String;
+  category_lte?: String;
+  category_gt?: String;
+  category_gte?: String;
+  category_contains?: String;
+  category_not_contains?: String;
+  category_starts_with?: String;
+  category_not_starts_with?: String;
+  category_ends_with?: String;
+  category_not_ends_with?: String;
+  key?: String;
+  key_not?: String;
+  key_in?: String[] | String;
+  key_not_in?: String[] | String;
+  key_lt?: String;
+  key_lte?: String;
+  key_gt?: String;
+  key_gte?: String;
+  key_contains?: String;
+  key_not_contains?: String;
+  key_starts_with?: String;
+  key_not_starts_with?: String;
+  key_ends_with?: String;
+  key_not_ends_with?: String;
+  value?: String;
+  value_not?: String;
+  value_in?: String[] | String;
+  value_not_in?: String[] | String;
+  value_lt?: String;
+  value_lte?: String;
+  value_gt?: String;
+  value_gte?: String;
+  value_contains?: String;
+  value_not_contains?: String;
+  value_starts_with?: String;
+  value_not_starts_with?: String;
+  value_ends_with?: String;
+  value_not_ends_with?: String;
+  workspace?: WorkspaceWhereInput;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  AND?: WorkspacePropertyWhereInput[] | WorkspacePropertyWhereInput;
+  OR?: WorkspacePropertyWhereInput[] | WorkspacePropertyWhereInput;
+  NOT?: WorkspacePropertyWhereInput[] | WorkspacePropertyWhereInput;
+}
+
+export interface RoleBindingWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  role?: Role;
+  role_not?: Role;
+  role_in?: Role[] | Role;
+  role_not_in?: Role[] | Role;
+  user?: UserWhereInput;
+  serviceAccount?: ServiceAccountWhereInput;
+  workspace?: WorkspaceWhereInput;
+  deployment?: DeploymentWhereInput;
+  AND?: RoleBindingWhereInput[] | RoleBindingWhereInput;
+  OR?: RoleBindingWhereInput[] | RoleBindingWhereInput;
+  NOT?: RoleBindingWhereInput[] | RoleBindingWhereInput;
 }
 
 export interface UserWhereInput {
@@ -1322,123 +1428,6 @@ export interface EmailWhereInput {
   NOT?: EmailWhereInput[] | EmailWhereInput;
 }
 
-export interface RoleBindingWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  role?: Role;
-  role_not?: Role;
-  role_in?: Role[] | Role;
-  role_not_in?: Role[] | Role;
-  user?: UserWhereInput;
-  serviceAccount?: ServiceAccountWhereInput;
-  workspace?: WorkspaceWhereInput;
-  deployment?: DeploymentWhereInput;
-  AND?: RoleBindingWhereInput[] | RoleBindingWhereInput;
-  OR?: RoleBindingWhereInput[] | RoleBindingWhereInput;
-  NOT?: RoleBindingWhereInput[] | RoleBindingWhereInput;
-}
-
-export interface ServiceAccountWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  apiKey?: String;
-  apiKey_not?: String;
-  apiKey_in?: String[] | String;
-  apiKey_not_in?: String[] | String;
-  apiKey_lt?: String;
-  apiKey_lte?: String;
-  apiKey_gt?: String;
-  apiKey_gte?: String;
-  apiKey_contains?: String;
-  apiKey_not_contains?: String;
-  apiKey_starts_with?: String;
-  apiKey_not_starts_with?: String;
-  apiKey_ends_with?: String;
-  apiKey_not_ends_with?: String;
-  label?: String;
-  label_not?: String;
-  label_in?: String[] | String;
-  label_not_in?: String[] | String;
-  label_lt?: String;
-  label_lte?: String;
-  label_gt?: String;
-  label_gte?: String;
-  label_contains?: String;
-  label_not_contains?: String;
-  label_starts_with?: String;
-  label_not_starts_with?: String;
-  label_ends_with?: String;
-  label_not_ends_with?: String;
-  category?: String;
-  category_not?: String;
-  category_in?: String[] | String;
-  category_not_in?: String[] | String;
-  category_lt?: String;
-  category_lte?: String;
-  category_gt?: String;
-  category_gte?: String;
-  category_contains?: String;
-  category_not_contains?: String;
-  category_starts_with?: String;
-  category_not_starts_with?: String;
-  category_ends_with?: String;
-  category_not_ends_with?: String;
-  active?: Boolean;
-  active_not?: Boolean;
-  roleBinding?: RoleBindingWhereInput;
-  lastUsedAt?: DateTimeInput;
-  lastUsedAt_not?: DateTimeInput;
-  lastUsedAt_in?: DateTimeInput[] | DateTimeInput;
-  lastUsedAt_not_in?: DateTimeInput[] | DateTimeInput;
-  lastUsedAt_lt?: DateTimeInput;
-  lastUsedAt_lte?: DateTimeInput;
-  lastUsedAt_gt?: DateTimeInput;
-  lastUsedAt_gte?: DateTimeInput;
-  createdAt?: DateTimeInput;
-  createdAt_not?: DateTimeInput;
-  createdAt_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_lt?: DateTimeInput;
-  createdAt_lte?: DateTimeInput;
-  createdAt_gt?: DateTimeInput;
-  createdAt_gte?: DateTimeInput;
-  updatedAt?: DateTimeInput;
-  updatedAt_not?: DateTimeInput;
-  updatedAt_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_lt?: DateTimeInput;
-  updatedAt_lte?: DateTimeInput;
-  updatedAt_gt?: DateTimeInput;
-  updatedAt_gte?: DateTimeInput;
-  AND?: ServiceAccountWhereInput[] | ServiceAccountWhereInput;
-  OR?: ServiceAccountWhereInput[] | ServiceAccountWhereInput;
-  NOT?: ServiceAccountWhereInput[] | ServiceAccountWhereInput;
-}
-
 export interface LocalCredentialWhereInput {
   id?: ID_Input;
   id_not?: ID_Input;
@@ -1545,7 +1534,7 @@ export interface OAuthCredentialWhereInput {
   NOT?: OAuthCredentialWhereInput[] | OAuthCredentialWhereInput;
 }
 
-export interface WorkspacePropertyWhereInput {
+export interface ServiceAccountWhereInput {
   id?: ID_Input;
   id_not?: ID_Input;
   id_in?: ID_Input[] | ID_Input;
@@ -1560,6 +1549,34 @@ export interface WorkspacePropertyWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
+  apiKey?: String;
+  apiKey_not?: String;
+  apiKey_in?: String[] | String;
+  apiKey_not_in?: String[] | String;
+  apiKey_lt?: String;
+  apiKey_lte?: String;
+  apiKey_gt?: String;
+  apiKey_gte?: String;
+  apiKey_contains?: String;
+  apiKey_not_contains?: String;
+  apiKey_starts_with?: String;
+  apiKey_not_starts_with?: String;
+  apiKey_ends_with?: String;
+  apiKey_not_ends_with?: String;
+  label?: String;
+  label_not?: String;
+  label_in?: String[] | String;
+  label_not_in?: String[] | String;
+  label_lt?: String;
+  label_lte?: String;
+  label_gt?: String;
+  label_gte?: String;
+  label_contains?: String;
+  label_not_contains?: String;
+  label_starts_with?: String;
+  label_not_starts_with?: String;
+  label_ends_with?: String;
+  label_not_ends_with?: String;
   category?: String;
   category_not?: String;
   category_in?: String[] | String;
@@ -1574,35 +1591,17 @@ export interface WorkspacePropertyWhereInput {
   category_not_starts_with?: String;
   category_ends_with?: String;
   category_not_ends_with?: String;
-  key?: String;
-  key_not?: String;
-  key_in?: String[] | String;
-  key_not_in?: String[] | String;
-  key_lt?: String;
-  key_lte?: String;
-  key_gt?: String;
-  key_gte?: String;
-  key_contains?: String;
-  key_not_contains?: String;
-  key_starts_with?: String;
-  key_not_starts_with?: String;
-  key_ends_with?: String;
-  key_not_ends_with?: String;
-  value?: String;
-  value_not?: String;
-  value_in?: String[] | String;
-  value_not_in?: String[] | String;
-  value_lt?: String;
-  value_lte?: String;
-  value_gt?: String;
-  value_gte?: String;
-  value_contains?: String;
-  value_not_contains?: String;
-  value_starts_with?: String;
-  value_not_starts_with?: String;
-  value_ends_with?: String;
-  value_not_ends_with?: String;
-  workspace?: WorkspaceWhereInput;
+  active?: Boolean;
+  active_not?: Boolean;
+  roleBinding?: RoleBindingWhereInput;
+  lastUsedAt?: DateTimeInput;
+  lastUsedAt_not?: DateTimeInput;
+  lastUsedAt_in?: DateTimeInput[] | DateTimeInput;
+  lastUsedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  lastUsedAt_lt?: DateTimeInput;
+  lastUsedAt_lte?: DateTimeInput;
+  lastUsedAt_gt?: DateTimeInput;
+  lastUsedAt_gte?: DateTimeInput;
   createdAt?: DateTimeInput;
   createdAt_not?: DateTimeInput;
   createdAt_in?: DateTimeInput[] | DateTimeInput;
@@ -1619,9 +1618,9 @@ export interface WorkspacePropertyWhereInput {
   updatedAt_lte?: DateTimeInput;
   updatedAt_gt?: DateTimeInput;
   updatedAt_gte?: DateTimeInput;
-  AND?: WorkspacePropertyWhereInput[] | WorkspacePropertyWhereInput;
-  OR?: WorkspacePropertyWhereInput[] | WorkspacePropertyWhereInput;
-  NOT?: WorkspacePropertyWhereInput[] | WorkspacePropertyWhereInput;
+  AND?: ServiceAccountWhereInput[] | ServiceAccountWhereInput;
+  OR?: ServiceAccountWhereInput[] | ServiceAccountWhereInput;
+  NOT?: ServiceAccountWhereInput[] | ServiceAccountWhereInput;
 }
 
 export type DeploymentPropertyWhereUniqueInput = AtLeastOne<{
@@ -1718,98 +1717,8 @@ export interface InviteTokenCreateManyWithoutWorkspaceInput {
 }
 
 export interface InviteTokenCreateWithoutWorkspaceInput {
-  assignments?: String;
   email?: String;
   token?: String;
-  user?: UserCreateOneWithoutInviteTokensInput;
-}
-
-export interface UserCreateOneWithoutInviteTokensInput {
-  create?: UserCreateWithoutInviteTokensInput;
-  connect?: UserWhereUniqueInput;
-}
-
-export interface UserCreateWithoutInviteTokensInput {
-  username?: String;
-  status?: String;
-  fullName?: String;
-  avatarUrl?: String;
-  emails?: EmailCreateManyWithoutUserInput;
-  roleBindings?: RoleBindingCreateManyWithoutUserInput;
-  localCredential?: LocalCredentialCreateOneWithoutUserInput;
-  oauthCredentials?: OAuthCredentialCreateManyWithoutUserInput;
-}
-
-export interface EmailCreateManyWithoutUserInput {
-  create?: EmailCreateWithoutUserInput[] | EmailCreateWithoutUserInput;
-  connect?: EmailWhereUniqueInput[] | EmailWhereUniqueInput;
-}
-
-export interface EmailCreateWithoutUserInput {
-  address?: String;
-  primary?: Boolean;
-  token?: String;
-  verified?: Boolean;
-}
-
-export interface RoleBindingCreateManyWithoutUserInput {
-  create?:
-    | RoleBindingCreateWithoutUserInput[]
-    | RoleBindingCreateWithoutUserInput;
-  connect?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
-}
-
-export interface RoleBindingCreateWithoutUserInput {
-  role?: Role;
-  serviceAccount?: ServiceAccountCreateOneWithoutRoleBindingInput;
-  workspace?: WorkspaceCreateOneWithoutRoleBindingsInput;
-  deployment?: DeploymentCreateOneInput;
-}
-
-export interface ServiceAccountCreateOneWithoutRoleBindingInput {
-  create?: ServiceAccountCreateWithoutRoleBindingInput;
-  connect?: ServiceAccountWhereUniqueInput;
-}
-
-export interface ServiceAccountCreateWithoutRoleBindingInput {
-  apiKey?: String;
-  label?: String;
-  category?: String;
-  active?: Boolean;
-  lastUsedAt?: DateTimeInput;
-}
-
-export interface WorkspaceCreateOneWithoutRoleBindingsInput {
-  create?: WorkspaceCreateWithoutRoleBindingsInput;
-  connect?: WorkspaceWhereUniqueInput;
-}
-
-export interface WorkspaceCreateWithoutRoleBindingsInput {
-  active?: Boolean;
-  deployments?: DeploymentCreateManyWithoutWorkspaceInput;
-  description?: String;
-  invites?: InviteTokenCreateManyWithoutWorkspaceInput;
-  label?: String;
-  properties?: WorkspacePropertyCreateManyWithoutWorkspaceInput;
-}
-
-export interface DeploymentCreateManyWithoutWorkspaceInput {
-  create?:
-    | DeploymentCreateWithoutWorkspaceInput[]
-    | DeploymentCreateWithoutWorkspaceInput;
-  connect?: DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput;
-}
-
-export interface DeploymentCreateWithoutWorkspaceInput {
-  config?: Json;
-  properties?: DeploymentPropertyCreateManyWithoutDeploymentInput;
-  description?: String;
-  label?: String;
-  registryPassword?: String;
-  releaseName?: String;
-  status?: String;
-  type?: String;
-  version?: String;
 }
 
 export interface WorkspacePropertyCreateManyWithoutWorkspaceInput {
@@ -1825,34 +1734,6 @@ export interface WorkspacePropertyCreateWithoutWorkspaceInput {
   category?: String;
   key: String;
   value?: String;
-}
-
-export interface DeploymentCreateOneInput {
-  create?: DeploymentCreateInput;
-  connect?: DeploymentWhereUniqueInput;
-}
-
-export interface LocalCredentialCreateOneWithoutUserInput {
-  create?: LocalCredentialCreateWithoutUserInput;
-  connect?: LocalCredentialWhereUniqueInput;
-}
-
-export interface LocalCredentialCreateWithoutUserInput {
-  password?: String;
-  resetToken?: String;
-}
-
-export interface OAuthCredentialCreateManyWithoutUserInput {
-  create?:
-    | OAuthCredentialCreateWithoutUserInput[]
-    | OAuthCredentialCreateWithoutUserInput;
-  connect?: OAuthCredentialWhereUniqueInput[] | OAuthCredentialWhereUniqueInput;
-}
-
-export interface OAuthCredentialCreateWithoutUserInput {
-  expiresAt?: DateTimeInput;
-  oauthProvider: String;
-  oauthUserId: String;
 }
 
 export interface RoleBindingCreateManyWithoutWorkspaceInput {
@@ -1880,20 +1761,29 @@ export interface UserCreateWithoutRoleBindingsInput {
   fullName?: String;
   avatarUrl?: String;
   emails?: EmailCreateManyWithoutUserInput;
-  inviteTokens?: InviteTokenCreateManyWithoutUserInput;
+  inviteTokens?: InviteTokenCreateManyInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
   oauthCredentials?: OAuthCredentialCreateManyWithoutUserInput;
 }
 
-export interface InviteTokenCreateManyWithoutUserInput {
-  create?:
-    | InviteTokenCreateWithoutUserInput[]
-    | InviteTokenCreateWithoutUserInput;
+export interface EmailCreateManyWithoutUserInput {
+  create?: EmailCreateWithoutUserInput[] | EmailCreateWithoutUserInput;
+  connect?: EmailWhereUniqueInput[] | EmailWhereUniqueInput;
+}
+
+export interface EmailCreateWithoutUserInput {
+  address?: String;
+  primary?: Boolean;
+  token?: String;
+  verified?: Boolean;
+}
+
+export interface InviteTokenCreateManyInput {
+  create?: InviteTokenCreateInput[] | InviteTokenCreateInput;
   connect?: InviteTokenWhereUniqueInput[] | InviteTokenWhereUniqueInput;
 }
 
-export interface InviteTokenCreateWithoutUserInput {
-  assignments?: String;
+export interface InviteTokenCreateInput {
   email?: String;
   token?: String;
   workspace?: WorkspaceCreateOneWithoutInvitesInput;
@@ -1911,6 +1801,66 @@ export interface WorkspaceCreateWithoutInvitesInput {
   label?: String;
   properties?: WorkspacePropertyCreateManyWithoutWorkspaceInput;
   roleBindings?: RoleBindingCreateManyWithoutWorkspaceInput;
+}
+
+export interface DeploymentCreateManyWithoutWorkspaceInput {
+  create?:
+    | DeploymentCreateWithoutWorkspaceInput[]
+    | DeploymentCreateWithoutWorkspaceInput;
+  connect?: DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput;
+}
+
+export interface DeploymentCreateWithoutWorkspaceInput {
+  config?: Json;
+  properties?: DeploymentPropertyCreateManyWithoutDeploymentInput;
+  description?: String;
+  label?: String;
+  registryPassword?: String;
+  releaseName?: String;
+  status?: String;
+  type?: String;
+  version?: String;
+}
+
+export interface LocalCredentialCreateOneWithoutUserInput {
+  create?: LocalCredentialCreateWithoutUserInput;
+  connect?: LocalCredentialWhereUniqueInput;
+}
+
+export interface LocalCredentialCreateWithoutUserInput {
+  password?: String;
+  resetToken?: String;
+}
+
+export interface OAuthCredentialCreateManyWithoutUserInput {
+  create?:
+    | OAuthCredentialCreateWithoutUserInput[]
+    | OAuthCredentialCreateWithoutUserInput;
+  connect?: OAuthCredentialWhereUniqueInput[] | OAuthCredentialWhereUniqueInput;
+}
+
+export interface OAuthCredentialCreateWithoutUserInput {
+  expiresAt?: DateTimeInput;
+  oauthProvider: String;
+  oauthUserId: String;
+}
+
+export interface ServiceAccountCreateOneWithoutRoleBindingInput {
+  create?: ServiceAccountCreateWithoutRoleBindingInput;
+  connect?: ServiceAccountWhereUniqueInput;
+}
+
+export interface ServiceAccountCreateWithoutRoleBindingInput {
+  apiKey?: String;
+  label?: String;
+  category?: String;
+  active?: Boolean;
+  lastUsedAt?: DateTimeInput;
+}
+
+export interface DeploymentCreateOneInput {
+  create?: DeploymentCreateInput;
+  connect?: DeploymentWhereUniqueInput;
 }
 
 export interface DeploymentUpdateInput {
@@ -2108,28 +2058,270 @@ export interface InviteTokenUpdateWithWhereUniqueWithoutWorkspaceInput {
 }
 
 export interface InviteTokenUpdateWithoutWorkspaceDataInput {
-  assignments?: String;
   email?: String;
   token?: String;
-  user?: UserUpdateOneWithoutInviteTokensInput;
 }
 
-export interface UserUpdateOneWithoutInviteTokensInput {
-  create?: UserCreateWithoutInviteTokensInput;
-  update?: UserUpdateWithoutInviteTokensDataInput;
-  upsert?: UserUpsertWithoutInviteTokensInput;
+export interface InviteTokenUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: InviteTokenWhereUniqueInput;
+  update: InviteTokenUpdateWithoutWorkspaceDataInput;
+  create: InviteTokenCreateWithoutWorkspaceInput;
+}
+
+export interface InviteTokenScalarWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  email?: String;
+  email_not?: String;
+  email_in?: String[] | String;
+  email_not_in?: String[] | String;
+  email_lt?: String;
+  email_lte?: String;
+  email_gt?: String;
+  email_gte?: String;
+  email_contains?: String;
+  email_not_contains?: String;
+  email_starts_with?: String;
+  email_not_starts_with?: String;
+  email_ends_with?: String;
+  email_not_ends_with?: String;
+  token?: String;
+  token_not?: String;
+  token_in?: String[] | String;
+  token_not_in?: String[] | String;
+  token_lt?: String;
+  token_lte?: String;
+  token_gt?: String;
+  token_gte?: String;
+  token_contains?: String;
+  token_not_contains?: String;
+  token_starts_with?: String;
+  token_not_starts_with?: String;
+  token_ends_with?: String;
+  token_not_ends_with?: String;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  AND?: InviteTokenScalarWhereInput[] | InviteTokenScalarWhereInput;
+  OR?: InviteTokenScalarWhereInput[] | InviteTokenScalarWhereInput;
+  NOT?: InviteTokenScalarWhereInput[] | InviteTokenScalarWhereInput;
+}
+
+export interface InviteTokenUpdateManyWithWhereNestedInput {
+  where: InviteTokenScalarWhereInput;
+  data: InviteTokenUpdateManyDataInput;
+}
+
+export interface InviteTokenUpdateManyDataInput {
+  email?: String;
+  token?: String;
+}
+
+export interface WorkspacePropertyUpdateManyWithoutWorkspaceInput {
+  create?:
+    | WorkspacePropertyCreateWithoutWorkspaceInput[]
+    | WorkspacePropertyCreateWithoutWorkspaceInput;
+  delete?:
+    | WorkspacePropertyWhereUniqueInput[]
+    | WorkspacePropertyWhereUniqueInput;
+  connect?:
+    | WorkspacePropertyWhereUniqueInput[]
+    | WorkspacePropertyWhereUniqueInput;
+  disconnect?:
+    | WorkspacePropertyWhereUniqueInput[]
+    | WorkspacePropertyWhereUniqueInput;
+  update?:
+    | WorkspacePropertyUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    | WorkspacePropertyUpdateWithWhereUniqueWithoutWorkspaceInput;
+  upsert?:
+    | WorkspacePropertyUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    | WorkspacePropertyUpsertWithWhereUniqueWithoutWorkspaceInput;
+  deleteMany?:
+    | WorkspacePropertyScalarWhereInput[]
+    | WorkspacePropertyScalarWhereInput;
+  updateMany?:
+    | WorkspacePropertyUpdateManyWithWhereNestedInput[]
+    | WorkspacePropertyUpdateManyWithWhereNestedInput;
+}
+
+export interface WorkspacePropertyUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: WorkspacePropertyWhereUniqueInput;
+  data: WorkspacePropertyUpdateWithoutWorkspaceDataInput;
+}
+
+export interface WorkspacePropertyUpdateWithoutWorkspaceDataInput {
+  category?: String;
+  key?: String;
+  value?: String;
+}
+
+export interface WorkspacePropertyUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: WorkspacePropertyWhereUniqueInput;
+  update: WorkspacePropertyUpdateWithoutWorkspaceDataInput;
+  create: WorkspacePropertyCreateWithoutWorkspaceInput;
+}
+
+export interface WorkspacePropertyScalarWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  category?: String;
+  category_not?: String;
+  category_in?: String[] | String;
+  category_not_in?: String[] | String;
+  category_lt?: String;
+  category_lte?: String;
+  category_gt?: String;
+  category_gte?: String;
+  category_contains?: String;
+  category_not_contains?: String;
+  category_starts_with?: String;
+  category_not_starts_with?: String;
+  category_ends_with?: String;
+  category_not_ends_with?: String;
+  key?: String;
+  key_not?: String;
+  key_in?: String[] | String;
+  key_not_in?: String[] | String;
+  key_lt?: String;
+  key_lte?: String;
+  key_gt?: String;
+  key_gte?: String;
+  key_contains?: String;
+  key_not_contains?: String;
+  key_starts_with?: String;
+  key_not_starts_with?: String;
+  key_ends_with?: String;
+  key_not_ends_with?: String;
+  value?: String;
+  value_not?: String;
+  value_in?: String[] | String;
+  value_not_in?: String[] | String;
+  value_lt?: String;
+  value_lte?: String;
+  value_gt?: String;
+  value_gte?: String;
+  value_contains?: String;
+  value_not_contains?: String;
+  value_starts_with?: String;
+  value_not_starts_with?: String;
+  value_ends_with?: String;
+  value_not_ends_with?: String;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  AND?: WorkspacePropertyScalarWhereInput[] | WorkspacePropertyScalarWhereInput;
+  OR?: WorkspacePropertyScalarWhereInput[] | WorkspacePropertyScalarWhereInput;
+  NOT?: WorkspacePropertyScalarWhereInput[] | WorkspacePropertyScalarWhereInput;
+}
+
+export interface WorkspacePropertyUpdateManyWithWhereNestedInput {
+  where: WorkspacePropertyScalarWhereInput;
+  data: WorkspacePropertyUpdateManyDataInput;
+}
+
+export interface WorkspacePropertyUpdateManyDataInput {
+  category?: String;
+  key?: String;
+  value?: String;
+}
+
+export interface RoleBindingUpdateManyWithoutWorkspaceInput {
+  create?:
+    | RoleBindingCreateWithoutWorkspaceInput[]
+    | RoleBindingCreateWithoutWorkspaceInput;
+  delete?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
+  connect?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
+  disconnect?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
+  update?:
+    | RoleBindingUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    | RoleBindingUpdateWithWhereUniqueWithoutWorkspaceInput;
+  upsert?:
+    | RoleBindingUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    | RoleBindingUpsertWithWhereUniqueWithoutWorkspaceInput;
+  deleteMany?: RoleBindingScalarWhereInput[] | RoleBindingScalarWhereInput;
+  updateMany?:
+    | RoleBindingUpdateManyWithWhereNestedInput[]
+    | RoleBindingUpdateManyWithWhereNestedInput;
+}
+
+export interface RoleBindingUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: RoleBindingWhereUniqueInput;
+  data: RoleBindingUpdateWithoutWorkspaceDataInput;
+}
+
+export interface RoleBindingUpdateWithoutWorkspaceDataInput {
+  role?: Role;
+  user?: UserUpdateOneWithoutRoleBindingsInput;
+  serviceAccount?: ServiceAccountUpdateOneWithoutRoleBindingInput;
+  deployment?: DeploymentUpdateOneInput;
+}
+
+export interface UserUpdateOneWithoutRoleBindingsInput {
+  create?: UserCreateWithoutRoleBindingsInput;
+  update?: UserUpdateWithoutRoleBindingsDataInput;
+  upsert?: UserUpsertWithoutRoleBindingsInput;
   delete?: Boolean;
   disconnect?: Boolean;
   connect?: UserWhereUniqueInput;
 }
 
-export interface UserUpdateWithoutInviteTokensDataInput {
+export interface UserUpdateWithoutRoleBindingsDataInput {
   username?: String;
   status?: String;
   fullName?: String;
   avatarUrl?: String;
   emails?: EmailUpdateManyWithoutUserInput;
-  roleBindings?: RoleBindingUpdateManyWithoutUserInput;
+  inviteTokens?: InviteTokenUpdateManyInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
   oauthCredentials?: OAuthCredentialUpdateManyWithoutUserInput;
 }
@@ -2233,75 +2425,50 @@ export interface EmailUpdateManyDataInput {
   verified?: Boolean;
 }
 
-export interface RoleBindingUpdateManyWithoutUserInput {
-  create?:
-    | RoleBindingCreateWithoutUserInput[]
-    | RoleBindingCreateWithoutUserInput;
-  delete?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
-  connect?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
-  disconnect?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
+export interface InviteTokenUpdateManyInput {
+  create?: InviteTokenCreateInput[] | InviteTokenCreateInput;
   update?:
-    | RoleBindingUpdateWithWhereUniqueWithoutUserInput[]
-    | RoleBindingUpdateWithWhereUniqueWithoutUserInput;
+    | InviteTokenUpdateWithWhereUniqueNestedInput[]
+    | InviteTokenUpdateWithWhereUniqueNestedInput;
   upsert?:
-    | RoleBindingUpsertWithWhereUniqueWithoutUserInput[]
-    | RoleBindingUpsertWithWhereUniqueWithoutUserInput;
-  deleteMany?: RoleBindingScalarWhereInput[] | RoleBindingScalarWhereInput;
+    | InviteTokenUpsertWithWhereUniqueNestedInput[]
+    | InviteTokenUpsertWithWhereUniqueNestedInput;
+  delete?: InviteTokenWhereUniqueInput[] | InviteTokenWhereUniqueInput;
+  connect?: InviteTokenWhereUniqueInput[] | InviteTokenWhereUniqueInput;
+  disconnect?: InviteTokenWhereUniqueInput[] | InviteTokenWhereUniqueInput;
+  deleteMany?: InviteTokenScalarWhereInput[] | InviteTokenScalarWhereInput;
   updateMany?:
-    | RoleBindingUpdateManyWithWhereNestedInput[]
-    | RoleBindingUpdateManyWithWhereNestedInput;
+    | InviteTokenUpdateManyWithWhereNestedInput[]
+    | InviteTokenUpdateManyWithWhereNestedInput;
 }
 
-export interface RoleBindingUpdateWithWhereUniqueWithoutUserInput {
-  where: RoleBindingWhereUniqueInput;
-  data: RoleBindingUpdateWithoutUserDataInput;
+export interface InviteTokenUpdateWithWhereUniqueNestedInput {
+  where: InviteTokenWhereUniqueInput;
+  data: InviteTokenUpdateDataInput;
 }
 
-export interface RoleBindingUpdateWithoutUserDataInput {
-  role?: Role;
-  serviceAccount?: ServiceAccountUpdateOneWithoutRoleBindingInput;
-  workspace?: WorkspaceUpdateOneWithoutRoleBindingsInput;
-  deployment?: DeploymentUpdateOneInput;
+export interface InviteTokenUpdateDataInput {
+  email?: String;
+  token?: String;
+  workspace?: WorkspaceUpdateOneWithoutInvitesInput;
 }
 
-export interface ServiceAccountUpdateOneWithoutRoleBindingInput {
-  create?: ServiceAccountCreateWithoutRoleBindingInput;
-  update?: ServiceAccountUpdateWithoutRoleBindingDataInput;
-  upsert?: ServiceAccountUpsertWithoutRoleBindingInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
-  connect?: ServiceAccountWhereUniqueInput;
-}
-
-export interface ServiceAccountUpdateWithoutRoleBindingDataInput {
-  apiKey?: String;
-  label?: String;
-  category?: String;
-  active?: Boolean;
-  lastUsedAt?: DateTimeInput;
-}
-
-export interface ServiceAccountUpsertWithoutRoleBindingInput {
-  update: ServiceAccountUpdateWithoutRoleBindingDataInput;
-  create: ServiceAccountCreateWithoutRoleBindingInput;
-}
-
-export interface WorkspaceUpdateOneWithoutRoleBindingsInput {
-  create?: WorkspaceCreateWithoutRoleBindingsInput;
-  update?: WorkspaceUpdateWithoutRoleBindingsDataInput;
-  upsert?: WorkspaceUpsertWithoutRoleBindingsInput;
+export interface WorkspaceUpdateOneWithoutInvitesInput {
+  create?: WorkspaceCreateWithoutInvitesInput;
+  update?: WorkspaceUpdateWithoutInvitesDataInput;
+  upsert?: WorkspaceUpsertWithoutInvitesInput;
   delete?: Boolean;
   disconnect?: Boolean;
   connect?: WorkspaceWhereUniqueInput;
 }
 
-export interface WorkspaceUpdateWithoutRoleBindingsDataInput {
+export interface WorkspaceUpdateWithoutInvitesDataInput {
   active?: Boolean;
   deployments?: DeploymentUpdateManyWithoutWorkspaceInput;
   description?: String;
-  invites?: InviteTokenUpdateManyWithoutWorkspaceInput;
   label?: String;
   properties?: WorkspacePropertyUpdateManyWithoutWorkspaceInput;
+  roleBindings?: RoleBindingUpdateManyWithoutWorkspaceInput;
 }
 
 export interface DeploymentUpdateManyWithoutWorkspaceInput {
@@ -2496,208 +2663,15 @@ export interface DeploymentUpdateManyDataInput {
   version?: String;
 }
 
-export interface WorkspacePropertyUpdateManyWithoutWorkspaceInput {
-  create?:
-    | WorkspacePropertyCreateWithoutWorkspaceInput[]
-    | WorkspacePropertyCreateWithoutWorkspaceInput;
-  delete?:
-    | WorkspacePropertyWhereUniqueInput[]
-    | WorkspacePropertyWhereUniqueInput;
-  connect?:
-    | WorkspacePropertyWhereUniqueInput[]
-    | WorkspacePropertyWhereUniqueInput;
-  disconnect?:
-    | WorkspacePropertyWhereUniqueInput[]
-    | WorkspacePropertyWhereUniqueInput;
-  update?:
-    | WorkspacePropertyUpdateWithWhereUniqueWithoutWorkspaceInput[]
-    | WorkspacePropertyUpdateWithWhereUniqueWithoutWorkspaceInput;
-  upsert?:
-    | WorkspacePropertyUpsertWithWhereUniqueWithoutWorkspaceInput[]
-    | WorkspacePropertyUpsertWithWhereUniqueWithoutWorkspaceInput;
-  deleteMany?:
-    | WorkspacePropertyScalarWhereInput[]
-    | WorkspacePropertyScalarWhereInput;
-  updateMany?:
-    | WorkspacePropertyUpdateManyWithWhereNestedInput[]
-    | WorkspacePropertyUpdateManyWithWhereNestedInput;
+export interface WorkspaceUpsertWithoutInvitesInput {
+  update: WorkspaceUpdateWithoutInvitesDataInput;
+  create: WorkspaceCreateWithoutInvitesInput;
 }
 
-export interface WorkspacePropertyUpdateWithWhereUniqueWithoutWorkspaceInput {
-  where: WorkspacePropertyWhereUniqueInput;
-  data: WorkspacePropertyUpdateWithoutWorkspaceDataInput;
-}
-
-export interface WorkspacePropertyUpdateWithoutWorkspaceDataInput {
-  category?: String;
-  key?: String;
-  value?: String;
-}
-
-export interface WorkspacePropertyUpsertWithWhereUniqueWithoutWorkspaceInput {
-  where: WorkspacePropertyWhereUniqueInput;
-  update: WorkspacePropertyUpdateWithoutWorkspaceDataInput;
-  create: WorkspacePropertyCreateWithoutWorkspaceInput;
-}
-
-export interface WorkspacePropertyScalarWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  category?: String;
-  category_not?: String;
-  category_in?: String[] | String;
-  category_not_in?: String[] | String;
-  category_lt?: String;
-  category_lte?: String;
-  category_gt?: String;
-  category_gte?: String;
-  category_contains?: String;
-  category_not_contains?: String;
-  category_starts_with?: String;
-  category_not_starts_with?: String;
-  category_ends_with?: String;
-  category_not_ends_with?: String;
-  key?: String;
-  key_not?: String;
-  key_in?: String[] | String;
-  key_not_in?: String[] | String;
-  key_lt?: String;
-  key_lte?: String;
-  key_gt?: String;
-  key_gte?: String;
-  key_contains?: String;
-  key_not_contains?: String;
-  key_starts_with?: String;
-  key_not_starts_with?: String;
-  key_ends_with?: String;
-  key_not_ends_with?: String;
-  value?: String;
-  value_not?: String;
-  value_in?: String[] | String;
-  value_not_in?: String[] | String;
-  value_lt?: String;
-  value_lte?: String;
-  value_gt?: String;
-  value_gte?: String;
-  value_contains?: String;
-  value_not_contains?: String;
-  value_starts_with?: String;
-  value_not_starts_with?: String;
-  value_ends_with?: String;
-  value_not_ends_with?: String;
-  createdAt?: DateTimeInput;
-  createdAt_not?: DateTimeInput;
-  createdAt_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_lt?: DateTimeInput;
-  createdAt_lte?: DateTimeInput;
-  createdAt_gt?: DateTimeInput;
-  createdAt_gte?: DateTimeInput;
-  updatedAt?: DateTimeInput;
-  updatedAt_not?: DateTimeInput;
-  updatedAt_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_lt?: DateTimeInput;
-  updatedAt_lte?: DateTimeInput;
-  updatedAt_gt?: DateTimeInput;
-  updatedAt_gte?: DateTimeInput;
-  AND?: WorkspacePropertyScalarWhereInput[] | WorkspacePropertyScalarWhereInput;
-  OR?: WorkspacePropertyScalarWhereInput[] | WorkspacePropertyScalarWhereInput;
-  NOT?: WorkspacePropertyScalarWhereInput[] | WorkspacePropertyScalarWhereInput;
-}
-
-export interface WorkspacePropertyUpdateManyWithWhereNestedInput {
-  where: WorkspacePropertyScalarWhereInput;
-  data: WorkspacePropertyUpdateManyDataInput;
-}
-
-export interface WorkspacePropertyUpdateManyDataInput {
-  category?: String;
-  key?: String;
-  value?: String;
-}
-
-export interface WorkspaceUpsertWithoutRoleBindingsInput {
-  update: WorkspaceUpdateWithoutRoleBindingsDataInput;
-  create: WorkspaceCreateWithoutRoleBindingsInput;
-}
-
-export interface DeploymentUpdateOneInput {
-  create?: DeploymentCreateInput;
-  update?: DeploymentUpdateDataInput;
-  upsert?: DeploymentUpsertNestedInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
-  connect?: DeploymentWhereUniqueInput;
-}
-
-export interface DeploymentUpdateDataInput {
-  config?: Json;
-  properties?: DeploymentPropertyUpdateManyWithoutDeploymentInput;
-  description?: String;
-  label?: String;
-  registryPassword?: String;
-  releaseName?: String;
-  status?: String;
-  type?: String;
-  version?: String;
-  workspace?: WorkspaceUpdateOneWithoutDeploymentsInput;
-}
-
-export interface DeploymentUpsertNestedInput {
-  update: DeploymentUpdateDataInput;
-  create: DeploymentCreateInput;
-}
-
-export interface RoleBindingUpsertWithWhereUniqueWithoutUserInput {
-  where: RoleBindingWhereUniqueInput;
-  update: RoleBindingUpdateWithoutUserDataInput;
-  create: RoleBindingCreateWithoutUserInput;
-}
-
-export interface RoleBindingScalarWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  role?: Role;
-  role_not?: Role;
-  role_in?: Role[] | Role;
-  role_not_in?: Role[] | Role;
-  AND?: RoleBindingScalarWhereInput[] | RoleBindingScalarWhereInput;
-  OR?: RoleBindingScalarWhereInput[] | RoleBindingScalarWhereInput;
-  NOT?: RoleBindingScalarWhereInput[] | RoleBindingScalarWhereInput;
-}
-
-export interface RoleBindingUpdateManyWithWhereNestedInput {
-  where: RoleBindingScalarWhereInput;
-  data: RoleBindingUpdateManyDataInput;
-}
-
-export interface RoleBindingUpdateManyDataInput {
-  role?: Role;
+export interface InviteTokenUpsertWithWhereUniqueNestedInput {
+  where: InviteTokenWhereUniqueInput;
+  update: InviteTokenUpdateDataInput;
+  create: InviteTokenCreateInput;
 }
 
 export interface LocalCredentialUpdateOneWithoutUserInput {
@@ -2826,18 +2800,67 @@ export interface OAuthCredentialUpdateManyDataInput {
   oauthUserId?: String;
 }
 
-export interface UserUpsertWithoutInviteTokensInput {
-  update: UserUpdateWithoutInviteTokensDataInput;
-  create: UserCreateWithoutInviteTokensInput;
+export interface UserUpsertWithoutRoleBindingsInput {
+  update: UserUpdateWithoutRoleBindingsDataInput;
+  create: UserCreateWithoutRoleBindingsInput;
 }
 
-export interface InviteTokenUpsertWithWhereUniqueWithoutWorkspaceInput {
-  where: InviteTokenWhereUniqueInput;
-  update: InviteTokenUpdateWithoutWorkspaceDataInput;
-  create: InviteTokenCreateWithoutWorkspaceInput;
+export interface ServiceAccountUpdateOneWithoutRoleBindingInput {
+  create?: ServiceAccountCreateWithoutRoleBindingInput;
+  update?: ServiceAccountUpdateWithoutRoleBindingDataInput;
+  upsert?: ServiceAccountUpsertWithoutRoleBindingInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: ServiceAccountWhereUniqueInput;
 }
 
-export interface InviteTokenScalarWhereInput {
+export interface ServiceAccountUpdateWithoutRoleBindingDataInput {
+  apiKey?: String;
+  label?: String;
+  category?: String;
+  active?: Boolean;
+  lastUsedAt?: DateTimeInput;
+}
+
+export interface ServiceAccountUpsertWithoutRoleBindingInput {
+  update: ServiceAccountUpdateWithoutRoleBindingDataInput;
+  create: ServiceAccountCreateWithoutRoleBindingInput;
+}
+
+export interface DeploymentUpdateOneInput {
+  create?: DeploymentCreateInput;
+  update?: DeploymentUpdateDataInput;
+  upsert?: DeploymentUpsertNestedInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: DeploymentWhereUniqueInput;
+}
+
+export interface DeploymentUpdateDataInput {
+  config?: Json;
+  properties?: DeploymentPropertyUpdateManyWithoutDeploymentInput;
+  description?: String;
+  label?: String;
+  registryPassword?: String;
+  releaseName?: String;
+  status?: String;
+  type?: String;
+  version?: String;
+  workspace?: WorkspaceUpdateOneWithoutDeploymentsInput;
+}
+
+export interface DeploymentUpsertNestedInput {
+  update: DeploymentUpdateDataInput;
+  create: DeploymentCreateInput;
+}
+
+export interface RoleBindingUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: RoleBindingWhereUniqueInput;
+  update: RoleBindingUpdateWithoutWorkspaceDataInput;
+  create: RoleBindingCreateWithoutWorkspaceInput;
+}
+
+export interface RoleBindingScalarWhereInput {
   id?: ID_Input;
   id_not?: ID_Input;
   id_in?: ID_Input[] | ID_Input;
@@ -2852,184 +2875,22 @@ export interface InviteTokenScalarWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
-  assignments?: String;
-  assignments_not?: String;
-  assignments_in?: String[] | String;
-  assignments_not_in?: String[] | String;
-  assignments_lt?: String;
-  assignments_lte?: String;
-  assignments_gt?: String;
-  assignments_gte?: String;
-  assignments_contains?: String;
-  assignments_not_contains?: String;
-  assignments_starts_with?: String;
-  assignments_not_starts_with?: String;
-  assignments_ends_with?: String;
-  assignments_not_ends_with?: String;
-  email?: String;
-  email_not?: String;
-  email_in?: String[] | String;
-  email_not_in?: String[] | String;
-  email_lt?: String;
-  email_lte?: String;
-  email_gt?: String;
-  email_gte?: String;
-  email_contains?: String;
-  email_not_contains?: String;
-  email_starts_with?: String;
-  email_not_starts_with?: String;
-  email_ends_with?: String;
-  email_not_ends_with?: String;
-  token?: String;
-  token_not?: String;
-  token_in?: String[] | String;
-  token_not_in?: String[] | String;
-  token_lt?: String;
-  token_lte?: String;
-  token_gt?: String;
-  token_gte?: String;
-  token_contains?: String;
-  token_not_contains?: String;
-  token_starts_with?: String;
-  token_not_starts_with?: String;
-  token_ends_with?: String;
-  token_not_ends_with?: String;
-  AND?: InviteTokenScalarWhereInput[] | InviteTokenScalarWhereInput;
-  OR?: InviteTokenScalarWhereInput[] | InviteTokenScalarWhereInput;
-  NOT?: InviteTokenScalarWhereInput[] | InviteTokenScalarWhereInput;
-}
-
-export interface InviteTokenUpdateManyWithWhereNestedInput {
-  where: InviteTokenScalarWhereInput;
-  data: InviteTokenUpdateManyDataInput;
-}
-
-export interface InviteTokenUpdateManyDataInput {
-  assignments?: String;
-  email?: String;
-  token?: String;
-}
-
-export interface RoleBindingUpdateManyWithoutWorkspaceInput {
-  create?:
-    | RoleBindingCreateWithoutWorkspaceInput[]
-    | RoleBindingCreateWithoutWorkspaceInput;
-  delete?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
-  connect?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
-  disconnect?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
-  update?:
-    | RoleBindingUpdateWithWhereUniqueWithoutWorkspaceInput[]
-    | RoleBindingUpdateWithWhereUniqueWithoutWorkspaceInput;
-  upsert?:
-    | RoleBindingUpsertWithWhereUniqueWithoutWorkspaceInput[]
-    | RoleBindingUpsertWithWhereUniqueWithoutWorkspaceInput;
-  deleteMany?: RoleBindingScalarWhereInput[] | RoleBindingScalarWhereInput;
-  updateMany?:
-    | RoleBindingUpdateManyWithWhereNestedInput[]
-    | RoleBindingUpdateManyWithWhereNestedInput;
-}
-
-export interface RoleBindingUpdateWithWhereUniqueWithoutWorkspaceInput {
-  where: RoleBindingWhereUniqueInput;
-  data: RoleBindingUpdateWithoutWorkspaceDataInput;
-}
-
-export interface RoleBindingUpdateWithoutWorkspaceDataInput {
   role?: Role;
-  user?: UserUpdateOneWithoutRoleBindingsInput;
-  serviceAccount?: ServiceAccountUpdateOneWithoutRoleBindingInput;
-  deployment?: DeploymentUpdateOneInput;
+  role_not?: Role;
+  role_in?: Role[] | Role;
+  role_not_in?: Role[] | Role;
+  AND?: RoleBindingScalarWhereInput[] | RoleBindingScalarWhereInput;
+  OR?: RoleBindingScalarWhereInput[] | RoleBindingScalarWhereInput;
+  NOT?: RoleBindingScalarWhereInput[] | RoleBindingScalarWhereInput;
 }
 
-export interface UserUpdateOneWithoutRoleBindingsInput {
-  create?: UserCreateWithoutRoleBindingsInput;
-  update?: UserUpdateWithoutRoleBindingsDataInput;
-  upsert?: UserUpsertWithoutRoleBindingsInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
-  connect?: UserWhereUniqueInput;
+export interface RoleBindingUpdateManyWithWhereNestedInput {
+  where: RoleBindingScalarWhereInput;
+  data: RoleBindingUpdateManyDataInput;
 }
 
-export interface UserUpdateWithoutRoleBindingsDataInput {
-  username?: String;
-  status?: String;
-  fullName?: String;
-  avatarUrl?: String;
-  emails?: EmailUpdateManyWithoutUserInput;
-  inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
-  localCredential?: LocalCredentialUpdateOneWithoutUserInput;
-  oauthCredentials?: OAuthCredentialUpdateManyWithoutUserInput;
-}
-
-export interface InviteTokenUpdateManyWithoutUserInput {
-  create?:
-    | InviteTokenCreateWithoutUserInput[]
-    | InviteTokenCreateWithoutUserInput;
-  delete?: InviteTokenWhereUniqueInput[] | InviteTokenWhereUniqueInput;
-  connect?: InviteTokenWhereUniqueInput[] | InviteTokenWhereUniqueInput;
-  disconnect?: InviteTokenWhereUniqueInput[] | InviteTokenWhereUniqueInput;
-  update?:
-    | InviteTokenUpdateWithWhereUniqueWithoutUserInput[]
-    | InviteTokenUpdateWithWhereUniqueWithoutUserInput;
-  upsert?:
-    | InviteTokenUpsertWithWhereUniqueWithoutUserInput[]
-    | InviteTokenUpsertWithWhereUniqueWithoutUserInput;
-  deleteMany?: InviteTokenScalarWhereInput[] | InviteTokenScalarWhereInput;
-  updateMany?:
-    | InviteTokenUpdateManyWithWhereNestedInput[]
-    | InviteTokenUpdateManyWithWhereNestedInput;
-}
-
-export interface InviteTokenUpdateWithWhereUniqueWithoutUserInput {
-  where: InviteTokenWhereUniqueInput;
-  data: InviteTokenUpdateWithoutUserDataInput;
-}
-
-export interface InviteTokenUpdateWithoutUserDataInput {
-  assignments?: String;
-  email?: String;
-  token?: String;
-  workspace?: WorkspaceUpdateOneWithoutInvitesInput;
-}
-
-export interface WorkspaceUpdateOneWithoutInvitesInput {
-  create?: WorkspaceCreateWithoutInvitesInput;
-  update?: WorkspaceUpdateWithoutInvitesDataInput;
-  upsert?: WorkspaceUpsertWithoutInvitesInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
-  connect?: WorkspaceWhereUniqueInput;
-}
-
-export interface WorkspaceUpdateWithoutInvitesDataInput {
-  active?: Boolean;
-  deployments?: DeploymentUpdateManyWithoutWorkspaceInput;
-  description?: String;
-  label?: String;
-  properties?: WorkspacePropertyUpdateManyWithoutWorkspaceInput;
-  roleBindings?: RoleBindingUpdateManyWithoutWorkspaceInput;
-}
-
-export interface WorkspaceUpsertWithoutInvitesInput {
-  update: WorkspaceUpdateWithoutInvitesDataInput;
-  create: WorkspaceCreateWithoutInvitesInput;
-}
-
-export interface InviteTokenUpsertWithWhereUniqueWithoutUserInput {
-  where: InviteTokenWhereUniqueInput;
-  update: InviteTokenUpdateWithoutUserDataInput;
-  create: InviteTokenCreateWithoutUserInput;
-}
-
-export interface UserUpsertWithoutRoleBindingsInput {
-  update: UserUpdateWithoutRoleBindingsDataInput;
-  create: UserCreateWithoutRoleBindingsInput;
-}
-
-export interface RoleBindingUpsertWithWhereUniqueWithoutWorkspaceInput {
-  where: RoleBindingWhereUniqueInput;
-  update: RoleBindingUpdateWithoutWorkspaceDataInput;
-  create: RoleBindingCreateWithoutWorkspaceInput;
+export interface RoleBindingUpdateManyDataInput {
+  role?: Role;
 }
 
 export interface WorkspaceUpsertWithoutDeploymentsInput {
@@ -3130,9 +2991,37 @@ export interface UserCreateWithoutEmailsInput {
   fullName?: String;
   avatarUrl?: String;
   roleBindings?: RoleBindingCreateManyWithoutUserInput;
-  inviteTokens?: InviteTokenCreateManyWithoutUserInput;
+  inviteTokens?: InviteTokenCreateManyInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
   oauthCredentials?: OAuthCredentialCreateManyWithoutUserInput;
+}
+
+export interface RoleBindingCreateManyWithoutUserInput {
+  create?:
+    | RoleBindingCreateWithoutUserInput[]
+    | RoleBindingCreateWithoutUserInput;
+  connect?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
+}
+
+export interface RoleBindingCreateWithoutUserInput {
+  role?: Role;
+  serviceAccount?: ServiceAccountCreateOneWithoutRoleBindingInput;
+  workspace?: WorkspaceCreateOneWithoutRoleBindingsInput;
+  deployment?: DeploymentCreateOneInput;
+}
+
+export interface WorkspaceCreateOneWithoutRoleBindingsInput {
+  create?: WorkspaceCreateWithoutRoleBindingsInput;
+  connect?: WorkspaceWhereUniqueInput;
+}
+
+export interface WorkspaceCreateWithoutRoleBindingsInput {
+  active?: Boolean;
+  deployments?: DeploymentCreateManyWithoutWorkspaceInput;
+  description?: String;
+  invites?: InviteTokenCreateManyWithoutWorkspaceInput;
+  label?: String;
+  properties?: WorkspacePropertyCreateManyWithoutWorkspaceInput;
 }
 
 export interface EmailUpdateInput {
@@ -3158,9 +3047,69 @@ export interface UserUpdateWithoutEmailsDataInput {
   fullName?: String;
   avatarUrl?: String;
   roleBindings?: RoleBindingUpdateManyWithoutUserInput;
-  inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
+  inviteTokens?: InviteTokenUpdateManyInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
   oauthCredentials?: OAuthCredentialUpdateManyWithoutUserInput;
+}
+
+export interface RoleBindingUpdateManyWithoutUserInput {
+  create?:
+    | RoleBindingCreateWithoutUserInput[]
+    | RoleBindingCreateWithoutUserInput;
+  delete?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
+  connect?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
+  disconnect?: RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput;
+  update?:
+    | RoleBindingUpdateWithWhereUniqueWithoutUserInput[]
+    | RoleBindingUpdateWithWhereUniqueWithoutUserInput;
+  upsert?:
+    | RoleBindingUpsertWithWhereUniqueWithoutUserInput[]
+    | RoleBindingUpsertWithWhereUniqueWithoutUserInput;
+  deleteMany?: RoleBindingScalarWhereInput[] | RoleBindingScalarWhereInput;
+  updateMany?:
+    | RoleBindingUpdateManyWithWhereNestedInput[]
+    | RoleBindingUpdateManyWithWhereNestedInput;
+}
+
+export interface RoleBindingUpdateWithWhereUniqueWithoutUserInput {
+  where: RoleBindingWhereUniqueInput;
+  data: RoleBindingUpdateWithoutUserDataInput;
+}
+
+export interface RoleBindingUpdateWithoutUserDataInput {
+  role?: Role;
+  serviceAccount?: ServiceAccountUpdateOneWithoutRoleBindingInput;
+  workspace?: WorkspaceUpdateOneWithoutRoleBindingsInput;
+  deployment?: DeploymentUpdateOneInput;
+}
+
+export interface WorkspaceUpdateOneWithoutRoleBindingsInput {
+  create?: WorkspaceCreateWithoutRoleBindingsInput;
+  update?: WorkspaceUpdateWithoutRoleBindingsDataInput;
+  upsert?: WorkspaceUpsertWithoutRoleBindingsInput;
+  delete?: Boolean;
+  disconnect?: Boolean;
+  connect?: WorkspaceWhereUniqueInput;
+}
+
+export interface WorkspaceUpdateWithoutRoleBindingsDataInput {
+  active?: Boolean;
+  deployments?: DeploymentUpdateManyWithoutWorkspaceInput;
+  description?: String;
+  invites?: InviteTokenUpdateManyWithoutWorkspaceInput;
+  label?: String;
+  properties?: WorkspacePropertyUpdateManyWithoutWorkspaceInput;
+}
+
+export interface WorkspaceUpsertWithoutRoleBindingsInput {
+  update: WorkspaceUpdateWithoutRoleBindingsDataInput;
+  create: WorkspaceCreateWithoutRoleBindingsInput;
+}
+
+export interface RoleBindingUpsertWithWhereUniqueWithoutUserInput {
+  where: RoleBindingWhereUniqueInput;
+  update: RoleBindingUpdateWithoutUserDataInput;
+  create: RoleBindingCreateWithoutUserInput;
 }
 
 export interface UserUpsertWithoutEmailsInput {
@@ -3175,24 +3124,13 @@ export interface EmailUpdateManyMutationInput {
   verified?: Boolean;
 }
 
-export interface InviteTokenCreateInput {
-  assignments?: String;
-  email?: String;
-  token?: String;
-  user?: UserCreateOneWithoutInviteTokensInput;
-  workspace?: WorkspaceCreateOneWithoutInvitesInput;
-}
-
 export interface InviteTokenUpdateInput {
-  assignments?: String;
   email?: String;
   token?: String;
-  user?: UserUpdateOneWithoutInviteTokensInput;
   workspace?: WorkspaceUpdateOneWithoutInvitesInput;
 }
 
 export interface InviteTokenUpdateManyMutationInput {
-  assignments?: String;
   email?: String;
   token?: String;
 }
@@ -3215,7 +3153,7 @@ export interface UserCreateWithoutLocalCredentialInput {
   avatarUrl?: String;
   emails?: EmailCreateManyWithoutUserInput;
   roleBindings?: RoleBindingCreateManyWithoutUserInput;
-  inviteTokens?: InviteTokenCreateManyWithoutUserInput;
+  inviteTokens?: InviteTokenCreateManyInput;
   oauthCredentials?: OAuthCredentialCreateManyWithoutUserInput;
 }
 
@@ -3241,7 +3179,7 @@ export interface UserUpdateWithoutLocalCredentialDataInput {
   avatarUrl?: String;
   emails?: EmailUpdateManyWithoutUserInput;
   roleBindings?: RoleBindingUpdateManyWithoutUserInput;
-  inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
+  inviteTokens?: InviteTokenUpdateManyInput;
   oauthCredentials?: OAuthCredentialUpdateManyWithoutUserInput;
 }
 
@@ -3274,7 +3212,7 @@ export interface UserCreateWithoutOauthCredentialsInput {
   avatarUrl?: String;
   emails?: EmailCreateManyWithoutUserInput;
   roleBindings?: RoleBindingCreateManyWithoutUserInput;
-  inviteTokens?: InviteTokenCreateManyWithoutUserInput;
+  inviteTokens?: InviteTokenCreateManyInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
 }
 
@@ -3301,7 +3239,7 @@ export interface UserUpdateWithoutOauthCredentialsDataInput {
   avatarUrl?: String;
   emails?: EmailUpdateManyWithoutUserInput;
   roleBindings?: RoleBindingUpdateManyWithoutUserInput;
-  inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
+  inviteTokens?: InviteTokenUpdateManyInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
 }
 
@@ -3402,7 +3340,7 @@ export interface UserCreateInput {
   avatarUrl?: String;
   emails?: EmailCreateManyWithoutUserInput;
   roleBindings?: RoleBindingCreateManyWithoutUserInput;
-  inviteTokens?: InviteTokenCreateManyWithoutUserInput;
+  inviteTokens?: InviteTokenCreateManyInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
   oauthCredentials?: OAuthCredentialCreateManyWithoutUserInput;
 }
@@ -3414,7 +3352,7 @@ export interface UserUpdateInput {
   avatarUrl?: String;
   emails?: EmailUpdateManyWithoutUserInput;
   roleBindings?: RoleBindingUpdateManyWithoutUserInput;
-  inviteTokens?: InviteTokenUpdateManyWithoutUserInput;
+  inviteTokens?: InviteTokenUpdateManyInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
   oauthCredentials?: OAuthCredentialUpdateManyWithoutUserInput;
 }
@@ -3884,29 +3822,88 @@ export interface WorkspaceSubscription
 
 export interface InviteToken {
   id: ID_Output;
-  assignments?: String;
   email?: String;
   token?: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface InviteTokenPromise extends Promise<InviteToken>, Fragmentable {
   id: () => Promise<ID_Output>;
-  assignments: () => Promise<String>;
   email: () => Promise<String>;
   token: () => Promise<String>;
-  user: <T = UserPromise>() => T;
   workspace: <T = WorkspacePromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface InviteTokenSubscription
   extends Promise<AsyncIterator<InviteToken>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  assignments: () => Promise<AsyncIterator<String>>;
   email: () => Promise<AsyncIterator<String>>;
   token: () => Promise<AsyncIterator<String>>;
-  user: <T = UserSubscription>() => T;
   workspace: <T = WorkspaceSubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface WorkspaceProperty {
+  id: ID_Output;
+  category?: String;
+  key: String;
+  value?: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface WorkspacePropertyPromise
+  extends Promise<WorkspaceProperty>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  category: () => Promise<String>;
+  key: () => Promise<String>;
+  value: () => Promise<String>;
+  workspace: <T = WorkspacePromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface WorkspacePropertySubscription
+  extends Promise<AsyncIterator<WorkspaceProperty>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  category: () => Promise<AsyncIterator<String>>;
+  key: () => Promise<AsyncIterator<String>>;
+  value: () => Promise<AsyncIterator<String>>;
+  workspace: <T = WorkspaceSubscription>() => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface RoleBinding {
+  id: ID_Output;
+  role?: Role;
+}
+
+export interface RoleBindingPromise extends Promise<RoleBinding>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  role: () => Promise<Role>;
+  user: <T = UserPromise>() => T;
+  serviceAccount: <T = ServiceAccountPromise>() => T;
+  workspace: <T = WorkspacePromise>() => T;
+  deployment: <T = DeploymentPromise>() => T;
+}
+
+export interface RoleBindingSubscription
+  extends Promise<AsyncIterator<RoleBinding>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  role: () => Promise<AsyncIterator<Role>>;
+  user: <T = UserSubscription>() => T;
+  serviceAccount: <T = ServiceAccountSubscription>() => T;
+  workspace: <T = WorkspaceSubscription>() => T;
+  deployment: <T = DeploymentSubscription>() => T;
 }
 
 export interface User {
@@ -4059,70 +4056,6 @@ export interface EmailSubscription
   verified: () => Promise<AsyncIterator<Boolean>>;
 }
 
-export interface RoleBinding {
-  id: ID_Output;
-  role?: Role;
-}
-
-export interface RoleBindingPromise extends Promise<RoleBinding>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  role: () => Promise<Role>;
-  user: <T = UserPromise>() => T;
-  serviceAccount: <T = ServiceAccountPromise>() => T;
-  workspace: <T = WorkspacePromise>() => T;
-  deployment: <T = DeploymentPromise>() => T;
-}
-
-export interface RoleBindingSubscription
-  extends Promise<AsyncIterator<RoleBinding>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  role: () => Promise<AsyncIterator<Role>>;
-  user: <T = UserSubscription>() => T;
-  serviceAccount: <T = ServiceAccountSubscription>() => T;
-  workspace: <T = WorkspaceSubscription>() => T;
-  deployment: <T = DeploymentSubscription>() => T;
-}
-
-export interface ServiceAccount {
-  id: ID_Output;
-  apiKey?: String;
-  label?: String;
-  category?: String;
-  active?: Boolean;
-  lastUsedAt?: DateTimeOutput;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-}
-
-export interface ServiceAccountPromise
-  extends Promise<ServiceAccount>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  apiKey: () => Promise<String>;
-  label: () => Promise<String>;
-  category: () => Promise<String>;
-  active: () => Promise<Boolean>;
-  roleBinding: <T = RoleBindingPromise>() => T;
-  lastUsedAt: () => Promise<DateTimeOutput>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface ServiceAccountSubscription
-  extends Promise<AsyncIterator<ServiceAccount>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  apiKey: () => Promise<AsyncIterator<String>>;
-  label: () => Promise<AsyncIterator<String>>;
-  category: () => Promise<AsyncIterator<String>>;
-  active: () => Promise<AsyncIterator<Boolean>>;
-  roleBinding: <T = RoleBindingSubscription>() => T;
-  lastUsedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
 export interface LocalCredential {
   id: ID_Output;
   password?: String;
@@ -4174,35 +4107,41 @@ export interface OAuthCredentialSubscription
   user: <T = UserSubscription>() => T;
 }
 
-export interface WorkspaceProperty {
+export interface ServiceAccount {
   id: ID_Output;
+  apiKey?: String;
+  label?: String;
   category?: String;
-  key: String;
-  value?: String;
+  active?: Boolean;
+  lastUsedAt?: DateTimeOutput;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
 
-export interface WorkspacePropertyPromise
-  extends Promise<WorkspaceProperty>,
+export interface ServiceAccountPromise
+  extends Promise<ServiceAccount>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  apiKey: () => Promise<String>;
+  label: () => Promise<String>;
   category: () => Promise<String>;
-  key: () => Promise<String>;
-  value: () => Promise<String>;
-  workspace: <T = WorkspacePromise>() => T;
+  active: () => Promise<Boolean>;
+  roleBinding: <T = RoleBindingPromise>() => T;
+  lastUsedAt: () => Promise<DateTimeOutput>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface WorkspacePropertySubscription
-  extends Promise<AsyncIterator<WorkspaceProperty>>,
+export interface ServiceAccountSubscription
+  extends Promise<AsyncIterator<ServiceAccount>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
+  apiKey: () => Promise<AsyncIterator<String>>;
+  label: () => Promise<AsyncIterator<String>>;
   category: () => Promise<AsyncIterator<String>>;
-  key: () => Promise<AsyncIterator<String>>;
-  value: () => Promise<AsyncIterator<String>>;
-  workspace: <T = WorkspaceSubscription>() => T;
+  active: () => Promise<AsyncIterator<Boolean>>;
+  roleBinding: <T = RoleBindingSubscription>() => T;
+  lastUsedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -5067,27 +5006,30 @@ export interface InviteTokenSubscriptionPayloadSubscription
 
 export interface InviteTokenPreviousValues {
   id: ID_Output;
-  assignments?: String;
   email?: String;
   token?: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
 }
 
 export interface InviteTokenPreviousValuesPromise
   extends Promise<InviteTokenPreviousValues>,
     Fragmentable {
   id: () => Promise<ID_Output>;
-  assignments: () => Promise<String>;
   email: () => Promise<String>;
   token: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
 }
 
 export interface InviteTokenPreviousValuesSubscription
   extends Promise<AsyncIterator<InviteTokenPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  assignments: () => Promise<AsyncIterator<String>>;
   email: () => Promise<AsyncIterator<String>>;
   token: () => Promise<AsyncIterator<String>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
 export interface LocalCredentialSubscriptionPayload {

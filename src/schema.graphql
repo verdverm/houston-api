@@ -64,9 +64,9 @@ type AuthConfig {
 type Invite {
   id: ID!
   uuid: Uuid @alias(field: "id")
-  assignments: String
+  assignments: String # Legacy field.
   email: String
-  # token: String
+  token: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -213,6 +213,11 @@ type Query {
     entityType: EntityType!
     entityUuid: Uuid
   ): [ServiceAccount] @auth
+
+  invites(
+    workspaceUuid: Uuid
+    email: String
+  ): [Invite] @auth(permission: "user.workspace.get")
 }
 
 #
@@ -283,4 +288,13 @@ type Mutation {
     label: String!
     description: String
   ): Workspace @auth
+
+  workspaceAddUser(
+    workspaceUuid: Uuid
+    email: String!
+  ): Workspace @auth(permission: "user.workspace.update")
+
+  deleteInviteToken(
+    inviteUuid: Uuid
+  ): Invite @auth
 }

@@ -19,8 +19,14 @@ export function groups() {
   return [];
 }
 
+export function invites(parent, args, ctx) {
+  return ctx.db.query.inviteTokens({
+    where: { workspace: { id: parent.id } }
+  });
+}
+
 export function deploymentCount(parent) {
   return size(parent.deployments);
 }
 
-export default { users, groups, deploymentCount };
+export default { users, groups, invites, deploymentCount };

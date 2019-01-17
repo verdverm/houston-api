@@ -54,3 +54,7 @@ export class MissingArgumentError extends Error {
     this.message = `A required argument was not sent: ${argName}`;
   }
 }
+
+export class UserInviteExistsError extends Error {
+  message = this.message || "User already invited to workspace";
+}

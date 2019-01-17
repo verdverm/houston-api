@@ -1135,11 +1135,11 @@ input EmailWhereUniqueInput {
 
 type InviteToken {
   id: ID!
-  assignments: String
   email: String
   token: String
-  user: User
   workspace: Workspace
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 type InviteTokenConnection {
@@ -1149,15 +1149,13 @@ type InviteTokenConnection {
 }
 
 input InviteTokenCreateInput {
-  assignments: String
   email: String
   token: String
-  user: UserCreateOneWithoutInviteTokensInput
   workspace: WorkspaceCreateOneWithoutInvitesInput
 }
 
-input InviteTokenCreateManyWithoutUserInput {
-  create: [InviteTokenCreateWithoutUserInput!]
+input InviteTokenCreateManyInput {
+  create: [InviteTokenCreateInput!]
   connect: [InviteTokenWhereUniqueInput!]
 }
 
@@ -1166,18 +1164,9 @@ input InviteTokenCreateManyWithoutWorkspaceInput {
   connect: [InviteTokenWhereUniqueInput!]
 }
 
-input InviteTokenCreateWithoutUserInput {
-  assignments: String
-  email: String
-  token: String
-  workspace: WorkspaceCreateOneWithoutInvitesInput
-}
-
 input InviteTokenCreateWithoutWorkspaceInput {
-  assignments: String
   email: String
   token: String
-  user: UserCreateOneWithoutInviteTokensInput
 }
 
 type InviteTokenEdge {
@@ -1188,8 +1177,6 @@ type InviteTokenEdge {
 enum InviteTokenOrderByInput {
   id_ASC
   id_DESC
-  assignments_ASC
-  assignments_DESC
   email_ASC
   email_DESC
   token_ASC
@@ -1202,9 +1189,10 @@ enum InviteTokenOrderByInput {
 
 type InviteTokenPreviousValues {
   id: ID!
-  assignments: String
   email: String
   token: String
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
 input InviteTokenScalarWhereInput {
@@ -1222,20 +1210,6 @@ input InviteTokenScalarWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  assignments: String
-  assignments_not: String
-  assignments_in: [String!]
-  assignments_not_in: [String!]
-  assignments_lt: String
-  assignments_lte: String
-  assignments_gt: String
-  assignments_gte: String
-  assignments_contains: String
-  assignments_not_contains: String
-  assignments_starts_with: String
-  assignments_not_starts_with: String
-  assignments_ends_with: String
-  assignments_not_ends_with: String
   email: String
   email_not: String
   email_in: [String!]
@@ -1264,6 +1238,22 @@ input InviteTokenScalarWhereInput {
   token_not_starts_with: String
   token_ends_with: String
   token_not_ends_with: String
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [InviteTokenScalarWhereInput!]
   OR: [InviteTokenScalarWhereInput!]
   NOT: [InviteTokenScalarWhereInput!]
@@ -1287,35 +1277,37 @@ input InviteTokenSubscriptionWhereInput {
   NOT: [InviteTokenSubscriptionWhereInput!]
 }
 
-input InviteTokenUpdateInput {
-  assignments: String
+input InviteTokenUpdateDataInput {
   email: String
   token: String
-  user: UserUpdateOneWithoutInviteTokensInput
+  workspace: WorkspaceUpdateOneWithoutInvitesInput
+}
+
+input InviteTokenUpdateInput {
+  email: String
+  token: String
   workspace: WorkspaceUpdateOneWithoutInvitesInput
 }
 
 input InviteTokenUpdateManyDataInput {
-  assignments: String
   email: String
   token: String
 }
 
-input InviteTokenUpdateManyMutationInput {
-  assignments: String
-  email: String
-  token: String
-}
-
-input InviteTokenUpdateManyWithoutUserInput {
-  create: [InviteTokenCreateWithoutUserInput!]
+input InviteTokenUpdateManyInput {
+  create: [InviteTokenCreateInput!]
+  update: [InviteTokenUpdateWithWhereUniqueNestedInput!]
+  upsert: [InviteTokenUpsertWithWhereUniqueNestedInput!]
   delete: [InviteTokenWhereUniqueInput!]
   connect: [InviteTokenWhereUniqueInput!]
   disconnect: [InviteTokenWhereUniqueInput!]
-  update: [InviteTokenUpdateWithWhereUniqueWithoutUserInput!]
-  upsert: [InviteTokenUpsertWithWhereUniqueWithoutUserInput!]
   deleteMany: [InviteTokenScalarWhereInput!]
   updateMany: [InviteTokenUpdateManyWithWhereNestedInput!]
+}
+
+input InviteTokenUpdateManyMutationInput {
+  email: String
+  token: String
 }
 
 input InviteTokenUpdateManyWithoutWorkspaceInput {
@@ -1334,23 +1326,14 @@ input InviteTokenUpdateManyWithWhereNestedInput {
   data: InviteTokenUpdateManyDataInput!
 }
 
-input InviteTokenUpdateWithoutUserDataInput {
-  assignments: String
-  email: String
-  token: String
-  workspace: WorkspaceUpdateOneWithoutInvitesInput
-}
-
 input InviteTokenUpdateWithoutWorkspaceDataInput {
-  assignments: String
   email: String
   token: String
-  user: UserUpdateOneWithoutInviteTokensInput
 }
 
-input InviteTokenUpdateWithWhereUniqueWithoutUserInput {
+input InviteTokenUpdateWithWhereUniqueNestedInput {
   where: InviteTokenWhereUniqueInput!
-  data: InviteTokenUpdateWithoutUserDataInput!
+  data: InviteTokenUpdateDataInput!
 }
 
 input InviteTokenUpdateWithWhereUniqueWithoutWorkspaceInput {
@@ -1358,10 +1341,10 @@ input InviteTokenUpdateWithWhereUniqueWithoutWorkspaceInput {
   data: InviteTokenUpdateWithoutWorkspaceDataInput!
 }
 
-input InviteTokenUpsertWithWhereUniqueWithoutUserInput {
+input InviteTokenUpsertWithWhereUniqueNestedInput {
   where: InviteTokenWhereUniqueInput!
-  update: InviteTokenUpdateWithoutUserDataInput!
-  create: InviteTokenCreateWithoutUserInput!
+  update: InviteTokenUpdateDataInput!
+  create: InviteTokenCreateInput!
 }
 
 input InviteTokenUpsertWithWhereUniqueWithoutWorkspaceInput {
@@ -1385,20 +1368,6 @@ input InviteTokenWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  assignments: String
-  assignments_not: String
-  assignments_in: [String!]
-  assignments_not_in: [String!]
-  assignments_lt: String
-  assignments_lte: String
-  assignments_gt: String
-  assignments_gte: String
-  assignments_contains: String
-  assignments_not_contains: String
-  assignments_starts_with: String
-  assignments_not_starts_with: String
-  assignments_ends_with: String
-  assignments_not_ends_with: String
   email: String
   email_not: String
   email_in: [String!]
@@ -1427,8 +1396,23 @@ input InviteTokenWhereInput {
   token_not_starts_with: String
   token_ends_with: String
   token_not_ends_with: String
-  user: UserWhereInput
   workspace: WorkspaceWhereInput
+  createdAt: DateTime
+  createdAt_not: DateTime
+  createdAt_in: [DateTime!]
+  createdAt_not_in: [DateTime!]
+  createdAt_lt: DateTime
+  createdAt_lte: DateTime
+  createdAt_gt: DateTime
+  createdAt_gte: DateTime
+  updatedAt: DateTime
+  updatedAt_not: DateTime
+  updatedAt_in: [DateTime!]
+  updatedAt_not_in: [DateTime!]
+  updatedAt_lt: DateTime
+  updatedAt_lte: DateTime
+  updatedAt_gt: DateTime
+  updatedAt_gte: DateTime
   AND: [InviteTokenWhereInput!]
   OR: [InviteTokenWhereInput!]
   NOT: [InviteTokenWhereInput!]
@@ -2499,18 +2483,13 @@ input UserCreateInput {
   avatarUrl: String
   emails: EmailCreateManyWithoutUserInput
   roleBindings: RoleBindingCreateManyWithoutUserInput
-  inviteTokens: InviteTokenCreateManyWithoutUserInput
+  inviteTokens: InviteTokenCreateManyInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
   oauthCredentials: OAuthCredentialCreateManyWithoutUserInput
 }
 
 input UserCreateOneWithoutEmailsInput {
   create: UserCreateWithoutEmailsInput
-  connect: UserWhereUniqueInput
-}
-
-input UserCreateOneWithoutInviteTokensInput {
-  create: UserCreateWithoutInviteTokensInput
   connect: UserWhereUniqueInput
 }
 
@@ -2535,18 +2514,7 @@ input UserCreateWithoutEmailsInput {
   fullName: String
   avatarUrl: String
   roleBindings: RoleBindingCreateManyWithoutUserInput
-  inviteTokens: InviteTokenCreateManyWithoutUserInput
-  localCredential: LocalCredentialCreateOneWithoutUserInput
-  oauthCredentials: OAuthCredentialCreateManyWithoutUserInput
-}
-
-input UserCreateWithoutInviteTokensInput {
-  username: String
-  status: String
-  fullName: String
-  avatarUrl: String
-  emails: EmailCreateManyWithoutUserInput
-  roleBindings: RoleBindingCreateManyWithoutUserInput
+  inviteTokens: InviteTokenCreateManyInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
   oauthCredentials: OAuthCredentialCreateManyWithoutUserInput
 }
@@ -2558,7 +2526,7 @@ input UserCreateWithoutLocalCredentialInput {
   avatarUrl: String
   emails: EmailCreateManyWithoutUserInput
   roleBindings: RoleBindingCreateManyWithoutUserInput
-  inviteTokens: InviteTokenCreateManyWithoutUserInput
+  inviteTokens: InviteTokenCreateManyInput
   oauthCredentials: OAuthCredentialCreateManyWithoutUserInput
 }
 
@@ -2569,7 +2537,7 @@ input UserCreateWithoutOauthCredentialsInput {
   avatarUrl: String
   emails: EmailCreateManyWithoutUserInput
   roleBindings: RoleBindingCreateManyWithoutUserInput
-  inviteTokens: InviteTokenCreateManyWithoutUserInput
+  inviteTokens: InviteTokenCreateManyInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
 }
 
@@ -2579,7 +2547,7 @@ input UserCreateWithoutRoleBindingsInput {
   fullName: String
   avatarUrl: String
   emails: EmailCreateManyWithoutUserInput
-  inviteTokens: InviteTokenCreateManyWithoutUserInput
+  inviteTokens: InviteTokenCreateManyInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
   oauthCredentials: OAuthCredentialCreateManyWithoutUserInput
 }
@@ -2641,7 +2609,7 @@ input UserUpdateInput {
   avatarUrl: String
   emails: EmailUpdateManyWithoutUserInput
   roleBindings: RoleBindingUpdateManyWithoutUserInput
-  inviteTokens: InviteTokenUpdateManyWithoutUserInput
+  inviteTokens: InviteTokenUpdateManyInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
   oauthCredentials: OAuthCredentialUpdateManyWithoutUserInput
 }
@@ -2657,15 +2625,6 @@ input UserUpdateOneWithoutEmailsInput {
   create: UserCreateWithoutEmailsInput
   update: UserUpdateWithoutEmailsDataInput
   upsert: UserUpsertWithoutEmailsInput
-  delete: Boolean
-  disconnect: Boolean
-  connect: UserWhereUniqueInput
-}
-
-input UserUpdateOneWithoutInviteTokensInput {
-  create: UserCreateWithoutInviteTokensInput
-  update: UserUpdateWithoutInviteTokensDataInput
-  upsert: UserUpsertWithoutInviteTokensInput
   delete: Boolean
   disconnect: Boolean
   connect: UserWhereUniqueInput
@@ -2704,18 +2663,7 @@ input UserUpdateWithoutEmailsDataInput {
   fullName: String
   avatarUrl: String
   roleBindings: RoleBindingUpdateManyWithoutUserInput
-  inviteTokens: InviteTokenUpdateManyWithoutUserInput
-  localCredential: LocalCredentialUpdateOneWithoutUserInput
-  oauthCredentials: OAuthCredentialUpdateManyWithoutUserInput
-}
-
-input UserUpdateWithoutInviteTokensDataInput {
-  username: String
-  status: String
-  fullName: String
-  avatarUrl: String
-  emails: EmailUpdateManyWithoutUserInput
-  roleBindings: RoleBindingUpdateManyWithoutUserInput
+  inviteTokens: InviteTokenUpdateManyInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
   oauthCredentials: OAuthCredentialUpdateManyWithoutUserInput
 }
@@ -2727,7 +2675,7 @@ input UserUpdateWithoutLocalCredentialDataInput {
   avatarUrl: String
   emails: EmailUpdateManyWithoutUserInput
   roleBindings: RoleBindingUpdateManyWithoutUserInput
-  inviteTokens: InviteTokenUpdateManyWithoutUserInput
+  inviteTokens: InviteTokenUpdateManyInput
   oauthCredentials: OAuthCredentialUpdateManyWithoutUserInput
 }
 
@@ -2738,7 +2686,7 @@ input UserUpdateWithoutOauthCredentialsDataInput {
   avatarUrl: String
   emails: EmailUpdateManyWithoutUserInput
   roleBindings: RoleBindingUpdateManyWithoutUserInput
-  inviteTokens: InviteTokenUpdateManyWithoutUserInput
+  inviteTokens: InviteTokenUpdateManyInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
 }
 
@@ -2748,7 +2696,7 @@ input UserUpdateWithoutRoleBindingsDataInput {
   fullName: String
   avatarUrl: String
   emails: EmailUpdateManyWithoutUserInput
-  inviteTokens: InviteTokenUpdateManyWithoutUserInput
+  inviteTokens: InviteTokenUpdateManyInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
   oauthCredentials: OAuthCredentialUpdateManyWithoutUserInput
 }
@@ -2756,11 +2704,6 @@ input UserUpdateWithoutRoleBindingsDataInput {
 input UserUpsertWithoutEmailsInput {
   update: UserUpdateWithoutEmailsDataInput!
   create: UserCreateWithoutEmailsInput!
-}
-
-input UserUpsertWithoutInviteTokensInput {
-  update: UserUpdateWithoutInviteTokensDataInput!
-  create: UserCreateWithoutInviteTokensInput!
 }
 
 input UserUpsertWithoutLocalCredentialInput {
