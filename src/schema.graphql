@@ -297,4 +297,9 @@ type Mutation {
   deleteInviteToken(
     inviteUuid: Uuid
   ): Invite @auth
+
+  updateWorkspace(
+    workspaceUuid: Uuid!
+    payload: JSON!
+  ): Workspace @auth(permission: "user.workspace.update")
 }
