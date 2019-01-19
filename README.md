@@ -16,6 +16,17 @@ Houston leverages [Prisma](https://www.prisma.io/docs/) as [GraphQL](https://gra
 
 Houston can be configured via YAML files under `./config`, and can be overridden via environment variables, which are defined in `/config/custom-environment-variables.yaml`. To add or override any variables locally, create a `.env` file in the project directory.
 
+## Structure
+
+All source code is nested under `src`. This directory contains:
+
+* [`index.js`](https://github.com/astronomer/houston-api-2/blob/master/src/index.js) is the entrypoint for the application.
+* [`schema.graphl`](https://github.com/astronomer/houston-api-2/blob/master/src/schema.graphql) contains the entire application schema.
+* `resolvers` contains all the Queries, Mutations and Types for the GraphQL API.
+* `routes` contains all RESTful route definitions.
+* `lib` contains all shared, library code. This directory is listed as a root for the babel module loader. All modules defined under this directory can be `import`ed directly, rather than specifying a relative path.
+
+
 ## Development
 
 Houston is written in ES6 and beyond. It's currently built with [Babel](https://babeljs.io). It's also using a module plugin so imports can be written relative to `./src/lib` and avoid imports like `../../some-module`. Use `npm start` to run the API locally. This uses nodemon and will restart when any source files change. The only exception is `./database/datamodel.graphql`. Changes to this file requies you to restart, triggering a `prisma deploy` and `prisma generate`. We could probably automate that process on change as well.
