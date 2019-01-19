@@ -35,11 +35,12 @@ Houston is written in ES6 and beyond. It's currently built with [Babel](https://
 
 Houston is currently using [Jest](https://jestjs.io) for running tests. Typically test files will live near the unit being tested and be named similarly with `.unit.test.js` as its extension. Jest can be ran as a one-off or can be run in watch mode. Both modes allow you to specify a regex path to limit what tests are running. `npm run test` will run all tests once and report back. `npm run test -- src/resolvers/create-user --watch` will run in watch mode, and only for the tests for the `create-user` resolver.
 
-## Commands
+## Useful Commands
 
 * `npm start` starts the develpment server. Restarts automatically with nodemon.
+* `npm run build` builds with babel and place output into `./dist`.
+* `npm run serve` starts the production server from built files under `./dist`.
 * `npm run test` runs tests using `jest`.
 * `npm run test -- --watch` runs tests in watch mode.
 * `npm run test -- src/resolvers/create-user --watch` runs a subset of tests in watch mode.
-* `npm run build` builds with babel and place output into `./dist`.
 * `npm run playground` starts a single playground for application as well as prisma CRUD.
