@@ -43,4 +43,6 @@ Houston is currently using [Jest](https://jestjs.io) for running tests. Typicall
 * `npm run test` runs tests using `jest`.
 * `npm run test -- --watch` runs tests in watch mode.
 * `npm run test -- src/resolvers/create-user --watch` runs a subset of tests in watch mode.
+* `npm run coverage` runs tests and outputs a coverage report to `./coverage`.
+* `npm run lint` runs eslint.
 * `npm run playground` starts a single playground for application as well as prisma CRUD.
