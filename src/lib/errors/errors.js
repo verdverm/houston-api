@@ -58,3 +58,7 @@ export class MissingArgumentError extends Error {
 export class UserInviteExistsError extends Error {
   message = this.message || "User already invited to workspace";
 }
+
+export class JWTValidationError extends Error {
+  message = this.message || "Invalid JWT";
+}

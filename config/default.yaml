@@ -77,9 +77,9 @@ auth:
   # Auth0 integration configuration.
   auth0:
     enabled: false
-    clientId: ~
-    baseDomain: ~
-    externalLogin: ~
+    clientId: "rH2L4yKctlepniTyJW3MkuXuTreOHHn1"
+    baseDomain: "astronomerio.auth0.com"
+    externalLogin: false
 
   # Direct oauth integration to google.
   google:

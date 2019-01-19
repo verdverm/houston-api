@@ -1,4 +1,5 @@
 import { oauthUrl } from "oauth/config";
+import { JWTValidationError } from "errors";
 import config from "config";
 import { google } from "googleapis";
 import { OAuth2Client } from "google-auth-library";
@@ -13,7 +14,7 @@ const cfg = config.get("auth.google");
  * Generate the authentication url for Google.
  * @return {String} The authentication url.
  */
-export function authUrl(state, redirectUrl) {
+export function authUrl(state, redirectUrl, integration = "self") {
   // Create oauth client.
   const client = new google.auth.OAuth2(cfg.clientId, null, redirectUrl);
 
@@ -27,7 +28,7 @@ export function authUrl(state, redirectUrl) {
       merge(
         {
           provider: "google",
-          integration: "self",
+          integration,
           origin: oauthUrl()
         },
         state
@@ -37,8 +38,8 @@ export function authUrl(state, redirectUrl) {
 }
 
 /*
- * Generate the authentication url for Google.
- * @return {String} The authentication url.
+ * Validate the JWT from Google.
+ * @return {String} The JWT.
  */
 export async function validate(data) {
   // Create Google OAuth2Client.
@@ -55,13 +56,13 @@ export async function validate(data) {
 
   // Validate JWT properties.
   if (jwt.exp < moment().unix()) {
-    throw new Error();
+    throw new JWTValidationError("JWT invalid, expired");
   }
   if (jwt.iss !== "https://accounts.google.com") {
-    throw new Error();
+    throw new JWTValidationError("JWT invalid, 'iss' mismatch");
   }
   if (jwt.aud !== cfg.clientId) {
-    throw new Error();
+    throw new JWTValidationError("JWT invalid, 'aud' mismatch");
   }
 
   // Return the JWT.

@@ -45,8 +45,11 @@ export function googleEnabled() {
  * @return {Boolean} Google OAuth url.
  */
 export function googleOAuthUrl(parent) {
-  return config.get("auth.google.enabled")
-    ? providers.google.authUrl(parent, oauthRedirectUrl())
+  const auth = config.get("auth");
+  return auth.google.enabled
+    ? auth.google.clientId
+      ? providers.google.authUrl(parent, oauthRedirectUrl())
+      : providers.auth0.authUrl(parent, oauthRedirectUrl(), "google-oauth2")
     : null;
 }
 
@@ -62,9 +65,9 @@ export function auth0Enabled() {
  * Return a string for Auth0 OAuth url.
  * @return {Boolean} Auth0 OAuth url.
  */
-export function auth0OAuthUrl(parent, args) {
+export function auth0OAuthUrl(parent) {
   return config.get("auth.auth0.enabled")
-    ? providers.auth0.authUrl(args.redirect)
+    ? providers.auth0.authUrl(parent, oauthRedirectUrl())
     : null;
 }
 
