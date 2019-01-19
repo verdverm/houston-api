@@ -5,6 +5,7 @@ import createUser from "./create-user";
 import createWorkspace from "./create-workspace";
 import deleteDeployment from "./delete-deployment";
 import deleteInviteToken from "./delete-invite-token";
+import deleteServiceAccount from "./delete-service-account";
 import deleteWorkspace from "./delete-workspace";
 import updateDeployment from "./update-deployment";
 import updateUser from "./update-user";
@@ -19,6 +20,7 @@ export default {
   createWorkspace,
   deleteDeployment,
   deleteInviteToken,
+  deleteServiceAccount,
   deleteWorkspace,
   updateDeployment,
   updateUser,

@@ -302,4 +302,8 @@ type Mutation {
     workspaceUuid: Uuid!
     payload: JSON!
   ): Workspace @auth(permission: "user.workspace.update")
+
+  deleteServiceAccount(
+    serviceAccountUuid: Uuid!
+  ): ServiceAccount @auth(permission: "user.serviceAccount.create")
 }

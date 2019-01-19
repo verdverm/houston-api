@@ -62,7 +62,6 @@ type OAuthCredential {
   user: User
 }
 
-
 type InviteToken {
   id: ID! @unique
   email: String
