@@ -24,7 +24,7 @@ All source code is nested under `src`. This directory contains:
 * [`schema.graphl`](https://github.com/astronomer/houston-api-2/blob/master/src/schema.graphql) contains the entire application schema.
 * [`resolvers`](https://github.com/astronomer/houston-api-2/tree/master/src/resolvers) contains all the Queries, Mutations and Types for the GraphQL API.
 * [`routes`](https://github.com/astronomer/houston-api-2/tree/master/src/routes) contains all RESTful route definitions.
-* [`lib`](https://github.com/astronomer/houston-api-2/tree/master/src/lib) contains all shared, library code. This directory is listed as a root for the babel module loader. All modules defined under this directory can be `import`ed directly, rather than specifying a relative path.
+* [`lib`](https://github.com/astronomer/houston-api-2/tree/master/src/lib) contains all shared, library code. This directory is [listed as a root for the babel module loader](https://github.com/astronomer/houston-api-2/blob/master/.babelrc). All modules defined under this directory can be `import`ed directly, rather than specifying a relative path.
 
 
 ## Development
