@@ -37,8 +37,9 @@ Houston is currently using [Jest](https://jestjs.io) for running tests. Typicall
 
 ## Commands
 
-* `npm start` - Start the develpment server. Restarts automatically with nodemon.
-* `npm run test` - Runs tests using `jest`.
-* `npm run test -- --watch` - Runs tests in watch mode.
-* `npm run build` -- Build with babel and place output into `./dist`.
-* `npm run playground` - Start a single playground for application as well as prisma CRUD.
+* `npm start` starts the develpment server. Restarts automatically with nodemon.
+* `npm run test` runs tests using `jest`.
+* `npm run test -- --watch` runs tests in watch mode.
+* `npm run test -- src/resolvers/create-user --watch` runs a subset of tests in watch mode.
+* `npm run build` builds with babel and place output into `./dist`.
+* `npm run playground` starts a single playground for application as well as prisma CRUD.
