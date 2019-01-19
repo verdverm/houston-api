@@ -46,3 +46,4 @@ Houston is currently using [Jest](https://jestjs.io) for running tests. Typicall
 * `npm run coverage` runs tests and outputs a coverage report to `./coverage`.
 * `npm run lint` runs eslint.
 * `npm run playground` starts a single playground for application as well as prisma CRUD.
+* `docker-compose up` starts a postgres container and the prisma service container.
