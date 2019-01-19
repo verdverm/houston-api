@@ -3,7 +3,6 @@ import casual from "casual";
 import { graphql } from "graphql";
 import { makeExecutableSchema } from "graphql-tools";
 import { importSchema } from "graphql-import";
-import { WORKSPACE_ADMIN } from "constants";
 
 // Import our application schema
 const schema = makeExecutableSchema({
@@ -27,7 +26,7 @@ const query = `
 `;
 
 describe("workspaceAddUser", () => {
-  test("typical request is successful", async () => {
+  test("create the workspace role binding if user already exists", async () => {
     // Create mock user.
     const user = {
       id: casual.uuid
