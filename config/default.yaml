@@ -35,6 +35,20 @@ commander:
   host: localhost
   port: 50051
 
+# Email configuration.
+email:
+  # Enable sending emails.
+  enabled: false
+
+  # Open HTML emails in browser when sent.
+  preview: false
+
+  # The "from" address to use.
+  reply: "noreply@astronomer.io"
+
+  # The SMTP server URL.
+  smtpUrl: ~
+
 # Orbit configuration.
 orbit:
   subdomain: app
