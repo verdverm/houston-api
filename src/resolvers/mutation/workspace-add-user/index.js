@@ -45,7 +45,7 @@ export default async function workspaceAddUser(parent, args, ctx, info) {
     );
     if (gt(size(existingInvites), 0)) throw new UserInviteExistsError();
 
-    // Crate the invite token if we didn't already have one.
+    // Create the invite token if we didn't already have one.
     await ctx.db.mutation.createInviteToken({
       data: {
         email,
