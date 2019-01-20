@@ -47,10 +47,6 @@ var models = [
   {
     name: "Workspace",
     embedded: false
-  },
-  {
-    name: "WorkspaceProperty",
-    embedded: false
   }
 ];
 exports.Prisma = prisma_lib_1.makePrismaClientClass({

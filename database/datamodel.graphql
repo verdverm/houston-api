@@ -90,18 +90,7 @@ type Workspace {
   description: String
   invites: [InviteToken!]!
   label: String
-  properties: [WorkspaceProperty!]!
   roleBindings: [RoleBinding!]!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type WorkspaceProperty {
-  id: ID! @unique
-  category: String
-  key: String!
-  value: String
-  workspace: Workspace
   createdAt: DateTime!
   updatedAt: DateTime!
 }

@@ -39,10 +39,6 @@ type AggregateWorkspace {
   count: Int!
 }
 
-type AggregateWorkspaceProperty {
-  count: Int!
-}
-
 type BatchPayload {
   count: Long!
 }
@@ -1642,12 +1638,6 @@ type Mutation {
   upsertWorkspace(where: WorkspaceWhereUniqueInput!, create: WorkspaceCreateInput!, update: WorkspaceUpdateInput!): Workspace!
   deleteWorkspace(where: WorkspaceWhereUniqueInput!): Workspace
   deleteManyWorkspaces(where: WorkspaceWhereInput): BatchPayload!
-  createWorkspaceProperty(data: WorkspacePropertyCreateInput!): WorkspaceProperty!
-  updateWorkspaceProperty(data: WorkspacePropertyUpdateInput!, where: WorkspacePropertyWhereUniqueInput!): WorkspaceProperty
-  updateManyWorkspaceProperties(data: WorkspacePropertyUpdateManyMutationInput!, where: WorkspacePropertyWhereInput): BatchPayload!
-  upsertWorkspaceProperty(where: WorkspacePropertyWhereUniqueInput!, create: WorkspacePropertyCreateInput!, update: WorkspacePropertyUpdateInput!): WorkspaceProperty!
-  deleteWorkspaceProperty(where: WorkspacePropertyWhereUniqueInput!): WorkspaceProperty
-  deleteManyWorkspaceProperties(where: WorkspacePropertyWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -1944,9 +1934,6 @@ type Query {
   workspace(where: WorkspaceWhereUniqueInput!): Workspace
   workspaces(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Workspace]!
   workspacesConnection(where: WorkspaceWhereInput, orderBy: WorkspaceOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkspaceConnection!
-  workspaceProperty(where: WorkspacePropertyWhereUniqueInput!): WorkspaceProperty
-  workspaceProperties(where: WorkspacePropertyWhereInput, orderBy: WorkspacePropertyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceProperty]!
-  workspacePropertiesConnection(where: WorkspacePropertyWhereInput, orderBy: WorkspacePropertyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): WorkspacePropertyConnection!
   node(id: ID!): Node
 }
 
@@ -2452,7 +2439,6 @@ type Subscription {
   serviceAccount(where: ServiceAccountSubscriptionWhereInput): ServiceAccountSubscriptionPayload
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   workspace(where: WorkspaceSubscriptionWhereInput): WorkspaceSubscriptionPayload
-  workspaceProperty(where: WorkspacePropertySubscriptionWhereInput): WorkspacePropertySubscriptionPayload
 }
 
 type User {
@@ -2838,7 +2824,6 @@ type Workspace {
   description: String
   invites(where: InviteTokenWhereInput, orderBy: InviteTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [InviteToken!]
   label: String
-  properties(where: WorkspacePropertyWhereInput, orderBy: WorkspacePropertyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [WorkspaceProperty!]
   roleBindings(where: RoleBindingWhereInput, orderBy: RoleBindingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleBinding!]
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -2856,7 +2841,6 @@ input WorkspaceCreateInput {
   description: String
   invites: InviteTokenCreateManyWithoutWorkspaceInput
   label: String
-  properties: WorkspacePropertyCreateManyWithoutWorkspaceInput
   roleBindings: RoleBindingCreateManyWithoutWorkspaceInput
 }
 
@@ -2870,11 +2854,6 @@ input WorkspaceCreateOneWithoutInvitesInput {
   connect: WorkspaceWhereUniqueInput
 }
 
-input WorkspaceCreateOneWithoutPropertiesInput {
-  create: WorkspaceCreateWithoutPropertiesInput
-  connect: WorkspaceWhereUniqueInput
-}
-
 input WorkspaceCreateOneWithoutRoleBindingsInput {
   create: WorkspaceCreateWithoutRoleBindingsInput
   connect: WorkspaceWhereUniqueInput
@@ -2885,7 +2864,6 @@ input WorkspaceCreateWithoutDeploymentsInput {
   description: String
   invites: InviteTokenCreateManyWithoutWorkspaceInput
   label: String
-  properties: WorkspacePropertyCreateManyWithoutWorkspaceInput
   roleBindings: RoleBindingCreateManyWithoutWorkspaceInput
 }
 
@@ -2893,16 +2871,6 @@ input WorkspaceCreateWithoutInvitesInput {
   active: Boolean
   deployments: DeploymentCreateManyWithoutWorkspaceInput
   description: String
-  label: String
-  properties: WorkspacePropertyCreateManyWithoutWorkspaceInput
-  roleBindings: RoleBindingCreateManyWithoutWorkspaceInput
-}
-
-input WorkspaceCreateWithoutPropertiesInput {
-  active: Boolean
-  deployments: DeploymentCreateManyWithoutWorkspaceInput
-  description: String
-  invites: InviteTokenCreateManyWithoutWorkspaceInput
   label: String
   roleBindings: RoleBindingCreateManyWithoutWorkspaceInput
 }
@@ -2913,7 +2881,6 @@ input WorkspaceCreateWithoutRoleBindingsInput {
   description: String
   invites: InviteTokenCreateManyWithoutWorkspaceInput
   label: String
-  properties: WorkspacePropertyCreateManyWithoutWorkspaceInput
 }
 
 type WorkspaceEdge {
@@ -2945,300 +2912,6 @@ type WorkspacePreviousValues {
   updatedAt: DateTime!
 }
 
-type WorkspaceProperty {
-  id: ID!
-  category: String
-  key: String!
-  value: String
-  workspace: Workspace
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type WorkspacePropertyConnection {
-  pageInfo: PageInfo!
-  edges: [WorkspacePropertyEdge]!
-  aggregate: AggregateWorkspaceProperty!
-}
-
-input WorkspacePropertyCreateInput {
-  category: String
-  key: String!
-  value: String
-  workspace: WorkspaceCreateOneWithoutPropertiesInput
-}
-
-input WorkspacePropertyCreateManyWithoutWorkspaceInput {
-  create: [WorkspacePropertyCreateWithoutWorkspaceInput!]
-  connect: [WorkspacePropertyWhereUniqueInput!]
-}
-
-input WorkspacePropertyCreateWithoutWorkspaceInput {
-  category: String
-  key: String!
-  value: String
-}
-
-type WorkspacePropertyEdge {
-  node: WorkspaceProperty!
-  cursor: String!
-}
-
-enum WorkspacePropertyOrderByInput {
-  id_ASC
-  id_DESC
-  category_ASC
-  category_DESC
-  key_ASC
-  key_DESC
-  value_ASC
-  value_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type WorkspacePropertyPreviousValues {
-  id: ID!
-  category: String
-  key: String!
-  value: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-input WorkspacePropertyScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  category: String
-  category_not: String
-  category_in: [String!]
-  category_not_in: [String!]
-  category_lt: String
-  category_lte: String
-  category_gt: String
-  category_gte: String
-  category_contains: String
-  category_not_contains: String
-  category_starts_with: String
-  category_not_starts_with: String
-  category_ends_with: String
-  category_not_ends_with: String
-  key: String
-  key_not: String
-  key_in: [String!]
-  key_not_in: [String!]
-  key_lt: String
-  key_lte: String
-  key_gt: String
-  key_gte: String
-  key_contains: String
-  key_not_contains: String
-  key_starts_with: String
-  key_not_starts_with: String
-  key_ends_with: String
-  key_not_ends_with: String
-  value: String
-  value_not: String
-  value_in: [String!]
-  value_not_in: [String!]
-  value_lt: String
-  value_lte: String
-  value_gt: String
-  value_gte: String
-  value_contains: String
-  value_not_contains: String
-  value_starts_with: String
-  value_not_starts_with: String
-  value_ends_with: String
-  value_not_ends_with: String
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  AND: [WorkspacePropertyScalarWhereInput!]
-  OR: [WorkspacePropertyScalarWhereInput!]
-  NOT: [WorkspacePropertyScalarWhereInput!]
-}
-
-type WorkspacePropertySubscriptionPayload {
-  mutation: MutationType!
-  node: WorkspaceProperty
-  updatedFields: [String!]
-  previousValues: WorkspacePropertyPreviousValues
-}
-
-input WorkspacePropertySubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: WorkspacePropertyWhereInput
-  AND: [WorkspacePropertySubscriptionWhereInput!]
-  OR: [WorkspacePropertySubscriptionWhereInput!]
-  NOT: [WorkspacePropertySubscriptionWhereInput!]
-}
-
-input WorkspacePropertyUpdateInput {
-  category: String
-  key: String
-  value: String
-  workspace: WorkspaceUpdateOneWithoutPropertiesInput
-}
-
-input WorkspacePropertyUpdateManyDataInput {
-  category: String
-  key: String
-  value: String
-}
-
-input WorkspacePropertyUpdateManyMutationInput {
-  category: String
-  key: String
-  value: String
-}
-
-input WorkspacePropertyUpdateManyWithoutWorkspaceInput {
-  create: [WorkspacePropertyCreateWithoutWorkspaceInput!]
-  delete: [WorkspacePropertyWhereUniqueInput!]
-  connect: [WorkspacePropertyWhereUniqueInput!]
-  disconnect: [WorkspacePropertyWhereUniqueInput!]
-  update: [WorkspacePropertyUpdateWithWhereUniqueWithoutWorkspaceInput!]
-  upsert: [WorkspacePropertyUpsertWithWhereUniqueWithoutWorkspaceInput!]
-  deleteMany: [WorkspacePropertyScalarWhereInput!]
-  updateMany: [WorkspacePropertyUpdateManyWithWhereNestedInput!]
-}
-
-input WorkspacePropertyUpdateManyWithWhereNestedInput {
-  where: WorkspacePropertyScalarWhereInput!
-  data: WorkspacePropertyUpdateManyDataInput!
-}
-
-input WorkspacePropertyUpdateWithoutWorkspaceDataInput {
-  category: String
-  key: String
-  value: String
-}
-
-input WorkspacePropertyUpdateWithWhereUniqueWithoutWorkspaceInput {
-  where: WorkspacePropertyWhereUniqueInput!
-  data: WorkspacePropertyUpdateWithoutWorkspaceDataInput!
-}
-
-input WorkspacePropertyUpsertWithWhereUniqueWithoutWorkspaceInput {
-  where: WorkspacePropertyWhereUniqueInput!
-  update: WorkspacePropertyUpdateWithoutWorkspaceDataInput!
-  create: WorkspacePropertyCreateWithoutWorkspaceInput!
-}
-
-input WorkspacePropertyWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  category: String
-  category_not: String
-  category_in: [String!]
-  category_not_in: [String!]
-  category_lt: String
-  category_lte: String
-  category_gt: String
-  category_gte: String
-  category_contains: String
-  category_not_contains: String
-  category_starts_with: String
-  category_not_starts_with: String
-  category_ends_with: String
-  category_not_ends_with: String
-  key: String
-  key_not: String
-  key_in: [String!]
-  key_not_in: [String!]
-  key_lt: String
-  key_lte: String
-  key_gt: String
-  key_gte: String
-  key_contains: String
-  key_not_contains: String
-  key_starts_with: String
-  key_not_starts_with: String
-  key_ends_with: String
-  key_not_ends_with: String
-  value: String
-  value_not: String
-  value_in: [String!]
-  value_not_in: [String!]
-  value_lt: String
-  value_lte: String
-  value_gt: String
-  value_gte: String
-  value_contains: String
-  value_not_contains: String
-  value_starts_with: String
-  value_not_starts_with: String
-  value_ends_with: String
-  value_not_ends_with: String
-  workspace: WorkspaceWhereInput
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  AND: [WorkspacePropertyWhereInput!]
-  OR: [WorkspacePropertyWhereInput!]
-  NOT: [WorkspacePropertyWhereInput!]
-}
-
-input WorkspacePropertyWhereUniqueInput {
-  id: ID
-}
-
 type WorkspaceSubscriptionPayload {
   mutation: MutationType!
   node: Workspace
@@ -3263,7 +2936,6 @@ input WorkspaceUpdateInput {
   description: String
   invites: InviteTokenUpdateManyWithoutWorkspaceInput
   label: String
-  properties: WorkspacePropertyUpdateManyWithoutWorkspaceInput
   roleBindings: RoleBindingUpdateManyWithoutWorkspaceInput
 }
 
@@ -3291,15 +2963,6 @@ input WorkspaceUpdateOneWithoutInvitesInput {
   connect: WorkspaceWhereUniqueInput
 }
 
-input WorkspaceUpdateOneWithoutPropertiesInput {
-  create: WorkspaceCreateWithoutPropertiesInput
-  update: WorkspaceUpdateWithoutPropertiesDataInput
-  upsert: WorkspaceUpsertWithoutPropertiesInput
-  delete: Boolean
-  disconnect: Boolean
-  connect: WorkspaceWhereUniqueInput
-}
-
 input WorkspaceUpdateOneWithoutRoleBindingsInput {
   create: WorkspaceCreateWithoutRoleBindingsInput
   update: WorkspaceUpdateWithoutRoleBindingsDataInput
@@ -3314,7 +2977,6 @@ input WorkspaceUpdateWithoutDeploymentsDataInput {
   description: String
   invites: InviteTokenUpdateManyWithoutWorkspaceInput
   label: String
-  properties: WorkspacePropertyUpdateManyWithoutWorkspaceInput
   roleBindings: RoleBindingUpdateManyWithoutWorkspaceInput
 }
 
@@ -3322,16 +2984,6 @@ input WorkspaceUpdateWithoutInvitesDataInput {
   active: Boolean
   deployments: DeploymentUpdateManyWithoutWorkspaceInput
   description: String
-  label: String
-  properties: WorkspacePropertyUpdateManyWithoutWorkspaceInput
-  roleBindings: RoleBindingUpdateManyWithoutWorkspaceInput
-}
-
-input WorkspaceUpdateWithoutPropertiesDataInput {
-  active: Boolean
-  deployments: DeploymentUpdateManyWithoutWorkspaceInput
-  description: String
-  invites: InviteTokenUpdateManyWithoutWorkspaceInput
   label: String
   roleBindings: RoleBindingUpdateManyWithoutWorkspaceInput
 }
@@ -3342,7 +2994,6 @@ input WorkspaceUpdateWithoutRoleBindingsDataInput {
   description: String
   invites: InviteTokenUpdateManyWithoutWorkspaceInput
   label: String
-  properties: WorkspacePropertyUpdateManyWithoutWorkspaceInput
 }
 
 input WorkspaceUpsertWithoutDeploymentsInput {
@@ -3353,11 +3004,6 @@ input WorkspaceUpsertWithoutDeploymentsInput {
 input WorkspaceUpsertWithoutInvitesInput {
   update: WorkspaceUpdateWithoutInvitesDataInput!
   create: WorkspaceCreateWithoutInvitesInput!
-}
-
-input WorkspaceUpsertWithoutPropertiesInput {
-  update: WorkspaceUpdateWithoutPropertiesDataInput!
-  create: WorkspaceCreateWithoutPropertiesInput!
 }
 
 input WorkspaceUpsertWithoutRoleBindingsInput {
@@ -3416,9 +3062,6 @@ input WorkspaceWhereInput {
   label_not_starts_with: String
   label_ends_with: String
   label_not_ends_with: String
-  properties_every: WorkspacePropertyWhereInput
-  properties_some: WorkspacePropertyWhereInput
-  properties_none: WorkspacePropertyWhereInput
   roleBindings_every: RoleBindingWhereInput
   roleBindings_some: RoleBindingWhereInput
   roleBindings_none: RoleBindingWhereInput

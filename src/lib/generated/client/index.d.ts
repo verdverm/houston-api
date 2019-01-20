@@ -26,7 +26,6 @@ export interface Exists {
   serviceAccount: (where?: ServiceAccountWhereInput) => Promise<boolean>;
   user: (where?: UserWhereInput) => Promise<boolean>;
   workspace: (where?: WorkspaceWhereInput) => Promise<boolean>;
-  workspaceProperty: (where?: WorkspacePropertyWhereInput) => Promise<boolean>;
 }
 
 export interface Node {}
@@ -286,31 +285,6 @@ export interface Prisma {
       last?: Int;
     }
   ) => WorkspaceConnectionPromise;
-  workspaceProperty: (
-    where: WorkspacePropertyWhereUniqueInput
-  ) => WorkspacePropertyPromise;
-  workspaceProperties: (
-    args?: {
-      where?: WorkspacePropertyWhereInput;
-      orderBy?: WorkspacePropertyOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => FragmentableArray<WorkspaceProperty>;
-  workspacePropertiesConnection: (
-    args?: {
-      where?: WorkspacePropertyWhereInput;
-      orderBy?: WorkspacePropertyOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => WorkspacePropertyConnectionPromise;
   node: (args: { id: ID_Output }) => Node;
 
   /**
@@ -541,34 +515,6 @@ export interface Prisma {
   ) => WorkspacePromise;
   deleteWorkspace: (where: WorkspaceWhereUniqueInput) => WorkspacePromise;
   deleteManyWorkspaces: (where?: WorkspaceWhereInput) => BatchPayloadPromise;
-  createWorkspaceProperty: (
-    data: WorkspacePropertyCreateInput
-  ) => WorkspacePropertyPromise;
-  updateWorkspaceProperty: (
-    args: {
-      data: WorkspacePropertyUpdateInput;
-      where: WorkspacePropertyWhereUniqueInput;
-    }
-  ) => WorkspacePropertyPromise;
-  updateManyWorkspaceProperties: (
-    args: {
-      data: WorkspacePropertyUpdateManyMutationInput;
-      where?: WorkspacePropertyWhereInput;
-    }
-  ) => BatchPayloadPromise;
-  upsertWorkspaceProperty: (
-    args: {
-      where: WorkspacePropertyWhereUniqueInput;
-      create: WorkspacePropertyCreateInput;
-      update: WorkspacePropertyUpdateInput;
-    }
-  ) => WorkspacePropertyPromise;
-  deleteWorkspaceProperty: (
-    where: WorkspacePropertyWhereUniqueInput
-  ) => WorkspacePropertyPromise;
-  deleteManyWorkspaceProperties: (
-    where?: WorkspacePropertyWhereInput
-  ) => BatchPayloadPromise;
 
   /**
    * Subscriptions
@@ -608,9 +554,6 @@ export interface Subscription {
   workspace: (
     where?: WorkspaceSubscriptionWhereInput
   ) => WorkspaceSubscriptionPayloadSubscription;
-  workspaceProperty: (
-    where?: WorkspacePropertySubscriptionWhereInput
-  ) => WorkspacePropertySubscriptionPayloadSubscription;
 }
 
 export interface ClientConstructor<T> {
@@ -677,20 +620,6 @@ export type InviteTokenOrderByInput =
   | "email_DESC"
   | "token_ASC"
   | "token_DESC"
-  | "createdAt_ASC"
-  | "createdAt_DESC"
-  | "updatedAt_ASC"
-  | "updatedAt_DESC";
-
-export type WorkspacePropertyOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "category_ASC"
-  | "category_DESC"
-  | "key_ASC"
-  | "key_DESC"
-  | "value_ASC"
-  | "value_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -1071,9 +1000,6 @@ export interface WorkspaceWhereInput {
   label_not_starts_with?: String;
   label_ends_with?: String;
   label_not_ends_with?: String;
-  properties_every?: WorkspacePropertyWhereInput;
-  properties_some?: WorkspacePropertyWhereInput;
-  properties_none?: WorkspacePropertyWhereInput;
   roleBindings_every?: RoleBindingWhereInput;
   roleBindings_some?: RoleBindingWhereInput;
   roleBindings_none?: RoleBindingWhereInput;
@@ -1161,85 +1087,6 @@ export interface InviteTokenWhereInput {
   AND?: InviteTokenWhereInput[] | InviteTokenWhereInput;
   OR?: InviteTokenWhereInput[] | InviteTokenWhereInput;
   NOT?: InviteTokenWhereInput[] | InviteTokenWhereInput;
-}
-
-export interface WorkspacePropertyWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  category?: String;
-  category_not?: String;
-  category_in?: String[] | String;
-  category_not_in?: String[] | String;
-  category_lt?: String;
-  category_lte?: String;
-  category_gt?: String;
-  category_gte?: String;
-  category_contains?: String;
-  category_not_contains?: String;
-  category_starts_with?: String;
-  category_not_starts_with?: String;
-  category_ends_with?: String;
-  category_not_ends_with?: String;
-  key?: String;
-  key_not?: String;
-  key_in?: String[] | String;
-  key_not_in?: String[] | String;
-  key_lt?: String;
-  key_lte?: String;
-  key_gt?: String;
-  key_gte?: String;
-  key_contains?: String;
-  key_not_contains?: String;
-  key_starts_with?: String;
-  key_not_starts_with?: String;
-  key_ends_with?: String;
-  key_not_ends_with?: String;
-  value?: String;
-  value_not?: String;
-  value_in?: String[] | String;
-  value_not_in?: String[] | String;
-  value_lt?: String;
-  value_lte?: String;
-  value_gt?: String;
-  value_gte?: String;
-  value_contains?: String;
-  value_not_contains?: String;
-  value_starts_with?: String;
-  value_not_starts_with?: String;
-  value_ends_with?: String;
-  value_not_ends_with?: String;
-  workspace?: WorkspaceWhereInput;
-  createdAt?: DateTimeInput;
-  createdAt_not?: DateTimeInput;
-  createdAt_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_lt?: DateTimeInput;
-  createdAt_lte?: DateTimeInput;
-  createdAt_gt?: DateTimeInput;
-  createdAt_gte?: DateTimeInput;
-  updatedAt?: DateTimeInput;
-  updatedAt_not?: DateTimeInput;
-  updatedAt_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_lt?: DateTimeInput;
-  updatedAt_lte?: DateTimeInput;
-  updatedAt_gt?: DateTimeInput;
-  updatedAt_gte?: DateTimeInput;
-  AND?: WorkspacePropertyWhereInput[] | WorkspacePropertyWhereInput;
-  OR?: WorkspacePropertyWhereInput[] | WorkspacePropertyWhereInput;
-  NOT?: WorkspacePropertyWhereInput[] | WorkspacePropertyWhereInput;
 }
 
 export interface RoleBindingWhereInput {
@@ -1663,10 +1510,6 @@ export type WorkspaceWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
 }>;
 
-export type WorkspacePropertyWhereUniqueInput = AtLeastOne<{
-  id: ID_Input;
-}>;
-
 export interface DeploymentCreateInput {
   config?: Json;
   properties?: DeploymentPropertyCreateManyWithoutDeploymentInput;
@@ -1705,7 +1548,6 @@ export interface WorkspaceCreateWithoutDeploymentsInput {
   description?: String;
   invites?: InviteTokenCreateManyWithoutWorkspaceInput;
   label?: String;
-  properties?: WorkspacePropertyCreateManyWithoutWorkspaceInput;
   roleBindings?: RoleBindingCreateManyWithoutWorkspaceInput;
 }
 
@@ -1719,21 +1561,6 @@ export interface InviteTokenCreateManyWithoutWorkspaceInput {
 export interface InviteTokenCreateWithoutWorkspaceInput {
   email?: String;
   token?: String;
-}
-
-export interface WorkspacePropertyCreateManyWithoutWorkspaceInput {
-  create?:
-    | WorkspacePropertyCreateWithoutWorkspaceInput[]
-    | WorkspacePropertyCreateWithoutWorkspaceInput;
-  connect?:
-    | WorkspacePropertyWhereUniqueInput[]
-    | WorkspacePropertyWhereUniqueInput;
-}
-
-export interface WorkspacePropertyCreateWithoutWorkspaceInput {
-  category?: String;
-  key: String;
-  value?: String;
 }
 
 export interface RoleBindingCreateManyWithoutWorkspaceInput {
@@ -1799,7 +1626,6 @@ export interface WorkspaceCreateWithoutInvitesInput {
   deployments?: DeploymentCreateManyWithoutWorkspaceInput;
   description?: String;
   label?: String;
-  properties?: WorkspacePropertyCreateManyWithoutWorkspaceInput;
   roleBindings?: RoleBindingCreateManyWithoutWorkspaceInput;
 }
 
@@ -2029,7 +1855,6 @@ export interface WorkspaceUpdateWithoutDeploymentsDataInput {
   description?: String;
   invites?: InviteTokenUpdateManyWithoutWorkspaceInput;
   label?: String;
-  properties?: WorkspacePropertyUpdateManyWithoutWorkspaceInput;
   roleBindings?: RoleBindingUpdateManyWithoutWorkspaceInput;
 }
 
@@ -2140,139 +1965,6 @@ export interface InviteTokenUpdateManyWithWhereNestedInput {
 export interface InviteTokenUpdateManyDataInput {
   email?: String;
   token?: String;
-}
-
-export interface WorkspacePropertyUpdateManyWithoutWorkspaceInput {
-  create?:
-    | WorkspacePropertyCreateWithoutWorkspaceInput[]
-    | WorkspacePropertyCreateWithoutWorkspaceInput;
-  delete?:
-    | WorkspacePropertyWhereUniqueInput[]
-    | WorkspacePropertyWhereUniqueInput;
-  connect?:
-    | WorkspacePropertyWhereUniqueInput[]
-    | WorkspacePropertyWhereUniqueInput;
-  disconnect?:
-    | WorkspacePropertyWhereUniqueInput[]
-    | WorkspacePropertyWhereUniqueInput;
-  update?:
-    | WorkspacePropertyUpdateWithWhereUniqueWithoutWorkspaceInput[]
-    | WorkspacePropertyUpdateWithWhereUniqueWithoutWorkspaceInput;
-  upsert?:
-    | WorkspacePropertyUpsertWithWhereUniqueWithoutWorkspaceInput[]
-    | WorkspacePropertyUpsertWithWhereUniqueWithoutWorkspaceInput;
-  deleteMany?:
-    | WorkspacePropertyScalarWhereInput[]
-    | WorkspacePropertyScalarWhereInput;
-  updateMany?:
-    | WorkspacePropertyUpdateManyWithWhereNestedInput[]
-    | WorkspacePropertyUpdateManyWithWhereNestedInput;
-}
-
-export interface WorkspacePropertyUpdateWithWhereUniqueWithoutWorkspaceInput {
-  where: WorkspacePropertyWhereUniqueInput;
-  data: WorkspacePropertyUpdateWithoutWorkspaceDataInput;
-}
-
-export interface WorkspacePropertyUpdateWithoutWorkspaceDataInput {
-  category?: String;
-  key?: String;
-  value?: String;
-}
-
-export interface WorkspacePropertyUpsertWithWhereUniqueWithoutWorkspaceInput {
-  where: WorkspacePropertyWhereUniqueInput;
-  update: WorkspacePropertyUpdateWithoutWorkspaceDataInput;
-  create: WorkspacePropertyCreateWithoutWorkspaceInput;
-}
-
-export interface WorkspacePropertyScalarWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  category?: String;
-  category_not?: String;
-  category_in?: String[] | String;
-  category_not_in?: String[] | String;
-  category_lt?: String;
-  category_lte?: String;
-  category_gt?: String;
-  category_gte?: String;
-  category_contains?: String;
-  category_not_contains?: String;
-  category_starts_with?: String;
-  category_not_starts_with?: String;
-  category_ends_with?: String;
-  category_not_ends_with?: String;
-  key?: String;
-  key_not?: String;
-  key_in?: String[] | String;
-  key_not_in?: String[] | String;
-  key_lt?: String;
-  key_lte?: String;
-  key_gt?: String;
-  key_gte?: String;
-  key_contains?: String;
-  key_not_contains?: String;
-  key_starts_with?: String;
-  key_not_starts_with?: String;
-  key_ends_with?: String;
-  key_not_ends_with?: String;
-  value?: String;
-  value_not?: String;
-  value_in?: String[] | String;
-  value_not_in?: String[] | String;
-  value_lt?: String;
-  value_lte?: String;
-  value_gt?: String;
-  value_gte?: String;
-  value_contains?: String;
-  value_not_contains?: String;
-  value_starts_with?: String;
-  value_not_starts_with?: String;
-  value_ends_with?: String;
-  value_not_ends_with?: String;
-  createdAt?: DateTimeInput;
-  createdAt_not?: DateTimeInput;
-  createdAt_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_lt?: DateTimeInput;
-  createdAt_lte?: DateTimeInput;
-  createdAt_gt?: DateTimeInput;
-  createdAt_gte?: DateTimeInput;
-  updatedAt?: DateTimeInput;
-  updatedAt_not?: DateTimeInput;
-  updatedAt_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_lt?: DateTimeInput;
-  updatedAt_lte?: DateTimeInput;
-  updatedAt_gt?: DateTimeInput;
-  updatedAt_gte?: DateTimeInput;
-  AND?: WorkspacePropertyScalarWhereInput[] | WorkspacePropertyScalarWhereInput;
-  OR?: WorkspacePropertyScalarWhereInput[] | WorkspacePropertyScalarWhereInput;
-  NOT?: WorkspacePropertyScalarWhereInput[] | WorkspacePropertyScalarWhereInput;
-}
-
-export interface WorkspacePropertyUpdateManyWithWhereNestedInput {
-  where: WorkspacePropertyScalarWhereInput;
-  data: WorkspacePropertyUpdateManyDataInput;
-}
-
-export interface WorkspacePropertyUpdateManyDataInput {
-  category?: String;
-  key?: String;
-  value?: String;
 }
 
 export interface RoleBindingUpdateManyWithoutWorkspaceInput {
@@ -2467,7 +2159,6 @@ export interface WorkspaceUpdateWithoutInvitesDataInput {
   deployments?: DeploymentUpdateManyWithoutWorkspaceInput;
   description?: String;
   label?: String;
-  properties?: WorkspacePropertyUpdateManyWithoutWorkspaceInput;
   roleBindings?: RoleBindingUpdateManyWithoutWorkspaceInput;
 }
 
@@ -3021,7 +2712,6 @@ export interface WorkspaceCreateWithoutRoleBindingsInput {
   description?: String;
   invites?: InviteTokenCreateManyWithoutWorkspaceInput;
   label?: String;
-  properties?: WorkspacePropertyCreateManyWithoutWorkspaceInput;
 }
 
 export interface EmailUpdateInput {
@@ -3098,7 +2788,6 @@ export interface WorkspaceUpdateWithoutRoleBindingsDataInput {
   description?: String;
   invites?: InviteTokenUpdateManyWithoutWorkspaceInput;
   label?: String;
-  properties?: WorkspacePropertyUpdateManyWithoutWorkspaceInput;
 }
 
 export interface WorkspaceUpsertWithoutRoleBindingsInput {
@@ -3370,7 +3059,6 @@ export interface WorkspaceCreateInput {
   description?: String;
   invites?: InviteTokenCreateManyWithoutWorkspaceInput;
   label?: String;
-  properties?: WorkspacePropertyCreateManyWithoutWorkspaceInput;
   roleBindings?: RoleBindingCreateManyWithoutWorkspaceInput;
 }
 
@@ -3380,7 +3068,6 @@ export interface WorkspaceUpdateInput {
   description?: String;
   invites?: InviteTokenUpdateManyWithoutWorkspaceInput;
   label?: String;
-  properties?: WorkspacePropertyUpdateManyWithoutWorkspaceInput;
   roleBindings?: RoleBindingUpdateManyWithoutWorkspaceInput;
 }
 
@@ -3388,63 +3075,6 @@ export interface WorkspaceUpdateManyMutationInput {
   active?: Boolean;
   description?: String;
   label?: String;
-}
-
-export interface WorkspacePropertyCreateInput {
-  category?: String;
-  key: String;
-  value?: String;
-  workspace?: WorkspaceCreateOneWithoutPropertiesInput;
-}
-
-export interface WorkspaceCreateOneWithoutPropertiesInput {
-  create?: WorkspaceCreateWithoutPropertiesInput;
-  connect?: WorkspaceWhereUniqueInput;
-}
-
-export interface WorkspaceCreateWithoutPropertiesInput {
-  active?: Boolean;
-  deployments?: DeploymentCreateManyWithoutWorkspaceInput;
-  description?: String;
-  invites?: InviteTokenCreateManyWithoutWorkspaceInput;
-  label?: String;
-  roleBindings?: RoleBindingCreateManyWithoutWorkspaceInput;
-}
-
-export interface WorkspacePropertyUpdateInput {
-  category?: String;
-  key?: String;
-  value?: String;
-  workspace?: WorkspaceUpdateOneWithoutPropertiesInput;
-}
-
-export interface WorkspaceUpdateOneWithoutPropertiesInput {
-  create?: WorkspaceCreateWithoutPropertiesInput;
-  update?: WorkspaceUpdateWithoutPropertiesDataInput;
-  upsert?: WorkspaceUpsertWithoutPropertiesInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
-  connect?: WorkspaceWhereUniqueInput;
-}
-
-export interface WorkspaceUpdateWithoutPropertiesDataInput {
-  active?: Boolean;
-  deployments?: DeploymentUpdateManyWithoutWorkspaceInput;
-  description?: String;
-  invites?: InviteTokenUpdateManyWithoutWorkspaceInput;
-  label?: String;
-  roleBindings?: RoleBindingUpdateManyWithoutWorkspaceInput;
-}
-
-export interface WorkspaceUpsertWithoutPropertiesInput {
-  update: WorkspaceUpdateWithoutPropertiesDataInput;
-  create: WorkspaceCreateWithoutPropertiesInput;
-}
-
-export interface WorkspacePropertyUpdateManyMutationInput {
-  category?: String;
-  key?: String;
-  value?: String;
 }
 
 export interface DeploymentSubscriptionWhereInput {
@@ -3579,23 +3209,6 @@ export interface WorkspaceSubscriptionWhereInput {
   AND?: WorkspaceSubscriptionWhereInput[] | WorkspaceSubscriptionWhereInput;
   OR?: WorkspaceSubscriptionWhereInput[] | WorkspaceSubscriptionWhereInput;
   NOT?: WorkspaceSubscriptionWhereInput[] | WorkspaceSubscriptionWhereInput;
-}
-
-export interface WorkspacePropertySubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: WorkspacePropertyWhereInput;
-  AND?:
-    | WorkspacePropertySubscriptionWhereInput[]
-    | WorkspacePropertySubscriptionWhereInput;
-  OR?:
-    | WorkspacePropertySubscriptionWhereInput[]
-    | WorkspacePropertySubscriptionWhereInput;
-  NOT?:
-    | WorkspacePropertySubscriptionWhereInput[]
-    | WorkspacePropertySubscriptionWhereInput;
 }
 
 export interface NodeNode {
@@ -3739,17 +3352,6 @@ export interface WorkspacePromise extends Promise<Workspace>, Fragmentable {
     }
   ) => T;
   label: () => Promise<String>;
-  properties: <T = FragmentableArray<WorkspaceProperty>>(
-    args?: {
-      where?: WorkspacePropertyWhereInput;
-      orderBy?: WorkspacePropertyOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
   roleBindings: <T = FragmentableArray<RoleBinding>>(
     args?: {
       where?: RoleBindingWhereInput;
@@ -3794,17 +3396,6 @@ export interface WorkspaceSubscription
     }
   ) => T;
   label: () => Promise<AsyncIterator<String>>;
-  properties: <T = Promise<AsyncIterator<WorkspacePropertySubscription>>>(
-    args?: {
-      where?: WorkspacePropertyWhereInput;
-      orderBy?: WorkspacePropertyOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
   roleBindings: <T = Promise<AsyncIterator<RoleBindingSubscription>>>(
     args?: {
       where?: RoleBindingWhereInput;
@@ -3843,39 +3434,6 @@ export interface InviteTokenSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   email: () => Promise<AsyncIterator<String>>;
   token: () => Promise<AsyncIterator<String>>;
-  workspace: <T = WorkspaceSubscription>() => T;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface WorkspaceProperty {
-  id: ID_Output;
-  category?: String;
-  key: String;
-  value?: String;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-}
-
-export interface WorkspacePropertyPromise
-  extends Promise<WorkspaceProperty>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  category: () => Promise<String>;
-  key: () => Promise<String>;
-  value: () => Promise<String>;
-  workspace: <T = WorkspacePromise>() => T;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface WorkspacePropertySubscription
-  extends Promise<AsyncIterator<WorkspaceProperty>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  category: () => Promise<AsyncIterator<String>>;
-  key: () => Promise<AsyncIterator<String>>;
-  value: () => Promise<AsyncIterator<String>>;
   workspace: <T = WorkspaceSubscription>() => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
@@ -4727,62 +4285,6 @@ export interface AggregateWorkspaceSubscription
   count: () => Promise<AsyncIterator<Int>>;
 }
 
-export interface WorkspacePropertyConnection {
-  pageInfo: PageInfo;
-  edges: WorkspacePropertyEdge[];
-}
-
-export interface WorkspacePropertyConnectionPromise
-  extends Promise<WorkspacePropertyConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<WorkspacePropertyEdge>>() => T;
-  aggregate: <T = AggregateWorkspacePropertyPromise>() => T;
-}
-
-export interface WorkspacePropertyConnectionSubscription
-  extends Promise<AsyncIterator<WorkspacePropertyConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<WorkspacePropertyEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateWorkspacePropertySubscription>() => T;
-}
-
-export interface WorkspacePropertyEdge {
-  node: WorkspaceProperty;
-  cursor: String;
-}
-
-export interface WorkspacePropertyEdgePromise
-  extends Promise<WorkspacePropertyEdge>,
-    Fragmentable {
-  node: <T = WorkspacePropertyPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface WorkspacePropertyEdgeSubscription
-  extends Promise<AsyncIterator<WorkspacePropertyEdge>>,
-    Fragmentable {
-  node: <T = WorkspacePropertySubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateWorkspaceProperty {
-  count: Int;
-}
-
-export interface AggregateWorkspacePropertyPromise
-  extends Promise<AggregateWorkspaceProperty>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateWorkspacePropertySubscription
-  extends Promise<AsyncIterator<AggregateWorkspaceProperty>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
 export interface BatchPayload {
   count: Long;
 }
@@ -5350,62 +4852,6 @@ export interface WorkspacePreviousValuesSubscription
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface WorkspacePropertySubscriptionPayload {
-  mutation: MutationType;
-  node: WorkspaceProperty;
-  updatedFields: String[];
-  previousValues: WorkspacePropertyPreviousValues;
-}
-
-export interface WorkspacePropertySubscriptionPayloadPromise
-  extends Promise<WorkspacePropertySubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = WorkspacePropertyPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = WorkspacePropertyPreviousValuesPromise>() => T;
-}
-
-export interface WorkspacePropertySubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<WorkspacePropertySubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = WorkspacePropertySubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = WorkspacePropertyPreviousValuesSubscription>() => T;
-}
-
-export interface WorkspacePropertyPreviousValues {
-  id: ID_Output;
-  category?: String;
-  key: String;
-  value?: String;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-}
-
-export interface WorkspacePropertyPreviousValuesPromise
-  extends Promise<WorkspacePropertyPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  category: () => Promise<String>;
-  key: () => Promise<String>;
-  value: () => Promise<String>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface WorkspacePropertyPreviousValuesSubscription
-  extends Promise<AsyncIterator<WorkspacePropertyPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  category: () => Promise<AsyncIterator<String>>;
-  key: () => Promise<AsyncIterator<String>>;
-  value: () => Promise<AsyncIterator<String>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
 /*
 The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
 */
@@ -5488,10 +4934,6 @@ export const models: Model[] = [
   },
   {
     name: "Workspace",
-    embedded: false
-  },
-  {
-    name: "WorkspaceProperty",
     embedded: false
   }
 ];
