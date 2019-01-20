@@ -12,9 +12,9 @@ router.use("/alerts", alerts);
 router.use("/healthz", healthz);
 router.use("/oauth_redirect", oauthRedirect);
 router.use("/oauth", oauth);
-// registry
-// authorization
-// registry_events
+// TODO: Implement /registry.
+// TODO: Implement /authorization.
+// TODO: Implement /registry_events.
 
 // Export the v1 router.
 export default router;
