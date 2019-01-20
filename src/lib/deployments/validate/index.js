@@ -22,5 +22,6 @@ export default async function validate(workspaceId, args, deploymentId) {
   validateProperties(args.properties);
 
   // Ensure this deployment label does not exist.
-  await validateExistence(workspaceId, args.label, deploymentId);
+  args.label &&
+    (await validateExistence(workspaceId, args.label, deploymentId));
 }

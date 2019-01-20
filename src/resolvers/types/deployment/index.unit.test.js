@@ -36,10 +36,8 @@ describe("Deployoment", () => {
   });
 
   test("properties correctly returns properties", async () => {
-    const parent = {
-      properties: [{ key: "extra_au", value: "50" }]
-    };
-    const props = await properties(parent);
-    expect(props).toHaveProperty("extra_au", 50);
+    const parent = { extraAu: 50 };
+    const ret = await properties(parent);
+    expect(ret).toHaveProperty("extra_au", 50);
   });
 });

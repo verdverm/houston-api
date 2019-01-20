@@ -4,13 +4,17 @@ import {
   envArrayToObject,
   generateHelmValues,
   limitRange,
-  constraints
+  constraints,
+  mapPropertiesToDeployment,
+  mapDeploymentToProperties
 } from "./index";
 import { generateReleaseName } from "deployments/naming";
 import casual from "casual";
 import {
   AIRFLOW_EXECUTOR_LOCAL,
-  DEPLOYMENT_PROPERTY_EXTRA_AU
+  DEPLOYMENT_PROPERTY_EXTRA_AU,
+  DEPLOYMENT_PROPERTY_COMPONENT_VERSION,
+  DEPLOYMENT_PROPERTY_ALERT_EMAILS
 } from "constants";
 
 describe("generateHelmValues", () => {
@@ -192,5 +196,50 @@ describe("envObjectToArary", () => {
     // Run the transformation.
     const arr = envObjectToArray();
     expect(arr).toEqual([]);
+  });
+});
+
+describe("mapPropertiesToDeployment", () => {
+  test("correctly creates a new object with new keys", () => {
+    // Create a test object.
+    const email = casual.email;
+
+    const obj = {
+      [DEPLOYMENT_PROPERTY_EXTRA_AU]: 10,
+      [DEPLOYMENT_PROPERTY_COMPONENT_VERSION]: "10.0.1",
+      [DEPLOYMENT_PROPERTY_ALERT_EMAILS]: JSON.stringify([email])
+    };
+
+    // Run the transformation.
+    const renamed = mapPropertiesToDeployment(obj);
+
+    expect(renamed.extraAu).toEqual(obj[DEPLOYMENT_PROPERTY_EXTRA_AU]);
+    expect(renamed.airflowVersion).toEqual(
+      obj[DEPLOYMENT_PROPERTY_COMPONENT_VERSION]
+    );
+
+    expect(renamed.alertEmails).toHaveProperty("set");
+    expect(renamed.alertEmails.set).toHaveLength(1);
+    expect(renamed.alertEmails.set[0]).toEqual(email);
+  });
+});
+
+describe("mapDeploymentToProperties", () => {
+  test("correctly creates a new object with legacy keys", () => {
+    // Create a test object.
+    const obj = {
+      extraAu: 10,
+      airflowVersion: "10.0.1",
+      alertEmails: [casual.email]
+    };
+
+    // Run the transformation.
+    const renamed = mapDeploymentToProperties(obj);
+
+    expect(renamed[DEPLOYMENT_PROPERTY_EXTRA_AU]).toEqual(obj.extraAu);
+    expect(renamed[DEPLOYMENT_PROPERTY_COMPONENT_VERSION]).toEqual(
+      obj.airflowVersion
+    );
+    expect(renamed[DEPLOYMENT_PROPERTY_ALERT_EMAILS]).toEqual(obj.alertEmails);
   });
 });

@@ -1,7 +1,10 @@
 import fragment from "./fragment";
 import validate from "deployments/validate";
-import { envArrayToObject, generateHelmValues } from "deployments/config";
-import { combinePropsForUpdate, propertiesObjectToArray } from "utilities";
+import {
+  envArrayToObject,
+  generateHelmValues,
+  mapPropertiesToDeployment
+} from "deployments/config";
 import {
   generateEnvironmentSecretName,
   generateNamespace
@@ -20,7 +23,7 @@ export default async function updateDeployment(parent, args, ctx, info) {
   // Get the deployment first.
   const deployment = await ctx.db.query.deployment(
     { where: { id: args.deploymentUuid } },
-    `{ releaseName, properties { id, key, value }, workspace { id } }`
+    `{ releaseName, workspace { id } }`
   );
 
   // This should be directly defined in the schema, rather than nested
@@ -49,10 +52,7 @@ export default async function updateDeployment(parent, args, ctx, info) {
   const where = { id: args.deploymentUuid };
   const data = merge({}, updatablePayload, {
     config: mungedArgs.config,
-    properties: combinePropsForUpdate(
-      deployment.properties,
-      propertiesObjectToArray(mungedArgs.properties)
-    )
+    ...mapPropertiesToDeployment(mungedArgs.properties)
   });
 
   // Update the deployment in the database.

@@ -82,6 +82,7 @@ type Group {
   updatedAt: DateTime!
 }
 
+# This only exists to support the legacy API.
 type UserProp {
   key: String
   value: String
@@ -138,6 +139,8 @@ type DeploymentUrl {
   url: String
 }
 
+# Deployment properties are only to support the legacy API.
+# Properties have been moved to top-level fields on Deployment internally.
 type Deployment {
   id: ID!
   uuid: Uuid @alias(field: "id")

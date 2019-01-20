@@ -108,7 +108,6 @@ describe("createDeployment", () => {
       label: casual.word,
       properties: {
         [DEPLOYMENT_PROPERTY_EXTRA_AU]: casual.integer(0, 300),
-        [DEPLOYMENT_PROPERTY_ALERT_EMAILS]: [casual.email],
         [DEPLOYMENT_PROPERTY_COMPONENT_VERSION]: "7.0"
       }
     };

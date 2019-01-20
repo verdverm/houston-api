@@ -15,9 +15,6 @@ export type AtLeastOne<T, U = { [K in keyof T]: Pick<T, K> }> = Partial<T> &
 
 export interface Exists {
   deployment: (where?: DeploymentWhereInput) => Promise<boolean>;
-  deploymentProperty: (
-    where?: DeploymentPropertyWhereInput
-  ) => Promise<boolean>;
   email: (where?: EmailWhereInput) => Promise<boolean>;
   inviteToken: (where?: InviteTokenWhereInput) => Promise<boolean>;
   localCredential: (where?: LocalCredentialWhereInput) => Promise<boolean>;
@@ -70,31 +67,6 @@ export interface Prisma {
       last?: Int;
     }
   ) => DeploymentConnectionPromise;
-  deploymentProperty: (
-    where: DeploymentPropertyWhereUniqueInput
-  ) => DeploymentPropertyPromise;
-  deploymentProperties: (
-    args?: {
-      where?: DeploymentPropertyWhereInput;
-      orderBy?: DeploymentPropertyOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => FragmentableArray<DeploymentProperty>;
-  deploymentPropertiesConnection: (
-    args?: {
-      where?: DeploymentPropertyWhereInput;
-      orderBy?: DeploymentPropertyOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => DeploymentPropertyConnectionPromise;
   email: (where: EmailWhereUniqueInput) => EmailPromise;
   emails: (
     args?: {
@@ -310,34 +282,6 @@ export interface Prisma {
   ) => DeploymentPromise;
   deleteDeployment: (where: DeploymentWhereUniqueInput) => DeploymentPromise;
   deleteManyDeployments: (where?: DeploymentWhereInput) => BatchPayloadPromise;
-  createDeploymentProperty: (
-    data: DeploymentPropertyCreateInput
-  ) => DeploymentPropertyPromise;
-  updateDeploymentProperty: (
-    args: {
-      data: DeploymentPropertyUpdateInput;
-      where: DeploymentPropertyWhereUniqueInput;
-    }
-  ) => DeploymentPropertyPromise;
-  updateManyDeploymentProperties: (
-    args: {
-      data: DeploymentPropertyUpdateManyMutationInput;
-      where?: DeploymentPropertyWhereInput;
-    }
-  ) => BatchPayloadPromise;
-  upsertDeploymentProperty: (
-    args: {
-      where: DeploymentPropertyWhereUniqueInput;
-      create: DeploymentPropertyCreateInput;
-      update: DeploymentPropertyUpdateInput;
-    }
-  ) => DeploymentPropertyPromise;
-  deleteDeploymentProperty: (
-    where: DeploymentPropertyWhereUniqueInput
-  ) => DeploymentPropertyPromise;
-  deleteManyDeploymentProperties: (
-    where?: DeploymentPropertyWhereInput
-  ) => BatchPayloadPromise;
   createEmail: (data: EmailCreateInput) => EmailPromise;
   updateEmail: (
     args: { data: EmailUpdateInput; where: EmailWhereUniqueInput }
@@ -527,9 +471,6 @@ export interface Subscription {
   deployment: (
     where?: DeploymentSubscriptionWhereInput
   ) => DeploymentSubscriptionPayloadSubscription;
-  deploymentProperty: (
-    where?: DeploymentPropertySubscriptionWhereInput
-  ) => DeploymentPropertySubscriptionPayloadSubscription;
   email: (
     where?: EmailSubscriptionWhereInput
   ) => EmailSubscriptionPayloadSubscription;
@@ -575,20 +516,6 @@ export type Role =
   | "SYSTEM_EDITOR"
   | "SYSTEM_VIEWER";
 
-export type DeploymentPropertyOrderByInput =
-  | "id_ASC"
-  | "id_DESC"
-  | "category_ASC"
-  | "category_DESC"
-  | "key_ASC"
-  | "key_DESC"
-  | "value_ASC"
-  | "value_DESC"
-  | "createdAt_ASC"
-  | "createdAt_DESC"
-  | "updatedAt_ASC"
-  | "updatedAt_DESC";
-
 export type DeploymentOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -602,12 +529,12 @@ export type DeploymentOrderByInput =
   | "registryPassword_DESC"
   | "releaseName_ASC"
   | "releaseName_DESC"
-  | "status_ASC"
-  | "status_DESC"
-  | "type_ASC"
-  | "type_DESC"
   | "version_ASC"
   | "version_DESC"
+  | "extraAu_ASC"
+  | "extraAu_DESC"
+  | "airflowVersion_ASC"
+  | "airflowVersion_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -732,85 +659,6 @@ export type DeploymentWhereUniqueInput = AtLeastOne<{
   releaseName?: String;
 }>;
 
-export interface DeploymentPropertyWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  category?: String;
-  category_not?: String;
-  category_in?: String[] | String;
-  category_not_in?: String[] | String;
-  category_lt?: String;
-  category_lte?: String;
-  category_gt?: String;
-  category_gte?: String;
-  category_contains?: String;
-  category_not_contains?: String;
-  category_starts_with?: String;
-  category_not_starts_with?: String;
-  category_ends_with?: String;
-  category_not_ends_with?: String;
-  deployment?: DeploymentWhereInput;
-  key?: String;
-  key_not?: String;
-  key_in?: String[] | String;
-  key_not_in?: String[] | String;
-  key_lt?: String;
-  key_lte?: String;
-  key_gt?: String;
-  key_gte?: String;
-  key_contains?: String;
-  key_not_contains?: String;
-  key_starts_with?: String;
-  key_not_starts_with?: String;
-  key_ends_with?: String;
-  key_not_ends_with?: String;
-  value?: String;
-  value_not?: String;
-  value_in?: String[] | String;
-  value_not_in?: String[] | String;
-  value_lt?: String;
-  value_lte?: String;
-  value_gt?: String;
-  value_gte?: String;
-  value_contains?: String;
-  value_not_contains?: String;
-  value_starts_with?: String;
-  value_not_starts_with?: String;
-  value_ends_with?: String;
-  value_not_ends_with?: String;
-  createdAt?: DateTimeInput;
-  createdAt_not?: DateTimeInput;
-  createdAt_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_lt?: DateTimeInput;
-  createdAt_lte?: DateTimeInput;
-  createdAt_gt?: DateTimeInput;
-  createdAt_gte?: DateTimeInput;
-  updatedAt?: DateTimeInput;
-  updatedAt_not?: DateTimeInput;
-  updatedAt_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_lt?: DateTimeInput;
-  updatedAt_lte?: DateTimeInput;
-  updatedAt_gt?: DateTimeInput;
-  updatedAt_gte?: DateTimeInput;
-  AND?: DeploymentPropertyWhereInput[] | DeploymentPropertyWhereInput;
-  OR?: DeploymentPropertyWhereInput[] | DeploymentPropertyWhereInput;
-  NOT?: DeploymentPropertyWhereInput[] | DeploymentPropertyWhereInput;
-}
-
 export interface DeploymentWhereInput {
   id?: ID_Input;
   id_not?: ID_Input;
@@ -826,9 +674,6 @@ export interface DeploymentWhereInput {
   id_not_starts_with?: ID_Input;
   id_ends_with?: ID_Input;
   id_not_ends_with?: ID_Input;
-  properties_every?: DeploymentPropertyWhereInput;
-  properties_some?: DeploymentPropertyWhereInput;
-  properties_none?: DeploymentPropertyWhereInput;
   description?: String;
   description_not?: String;
   description_in?: String[] | String;
@@ -885,34 +730,6 @@ export interface DeploymentWhereInput {
   releaseName_not_starts_with?: String;
   releaseName_ends_with?: String;
   releaseName_not_ends_with?: String;
-  status?: String;
-  status_not?: String;
-  status_in?: String[] | String;
-  status_not_in?: String[] | String;
-  status_lt?: String;
-  status_lte?: String;
-  status_gt?: String;
-  status_gte?: String;
-  status_contains?: String;
-  status_not_contains?: String;
-  status_starts_with?: String;
-  status_not_starts_with?: String;
-  status_ends_with?: String;
-  status_not_ends_with?: String;
-  type?: String;
-  type_not?: String;
-  type_in?: String[] | String;
-  type_not_in?: String[] | String;
-  type_lt?: String;
-  type_lte?: String;
-  type_gt?: String;
-  type_gte?: String;
-  type_contains?: String;
-  type_not_contains?: String;
-  type_starts_with?: String;
-  type_not_starts_with?: String;
-  type_ends_with?: String;
-  type_not_ends_with?: String;
   version?: String;
   version_not?: String;
   version_in?: String[] | String;
@@ -927,6 +744,28 @@ export interface DeploymentWhereInput {
   version_not_starts_with?: String;
   version_ends_with?: String;
   version_not_ends_with?: String;
+  extraAu?: Int;
+  extraAu_not?: Int;
+  extraAu_in?: Int[] | Int;
+  extraAu_not_in?: Int[] | Int;
+  extraAu_lt?: Int;
+  extraAu_lte?: Int;
+  extraAu_gt?: Int;
+  extraAu_gte?: Int;
+  airflowVersion?: String;
+  airflowVersion_not?: String;
+  airflowVersion_in?: String[] | String;
+  airflowVersion_not_in?: String[] | String;
+  airflowVersion_lt?: String;
+  airflowVersion_lte?: String;
+  airflowVersion_gt?: String;
+  airflowVersion_gte?: String;
+  airflowVersion_contains?: String;
+  airflowVersion_not_contains?: String;
+  airflowVersion_starts_with?: String;
+  airflowVersion_not_starts_with?: String;
+  airflowVersion_ends_with?: String;
+  airflowVersion_not_ends_with?: String;
   workspace?: WorkspaceWhereInput;
   createdAt?: DateTimeInput;
   createdAt_not?: DateTimeInput;
@@ -1470,10 +1309,6 @@ export interface ServiceAccountWhereInput {
   NOT?: ServiceAccountWhereInput[] | ServiceAccountWhereInput;
 }
 
-export type DeploymentPropertyWhereUniqueInput = AtLeastOne<{
-  id: ID_Input;
-}>;
-
 export type EmailWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
   address?: String;
@@ -1512,30 +1347,19 @@ export type WorkspaceWhereUniqueInput = AtLeastOne<{
 
 export interface DeploymentCreateInput {
   config?: Json;
-  properties?: DeploymentPropertyCreateManyWithoutDeploymentInput;
   description?: String;
   label?: String;
   registryPassword?: String;
   releaseName?: String;
-  status?: String;
-  type?: String;
   version?: String;
+  extraAu?: Int;
+  airflowVersion?: String;
+  alertEmails?: DeploymentCreatealertEmailsInput;
   workspace?: WorkspaceCreateOneWithoutDeploymentsInput;
 }
 
-export interface DeploymentPropertyCreateManyWithoutDeploymentInput {
-  create?:
-    | DeploymentPropertyCreateWithoutDeploymentInput[]
-    | DeploymentPropertyCreateWithoutDeploymentInput;
-  connect?:
-    | DeploymentPropertyWhereUniqueInput[]
-    | DeploymentPropertyWhereUniqueInput;
-}
-
-export interface DeploymentPropertyCreateWithoutDeploymentInput {
-  category?: String;
-  key: String;
-  value?: String;
+export interface DeploymentCreatealertEmailsInput {
+  set?: String[] | String;
 }
 
 export interface WorkspaceCreateOneWithoutDeploymentsInput {
@@ -1638,14 +1462,14 @@ export interface DeploymentCreateManyWithoutWorkspaceInput {
 
 export interface DeploymentCreateWithoutWorkspaceInput {
   config?: Json;
-  properties?: DeploymentPropertyCreateManyWithoutDeploymentInput;
   description?: String;
   label?: String;
   registryPassword?: String;
   releaseName?: String;
-  status?: String;
-  type?: String;
   version?: String;
+  extraAu?: Int;
+  airflowVersion?: String;
+  alertEmails?: DeploymentCreatealertEmailsInput;
 }
 
 export interface LocalCredentialCreateOneWithoutUserInput {
@@ -1691,154 +1515,19 @@ export interface DeploymentCreateOneInput {
 
 export interface DeploymentUpdateInput {
   config?: Json;
-  properties?: DeploymentPropertyUpdateManyWithoutDeploymentInput;
   description?: String;
   label?: String;
   registryPassword?: String;
   releaseName?: String;
-  status?: String;
-  type?: String;
   version?: String;
+  extraAu?: Int;
+  airflowVersion?: String;
+  alertEmails?: DeploymentUpdatealertEmailsInput;
   workspace?: WorkspaceUpdateOneWithoutDeploymentsInput;
 }
 
-export interface DeploymentPropertyUpdateManyWithoutDeploymentInput {
-  create?:
-    | DeploymentPropertyCreateWithoutDeploymentInput[]
-    | DeploymentPropertyCreateWithoutDeploymentInput;
-  delete?:
-    | DeploymentPropertyWhereUniqueInput[]
-    | DeploymentPropertyWhereUniqueInput;
-  connect?:
-    | DeploymentPropertyWhereUniqueInput[]
-    | DeploymentPropertyWhereUniqueInput;
-  disconnect?:
-    | DeploymentPropertyWhereUniqueInput[]
-    | DeploymentPropertyWhereUniqueInput;
-  update?:
-    | DeploymentPropertyUpdateWithWhereUniqueWithoutDeploymentInput[]
-    | DeploymentPropertyUpdateWithWhereUniqueWithoutDeploymentInput;
-  upsert?:
-    | DeploymentPropertyUpsertWithWhereUniqueWithoutDeploymentInput[]
-    | DeploymentPropertyUpsertWithWhereUniqueWithoutDeploymentInput;
-  deleteMany?:
-    | DeploymentPropertyScalarWhereInput[]
-    | DeploymentPropertyScalarWhereInput;
-  updateMany?:
-    | DeploymentPropertyUpdateManyWithWhereNestedInput[]
-    | DeploymentPropertyUpdateManyWithWhereNestedInput;
-}
-
-export interface DeploymentPropertyUpdateWithWhereUniqueWithoutDeploymentInput {
-  where: DeploymentPropertyWhereUniqueInput;
-  data: DeploymentPropertyUpdateWithoutDeploymentDataInput;
-}
-
-export interface DeploymentPropertyUpdateWithoutDeploymentDataInput {
-  category?: String;
-  key?: String;
-  value?: String;
-}
-
-export interface DeploymentPropertyUpsertWithWhereUniqueWithoutDeploymentInput {
-  where: DeploymentPropertyWhereUniqueInput;
-  update: DeploymentPropertyUpdateWithoutDeploymentDataInput;
-  create: DeploymentPropertyCreateWithoutDeploymentInput;
-}
-
-export interface DeploymentPropertyScalarWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  category?: String;
-  category_not?: String;
-  category_in?: String[] | String;
-  category_not_in?: String[] | String;
-  category_lt?: String;
-  category_lte?: String;
-  category_gt?: String;
-  category_gte?: String;
-  category_contains?: String;
-  category_not_contains?: String;
-  category_starts_with?: String;
-  category_not_starts_with?: String;
-  category_ends_with?: String;
-  category_not_ends_with?: String;
-  key?: String;
-  key_not?: String;
-  key_in?: String[] | String;
-  key_not_in?: String[] | String;
-  key_lt?: String;
-  key_lte?: String;
-  key_gt?: String;
-  key_gte?: String;
-  key_contains?: String;
-  key_not_contains?: String;
-  key_starts_with?: String;
-  key_not_starts_with?: String;
-  key_ends_with?: String;
-  key_not_ends_with?: String;
-  value?: String;
-  value_not?: String;
-  value_in?: String[] | String;
-  value_not_in?: String[] | String;
-  value_lt?: String;
-  value_lte?: String;
-  value_gt?: String;
-  value_gte?: String;
-  value_contains?: String;
-  value_not_contains?: String;
-  value_starts_with?: String;
-  value_not_starts_with?: String;
-  value_ends_with?: String;
-  value_not_ends_with?: String;
-  createdAt?: DateTimeInput;
-  createdAt_not?: DateTimeInput;
-  createdAt_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_lt?: DateTimeInput;
-  createdAt_lte?: DateTimeInput;
-  createdAt_gt?: DateTimeInput;
-  createdAt_gte?: DateTimeInput;
-  updatedAt?: DateTimeInput;
-  updatedAt_not?: DateTimeInput;
-  updatedAt_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_lt?: DateTimeInput;
-  updatedAt_lte?: DateTimeInput;
-  updatedAt_gt?: DateTimeInput;
-  updatedAt_gte?: DateTimeInput;
-  AND?:
-    | DeploymentPropertyScalarWhereInput[]
-    | DeploymentPropertyScalarWhereInput;
-  OR?:
-    | DeploymentPropertyScalarWhereInput[]
-    | DeploymentPropertyScalarWhereInput;
-  NOT?:
-    | DeploymentPropertyScalarWhereInput[]
-    | DeploymentPropertyScalarWhereInput;
-}
-
-export interface DeploymentPropertyUpdateManyWithWhereNestedInput {
-  where: DeploymentPropertyScalarWhereInput;
-  data: DeploymentPropertyUpdateManyDataInput;
-}
-
-export interface DeploymentPropertyUpdateManyDataInput {
-  category?: String;
-  key?: String;
-  value?: String;
+export interface DeploymentUpdatealertEmailsInput {
+  set?: String[] | String;
 }
 
 export interface WorkspaceUpdateOneWithoutDeploymentsInput {
@@ -2188,14 +1877,14 @@ export interface DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput {
 
 export interface DeploymentUpdateWithoutWorkspaceDataInput {
   config?: Json;
-  properties?: DeploymentPropertyUpdateManyWithoutDeploymentInput;
   description?: String;
   label?: String;
   registryPassword?: String;
   releaseName?: String;
-  status?: String;
-  type?: String;
   version?: String;
+  extraAu?: Int;
+  airflowVersion?: String;
+  alertEmails?: DeploymentUpdatealertEmailsInput;
 }
 
 export interface DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput {
@@ -2275,34 +1964,6 @@ export interface DeploymentScalarWhereInput {
   releaseName_not_starts_with?: String;
   releaseName_ends_with?: String;
   releaseName_not_ends_with?: String;
-  status?: String;
-  status_not?: String;
-  status_in?: String[] | String;
-  status_not_in?: String[] | String;
-  status_lt?: String;
-  status_lte?: String;
-  status_gt?: String;
-  status_gte?: String;
-  status_contains?: String;
-  status_not_contains?: String;
-  status_starts_with?: String;
-  status_not_starts_with?: String;
-  status_ends_with?: String;
-  status_not_ends_with?: String;
-  type?: String;
-  type_not?: String;
-  type_in?: String[] | String;
-  type_not_in?: String[] | String;
-  type_lt?: String;
-  type_lte?: String;
-  type_gt?: String;
-  type_gte?: String;
-  type_contains?: String;
-  type_not_contains?: String;
-  type_starts_with?: String;
-  type_not_starts_with?: String;
-  type_ends_with?: String;
-  type_not_ends_with?: String;
   version?: String;
   version_not?: String;
   version_in?: String[] | String;
@@ -2317,6 +1978,28 @@ export interface DeploymentScalarWhereInput {
   version_not_starts_with?: String;
   version_ends_with?: String;
   version_not_ends_with?: String;
+  extraAu?: Int;
+  extraAu_not?: Int;
+  extraAu_in?: Int[] | Int;
+  extraAu_not_in?: Int[] | Int;
+  extraAu_lt?: Int;
+  extraAu_lte?: Int;
+  extraAu_gt?: Int;
+  extraAu_gte?: Int;
+  airflowVersion?: String;
+  airflowVersion_not?: String;
+  airflowVersion_in?: String[] | String;
+  airflowVersion_not_in?: String[] | String;
+  airflowVersion_lt?: String;
+  airflowVersion_lte?: String;
+  airflowVersion_gt?: String;
+  airflowVersion_gte?: String;
+  airflowVersion_contains?: String;
+  airflowVersion_not_contains?: String;
+  airflowVersion_starts_with?: String;
+  airflowVersion_not_starts_with?: String;
+  airflowVersion_ends_with?: String;
+  airflowVersion_not_ends_with?: String;
   createdAt?: DateTimeInput;
   createdAt_not?: DateTimeInput;
   createdAt_in?: DateTimeInput[] | DateTimeInput;
@@ -2349,9 +2032,10 @@ export interface DeploymentUpdateManyDataInput {
   label?: String;
   registryPassword?: String;
   releaseName?: String;
-  status?: String;
-  type?: String;
   version?: String;
+  extraAu?: Int;
+  airflowVersion?: String;
+  alertEmails?: DeploymentUpdatealertEmailsInput;
 }
 
 export interface WorkspaceUpsertWithoutInvitesInput {
@@ -2529,14 +2213,14 @@ export interface DeploymentUpdateOneInput {
 
 export interface DeploymentUpdateDataInput {
   config?: Json;
-  properties?: DeploymentPropertyUpdateManyWithoutDeploymentInput;
   description?: String;
   label?: String;
   registryPassword?: String;
   releaseName?: String;
-  status?: String;
-  type?: String;
   version?: String;
+  extraAu?: Int;
+  airflowVersion?: String;
+  alertEmails?: DeploymentUpdatealertEmailsInput;
   workspace?: WorkspaceUpdateOneWithoutDeploymentsInput;
 }
 
@@ -2595,72 +2279,10 @@ export interface DeploymentUpdateManyMutationInput {
   label?: String;
   registryPassword?: String;
   releaseName?: String;
-  status?: String;
-  type?: String;
   version?: String;
-}
-
-export interface DeploymentPropertyCreateInput {
-  category?: String;
-  deployment?: DeploymentCreateOneWithoutPropertiesInput;
-  key: String;
-  value?: String;
-}
-
-export interface DeploymentCreateOneWithoutPropertiesInput {
-  create?: DeploymentCreateWithoutPropertiesInput;
-  connect?: DeploymentWhereUniqueInput;
-}
-
-export interface DeploymentCreateWithoutPropertiesInput {
-  config?: Json;
-  description?: String;
-  label?: String;
-  registryPassword?: String;
-  releaseName?: String;
-  status?: String;
-  type?: String;
-  version?: String;
-  workspace?: WorkspaceCreateOneWithoutDeploymentsInput;
-}
-
-export interface DeploymentPropertyUpdateInput {
-  category?: String;
-  deployment?: DeploymentUpdateOneWithoutPropertiesInput;
-  key?: String;
-  value?: String;
-}
-
-export interface DeploymentUpdateOneWithoutPropertiesInput {
-  create?: DeploymentCreateWithoutPropertiesInput;
-  update?: DeploymentUpdateWithoutPropertiesDataInput;
-  upsert?: DeploymentUpsertWithoutPropertiesInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
-  connect?: DeploymentWhereUniqueInput;
-}
-
-export interface DeploymentUpdateWithoutPropertiesDataInput {
-  config?: Json;
-  description?: String;
-  label?: String;
-  registryPassword?: String;
-  releaseName?: String;
-  status?: String;
-  type?: String;
-  version?: String;
-  workspace?: WorkspaceUpdateOneWithoutDeploymentsInput;
-}
-
-export interface DeploymentUpsertWithoutPropertiesInput {
-  update: DeploymentUpdateWithoutPropertiesDataInput;
-  create: DeploymentCreateWithoutPropertiesInput;
-}
-
-export interface DeploymentPropertyUpdateManyMutationInput {
-  category?: String;
-  key?: String;
-  value?: String;
+  extraAu?: Int;
+  airflowVersion?: String;
+  alertEmails?: DeploymentUpdatealertEmailsInput;
 }
 
 export interface EmailCreateInput {
@@ -3088,23 +2710,6 @@ export interface DeploymentSubscriptionWhereInput {
   NOT?: DeploymentSubscriptionWhereInput[] | DeploymentSubscriptionWhereInput;
 }
 
-export interface DeploymentPropertySubscriptionWhereInput {
-  mutation_in?: MutationType[] | MutationType;
-  updatedFields_contains?: String;
-  updatedFields_contains_every?: String[] | String;
-  updatedFields_contains_some?: String[] | String;
-  node?: DeploymentPropertyWhereInput;
-  AND?:
-    | DeploymentPropertySubscriptionWhereInput[]
-    | DeploymentPropertySubscriptionWhereInput;
-  OR?:
-    | DeploymentPropertySubscriptionWhereInput[]
-    | DeploymentPropertySubscriptionWhereInput;
-  NOT?:
-    | DeploymentPropertySubscriptionWhereInput[]
-    | DeploymentPropertySubscriptionWhereInput;
-}
-
 export interface EmailSubscriptionWhereInput {
   mutation_in?: MutationType[] | MutationType;
   updatedFields_contains?: String;
@@ -3222,9 +2827,10 @@ export interface Deployment {
   label?: String;
   registryPassword?: String;
   releaseName?: String;
-  status?: String;
-  type?: String;
   version?: String;
+  extraAu?: Int;
+  airflowVersion?: String;
+  alertEmails: String[];
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -3232,24 +2838,14 @@ export interface Deployment {
 export interface DeploymentPromise extends Promise<Deployment>, Fragmentable {
   id: () => Promise<ID_Output>;
   config: () => Promise<Json>;
-  properties: <T = FragmentableArray<DeploymentProperty>>(
-    args?: {
-      where?: DeploymentPropertyWhereInput;
-      orderBy?: DeploymentPropertyOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
   description: () => Promise<String>;
   label: () => Promise<String>;
   registryPassword: () => Promise<String>;
   releaseName: () => Promise<String>;
-  status: () => Promise<String>;
-  type: () => Promise<String>;
   version: () => Promise<String>;
+  extraAu: () => Promise<Int>;
+  airflowVersion: () => Promise<String>;
+  alertEmails: () => Promise<String[]>;
   workspace: <T = WorkspacePromise>() => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
@@ -3260,58 +2856,15 @@ export interface DeploymentSubscription
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   config: () => Promise<AsyncIterator<Json>>;
-  properties: <T = Promise<AsyncIterator<DeploymentPropertySubscription>>>(
-    args?: {
-      where?: DeploymentPropertyWhereInput;
-      orderBy?: DeploymentPropertyOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
   description: () => Promise<AsyncIterator<String>>;
   label: () => Promise<AsyncIterator<String>>;
   registryPassword: () => Promise<AsyncIterator<String>>;
   releaseName: () => Promise<AsyncIterator<String>>;
-  status: () => Promise<AsyncIterator<String>>;
-  type: () => Promise<AsyncIterator<String>>;
   version: () => Promise<AsyncIterator<String>>;
+  extraAu: () => Promise<AsyncIterator<Int>>;
+  airflowVersion: () => Promise<AsyncIterator<String>>;
+  alertEmails: () => Promise<AsyncIterator<String[]>>;
   workspace: <T = WorkspaceSubscription>() => T;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface DeploymentProperty {
-  id: ID_Output;
-  category?: String;
-  key: String;
-  value?: String;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-}
-
-export interface DeploymentPropertyPromise
-  extends Promise<DeploymentProperty>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  category: () => Promise<String>;
-  deployment: <T = DeploymentPromise>() => T;
-  key: () => Promise<String>;
-  value: () => Promise<String>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface DeploymentPropertySubscription
-  extends Promise<AsyncIterator<DeploymentProperty>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  category: () => Promise<AsyncIterator<String>>;
-  deployment: <T = DeploymentSubscription>() => T;
-  key: () => Promise<AsyncIterator<String>>;
-  value: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -3779,64 +3332,6 @@ export interface AggregateDeploymentPromise
 
 export interface AggregateDeploymentSubscription
   extends Promise<AsyncIterator<AggregateDeployment>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface DeploymentPropertyConnection {
-  pageInfo: PageInfo;
-  edges: DeploymentPropertyEdge[];
-}
-
-export interface DeploymentPropertyConnectionPromise
-  extends Promise<DeploymentPropertyConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<DeploymentPropertyEdge>>() => T;
-  aggregate: <T = AggregateDeploymentPropertyPromise>() => T;
-}
-
-export interface DeploymentPropertyConnectionSubscription
-  extends Promise<AsyncIterator<DeploymentPropertyConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <
-    T = Promise<AsyncIterator<DeploymentPropertyEdgeSubscription>>
-  >() => T;
-  aggregate: <T = AggregateDeploymentPropertySubscription>() => T;
-}
-
-export interface DeploymentPropertyEdge {
-  node: DeploymentProperty;
-  cursor: String;
-}
-
-export interface DeploymentPropertyEdgePromise
-  extends Promise<DeploymentPropertyEdge>,
-    Fragmentable {
-  node: <T = DeploymentPropertyPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface DeploymentPropertyEdgeSubscription
-  extends Promise<AsyncIterator<DeploymentPropertyEdge>>,
-    Fragmentable {
-  node: <T = DeploymentPropertySubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateDeploymentProperty {
-  count: Int;
-}
-
-export interface AggregateDeploymentPropertyPromise
-  extends Promise<AggregateDeploymentProperty>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateDeploymentPropertySubscription
-  extends Promise<AsyncIterator<AggregateDeploymentProperty>>,
     Fragmentable {
   count: () => Promise<AsyncIterator<Int>>;
 }
@@ -4333,9 +3828,10 @@ export interface DeploymentPreviousValues {
   label?: String;
   registryPassword?: String;
   releaseName?: String;
-  status?: String;
-  type?: String;
   version?: String;
+  extraAu?: Int;
+  airflowVersion?: String;
+  alertEmails: String[];
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -4349,9 +3845,10 @@ export interface DeploymentPreviousValuesPromise
   label: () => Promise<String>;
   registryPassword: () => Promise<String>;
   releaseName: () => Promise<String>;
-  status: () => Promise<String>;
-  type: () => Promise<String>;
   version: () => Promise<String>;
+  extraAu: () => Promise<Int>;
+  airflowVersion: () => Promise<String>;
+  alertEmails: () => Promise<String[]>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
@@ -4365,65 +3862,10 @@ export interface DeploymentPreviousValuesSubscription
   label: () => Promise<AsyncIterator<String>>;
   registryPassword: () => Promise<AsyncIterator<String>>;
   releaseName: () => Promise<AsyncIterator<String>>;
-  status: () => Promise<AsyncIterator<String>>;
-  type: () => Promise<AsyncIterator<String>>;
   version: () => Promise<AsyncIterator<String>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface DeploymentPropertySubscriptionPayload {
-  mutation: MutationType;
-  node: DeploymentProperty;
-  updatedFields: String[];
-  previousValues: DeploymentPropertyPreviousValues;
-}
-
-export interface DeploymentPropertySubscriptionPayloadPromise
-  extends Promise<DeploymentPropertySubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = DeploymentPropertyPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = DeploymentPropertyPreviousValuesPromise>() => T;
-}
-
-export interface DeploymentPropertySubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<DeploymentPropertySubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = DeploymentPropertySubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = DeploymentPropertyPreviousValuesSubscription>() => T;
-}
-
-export interface DeploymentPropertyPreviousValues {
-  id: ID_Output;
-  category?: String;
-  key: String;
-  value?: String;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-}
-
-export interface DeploymentPropertyPreviousValuesPromise
-  extends Promise<DeploymentPropertyPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  category: () => Promise<String>;
-  key: () => Promise<String>;
-  value: () => Promise<String>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface DeploymentPropertyPreviousValuesSubscription
-  extends Promise<AsyncIterator<DeploymentPropertyPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  category: () => Promise<AsyncIterator<String>>;
-  key: () => Promise<AsyncIterator<String>>;
-  value: () => Promise<AsyncIterator<String>>;
+  extraAu: () => Promise<AsyncIterator<Int>>;
+  airflowVersion: () => Promise<AsyncIterator<String>>;
+  alertEmails: () => Promise<AsyncIterator<String[]>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -4866,6 +4308,11 @@ export type String = string;
 export type Json = any;
 
 /*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
+*/
+export type Int = number;
+
+/*
 The `Boolean` scalar type represents `true` or `false`.
 */
 export type Boolean = boolean;
@@ -4880,11 +4327,6 @@ DateTime scalar output type, which is always a string
 */
 export type DateTimeOutput = string;
 
-/*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
-*/
-export type Int = number;
-
 export type Long = string;
 
 /**
@@ -4894,10 +4336,6 @@ export type Long = string;
 export const models: Model[] = [
   {
     name: "Deployment",
-    embedded: false
-  },
-  {
-    name: "DeploymentProperty",
     embedded: false
   },
   {

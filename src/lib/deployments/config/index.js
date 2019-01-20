@@ -1,7 +1,10 @@
+import { parseJSON } from "utilities";
 import { curry, find, fromPairs, get, map, set, merge } from "lodash";
 import config from "config";
 import {
   DEPLOYMENT_PROPERTY_EXTRA_AU,
+  DEPLOYMENT_PROPERTY_ALERT_EMAILS,
+  DEPLOYMENT_PROPERTY_COMPONENT_VERSION,
   AIRFLOW_EXECUTOR_LOCAL,
   AIRFLOW_EXECUTOR_CELERY,
   AIRFLOW_COMPONENT_SCHEDULER,
@@ -269,4 +272,54 @@ export function envArrayToObject(arr = []) {
  */
 export function envObjectToArray(obj = {}) {
   return map(obj, (val, key) => ({ [key]: val }));
+}
+
+/*
+ * Map legacy DeploymentProperties to their new top-level names.
+ * This is purely to bridge the gap from the legacy API.
+ * @param {Object} An object with key/value pairs.
+ * @return {[]Object} The object with key/value pairs.
+ */
+export function mapPropertiesToDeployment(obj = {}) {
+  const mapped = {};
+
+  if (obj[DEPLOYMENT_PROPERTY_EXTRA_AU]) {
+    mapped.extraAu = obj[DEPLOYMENT_PROPERTY_EXTRA_AU];
+  }
+
+  if (obj[DEPLOYMENT_PROPERTY_COMPONENT_VERSION]) {
+    mapped.airflowVersion = obj[DEPLOYMENT_PROPERTY_COMPONENT_VERSION];
+  }
+
+  if (obj[DEPLOYMENT_PROPERTY_ALERT_EMAILS]) {
+    mapped.alertEmails = {
+      set: parseJSON(obj[DEPLOYMENT_PROPERTY_ALERT_EMAILS])
+    };
+  }
+
+  return mapped;
+}
+
+/*
+ * Map top level deployment fields to legacy properties.
+ * This is purely to bridge the gap from the legacy API.
+ * @param {Object} An object
+ * @return {[]Object} The object with key/value pairs.
+ */
+export function mapDeploymentToProperties(dep = {}) {
+  const mapped = {};
+
+  if (dep.extraAu) {
+    mapped[DEPLOYMENT_PROPERTY_EXTRA_AU] = dep.extraAu;
+  }
+
+  if (dep.airflowVersion) {
+    mapped[DEPLOYMENT_PROPERTY_COMPONENT_VERSION] = dep.airflowVersion;
+  }
+
+  if (dep.alertEmails) {
+    mapped[DEPLOYMENT_PROPERTY_ALERT_EMAILS] = dep.alertEmails;
+  }
+
+  return mapped;
 }

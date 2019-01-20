@@ -3,10 +3,6 @@ module.exports = {
   count: Int!
 }
 
-type AggregateDeploymentProperty {
-  count: Int!
-}
-
 type AggregateEmail {
   count: Int!
 }
@@ -48,14 +44,14 @@ scalar DateTime
 type Deployment {
   id: ID!
   config: Json
-  properties(where: DeploymentPropertyWhereInput, orderBy: DeploymentPropertyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DeploymentProperty!]
   description: String
   label: String
   registryPassword: String
   releaseName: String
-  status: String
-  type: String
   version: String
+  extraAu: Int
+  airflowVersion: String
+  alertEmails: [String!]!
   workspace: Workspace
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -67,16 +63,20 @@ type DeploymentConnection {
   aggregate: AggregateDeployment!
 }
 
+input DeploymentCreatealertEmailsInput {
+  set: [String!]
+}
+
 input DeploymentCreateInput {
   config: Json
-  properties: DeploymentPropertyCreateManyWithoutDeploymentInput
   description: String
   label: String
   registryPassword: String
   releaseName: String
-  status: String
-  type: String
   version: String
+  extraAu: Int
+  airflowVersion: String
+  alertEmails: DeploymentCreatealertEmailsInput
   workspace: WorkspaceCreateOneWithoutDeploymentsInput
 }
 
@@ -90,33 +90,16 @@ input DeploymentCreateOneInput {
   connect: DeploymentWhereUniqueInput
 }
 
-input DeploymentCreateOneWithoutPropertiesInput {
-  create: DeploymentCreateWithoutPropertiesInput
-  connect: DeploymentWhereUniqueInput
-}
-
-input DeploymentCreateWithoutPropertiesInput {
-  config: Json
-  description: String
-  label: String
-  registryPassword: String
-  releaseName: String
-  status: String
-  type: String
-  version: String
-  workspace: WorkspaceCreateOneWithoutDeploymentsInput
-}
-
 input DeploymentCreateWithoutWorkspaceInput {
   config: Json
-  properties: DeploymentPropertyCreateManyWithoutDeploymentInput
   description: String
   label: String
   registryPassword: String
   releaseName: String
-  status: String
-  type: String
   version: String
+  extraAu: Int
+  airflowVersion: String
+  alertEmails: DeploymentCreatealertEmailsInput
 }
 
 type DeploymentEdge {
@@ -137,12 +120,12 @@ enum DeploymentOrderByInput {
   registryPassword_DESC
   releaseName_ASC
   releaseName_DESC
-  status_ASC
-  status_DESC
-  type_ASC
-  type_DESC
   version_ASC
   version_DESC
+  extraAu_ASC
+  extraAu_DESC
+  airflowVersion_ASC
+  airflowVersion_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -156,305 +139,12 @@ type DeploymentPreviousValues {
   label: String
   registryPassword: String
   releaseName: String
-  status: String
-  type: String
   version: String
+  extraAu: Int
+  airflowVersion: String
+  alertEmails: [String!]!
   createdAt: DateTime!
   updatedAt: DateTime!
-}
-
-type DeploymentProperty {
-  id: ID!
-  category: String
-  deployment: Deployment
-  key: String!
-  value: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type DeploymentPropertyConnection {
-  pageInfo: PageInfo!
-  edges: [DeploymentPropertyEdge]!
-  aggregate: AggregateDeploymentProperty!
-}
-
-input DeploymentPropertyCreateInput {
-  category: String
-  deployment: DeploymentCreateOneWithoutPropertiesInput
-  key: String!
-  value: String
-}
-
-input DeploymentPropertyCreateManyWithoutDeploymentInput {
-  create: [DeploymentPropertyCreateWithoutDeploymentInput!]
-  connect: [DeploymentPropertyWhereUniqueInput!]
-}
-
-input DeploymentPropertyCreateWithoutDeploymentInput {
-  category: String
-  key: String!
-  value: String
-}
-
-type DeploymentPropertyEdge {
-  node: DeploymentProperty!
-  cursor: String!
-}
-
-enum DeploymentPropertyOrderByInput {
-  id_ASC
-  id_DESC
-  category_ASC
-  category_DESC
-  key_ASC
-  key_DESC
-  value_ASC
-  value_DESC
-  createdAt_ASC
-  createdAt_DESC
-  updatedAt_ASC
-  updatedAt_DESC
-}
-
-type DeploymentPropertyPreviousValues {
-  id: ID!
-  category: String
-  key: String!
-  value: String
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-input DeploymentPropertyScalarWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  category: String
-  category_not: String
-  category_in: [String!]
-  category_not_in: [String!]
-  category_lt: String
-  category_lte: String
-  category_gt: String
-  category_gte: String
-  category_contains: String
-  category_not_contains: String
-  category_starts_with: String
-  category_not_starts_with: String
-  category_ends_with: String
-  category_not_ends_with: String
-  key: String
-  key_not: String
-  key_in: [String!]
-  key_not_in: [String!]
-  key_lt: String
-  key_lte: String
-  key_gt: String
-  key_gte: String
-  key_contains: String
-  key_not_contains: String
-  key_starts_with: String
-  key_not_starts_with: String
-  key_ends_with: String
-  key_not_ends_with: String
-  value: String
-  value_not: String
-  value_in: [String!]
-  value_not_in: [String!]
-  value_lt: String
-  value_lte: String
-  value_gt: String
-  value_gte: String
-  value_contains: String
-  value_not_contains: String
-  value_starts_with: String
-  value_not_starts_with: String
-  value_ends_with: String
-  value_not_ends_with: String
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  AND: [DeploymentPropertyScalarWhereInput!]
-  OR: [DeploymentPropertyScalarWhereInput!]
-  NOT: [DeploymentPropertyScalarWhereInput!]
-}
-
-type DeploymentPropertySubscriptionPayload {
-  mutation: MutationType!
-  node: DeploymentProperty
-  updatedFields: [String!]
-  previousValues: DeploymentPropertyPreviousValues
-}
-
-input DeploymentPropertySubscriptionWhereInput {
-  mutation_in: [MutationType!]
-  updatedFields_contains: String
-  updatedFields_contains_every: [String!]
-  updatedFields_contains_some: [String!]
-  node: DeploymentPropertyWhereInput
-  AND: [DeploymentPropertySubscriptionWhereInput!]
-  OR: [DeploymentPropertySubscriptionWhereInput!]
-  NOT: [DeploymentPropertySubscriptionWhereInput!]
-}
-
-input DeploymentPropertyUpdateInput {
-  category: String
-  deployment: DeploymentUpdateOneWithoutPropertiesInput
-  key: String
-  value: String
-}
-
-input DeploymentPropertyUpdateManyDataInput {
-  category: String
-  key: String
-  value: String
-}
-
-input DeploymentPropertyUpdateManyMutationInput {
-  category: String
-  key: String
-  value: String
-}
-
-input DeploymentPropertyUpdateManyWithoutDeploymentInput {
-  create: [DeploymentPropertyCreateWithoutDeploymentInput!]
-  delete: [DeploymentPropertyWhereUniqueInput!]
-  connect: [DeploymentPropertyWhereUniqueInput!]
-  disconnect: [DeploymentPropertyWhereUniqueInput!]
-  update: [DeploymentPropertyUpdateWithWhereUniqueWithoutDeploymentInput!]
-  upsert: [DeploymentPropertyUpsertWithWhereUniqueWithoutDeploymentInput!]
-  deleteMany: [DeploymentPropertyScalarWhereInput!]
-  updateMany: [DeploymentPropertyUpdateManyWithWhereNestedInput!]
-}
-
-input DeploymentPropertyUpdateManyWithWhereNestedInput {
-  where: DeploymentPropertyScalarWhereInput!
-  data: DeploymentPropertyUpdateManyDataInput!
-}
-
-input DeploymentPropertyUpdateWithoutDeploymentDataInput {
-  category: String
-  key: String
-  value: String
-}
-
-input DeploymentPropertyUpdateWithWhereUniqueWithoutDeploymentInput {
-  where: DeploymentPropertyWhereUniqueInput!
-  data: DeploymentPropertyUpdateWithoutDeploymentDataInput!
-}
-
-input DeploymentPropertyUpsertWithWhereUniqueWithoutDeploymentInput {
-  where: DeploymentPropertyWhereUniqueInput!
-  update: DeploymentPropertyUpdateWithoutDeploymentDataInput!
-  create: DeploymentPropertyCreateWithoutDeploymentInput!
-}
-
-input DeploymentPropertyWhereInput {
-  id: ID
-  id_not: ID
-  id_in: [ID!]
-  id_not_in: [ID!]
-  id_lt: ID
-  id_lte: ID
-  id_gt: ID
-  id_gte: ID
-  id_contains: ID
-  id_not_contains: ID
-  id_starts_with: ID
-  id_not_starts_with: ID
-  id_ends_with: ID
-  id_not_ends_with: ID
-  category: String
-  category_not: String
-  category_in: [String!]
-  category_not_in: [String!]
-  category_lt: String
-  category_lte: String
-  category_gt: String
-  category_gte: String
-  category_contains: String
-  category_not_contains: String
-  category_starts_with: String
-  category_not_starts_with: String
-  category_ends_with: String
-  category_not_ends_with: String
-  deployment: DeploymentWhereInput
-  key: String
-  key_not: String
-  key_in: [String!]
-  key_not_in: [String!]
-  key_lt: String
-  key_lte: String
-  key_gt: String
-  key_gte: String
-  key_contains: String
-  key_not_contains: String
-  key_starts_with: String
-  key_not_starts_with: String
-  key_ends_with: String
-  key_not_ends_with: String
-  value: String
-  value_not: String
-  value_in: [String!]
-  value_not_in: [String!]
-  value_lt: String
-  value_lte: String
-  value_gt: String
-  value_gte: String
-  value_contains: String
-  value_not_contains: String
-  value_starts_with: String
-  value_not_starts_with: String
-  value_ends_with: String
-  value_not_ends_with: String
-  createdAt: DateTime
-  createdAt_not: DateTime
-  createdAt_in: [DateTime!]
-  createdAt_not_in: [DateTime!]
-  createdAt_lt: DateTime
-  createdAt_lte: DateTime
-  createdAt_gt: DateTime
-  createdAt_gte: DateTime
-  updatedAt: DateTime
-  updatedAt_not: DateTime
-  updatedAt_in: [DateTime!]
-  updatedAt_not_in: [DateTime!]
-  updatedAt_lt: DateTime
-  updatedAt_lte: DateTime
-  updatedAt_gt: DateTime
-  updatedAt_gte: DateTime
-  AND: [DeploymentPropertyWhereInput!]
-  OR: [DeploymentPropertyWhereInput!]
-  NOT: [DeploymentPropertyWhereInput!]
-}
-
-input DeploymentPropertyWhereUniqueInput {
-  id: ID
 }
 
 input DeploymentScalarWhereInput {
@@ -528,34 +218,6 @@ input DeploymentScalarWhereInput {
   releaseName_not_starts_with: String
   releaseName_ends_with: String
   releaseName_not_ends_with: String
-  status: String
-  status_not: String
-  status_in: [String!]
-  status_not_in: [String!]
-  status_lt: String
-  status_lte: String
-  status_gt: String
-  status_gte: String
-  status_contains: String
-  status_not_contains: String
-  status_starts_with: String
-  status_not_starts_with: String
-  status_ends_with: String
-  status_not_ends_with: String
-  type: String
-  type_not: String
-  type_in: [String!]
-  type_not_in: [String!]
-  type_lt: String
-  type_lte: String
-  type_gt: String
-  type_gte: String
-  type_contains: String
-  type_not_contains: String
-  type_starts_with: String
-  type_not_starts_with: String
-  type_ends_with: String
-  type_not_ends_with: String
   version: String
   version_not: String
   version_in: [String!]
@@ -570,6 +232,28 @@ input DeploymentScalarWhereInput {
   version_not_starts_with: String
   version_ends_with: String
   version_not_ends_with: String
+  extraAu: Int
+  extraAu_not: Int
+  extraAu_in: [Int!]
+  extraAu_not_in: [Int!]
+  extraAu_lt: Int
+  extraAu_lte: Int
+  extraAu_gt: Int
+  extraAu_gte: Int
+  airflowVersion: String
+  airflowVersion_not: String
+  airflowVersion_in: [String!]
+  airflowVersion_not_in: [String!]
+  airflowVersion_lt: String
+  airflowVersion_lte: String
+  airflowVersion_gt: String
+  airflowVersion_gte: String
+  airflowVersion_contains: String
+  airflowVersion_not_contains: String
+  airflowVersion_starts_with: String
+  airflowVersion_not_starts_with: String
+  airflowVersion_ends_with: String
+  airflowVersion_not_ends_with: String
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -609,29 +293,33 @@ input DeploymentSubscriptionWhereInput {
   NOT: [DeploymentSubscriptionWhereInput!]
 }
 
+input DeploymentUpdatealertEmailsInput {
+  set: [String!]
+}
+
 input DeploymentUpdateDataInput {
   config: Json
-  properties: DeploymentPropertyUpdateManyWithoutDeploymentInput
   description: String
   label: String
   registryPassword: String
   releaseName: String
-  status: String
-  type: String
   version: String
+  extraAu: Int
+  airflowVersion: String
+  alertEmails: DeploymentUpdatealertEmailsInput
   workspace: WorkspaceUpdateOneWithoutDeploymentsInput
 }
 
 input DeploymentUpdateInput {
   config: Json
-  properties: DeploymentPropertyUpdateManyWithoutDeploymentInput
   description: String
   label: String
   registryPassword: String
   releaseName: String
-  status: String
-  type: String
   version: String
+  extraAu: Int
+  airflowVersion: String
+  alertEmails: DeploymentUpdatealertEmailsInput
   workspace: WorkspaceUpdateOneWithoutDeploymentsInput
 }
 
@@ -641,9 +329,10 @@ input DeploymentUpdateManyDataInput {
   label: String
   registryPassword: String
   releaseName: String
-  status: String
-  type: String
   version: String
+  extraAu: Int
+  airflowVersion: String
+  alertEmails: DeploymentUpdatealertEmailsInput
 }
 
 input DeploymentUpdateManyMutationInput {
@@ -652,9 +341,10 @@ input DeploymentUpdateManyMutationInput {
   label: String
   registryPassword: String
   releaseName: String
-  status: String
-  type: String
   version: String
+  extraAu: Int
+  airflowVersion: String
+  alertEmails: DeploymentUpdatealertEmailsInput
 }
 
 input DeploymentUpdateManyWithoutWorkspaceInput {
@@ -682,37 +372,16 @@ input DeploymentUpdateOneInput {
   connect: DeploymentWhereUniqueInput
 }
 
-input DeploymentUpdateOneWithoutPropertiesInput {
-  create: DeploymentCreateWithoutPropertiesInput
-  update: DeploymentUpdateWithoutPropertiesDataInput
-  upsert: DeploymentUpsertWithoutPropertiesInput
-  delete: Boolean
-  disconnect: Boolean
-  connect: DeploymentWhereUniqueInput
-}
-
-input DeploymentUpdateWithoutPropertiesDataInput {
-  config: Json
-  description: String
-  label: String
-  registryPassword: String
-  releaseName: String
-  status: String
-  type: String
-  version: String
-  workspace: WorkspaceUpdateOneWithoutDeploymentsInput
-}
-
 input DeploymentUpdateWithoutWorkspaceDataInput {
   config: Json
-  properties: DeploymentPropertyUpdateManyWithoutDeploymentInput
   description: String
   label: String
   registryPassword: String
   releaseName: String
-  status: String
-  type: String
   version: String
+  extraAu: Int
+  airflowVersion: String
+  alertEmails: DeploymentUpdatealertEmailsInput
 }
 
 input DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput {
@@ -723,11 +392,6 @@ input DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput {
 input DeploymentUpsertNestedInput {
   update: DeploymentUpdateDataInput!
   create: DeploymentCreateInput!
-}
-
-input DeploymentUpsertWithoutPropertiesInput {
-  update: DeploymentUpdateWithoutPropertiesDataInput!
-  create: DeploymentCreateWithoutPropertiesInput!
 }
 
 input DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput {
@@ -751,9 +415,6 @@ input DeploymentWhereInput {
   id_not_starts_with: ID
   id_ends_with: ID
   id_not_ends_with: ID
-  properties_every: DeploymentPropertyWhereInput
-  properties_some: DeploymentPropertyWhereInput
-  properties_none: DeploymentPropertyWhereInput
   description: String
   description_not: String
   description_in: [String!]
@@ -810,34 +471,6 @@ input DeploymentWhereInput {
   releaseName_not_starts_with: String
   releaseName_ends_with: String
   releaseName_not_ends_with: String
-  status: String
-  status_not: String
-  status_in: [String!]
-  status_not_in: [String!]
-  status_lt: String
-  status_lte: String
-  status_gt: String
-  status_gte: String
-  status_contains: String
-  status_not_contains: String
-  status_starts_with: String
-  status_not_starts_with: String
-  status_ends_with: String
-  status_not_ends_with: String
-  type: String
-  type_not: String
-  type_in: [String!]
-  type_not_in: [String!]
-  type_lt: String
-  type_lte: String
-  type_gt: String
-  type_gte: String
-  type_contains: String
-  type_not_contains: String
-  type_starts_with: String
-  type_not_starts_with: String
-  type_ends_with: String
-  type_not_ends_with: String
   version: String
   version_not: String
   version_in: [String!]
@@ -852,6 +485,28 @@ input DeploymentWhereInput {
   version_not_starts_with: String
   version_ends_with: String
   version_not_ends_with: String
+  extraAu: Int
+  extraAu_not: Int
+  extraAu_in: [Int!]
+  extraAu_not_in: [Int!]
+  extraAu_lt: Int
+  extraAu_lte: Int
+  extraAu_gt: Int
+  extraAu_gte: Int
+  airflowVersion: String
+  airflowVersion_not: String
+  airflowVersion_in: [String!]
+  airflowVersion_not_in: [String!]
+  airflowVersion_lt: String
+  airflowVersion_lte: String
+  airflowVersion_gt: String
+  airflowVersion_gte: String
+  airflowVersion_contains: String
+  airflowVersion_not_contains: String
+  airflowVersion_starts_with: String
+  airflowVersion_not_starts_with: String
+  airflowVersion_ends_with: String
+  airflowVersion_not_ends_with: String
   workspace: WorkspaceWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
@@ -1584,12 +1239,6 @@ type Mutation {
   upsertDeployment(where: DeploymentWhereUniqueInput!, create: DeploymentCreateInput!, update: DeploymentUpdateInput!): Deployment!
   deleteDeployment(where: DeploymentWhereUniqueInput!): Deployment
   deleteManyDeployments(where: DeploymentWhereInput): BatchPayload!
-  createDeploymentProperty(data: DeploymentPropertyCreateInput!): DeploymentProperty!
-  updateDeploymentProperty(data: DeploymentPropertyUpdateInput!, where: DeploymentPropertyWhereUniqueInput!): DeploymentProperty
-  updateManyDeploymentProperties(data: DeploymentPropertyUpdateManyMutationInput!, where: DeploymentPropertyWhereInput): BatchPayload!
-  upsertDeploymentProperty(where: DeploymentPropertyWhereUniqueInput!, create: DeploymentPropertyCreateInput!, update: DeploymentPropertyUpdateInput!): DeploymentProperty!
-  deleteDeploymentProperty(where: DeploymentPropertyWhereUniqueInput!): DeploymentProperty
-  deleteManyDeploymentProperties(where: DeploymentPropertyWhereInput): BatchPayload!
   createEmail(data: EmailCreateInput!): Email!
   updateEmail(data: EmailUpdateInput!, where: EmailWhereUniqueInput!): Email
   updateManyEmails(data: EmailUpdateManyMutationInput!, where: EmailWhereInput): BatchPayload!
@@ -1907,9 +1556,6 @@ type Query {
   deployment(where: DeploymentWhereUniqueInput!): Deployment
   deployments(where: DeploymentWhereInput, orderBy: DeploymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Deployment]!
   deploymentsConnection(where: DeploymentWhereInput, orderBy: DeploymentOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeploymentConnection!
-  deploymentProperty(where: DeploymentPropertyWhereUniqueInput!): DeploymentProperty
-  deploymentProperties(where: DeploymentPropertyWhereInput, orderBy: DeploymentPropertyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DeploymentProperty]!
-  deploymentPropertiesConnection(where: DeploymentPropertyWhereInput, orderBy: DeploymentPropertyOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DeploymentPropertyConnection!
   email(where: EmailWhereUniqueInput!): Email
   emails(where: EmailWhereInput, orderBy: EmailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Email]!
   emailsConnection(where: EmailWhereInput, orderBy: EmailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): EmailConnection!
@@ -2430,7 +2076,6 @@ input ServiceAccountWhereUniqueInput {
 
 type Subscription {
   deployment(where: DeploymentSubscriptionWhereInput): DeploymentSubscriptionPayload
-  deploymentProperty(where: DeploymentPropertySubscriptionWhereInput): DeploymentPropertySubscriptionPayload
   email(where: EmailSubscriptionWhereInput): EmailSubscriptionPayload
   inviteToken(where: InviteTokenSubscriptionWhereInput): InviteTokenSubscriptionPayload
   localCredential(where: LocalCredentialSubscriptionWhereInput): LocalCredentialSubscriptionPayload

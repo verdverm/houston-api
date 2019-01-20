@@ -2,11 +2,13 @@ import {
   generateNamespace,
   generateEnvironmentSecretName
 } from "deployments/naming";
-import { envObjectToArray } from "deployments/config";
-import { propertiesArrayToObject } from "utilities";
+import {
+  envObjectToArray,
+  mapDeploymentToProperties
+} from "deployments/config";
 import { get } from "lodash";
 import config from "config";
-import { AIRFLOW_EXECUTOR_CELERY } from "constants";
+import { AIRFLOW_EXECUTOR_CELERY, DEPLOYMENT_AIRFLOW } from "constants";
 
 export function urls(parent) {
   const { config: cfg, releaseName } = parent;
@@ -45,7 +47,11 @@ export async function env(parent, args, ctx) {
 }
 
 export async function properties(parent) {
-  return propertiesArrayToObject(parent.properties);
+  return mapDeploymentToProperties(parent);
 }
 
-export default { urls, env, properties };
+export function type() {
+  return DEPLOYMENT_AIRFLOW;
+}
+
+export default { urls, env, type, properties };

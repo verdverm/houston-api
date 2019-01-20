@@ -98,25 +98,15 @@ type Workspace {
 type Deployment {
   id: ID! @unique
   config: Json
-  properties: [DeploymentProperty!]!
   description: String
   label: String
   registryPassword: String
   releaseName: String @unique
-  status: String
-  type: String
   version: String
+  extraAu: Int
+  airflowVersion: String
+  alertEmails: [String!]
   workspace: Workspace
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type DeploymentProperty {
-  id: ID! @unique
-  category: String
-  deployment: Deployment
-  key: String!
-  value: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }

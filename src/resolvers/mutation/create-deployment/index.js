@@ -5,14 +5,17 @@ import {
   generateEnvironmentSecretName
 } from "deployments/naming";
 import { createDatabaseForDeployment } from "deployments/database";
-import { envArrayToObject, generateHelmValues } from "deployments/config";
-import { propertiesObjectToArray } from "utilities";
+import {
+  envArrayToObject,
+  generateHelmValues,
+  mapPropertiesToDeployment
+} from "deployments/config";
 import validate from "deployments/validate";
 import { addFragmentToInfo } from "graphql-binding";
 import config from "config";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { DEPLOYMENT_ADMIN } from "constants";
+import { DEPLOYMENT_ADMIN, DEPLOYMENT_AIRFLOW } from "constants";
 
 /*
  * Create a deployment.
@@ -24,10 +27,6 @@ import { DEPLOYMENT_ADMIN } from "constants";
 export default async function createDeployment(parent, args, ctx, info) {
   // Validate deployment args.
   await validate(args.workspaceUuid, args);
-
-  // This API supports a type parameter, but we only support airflow now,
-  // so we're just ignoring it for now.
-  const type = "airflow";
 
   // Default deployment version to platform version.
   const version = args.version
@@ -43,20 +42,16 @@ export default async function createDeployment(parent, args, ctx, info) {
   // Generate a random space-themed release name.
   const releaseName = generateReleaseName();
 
-  // Generate a list of properties to add to mutation.
-  const properties = propertiesObjectToArray(args.properties);
-
   // Create the base mutation.
   const mutation = {
     data: {
-      type,
-      version,
       label: args.label,
       description: args.description,
       config: args.config,
+      version,
       releaseName,
       registryPassword,
-      properties: { create: properties },
+      ...mapPropertiesToDeployment(args.properties),
       workspace: {
         connect: {
           id: args.workspaceUuid
@@ -96,7 +91,7 @@ export default async function createDeployment(parent, args, ctx, info) {
   await ctx.commander.request("createDeployment", {
     releaseName: releaseName,
     chart: {
-      name: type,
+      name: DEPLOYMENT_AIRFLOW,
       version: version
     },
     namespace: generateNamespace(releaseName),

@@ -9,10 +9,6 @@ var models = [
     embedded: false
   },
   {
-    name: "DeploymentProperty",
-    embedded: false
-  },
-  {
     name: "Email",
     embedded: false
   },
