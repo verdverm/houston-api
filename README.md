@@ -5,7 +5,7 @@
 
 ## Description
 
-Houston is the command and control API for the [Astronomer Platform](https://github.com/astronomer/astronomer). It is primarily a [GraphQL](https://graphql.org) server built with [Apollo Server 2](https://www.apollographql.com) and [Prisma](https://www.prisma.io/docs/). It also supports several RESTful endpoints using the same express server that Apollo is using. These endpoints are primarily used for integrating with external authentication, [Alertmanager](https://prometheus.io/docs/alerting/alertmanager/), [Docker Registry](https://github.com/docker/distribution/blob/master/docs/spec/api.md) and other external dependencies. This is the second iteration of this API. This version was built to support the same external API, and is just an internal
+Houston is the command and control API for the [Astronomer Platform](https://github.com/astronomer/astronomer). It is primarily a [GraphQL](https://graphql.org) server built with [Apollo Server 2](https://www.apollographql.com) and [Prisma](https://www.prisma.io/docs/). It also supports several RESTful endpoints using the same [Express](https://github.com/expressjs/express) server that Apollo is using. These endpoints are primarily used for integrating with external authentication, [Alertmanager](https://prometheus.io/docs/alerting/alertmanager/), [Docker Registry](https://github.com/docker/distribution/blob/master/docs/spec/api.md) and other external dependencies. This is the second iteration of this API. This version was built to support the same external API, and is just an internal
 re-implementation.
 
 ## Database
