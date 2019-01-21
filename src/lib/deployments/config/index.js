@@ -97,12 +97,12 @@ export function constraints(deployment) {
       // falling back to static config vaules.
       const { cpu, memory } = get(
         deployment,
-        `${cur}.resources.limits`,
+        `config.${cur}.resources.limits`,
         defaults
       );
 
       // Check if deployment config has replicas.
-      const replicas = get(deployment, `${cur}.replicas`, 1);
+      const replicas = get(deployment, `config.${cur}.replicas`, 1);
 
       // Return combined.
       return {

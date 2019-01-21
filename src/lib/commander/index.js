@@ -4,48 +4,42 @@ import grpc from "grpc";
 import caller from "grpc-caller";
 import config from "config";
 
+// Get the commander settings.
+const { enabled, host, port } = config.get("commander");
+
+// Concat host and port.
+const authority = `${host}:${port}`;
+
+// Path to the Commander service definition.
+const path = `${protoPath}/commander.proto`;
+
+// Service name.
+const service = "Commander";
+
+// Credentials for Commander.
+const credentials = grpc.credentials.createInsecure();
+
+// Export the wrapped grpc client.
+const client = caller(authority, path, service, credentials);
+
 /*
- * Create commander client.
- * @return {Object} The commander client.
+ * Make request to commander.
+ * @param {String} methodName The commander method.
+ * @return {Response} The response.
  */
-export default function commander() {
-  // Get the commander settings.
-  const { enabled, host, port } = config.get("commander");
+export async function request(...args) {
+  // Method name is first arg as a string.
+  const method = `#${args[0]}`;
 
-  // Concat host and port.
-  const authority = `${host}:${port}`;
-
-  // Path to the Commander service definition.
-  const path = `${protoPath}/commander.proto`;
-
-  // Service name.
-  const service = "Commander";
-
-  // Credentials for Commander.
-  const credentials = grpc.credentials.createInsecure();
-
-  // Export the wrapped grpc client.
-  const client = caller(authority, path, service, credentials);
-
-  /*
-   * Make request to commander.
-   * @param {String} methodName The commander method.
-   * @return {Response} The response.
-   */
-  async function request(...args) {
-    // Method name is first arg as a string.
-    const method = `#${args[0]}`;
-
-    // If commander is enabled, run method, otherwise skip and log.
-    if (enabled) {
-      log.info(`Calling commander method ${method}`);
-      const req = new client.Request(...args);
-      const res = await req.exec();
-      log.info(`Response from ${method}: ${JSON.stringify(res.response)}`);
-      return res.response;
-    }
-    log.info(`Commander disabled, skipping call to ${method}`);
+  // If commander is enabled, run method, otherwise skip and log.
+  if (enabled) {
+    log.info(`Calling commander method ${method}`);
+    const req = new client.Request(...args);
+    const res = await req.exec();
+    log.info(`Response from ${method}: ${JSON.stringify(res.response)}`);
+    return res.response;
   }
-
-  return { client, request };
+  log.info(`Commander disabled, skipping call to ${method}`);
 }
+
+export default { client, request };
