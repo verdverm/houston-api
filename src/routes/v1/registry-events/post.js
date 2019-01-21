@@ -1,4 +1,3 @@
-import fragment from "./fragment";
 import { generateHelmValues } from "deployments/config";
 import { prisma } from "generated/client";
 import isValidTaggedDeployment from "deployments/validate/docker-tag";
@@ -39,12 +38,10 @@ export default async function(req, res) {
       });
 
       // Update the deployment.
-      const updatedDeployment = await prisma
-        .updateDeployment({
-          where: { releaseName },
-          data: { config: updatedConfig }
-        })
-        .$fragment(fragment);
+      const updatedDeployment = await prisma.updateDeployment({
+        where: { releaseName },
+        data: { config: updatedConfig }
+      });
 
       // Fire the helm upgrade to commander.
       await commander.request("updateDeployment", {
