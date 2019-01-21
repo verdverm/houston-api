@@ -28,7 +28,7 @@ All source code is nested under `src`. This directory contains:
 
 ## Authentication
 
-Houston supports multiple authentication methods. Currently it supports the built-in username/password method, as well as Google OAuth, as well as Auth0 OAuth. By default, the local authentication method is enabled, as well as a default Auth0 account. This can be overridden with a custom configuration to override the [default values under the `auth` section](https://github.com/astronomer/houston-api-2/blob/master/config/default.yaml).
+Houston supports multiple authentication methods. Currently it supports the built-in username/password method, as well as [Google OAuth](https://developers.google.com/identity/protocols/OAuth2), as well as [Auth0 OAuth](https://auth0.com). By default, the local authentication method is enabled, as well as a default Auth0 account. This can be overridden with a custom configuration to override the [default values under the `auth` section](https://github.com/astronomer/houston-api-2/blob/master/config/default.yaml).
 
 ## Authorization
 
@@ -37,9 +37,9 @@ Directive](https://www.apollographql.com/docs/graphql-tools/schema-directives.ht
 
 ## Development
 
-Houston is written in ES6 and beyond. It's currently built with [Babel](https://babeljs.io). Use `npm start` to run the API locally. This uses [nodemon](https://github.com/remy/nodemon) and will restart when any source files change. The only exception is `./database/datamodel.graphql`. Changes to this file requies you to restart, triggering a `prisma deploy` and `prisma generate`. We could probably automate that process on change as well.
+Houston is written in ES6 and beyond. It's currently built with [Babel](https://babeljs.io). Use `npm start` to run the API locally. This uses [Nodemon](https://github.com/remy/nodemon) and will restart when any source files change. The only exception is `./database/datamodel.graphql`. Changes to this file requies you to restart, triggering a `prisma deploy` and `prisma generate`. We could probably automate that process on change as well.
 
-The easiest way to run the project locally is to first run `docker-compose up`, or `docker-compose up -d` to detach and run the containers in the background, freeing up your terminal. This will start the postgres database, as well as the prisma service. From here you can run `npm start` to start the project locally, connecting to the previously started data stack. Houston could also be added to the docker-compose services, but it's easier to interpret the logs when it's on its own. Houston will start the [playground](https://github.com/prisma/graphql-playground) by default, but it's also possible to start a playground that will expose the application API, as well as the prisma API. To start this on port 3000, just run `graphql playground`, or send it to the background with `graphql playground &`.
+The easiest way to run the project locally is to first run `docker-compose up`, or `docker-compose up -d` to detach and run the containers in the background, freeing up your terminal. This will start the postgres database, as well as the prisma service. From here you can run `npm start` to start the project locally, connecting to the previously started data stack. Houston could also be added to the docker-compose services, but it's easier to interpret the logs when it's on its own. Houston will start the [Playground](https://github.com/prisma/graphql-playground) by default, but it's also possible to start a playground that will expose the application API, as well as the prisma API. To start this on port 3000, just run `graphql playground`, or send it to the background with `graphql playground &`.
 
 ## Testing
 
