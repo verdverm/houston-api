@@ -309,4 +309,9 @@ type Mutation {
   deleteServiceAccount(
     serviceAccountUuid: Uuid!
   ): ServiceAccount @auth(permission: "user.serviceAccount.create")
+
+  upgradeDeployment(
+    deploymentUuid: Uuid!
+    version: String!
+  ): Deployment @auth(permission: "user.deployment.update")
 }

@@ -10,6 +10,7 @@ import deleteWorkspace from "./delete-workspace";
 import updateDeployment from "./update-deployment";
 import updateUser from "./update-user";
 import updateWorkspace from "./update-workspace";
+import upgradeDeployment from "./upgrade-deployment";
 import workspaceAddUser from "./workspace-add-user";
 
 export default {
@@ -25,5 +26,6 @@ export default {
   updateDeployment,
   updateUser,
   updateWorkspace,
+  upgradeDeployment,
   workspaceAddUser
 };

@@ -11,6 +11,7 @@ import {
 } from "deployments/naming";
 import { addFragmentToInfo } from "graphql-binding";
 import { get, merge, pick } from "lodash";
+import { DEPLOYMENT_AIRFLOW } from "constants";
 
 /*
  * Update a deployment.
@@ -78,8 +79,8 @@ export default async function updateDeployment(parent, args, ctx, info) {
     await ctx.commander.request("updateDeployment", {
       releaseName: updatedDeployment.releaseName,
       chart: {
-        name: updateDeployment.type,
-        version: updateDeployment.version
+        name: DEPLOYMENT_AIRFLOW,
+        version: updatedDeployment.version
       },
       rawConfig: JSON.stringify(generateHelmValues(updatedDeployment))
     });
