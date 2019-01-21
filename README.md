@@ -20,12 +20,20 @@ Houston can be configured via YAML files under `./config`, and can be overridden
 
 All source code is nested under `src`. This directory contains:
 
-* [`index.js`](https://github.com/astronomer/houston-api-2/blob/master/src/index.js) is the entrypoint for the application.
-* [`schema.graphl`](https://github.com/astronomer/houston-api-2/blob/master/src/schema.graphql) contains the entire application schema.
+* [`lib`](https://github.com/astronomer/houston-api-2/tree/master/src/lib) contains all shared, library code. This directory is [listed as a root for the babel module loader](https://github.com/astronomer/houston-api-2/blob/master/.babelrc). All modules defined under this directory can be `import`ed directly, rather than specifying a relative path.
 * [`resolvers`](https://github.com/astronomer/houston-api-2/tree/master/src/resolvers) contains all the Queries, Mutations and Types for the GraphQL API.
 * [`routes`](https://github.com/astronomer/houston-api-2/tree/master/src/routes) contains all RESTful route definitions.
-* [`lib`](https://github.com/astronomer/houston-api-2/tree/master/src/lib) contains all shared, library code. This directory is [listed as a root for the babel module loader](https://github.com/astronomer/houston-api-2/blob/master/.babelrc). All modules defined under this directory can be `import`ed directly, rather than specifying a relative path.
+* [`index.js`](https://github.com/astronomer/houston-api-2/blob/master/src/index.js) is the entrypoint for the application.
+* [`schema.graphl`](https://github.com/astronomer/houston-api-2/blob/master/src/schema.graphql) contains the entire application schema.
 
+## Authentication
+
+Houston supports multiple authentication methods. Currently it supports the built-in username/password method, as well as Google OAuth, as well as Auth0 OAuth. By default, the local authentication method is enabled, as well as a default Auth0 account. This can be overridden with a custom configuration to override the [default values under the `auth` section](https://github.com/astronomer/houston-api-2/blob/master/config/default.yaml).
+
+## Authorization
+
+Houston currently defines several default role values in it's datamodel [here](https://github.com/astronomer/houston-api-2/blob/master/database/datamodel.graphql). These values are backed by a configurable permission mapping via a config file. The default permission mappings are defined [here](https://github.com/astronomer/houston-api-2/blob/master/config/default.yaml). These permissions are currently enforced using a [GraphQL
+Directive](https://www.apollographql.com/docs/graphql-tools/schema-directives.html).
 
 ## Development
 
