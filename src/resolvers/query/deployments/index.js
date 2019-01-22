@@ -1,6 +1,9 @@
 import fragment from "./fragment";
+import { prisma } from "generated/client";
+import { checkPermission } from "rbac";
 import { addFragmentToInfo } from "graphql-binding";
 import { compact } from "lodash";
+import { ENTITY_DEPLOYMENT } from "constants";
 
 /*
  * Get list of deployments for a workspace.
@@ -10,6 +13,21 @@ import { compact } from "lodash";
  * @return {[]Deployment} List of Deployments.
  */
 export default async function deployments(parent, args, ctx, info) {
+  // Perform extra check here if passing in releaseName,
+  // because it passes right through the auth directive.
+  if (args.releaseName) {
+    const deploymentId = await prisma
+      .deployment({ releaseName: args.releaseName })
+      .id();
+
+    checkPermission(
+      ctx.user,
+      "user.deployment.get",
+      ENTITY_DEPLOYMENT.toLowerCase(),
+      deploymentId
+    );
+  }
+
   // Build the deployments query.
   const query = deploymentsQuery(args, ctx);
 
@@ -28,7 +46,7 @@ export default async function deployments(parent, args, ctx, info) {
  */
 export function deploymentsQuery(args, ctx) {
   // Pull out some args.
-  const { deploymentUuid, /*releaseName,*/ workspaceUuid } = args;
+  const { deploymentUuid, releaseName, workspaceUuid } = args;
 
   // Build query structure.
   const query = { where: { AND: [] } };
@@ -39,9 +57,9 @@ export function deploymentsQuery(args, ctx) {
   }
 
   // If we have releaseName, add to filter.
-  // if (releaseName) {
-  //   query.where.AND.push({ releaseName });
-  // }
+  if (releaseName) {
+    query.where.AND.push({ releaseName });
+  }
 
   // If we have workspaceUuid, add to filter.
   if (workspaceUuid) {

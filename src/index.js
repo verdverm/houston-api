@@ -6,11 +6,13 @@ import log from "logger";
 import directives from "directives";
 import { formatError } from "errors";
 import commander from "commander";
+import { authenticateRequest } from "authn";
 import config from "config";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { Prisma } from "prisma-binding";
 import { importSchema } from "graphql-import";
+import cookieParser from "cookie-parser";
 import { createServer } from "http";
 
 // Get configuration from config dir and environment
@@ -20,6 +22,7 @@ const prismaConfig = config.get("prisma");
 
 // Create express server
 const app = express();
+app.use(cookieParser(), authenticateRequest());
 
 // Setup REST routes
 app.use("/v1", v1);

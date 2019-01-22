@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import config from "config";
 import ms from "ms";
+import { AUTH_COOKIE_NAME } from "constants";
 
 /*
  * Create a new JWT for houston.
@@ -30,7 +31,7 @@ export function setJWTCookie(response, token) {
   const millis = config.get("authDuration");
 
   // Set the cookie.
-  return response.cookie("astronomer_auth", token, {
+  return response.cookie(AUTH_COOKIE_NAME, token, {
     domain: `.${config.get("helm.baseDomain")}`,
     path: "/",
     expires: new Date(millis),
