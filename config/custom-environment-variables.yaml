@@ -27,6 +27,11 @@ email:
   reply: "EMAIL__REPLY"
   smtpUrl: "EMAIL__SMTP_URL"
 
+registry:
+  auth:
+    __name: "REGISTRY__AUTH"
+    __form: "json"
+
 repository: "REPOSITORY"
 
 helm:

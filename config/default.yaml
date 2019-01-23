@@ -54,6 +54,10 @@ orbit:
   subdomain: app
   port: 5000
 
+# Docker registry configuration.
+registry:
+  auth: ~
+
 # Charts live here.
 # This is where the airflow chart is installed from.
 repository: "https://helm.astronomer.io/"
