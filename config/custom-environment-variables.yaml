@@ -27,6 +27,13 @@ email:
   reply: "EMAIL__REPLY"
   smtpUrl: "EMAIL__SMTP_URL"
 
+mailchimp:
+  enabled: 
+    __name: "MAILCHIMP__ENABLED"
+    __format: "json"
+  apiKey: "MAILCHIMP__APIKEY"
+  listId: "MAILCHIMP__LISTID"
+
 registry:
   auth:
     __name: "REGISTRY__AUTH"

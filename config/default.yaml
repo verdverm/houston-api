@@ -49,6 +49,12 @@ email:
   # The SMTP server URL.
   smtpUrl: ~
 
+# The Mailchimp config
+mailchimp:
+  enabled: false
+  apiKey: ~
+  listId: ~
+
 # Orbit configuration.
 orbit:
   subdomain: app

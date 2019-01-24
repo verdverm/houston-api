@@ -3,6 +3,7 @@ import { createUser as _createUser } from "users";
 import { getProvider, orbit } from "oauth/config";
 import { prisma } from "generated/client";
 import { createJWT, setJWTCookie } from "jwt";
+import { addMember } from "mailchimp";
 import { first } from "lodash";
 import querystring from "querystring";
 
@@ -69,6 +70,9 @@ export default async function(req, res) {
       oauthUserId: providerUserId,
       user: { connect: { id: userId } }
     });
+
+    // Add user to Mailchimp list for onboarding.
+    await addMember(email);
   }
 
   // Create the JWT.
