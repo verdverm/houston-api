@@ -1,8 +1,8 @@
 import { DuplicateDeploymentLabelError } from "errors";
 import resolvers from "resolvers";
 import * as validate from "deployments/validate";
-import { generateReleaseName } from "deployments/naming";
 import casual from "casual";
+import config from "config";
 import { graphql } from "graphql";
 import { makeExecutableSchema } from "graphql-tools";
 import { importSchema } from "graphql-import";
@@ -65,64 +65,118 @@ const mutation = `
 `;
 
 describe("createDeployment", () => {
-  test("typical request is successful", async () => {
-    // Create mock user.
-    const user = {
-      id: casual.uuid
-    };
-
-    // Create some deployment vars.
-    const id = casual.uuid;
-
-    // Override and not throw any error.
-    jest.spyOn(validate, "default").mockReturnValue();
-
-    // Mock up some db functions.
-    const createDeployment = jest.fn().mockReturnValue({
-      id,
-      releaseName: generateReleaseName(),
-      config: { executor: AIRFLOW_EXECUTOR_CELERY },
-      createdAt: new Date(),
-      updatedAt: new Date()
+  describe("typical request", async () => {
+    let user,
+      deploymentId,
+      createDeployment,
+      createRoleBinding,
+      commander,
+      vars,
+      db;
+    const currentNamespace = casual.word;
+    beforeAll(() => {
+      config.helm.releaseNamespace = currentNamespace;
     });
 
-    const createRoleBinding = jest.fn().mockReturnValue({
-      id: casual.uuid
+    beforeEach(() => {
+      user = {
+        id: casual.uuid
+      };
+
+      deploymentId = casual.uuid;
+
+      // Mock up some db functions.
+      createDeployment = jest.fn(req => {
+        console.log("req.data.releaseName", req.data.releaseName);
+        return {
+          id: deploymentId,
+          // Use the releaseName from the request
+          releaseName: req.data.releaseName,
+          config: { executor: AIRFLOW_EXECUTOR_CELERY },
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+      });
+
+      createRoleBinding = jest.fn().mockReturnValue({
+        id: casual.uuid
+      });
+
+      // Construct db object for context.
+      db = {
+        mutation: { createDeployment, createRoleBinding }
+      };
+
+      // Create mock commander client.
+      commander = {
+        request: jest.fn()
+      };
+
+      // Vars for the gql mutation.
+      vars = {
+        workspaceUuid: casual.uuid,
+        type: DEPLOYMENT_AIRFLOW,
+        label: casual.word,
+        properties: {
+          [DEPLOYMENT_PROPERTY_EXTRA_AU]: casual.integer(0, 300),
+          [DEPLOYMENT_PROPERTY_COMPONENT_VERSION]: "7.0"
+        }
+      };
     });
 
-    // Construct db object for context.
-    const db = {
-      mutation: { createDeployment, createRoleBinding }
-    };
+    test("is successful", async () => {
+      // Create some deployment vars.
+      // Override and not throw any error.
+      jest.spyOn(validate, "default").mockReturnValue();
 
-    // Create mock commander client.
-    const commander = {
-      request: jest.fn()
-    };
+      // Run the graphql mutation.
+      const res = await graphql(
+        schema,
+        mutation,
+        null,
+        { db, commander, user },
+        vars
+      );
 
-    // Vars for the gql mutation.
-    const vars = {
-      workspaceUuid: casual.uuid,
-      type: DEPLOYMENT_AIRFLOW,
-      label: casual.word,
-      properties: {
-        [DEPLOYMENT_PROPERTY_EXTRA_AU]: casual.integer(0, 300),
-        [DEPLOYMENT_PROPERTY_COMPONENT_VERSION]: "7.0"
-      }
-    };
+      expect(res.errors).toBeUndefined();
+      expect(createDeployment.mock.calls.length).toBe(1);
+      expect(commander.request.mock.calls[0][0]).toBe("createDeployment");
+      expect(commander.request.mock.calls[0][1].namespace).toEqual(
+        expect.stringMatching("^" + currentNamespace + "-")
+      );
+      expect(res.data.createDeployment.id).toBe(deploymentId);
+    });
 
-    // Run the graphql mutation.
-    const res = await graphql(
-      schema,
-      mutation,
-      null,
-      { db, commander, user },
-      vars
-    );
+    describe("in singleNamespace node", () => {
+      beforeEach(() => {
+        config.helm.singleNamespace = true;
+      });
+      afterEach(() => {
+        config.helm.singleNamespace = false;
+      });
+      test("is successful", async () => {
+        // Create some deployment vars.
+        // Override and not throw any error.
+        jest.spyOn(validate, "default").mockReturnValue();
 
-    expect(res.errors).toBeUndefined();
-    expect(createDeployment.mock.calls.length).toBe(1);
-    expect(res.data.createDeployment.id).toBe(id);
+        // Run the graphql mutation.
+        const res = await graphql(
+          schema,
+          mutation,
+          null,
+          { db, commander, user },
+          vars
+        );
+
+        expect(res.errors).toBeUndefined();
+        expect(createDeployment.mock.calls.length).toBe(1);
+        expect(commander.request.mock.calls[0][0]).toBe("createDeployment");
+        expect(commander.request.mock.calls[0][1].namespace).toBe(
+          currentNamespace
+        );
+        expect(res.data.createDeployment.id).toBe(deploymentId);
+      });
+    });
   });
 
   test("request fails if deployment with same label exists", async () => {

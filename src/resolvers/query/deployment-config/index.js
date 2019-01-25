@@ -7,7 +7,7 @@ import { keyBy } from "lodash";
  * @param {Object} parent The result of the parent resolver.
  * @param {Object} args The graphql arguments.
  * @param {Object} ctx The graphql context.
- * @return {AuthConfig} The auth config.
+ * @return {DeploymentConfig} The deployment config.
  */
 export default async function deploymentConfig() {
   // Get astroUnit object directly from config.
@@ -28,12 +28,17 @@ export default async function deploymentConfig() {
   // Get current version of platform, passed from helm.
   const latestVersion = config.get("helm.releaseVersion");
 
+  // Are we deploying the platform and airflow into the same namespace (true),
+  // or creating a new namespace for each deployment (false)
+  const singleNamespace = config.get("helm.singleNamespace");
+
   return {
     defaults,
     limits,
     astroUnit,
     maxExtraAu,
     executors,
-    latestVersion
+    latestVersion,
+    singleNamespace
   };
 }
