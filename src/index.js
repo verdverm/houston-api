@@ -26,7 +26,11 @@ const app = express();
 app.use(cookieParser(), authenticateRequest());
 
 // Set up HTTP request logging.
-app.use(morgan("dev", { stream: { write: msg => log.debug(msg.trim()) } }));
+app.use(
+  morgan(process.env.NODE_ENV === "development" ? "dev" : "short", {
+    stream: { write: msg => log.debug(msg.trim()) }
+  })
+);
 
 // Setup REST routes
 app.use("/v1", v1);
