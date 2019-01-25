@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "GraphQL API for the Astronomer Platform",
   "scripts": {
-    "build": "babel src -d dist && npm run prisma-generate",
+    "build": "babel src -d dist --copy-files && npm run prisma-generate",
     "start": "npm run prisma-deploy && npm run prisma-generate && nodemon --exec babel-node -e js,graphql src/index.js",
     "serve": "node dist/index.js",
     "test": "jest",
