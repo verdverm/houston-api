@@ -13,6 +13,7 @@ import { ApolloServer } from "apollo-server-express";
 import { Prisma } from "prisma-binding";
 import { importSchema } from "graphql-import";
 import cookieParser from "cookie-parser";
+import morgan from "morgan";
 import { createServer } from "http";
 
 // Get configuration from config dir and environment
@@ -23,6 +24,9 @@ const prismaConfig = config.get("prisma");
 // Create express server
 const app = express();
 app.use(cookieParser(), authenticateRequest());
+
+// Set up HTTP request logging.
+app.use(morgan("dev", { stream: { write: msg => log.debug(msg.trim()) } }));
 
 // Setup REST routes
 app.use("/v1", v1);
