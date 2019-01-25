@@ -51,6 +51,12 @@ export function ingress() {
  * @return {Object} LimitRange values.
  */
 export function limitRange() {
+  if (config.get("helm.singleNamespace")) {
+    // If the platform and airflow are deployed in the same namespace we can't
+    // usefully enforce any quotas.
+    return {};
+  }
+
   const { astroUnit, maxPodAu } = config.get("deployments");
   const max = auToResources(astroUnit, maxPodAu);
   const min = auToResources(astroUnit, 1);
@@ -77,6 +83,12 @@ export function limitRange() {
  * @return {Object} Quotas, etc.
  */
 export function constraints(deployment) {
+  if (config.get("helm.singleNamespace")) {
+    // If the platform and airflow are deployed in the same namespace we can't
+    // usefully enforce any quotas.
+    return {};
+  }
+
   // Get some config settings.
   const { astroUnit, components, executors } = config.get("deployments");
 

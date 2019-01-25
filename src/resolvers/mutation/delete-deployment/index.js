@@ -1,4 +1,5 @@
 import { generateNamespace } from "deployments/naming";
+import config from "config";
 
 /*
  * Delete a deployment.
@@ -20,7 +21,7 @@ export default async function deleteDeployment(parent, args, ctx) {
   await ctx.commander.request("deleteDeployment", {
     releaseName: deployment.releaseName,
     namespace: generateNamespace(deployment.releaseName),
-    deleteNamespace: true
+    deleteNamespace: !config.get("helm.singleNamespace")
   });
 
   return deployment;
