@@ -10,6 +10,7 @@ import {
 } from "./index";
 import { generateReleaseName } from "deployments/naming";
 import casual from "casual";
+import config from "config";
 import {
   AIRFLOW_EXECUTOR_LOCAL,
   DEPLOYMENT_PROPERTY_EXTRA_AU,
@@ -42,6 +43,14 @@ describe("limitRange", () => {
     expect(config).toHaveProperty("limits");
     expect(config.limits).toHaveLength(2);
   });
+
+  describe("in singleNamespace mode", () => {
+    beforeAll(() => (config.helm.singleNamespace = true));
+    afterAll(() => (config.helm.singleNamespace = false));
+    test("Doesn't specify any limits", () => {
+      expect(limitRange()).toEqual({});
+    });
+  });
 });
 
 describe("constraints", () => {
@@ -60,6 +69,17 @@ describe("constraints", () => {
     expect(config.pgbouncer.metadataPoolSize).toBe(12);
     expect(config.pgbouncer.maxClientConn).toBe(125);
     expect(config).not.toHaveProperty("allowPodLaunching");
+  });
+
+  describe("in singleNamespace mode", () => {
+    beforeAll(() => (config.helm.singleNamespace = true));
+    afterAll(() => (config.helm.singleNamespace = false));
+    test("Doesn't specify any quotas", () => {
+      const deployment = {
+        id: casual.uuid
+      };
+      expect(constraints(deployment)).toEqual({});
+    });
   });
 
   test("correctly applies constraints for extra au property", () => {

@@ -1,6 +1,7 @@
 import resolvers from "resolvers";
 import { generateReleaseName } from "deployments/naming";
 import casual from "casual";
+import config from "config";
 import { graphql } from "graphql";
 import { makeExecutableSchema } from "graphql-tools";
 import { importSchema } from "graphql-import";
@@ -25,37 +26,72 @@ const mutation = `
 `;
 
 describe("deleteDeployment", () => {
-  test("typical request is successful", async () => {
+  let id, deleteDeployment, db, commander, vars;
+
+  beforeEach(() => {
     // Create some deployment vars.
-    const id = casual.uuid;
+    id = casual.uuid;
 
     // Mock up some db functions.
-    const deleteDeployment = jest.fn().mockReturnValue({
+    deleteDeployment = jest.fn().mockReturnValue({
       id,
       releaseName: generateReleaseName()
     });
 
     // Construct db object for context.
-    const db = {
+    db = {
       mutation: { deleteDeployment }
     };
 
     // Create mock commander client.
-    const commander = {
+    commander = {
       request: jest.fn()
     };
 
     // Vars for the gql mutation.
-    const vars = {
+    vars = {
       deploymentUuid: id
     };
+  });
 
-    // Run the graphql mutation.
-    const res = await graphql(schema, mutation, null, { db, commander }, vars);
+  describe("in normal mode", () => {
+    test("typical request is successful", async () => {
+      // Run the graphql mutation.
+      const res = await graphql(
+        schema,
+        mutation,
+        null,
+        { db, commander },
+        vars
+      );
 
-    expect(res.errors).toBeUndefined();
-    expect(deleteDeployment.mock.calls.length).toBe(1);
-    expect(commander.request.mock.calls.length).toBe(1);
-    expect(res.data.deleteDeployment.id).toBe(id);
+      expect(res.errors).toBeUndefined();
+      expect(deleteDeployment.mock.calls.length).toBe(1);
+      expect(commander.request.mock.calls.length).toBe(1);
+      expect(commander.request.mock.calls[0][0]).toBe("deleteDeployment");
+      expect(commander.request.mock.calls[0][1].deleteNamespace).toBe(true);
+      expect(res.data.deleteDeployment.id).toBe(id);
+    });
+  });
+  describe("in singleNamespace mode", () => {
+    beforeAll(() => (config.helm.singleNamespace = true));
+    afterAll(() => (config.helm.singleNamespace = false));
+    test("typical request is successful", async () => {
+      // Run the graphql mutation.
+      const res = await graphql(
+        schema,
+        mutation,
+        null,
+        { db, commander },
+        vars
+      );
+
+      expect(res.errors).toBeUndefined();
+      expect(deleteDeployment.mock.calls.length).toBe(1);
+      expect(commander.request.mock.calls.length).toBe(1);
+      expect(commander.request.mock.calls[0][0]).toBe("deleteDeployment");
+      expect(commander.request.mock.calls[0][1].deleteNamespace).toBe(false);
+      expect(res.data.deleteDeployment.id).toBe(id);
+    });
   });
 });
