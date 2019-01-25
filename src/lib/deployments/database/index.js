@@ -161,4 +161,6 @@ export async function createSchema(
   if (!allowRootAccess) {
     await conn.raw(`REVOKE ${user} FROM ${creator}`);
   }
+
+  log.info(`Created ${schema} schema for ${user}`);
 }
