@@ -36,6 +36,7 @@ const query = `
       maxExtraAu
       executors
       latestVersion
+      singleNamespace
     }
   }
 `;
@@ -51,5 +52,6 @@ describe("deploymentConfig", () => {
     expect(data.deploymentConfig).toHaveProperty("maxExtraAu");
     expect(data.deploymentConfig).toHaveProperty("executors");
     expect(data.deploymentConfig).toHaveProperty("latestVersion");
+    expect(data.deploymentConfig).toHaveProperty("singleNamespace");
   });
 });

@@ -123,6 +123,7 @@ type DeploymentConfig {
   maxExtraAu: Int
   executors: JSON
   latestVersion: String
+  singleNamespace: Boolean!
 }
 
 type AstroUnit {
