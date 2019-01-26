@@ -1,19 +1,30 @@
+import config from "config";
 import { createLogger, format, transports } from "winston";
+const { combine, colorize, timestamp, printf } = format;
+
+const baseFormatter = combine(
+  format(info => {
+    info.level = `${info.level.toUpperCase()}`;
+    return info;
+  })(),
+  timestamp({
+    format: "YYYY-MM-DDTHH:mm:ss"
+  })
+);
+
+const printer = printf(
+  info => `${info.timestamp} ${info.level} ${info.message}`
+);
+
+const isProd = process.env.NODE_ENV === "production";
+const formatter = isProd
+  ? combine(baseFormatter, printer)
+  : combine(baseFormatter, colorize(), printer);
 
 // Reuturn a default console logger
 export default createLogger({
-  level: "debug",
-  format: format.combine(
-    format(info => {
-      info.level = `${info.level.toUpperCase()}`;
-      return info;
-    })(),
-    format.colorize(),
-    format.timestamp({
-      format: "YYYY-MM-DDTHH:mm:ss"
-    }),
-    format.printf(info => `${info.timestamp} ${info.level} ${info.message}`)
-  ),
+  level: config.get("logging.level"),
+  format: formatter,
   transports: [
     new transports.Console({
       // Supress logs if running `jest --silent`.

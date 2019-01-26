@@ -12,6 +12,10 @@ prisma:
   secret: ~
   debug: false
 
+# Logging configuration.
+logging:
+  level: "debug"
+
 # Database connection.
 # This is mostly for knexfile now.
 # Also defined for Prisma service separately.
