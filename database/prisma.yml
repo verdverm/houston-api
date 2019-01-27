@@ -1,16 +1,11 @@
 # Pull endpoint from env
-# endpoint: ${env:PRISMA_ENDPOINT}
-endpoint: "http://localhost:4466/houston"
+endpoint: ${env:PRISMA_ENDPOINT}
 
 # Location of datamodel
 datamodel: datamodel.graphql
 
 # Pull secret from env
-# secret: ${env:PRISMA_SECRET}
-
-# Seed our database on initial deploy
-# seed:
-#   import: seed.graphql
+secret: ${env:PRISMA_SECRET}
 
 # Generate graphql schema
 generate:

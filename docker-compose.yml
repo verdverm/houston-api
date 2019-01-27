@@ -13,12 +13,7 @@ services:
         databases:
           default:
             connector: postgres
-            host: postgres
-            port: 5432
-            database: postgres
-            # schema: public
-            user: postgres
-            password: postgres
+            uri: "postgres://postgres:postgres@postgres:5432/postgres"
             migrations: true
             rawAccess: true
   postgres:

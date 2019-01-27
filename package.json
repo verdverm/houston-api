@@ -3,14 +3,13 @@
   "version": "1.0.0",
   "description": "GraphQL API for the Astronomer Platform",
   "scripts": {
-    "build": "babel src -d dist --copy-files && npm run prisma-generate",
-    "start": "npm run prisma-deploy && npm run prisma-generate && nodemon --exec babel-node -e js,graphql src/index.js",
-    "serve": "node dist/index.js",
+    "build": "babel src -d dist --copy-files",
+    "start": "npm run deploy && nodemon --exec babel-node -e js,graphql src/index.js",
+    "serve": "npm run deploy && node dist/index.js",
     "test": "jest",
     "coverage": "jest --coverage",
     "lint": "eslint src --ignore-pattern src/lib/generated --ext .js --ext .graphql",
-    "prisma-deploy": "prisma deploy --env-file .env",
-    "prisma-generate": "prisma generate",
+    "deploy": "prisma deploy && prisma generate",
     "playground": "graphql playground",
     "knex": "babel-node node_modules/.bin/knex",
     "migrate-latest": "npm run knex migrate:latest"
