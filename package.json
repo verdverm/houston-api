@@ -15,7 +15,7 @@
     "migrate-latest": "npm run knex migrate:latest"
   },
   "author": "Astronomer",
-  "license": "Apache 2.0",
+  "license": "Astronomer Enterprise License",
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "apollo-server": "^2.2.2",
