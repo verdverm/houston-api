@@ -43,6 +43,12 @@ Houston is written in ES6 and beyond, and it's currently built with [Babel](http
 
 Houston is currently using [Jest](https://jestjs.io) for running tests. Typically test files will live near the unit being tested and be named similarly with `.unit.test.js` as its extension. Jest can be ran as a one-off or can be run in watch mode. Both modes allow you to specify a regex path to limit what tests are running. `npm run test` will run all tests once and report back. `npm run test -- src/resolvers/create-user --watch` will run in watch mode, and only for the tests for the `create-user` resolver.
 
+## Live testing in Kubernetes
+
+Sometimes it's useful to manually take over the role of commander, in order to test other components, like the airflow chart. Since commander requires the chart to live in a remote repository, it's difficult to quickly iterate on changes to the chart locally. One way to test this type of scenario is to disable commander and enable logging of the helm values instead. This can be done by setting configuration `commander.enabled: false` and `deployments.logHelmValues: true`. These can be overridden via environment variables.
+
+Create a new deployment via the UI or CLI, then grab the values that Houston logs out. You can then use these values to pass to a `helm install` manually. Ex: `helm install -f values.yaml -n <release-name> --namespace <namespace>`.
+
 ## Useful Commands
 
 * `npm start` starts the develpment server. Restarts automatically with nodemon.
