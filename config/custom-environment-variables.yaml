@@ -79,3 +79,16 @@ publicSignups:
 emailConfirmation:
   __name: "EMAIL_CONFIRMATION"
   __format: "json"
+
+deployments:
+  database:
+    enabled:
+      __name: "DEPLOYMENTS_DATBASE_ENABLED"
+      __format: "json"
+    retainOnDelete:
+      __name: "DEPLOYMENTS_DATBASE_RETAIN_ON_DELETE"
+      __format: "json"
+    allowRootAccess:
+      __name: "DEPLOYMENTS_DATBASE_ALLOW_ROOT_ACCES"
+      __format: "json"
+    connection: "DEPLOYMENTS_DATABASE_CONNECTION"

@@ -208,6 +208,7 @@ deployments:
     allowRootAccess: false
 
     # Connection details for root user.
+    # This can also be overridden with a connection string.
     connection:
       user: postgres
       password: postgres
