@@ -5,9 +5,10 @@ import {
 } from "deployments/naming";
 import log from "logger";
 import knex from "knex";
-import { clone, merge } from "lodash";
+import { clone, isString, merge } from "lodash";
 import config from "config";
 import passwordGenerator from "generate-password";
+import { parse } from "pg-connection-string";
 
 /*
  * Create a new database for a given deployment
@@ -24,8 +25,11 @@ export async function createDatabaseForDeployment(deployment) {
     return {};
   }
 
+  // Parse the connection into a standard format.
+  const parsedConn = parseConnection(connection);
+
   // Create connection as root user.
-  const rootConn = createConnection(connection);
+  const rootConn = createConnection(parsedConn);
 
   // Generate some data.
   const dbName = generateDatabaseName(deployment.releaseName);
@@ -46,7 +50,7 @@ export async function createDatabaseForDeployment(deployment) {
   await createDatabase(rootConn, dbName);
 
   // Connect to the newly created database.
-  const deploymentCfg = merge(clone(connection), { database: dbName });
+  const deploymentCfg = merge(clone(parsedConn), { database: dbName });
   const deploymentDb = createConnection(deploymentCfg);
 
   // Create schema for airflow metadata.
@@ -56,7 +60,7 @@ export async function createDatabaseForDeployment(deployment) {
     airflowSchemaName,
     airflowUserName,
     airflowPassword,
-    connection.user,
+    parsedConn.user,
     allowRootAccess
   );
 
@@ -67,7 +71,7 @@ export async function createDatabaseForDeployment(deployment) {
     celerySchemaName,
     celeryUserName,
     celeryPassword,
-    connection.user,
+    parsedConn.user,
     allowRootAccess
   );
 
@@ -78,17 +82,17 @@ export async function createDatabaseForDeployment(deployment) {
   const metadataConnection = {
     user: airflowUserName,
     pass: airflowPassword,
-    host: connection.host,
-    port: connection.port,
+    host: parsedConn.host,
+    port: parsedConn.port,
     db: dbName
   };
 
   // Construt connection details for celery schema.
-  const resultBackendConnection = merge(clone(connection), {
+  const resultBackendConnection = merge(clone(parsedConn), {
     user: celeryUserName,
     pass: celeryPassword,
-    host: connection.host,
-    port: connection.port,
+    host: parsedConn.host,
+    port: parsedConn.port,
     db: dbName
   });
 
@@ -163,4 +167,14 @@ export async function createSchema(
   }
 
   log.info(`Created ${schema} schema for ${user}`);
+}
+
+/*
+ * Parse the connection configuration into an object.
+ * @param {String} conn A postgres connection string or connection object.
+ * @param {Object} The parsed connection object.
+ */
+export function parseConnection(conn) {
+  if (isString(conn)) return parse(conn);
+  return conn;
 }
