@@ -1,6 +1,8 @@
 import { parseJSON } from "utilities";
+import log from "logger";
 import { curry, find, fromPairs, get, map, set, merge } from "lodash";
 import config from "config";
+import yaml from "yamljs";
 import {
   DEPLOYMENT_PROPERTY_EXTRA_AU,
   DEPLOYMENT_PROPERTY_ALERT_EMAILS,
@@ -19,7 +21,9 @@ import {
  */
 export function generateHelmValues(deployment, values = {}) {
   const base = config.get("deployments.helm") || {};
-  return merge(
+  const logValues = config.get("deployments.logHelmValues");
+
+  const helmValues = merge(
     base, // Apply base settings from config YAML.
     values, // Apply any settings passed in directly.
     ingress(), // Apply ingress settings.
@@ -29,6 +33,12 @@ export function generateHelmValues(deployment, values = {}) {
     platform(deployment), // Apply astronomer platform specific values.
     deployment.config // The deployment level config.
   );
+
+  // Log out the YAML values if enabled.
+  logValues &&
+    log.info(`Final helm values: \n${yaml.stringify(helmValues, 4)}`);
+
+  return helmValues;
 }
 
 /*

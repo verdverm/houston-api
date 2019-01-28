@@ -81,6 +81,9 @@ emailConfirmation:
   __format: "json"
 
 deployments:
+  logHelmValues:
+    __name: "DEPLOYMENTS_LOG_HELM_VALUES"
+    __format: "json"
   database:
     enabled:
       __name: "DEPLOYMENTS_DATBASE_ENABLED"

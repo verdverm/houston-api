@@ -52,7 +52,8 @@
     "prisma-binding": "^2.2.12",
     "prisma-client-lib": "^1.23.2",
     "shortid": "^2.2.14",
-    "winston": "^3.1.0"
+    "winston": "^3.1.0",
+    "yamljs": "^0.3.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.0.0",

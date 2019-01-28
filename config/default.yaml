@@ -191,6 +191,9 @@ roles:
 # Airflow Deployment Configurations
 #
 deployments:
+  # Log out final helm values whenever they are generated, before deployment.
+  logHelmValues: false
+
   # This is the database connection that we use to connect
   # and create other databases/schemas/users for each
   # individual airflow deployment.
