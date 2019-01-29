@@ -14,10 +14,10 @@ const router = new express.Router();
 router.use("/alerts", alerts);
 router.use("/authorization", authorization);
 router.use("/healthz", healthz);
-router.use("/oauth_redirect", oauthRedirect);
+router.use("/oauth-redirect", oauthRedirect);
 router.use("/oauth", oauth);
 router.use("/registry", registry);
-router.use("/registry_events", registryEvents);
+router.use("/registry-events", registryEvents);
 
 // Export the v1 router.
 export default router;
