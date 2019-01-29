@@ -34,7 +34,7 @@ export function setJWTCookie(response, token) {
   return response.cookie(AUTH_COOKIE_NAME, token, {
     domain: `.${config.get("helm.baseDomain")}`,
     path: "/",
-    expires: new Date(millis),
+    expires: new Date(Date.now() + millis),
     secure: true
   });
 }

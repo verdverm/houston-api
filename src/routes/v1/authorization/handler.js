@@ -11,18 +11,16 @@ import url from "url";
  */
 export default async function(req, res) {
   const { user } = req.session;
-  if (!user) res.sendStatus(401);
+  if (!user) return res.sendStatus(401);
 
   // Parse out some variables.
   const originalUrl = req.get("x-original-url");
   const { hostname } = url.parse(originalUrl);
   const [subdomain] = hostname.split(".");
 
-  // Check if the user has global monitoring permission.
-  const hasMonitoringPermission = hasPermission(user, "global.monitoring.view");
-
   // If we're accessing a monitoring service and we have permission, allow it.
-  if (/^(grafana|kibana)$/.test(subdomain) && hasMonitoringPermission) {
+  const monitoringSubdomain = /^(grafana|kibana)$/.test(subdomain);
+  if (monitoringSubdomain && hasPermission(user, "global.monitoring.view")) {
     log.info(`Authorizing request to ${originalUrl}`);
     return res.sendStatus(200);
   }
@@ -32,7 +30,7 @@ export default async function(req, res) {
   if (matches) {
     // Get the deploymentId for the parsed releaseName.
     const deploymentId = await prisma
-      .deployment({ where: { releaseName: matches[1] } })
+      .deployment({ releaseName: matches[1] })
       .id();
 
     // Check if we have deployment level access to it.
@@ -46,10 +44,11 @@ export default async function(req, res) {
     // If we have permission, authorize it.
     if (hasDeploymentPermission) {
       log.info(`Authorizing request to ${originalUrl}`);
-      res.sendStatus(200);
+      return res.sendStatus(200);
     }
   }
 
   // If we made it this far, deny the request.
-  res.sendStatus(401);
+  log.info(`Denying request to ${originalUrl}`);
+  return res.sendStatus(401);
 }

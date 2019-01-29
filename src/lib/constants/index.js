@@ -40,3 +40,5 @@ export const SYSTEM_VIEWER = "SYSTEM_VIEWER";
 
 export const ENTITY_WORKSPACE = "WORKSPACE";
 export const ENTITY_DEPLOYMENT = "DEPLOYMENT";
+
+export const AUTH_COOKIE_NAME = "astronomer_auth";

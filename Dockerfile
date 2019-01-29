@@ -12,8 +12,7 @@ LABEL io.astronomer.docker.component="houston"
 LABEL io.astronomer.docker.environment="development"
 
 # Set and switch to installation directory.
-ENV HOUSTON_DIR=/opt/houston-api
-WORKDIR ${HOUSTON_DIR}
+WORKDIR /houston
 
 # Add packages.json first so we can prevent rebuilds for code changes.
 COPY package.json package.json
@@ -38,4 +37,4 @@ COPY . .
 
 # Expose port and run default start command.
 EXPOSE 8871
-CMD ["npm", "run", "start"]
+ENTRYPOINT ["npm", "run", "start"]

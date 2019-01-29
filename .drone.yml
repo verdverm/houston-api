@@ -11,7 +11,7 @@ pipeline:
   test:
     image: astronomerinc/ap-houston-api:dev
     commands:
-      - cd /opt/houston-api
+      - cd /houston
       - npm run test
     when:
       event: push
@@ -19,7 +19,7 @@ pipeline:
   lint:
     image: astronomerinc/ap-houston-api:dev
     commands:
-      - cd /opt/houston-api
+      - cd /houston
       - npm run lint
     when:
       event: push

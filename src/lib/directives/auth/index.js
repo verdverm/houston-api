@@ -55,7 +55,9 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
         );
 
       // Execute the actual request.
-      log.debug(`Executing authenticated request for userId ${ctx.user.id}`);
+      log.debug(
+        `Executing authenticated graphql request for userId ${ctx.user.id}`
+      );
       return resolve.apply(this, args);
     };
   }
