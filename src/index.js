@@ -6,7 +6,7 @@ import log from "logger";
 import directives from "directives";
 import { formatError } from "errors";
 import commander from "commander";
-import { authenticateRequest } from "authn";
+import { authenticateRequest } from "authentication";
 import config from "config";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
