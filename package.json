@@ -10,6 +10,7 @@
     "coverage": "jest --coverage",
     "lint": "eslint src --ignore-pattern src/lib/generated --ext .js --ext .graphql",
     "deploy": "prisma deploy && prisma generate",
+    "token": "prisma token",
     "playground": "graphql playground",
     "knex": "babel-node node_modules/.bin/knex",
     "migrate-latest": "npm run knex migrate:latest"
