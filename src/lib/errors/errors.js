@@ -1,4 +1,8 @@
-import { AuthenticationError, ForbiddenError, UserInputError } from "apollo-server";
+import {
+  AuthenticationError,
+  ForbiddenError,
+  UserInputError
+} from "apollo-server";
 
 export class PublicSignupsDisabledError extends Error {
   message =
