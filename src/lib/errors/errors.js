@@ -1,14 +1,16 @@
+import { AuthenticationError, ForbiddenError, UserInputError } from "apollo-server";
+
 export class PublicSignupsDisabledError extends Error {
   message =
     this.message ||
     "Public signups are disabled, a valid inviteToken is required";
 }
 
-export class InviteTokenNotFoundError extends Error {
+export class InviteTokenNotFoundError extends UserInputError {
   message = this.message || "Invite token not found";
 }
 
-export class InviteTokenEmailError extends Error {
+export class InviteTokenEmailError extends UserInputError {
   message =
     this.message ||
     "The email specified is not associated with the invite token";
@@ -18,13 +20,13 @@ export class ResourceNotFoundError extends Error {
   message = this.message || "The requested resource was not found";
 }
 
-export class CredentialsNotFoundError extends Error {
+export class CredentialsNotFoundError extends AuthenticationError {
   message =
     this.message ||
     "Credentials not found for this user, did you mean to sign in with OAuth?";
 }
 
-export class InvalidCredentialsError extends Error {
+export class InvalidCredentialsError extends AuthenticationError {
   message = this.message || "Invalid username and password combination";
 }
 
@@ -32,15 +34,14 @@ export class InvalidAuthenticationProviderError extends Error {
   message = this.message || "Invalid authentication provider";
 }
 
-export class PermissionError extends Error {
+export class PermissionError extends ForbiddenError {
   message =
     this.message || "You do not have the appropriate permissions for that";
 }
 
-export class DuplicateDeploymentLabelError extends Error {
+export class DuplicateDeploymentLabelError extends UserInputError {
   constructor(deploymentName) {
-    super();
-    this.message = `Workspace already has a deployment named ${deploymentName}`;
+    super(`Workspace already has a deployment named ${deploymentName}`);
   }
 }
 
@@ -48,17 +49,17 @@ export class InvalidDeploymentError extends Error {
   message = this.message || "Invalid deployment";
 }
 
-export class MissingArgumentError extends Error {
+export class MissingArgumentError extends UserInputError {
   constructor(argName) {
     super();
     this.message = `A required argument was not sent: ${argName}`;
   }
 }
 
-export class UserInviteExistsError extends Error {
+export class UserInviteExistsError extends UserInputError {
   message = this.message || "User already invited to workspace";
 }
 
-export class JWTValidationError extends Error {
+export class JWTValidationError extends AuthenticationError {
   message = this.message || "Invalid JWT";
 }
