@@ -1,4 +1,5 @@
 import {
+  ApolloError,
   AuthenticationError,
   ForbiddenError,
   UserInputError
@@ -30,8 +31,16 @@ export class CredentialsNotFoundError extends AuthenticationError {
     "Credentials not found for this user, did you mean to sign in with OAuth?";
 }
 
-export class InvalidCredentialsError extends AuthenticationError {
-  message = this.message || "Invalid username and password combination";
+export class InvalidCredentialsError extends ApolloError {
+  name = "InvalidCredentialsError";
+  constructor() {
+    // Orbit currently looks at the _text_ of the error message, so don't
+    // change this without updating Orbit to look at the code, not the message
+    super(
+      "Invalid password and username combination",
+      "INVAILD_USERNAME_PASSWORD"
+    );
+  }
 }
 
 export class InvalidAuthenticationProviderError extends Error {

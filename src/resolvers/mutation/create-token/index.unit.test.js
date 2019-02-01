@@ -153,7 +153,9 @@ describe("createToken", () => {
     const res = await graphql(schema, mutation, null, { db }, vars);
     expect(res.errors.length).toBe(1);
     expect(res.errors[0].message).toEqual(
-      expect.stringMatching(/^Invalid username and password/)
+      // Orbit expects this to match to show the right message
+      expect.stringMatching(/invalid password/i)
     );
+    expect(res.errors[0].extensions.code).toBe("INVAILD_USERNAME_PASSWORD");
   });
 });
