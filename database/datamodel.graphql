@@ -50,8 +50,8 @@ type Email {
 type LocalCredential {
   id: ID! @unique
   user: User
-  password: String @unique
-  resetToken: String
+  password: String
+  resetToken: String @unique
 }
 
 type OAuthCredential {

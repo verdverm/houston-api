@@ -1321,7 +1321,7 @@ export type InviteTokenWhereUniqueInput = AtLeastOne<{
 
 export type LocalCredentialWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
-  password?: String;
+  resetToken?: String;
 }>;
 
 export type OAuthCredentialWhereUniqueInput = AtLeastOne<{

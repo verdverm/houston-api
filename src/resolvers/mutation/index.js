@@ -7,6 +7,8 @@ import deleteDeployment from "./delete-deployment";
 import deleteInviteToken from "./delete-invite-token";
 import deleteServiceAccount from "./delete-service-account";
 import deleteWorkspace from "./delete-workspace";
+import forgotPassword from "./forgot-password";
+import resetPassword from "./reset-password";
 import updateDeployment from "./update-deployment";
 import updateUser from "./update-user";
 import updateWorkspace from "./update-workspace";
@@ -23,6 +25,8 @@ export default {
   deleteInviteToken,
   deleteServiceAccount,
   deleteWorkspace,
+  forgotPassword,
+  resetPassword,
   updateDeployment,
   updateUser,
   updateWorkspace,

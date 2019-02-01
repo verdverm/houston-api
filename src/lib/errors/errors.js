@@ -67,3 +67,7 @@ export class UserInviteExistsError extends UserInputError {
 export class JWTValidationError extends AuthenticationError {
   message = this.message || "Invalid JWT";
 }
+
+export class InvalidResetToken extends UserInputError {
+  message = this.message || "Invalid resetToken";
+}

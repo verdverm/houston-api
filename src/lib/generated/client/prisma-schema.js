@@ -1227,7 +1227,7 @@ input LocalCredentialWhereInput {
 
 input LocalCredentialWhereUniqueInput {
   id: ID
-  password: String
+  resetToken: String
 }
 
 scalar Long

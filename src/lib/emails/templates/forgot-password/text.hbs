@@ -1,5 +1,15 @@
+{{#extend "layout-text"}}{{#content "body"~}}
+You (or someone else) asked for a password reset on the account associated with
+this email address.
+
 Your password token is: {{token}}
 
 Please follow the link below to reset your password:
 
 {{orbitUrl}}/reset-password?token={{token}}
+
+If you did not request a password reset you can delete and ignore this email.
+
+Thanks,
+The Astronomer team
+{{~/content}}{{/extend}}

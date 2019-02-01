@@ -14,8 +14,14 @@ handlebarsLayouts.register(handlebars);
 
 // Define template paths.
 const templatePath = path.join(__dirname, "templates");
-const layoutPath = path.join(templatePath, "layouts/main.hbs");
-handlebars.registerPartial("layout", fs.readFileSync(layoutPath, "utf8"));
+handlebars.registerPartial(
+  "layout",
+  fs.readFileSync(path.join(templatePath, "layouts/main.hbs"), "utf8")
+);
+handlebars.registerPartial(
+  "layout-text",
+  fs.readFileSync(path.join(templatePath, "layouts/text.hbs"), "utf8")
+);
 
 // Create a new mailer object.
 const mailer = new Emailer({
