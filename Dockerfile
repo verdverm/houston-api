@@ -37,4 +37,7 @@ COPY . .
 
 # Expose port and run default start command.
 EXPOSE 8871
-ENTRYPOINT ["npm", "run", "start"]
+
+# Wrap with entrypoint
+ENTRYPOINT ["/houston/bin/entrypoint"]
+CMD ["npm", "run", "start"]

@@ -2,6 +2,11 @@
 
 set -e
 
+HOST=$(echo "${PRISMA_ENDPOINT}" | awk -F// '{print $2}' | awk -F: '{print $1}')
+PORT=$(echo "${PRISMA_ENDPOINT}" | awk -F// '{print $2}' | awk -F: '{print $2}')
 while ! nc -w 1 -z "${HOST}" "${PORT}"; do
     sleep 0.001
 done
+
+# Run the original command
+exec "$@"
