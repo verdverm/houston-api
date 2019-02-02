@@ -1,10 +1,12 @@
 import { prisma } from "generated/client";
+import { checkPermission, getUserWithRoleBindings } from "rbac";
 import log from "logger";
 import { InvalidCredentialsError } from "errors";
-import { createJWT } from "jwt";
+import { decodeJWT } from "jwt";
+import { createDockerJWT } from "registry/jwt";
 import bcrypt from "bcryptjs";
-import config from "config";
-import { forEach } from "lodash";
+import { compact, first, isArray } from "lodash";
+import { ENTITY_DEPLOYMENT } from "constants";
 
 // List of expected registry codes.
 const REGISTRY_CODES = {
@@ -19,72 +21,136 @@ const REGISTRY_CODES = {
  * @param {Object} res The response.
  */
 export default async function(req, res) {
-  log.info("Handling registry auth");
+  log.info("Processing registry authorization");
 
+  // If we don't have an original URL, it's a mistake. Can't proceed.
   const originalUri = req.get("x-original-uri");
   if (!originalUri) {
-    sendError(res, REGISTRY_CODES.UNKNOWN, "Unknown registry service request");
+    return sendError(
+      res,
+      REGISTRY_CODES.UNKNOWN,
+      "Unknown registry service request"
+    );
   }
 
+  // Get the authorization header, fail if not found.
   const authorization = req.get("authorization");
-  if (!authorization) {
-    sendError(
+  if (!authorization || authorization.substr(0, 5) !== "Basic") {
+    return sendError(
       res,
       REGISTRY_CODES.UNAUTHORIZED,
       "No authorization credentials specified"
     );
   }
 
-  if (!authorization.substr(0, 5) === "Basic") {
-    sendError(
-      res,
-      REGISTRY_CODES.UNAUTHORIZED,
-      "Unknown authentication pattern"
-    );
-  }
-
+  // Pull authorization token out of headers and parse it.
   const token = authorization.substr(6);
-  const isRegistryAuth = isRegistryAuth(token);
+  const [authUser, authPassword] = Buffer.from(token, "base64")
+    .toString()
+    .split(":");
 
-  if (isRegistryAuth) {
-    log.info("Do registryAuth stuff here");
+  // Determine if this is a user triggered action, or from a running deployment.
+  const isDeployment = await isDeploymentRegistryAuth(authUser, authPassword);
+  const userId = isDeployment
+    ? "registry"
+    : (await decodeJWT(authPassword)).uuid;
+
+  // JWT response payload.
+  const payload = [];
+
+  // Pull out the scope variable.
+  const scope = req.query.scope;
+
+  // Scope will not exist on a docker login (astro auth login).
+  // It will exist for a code push (docker push) and when deployment pods
+  // pull the image (docker pull).
+  if (scope) {
+    const { type, releaseName, image, actions } = first(
+      compact((isArray(scope) ? scope : [scope]).map(parseScope))
+    );
+
+    if (!releaseName) {
+      return sendError(
+        res,
+        REGISTRY_CODES.UNKNOWN,
+        "Unknown scope, cannot determine repository or image"
+      );
+    }
+
+    // This path is for a code push.
+    if (!isDeployment) {
+      log.info(`Checking permissions for ${userId} on ${releaseName}`);
+      const user = await getUserWithRoleBindings(userId);
+      const deploymentId = await prisma.deployment({ releaseName }).id();
+      checkPermission(
+        user,
+        "user.deployment.update",
+        ENTITY_DEPLOYMENT.toLowerCase(),
+        deploymentId
+      );
+    }
+
+    payload.push({ type, actions, name: `${releaseName}/${image}` });
   }
 
+  // Create and respond with the JWT.
+  const expiration = 3600;
+  const dockerJWT = await createDockerJWT(userId, payload, expiration);
   res.json({
-    token: createJWT("<<userIdGoesHere>>"),
-    expires_in: 3600,
+    token: dockerJWT,
+    expires_in: expiration,
     issued_at: new Date().toISOString()
   });
+}
+
+/*
+ * Parse a scope query string parameter from the registry.
+ * @param {String} scope The user scope.
+ * @return {Object} The parsed information.
+ */
+export function parseScope(scope) {
+  const matches = scope.match(
+    /(repository):([a-z]+-[a-z]+-[0-9]{0,4})\/(airflow):([a-z,]+)/
+  );
+  if (matches) {
+    return {
+      type: matches[1],
+      releaseName: matches[2],
+      image: matches[3],
+      actions: matches[4].split(",")
+    };
+  }
 }
 
 /*
  * Check if token is legit.
  * @param {String} token The authorization token.
  */
-export async function isRegistryAuth(token) {
-  if (isPlatformRegistryAuth(token)) return true;
-  return await isDeploymentRegistryAuth(token);
-}
+// export async function isRegistryAuth(token) {
+//   if (isPlatformRegistryAuth(token)) {
+//     log.info("Platform registry auth");
+//     return true;
+//   }
+//   if (await isDeploymentRegistryAuth(token)) {
+//     log.info("Deployment registry auth");
+//     return true;
+//   }
+// }
 
 /*
  * Check if token is a platform token.
  * @param {String} token The authorization token.
  */
-export function isPlatformRegistryAuth(token) {
-  const registryAuth = config.get("registry.auth");
-  forEach(registryAuth.auths, value => {
-    if (value.auth === token) return true;
-  });
-}
+// export function isPlatformRegistryAuth(token) {
+//   const registryAuth = config.get("registry.auth");
+//   return !!find(registryAuth.auths, value => value.auth === token);
+// }
 
 /*
  * Check if token is a deployment token.
  * @param {String} token The authorization token.
  */
-export async function isDeploymentRegistryAuth(token) {
-  const decoded = Buffer.from(token, "base64").toString();
-  const [releaseName, password] = decoded.split(":");
-
+export async function isDeploymentRegistryAuth(releaseName, password) {
   // Return false if password is empty.
   if (!password) return false;
 
@@ -93,7 +159,7 @@ export async function isDeploymentRegistryAuth(token) {
 
   // Get the registryPassword for this deployment.
   const registryPassword = await prisma
-    .deployment({ where: { releaseName } })
+    .deployment({ releaseName })
     .registryPassword();
 
   // Return false if no result.

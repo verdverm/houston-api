@@ -1,12 +1,13 @@
 import config from "config";
 import { createLogger, format, transports } from "winston";
-const { combine, colorize, timestamp, printf } = format;
+const { combine, colorize, timestamp, printf, splat } = format;
 
 const baseFormatter = combine(
   format(info => {
     info.level = `${info.level.toUpperCase()}`;
     return info;
   })(),
+  splat(),
   timestamp({
     format: "YYYY-MM-DDTHH:mm:ss"
   })

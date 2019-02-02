@@ -1,4 +1,6 @@
+import fragment from "./fragment";
 import { PermissionError } from "errors";
+import { prisma } from "generated/client";
 import { filter, find, flatten, includes } from "lodash";
 import config from "config";
 import {
@@ -74,3 +76,22 @@ export function checkPermission(user, permission, entityType, entityId) {
     throw new PermissionError();
   }
 }
+
+/* Get a user that has the required information to make
+ * RBAC decisions.
+ * @param {String} id The user id.
+ * @return {Promise<Object>} The user object with RoleBindings.
+ */
+export function getUserWithRoleBindings(id) {
+  return prisma.user({ id }).$fragment(fragment);
+}
+
+/* If the passed argument is a string, lookup the user by id.
+ * Otherwise use the user.id to get the user, with RoleBindings.
+ * @param {String|Object} user The user object or id.
+ * @return {Promise<Object} The user object with RoleBindings.
+ */
+// export function ensureUserRoleBindings(user) {
+//   if (isString(user)) return getUserWithRoleBindings(user);
+//   return getUserWithRoleBindings(user.id);
+// }

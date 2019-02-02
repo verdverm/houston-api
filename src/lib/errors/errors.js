@@ -77,6 +77,11 @@ export class JWTValidationError extends AuthenticationError {
   message = this.message || "Invalid JWT";
 }
 
+export class MissingTLSCertificateError extends Error {
+  message =
+    this.message || "TLS Certificate not found, can't sign docker registry JWT";
+}
+
 export class InvalidResetToken extends UserInputError {
   message = this.message || "Invalid resetToken";
 }

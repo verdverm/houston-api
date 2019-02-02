@@ -8,7 +8,8 @@ import { createDatabaseForDeployment } from "deployments/database";
 import {
   envArrayToObject,
   generateHelmValues,
-  mapPropertiesToDeployment
+  mapPropertiesToDeployment,
+  generateDefaultDeploymentConfig
 } from "deployments/config";
 import validate from "deployments/validate";
 import { addFragmentToInfo } from "graphql-binding";
@@ -34,10 +35,8 @@ export default async function createDeployment(parent, args, ctx, info) {
     : config.get("helm.releaseVersion");
 
   // Generate a unique registry password for this deployment.
-  const registryPassword = await bcrypt.hash(
-    crypto.randomBytes(16).toString("hex"),
-    10
-  );
+  const registryPassword = crypto.randomBytes(16).toString("hex");
+  const hashedRegistryPassword = await bcrypt.hash(registryPassword, 10);
 
   // Generate a random space-themed release name.
   const releaseName = generateReleaseName();
@@ -47,10 +46,10 @@ export default async function createDeployment(parent, args, ctx, info) {
     data: {
       label: args.label,
       description: args.description,
-      config: args.config,
+      config: args.config || generateDefaultDeploymentConfig(),
       version,
       releaseName,
-      registryPassword,
+      registryPassword: hashedRegistryPassword,
       ...mapPropertiesToDeployment(args.properties),
       workspace: {
         connect: {
@@ -85,7 +84,12 @@ export default async function createDeployment(parent, args, ctx, info) {
   } = await createDatabaseForDeployment(deployment);
 
   // Create some ad-hoc values to get passed into helm.
-  const values = { data: { metadataConnection, resultBackendConnection } };
+  // These won't be changing so just pass them in on create,
+  // and subsequent helm upgrades will use the --reuse-values option.
+  const data = { metadataConnection, resultBackendConnection };
+  const registry = { connection: { pass: registryPassword } };
+  const platform = { release: releaseName, workspace: args.workspaceUuid };
+  const values = { data, registry, platform };
 
   // Fire off createDeployment to commander.
   await ctx.commander.request("createDeployment", {

@@ -4,4 +4,5 @@ export default `fragment EnsureFields on Deployment {
   extraAu
   alertEmails
   airflowVersion
+  config
 }`;

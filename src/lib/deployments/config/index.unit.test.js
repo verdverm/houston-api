@@ -6,7 +6,9 @@ import {
   limitRange,
   constraints,
   mapPropertiesToDeployment,
-  mapDeploymentToProperties
+  mapDeploymentToProperties,
+  findLatestTag,
+  generateNextTag
 } from "./index";
 import { generateReleaseName } from "deployments/naming";
 import casual from "casual";
@@ -15,7 +17,8 @@ import {
   AIRFLOW_EXECUTOR_LOCAL,
   DEPLOYMENT_PROPERTY_EXTRA_AU,
   DEPLOYMENT_PROPERTY_COMPONENT_VERSION,
-  DEPLOYMENT_PROPERTY_ALERT_EMAILS
+  DEPLOYMENT_PROPERTY_ALERT_EMAILS,
+  DEFAULT_NEXT_IMAGE_TAG
 } from "constants";
 
 describe("generateHelmValues", () => {
@@ -261,5 +264,33 @@ describe("mapDeploymentToProperties", () => {
       obj.airflowVersion
     );
     expect(renamed[DEPLOYMENT_PROPERTY_ALERT_EMAILS]).toEqual(obj.alertEmails);
+  });
+});
+
+describe("findLatestTag", () => {
+  test("correctly determines the latest tag from list", () => {
+    const tags = ["cli-1", "cli-3", "cli-2", "somethingelse"];
+    const latest = findLatestTag(tags);
+    expect(latest).toBe("cli-3");
+  });
+
+  test("returns undefined for an empty list", () => {
+    const tags = [];
+    const latest = findLatestTag(tags);
+    expect(latest).toBeUndefined();
+  });
+});
+
+describe("generateNextTag", () => {
+  test("correctly generates the next tag", () => {
+    const latest = "cli-3";
+    const next = generateNextTag(latest);
+    expect(next).toBe("cli-4");
+  });
+
+  test("returns default value if latest is empty", () => {
+    const latest = undefined;
+    const next = generateNextTag(latest);
+    expect(next).toBe(DEFAULT_NEXT_IMAGE_TAG);
   });
 });

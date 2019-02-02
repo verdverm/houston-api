@@ -23,14 +23,17 @@ email:
     __format: "json"
   preview:
     __name: "EMAIL_PREVIEW"
-    __form: "json"
+    __format: "json"
   reply: "EMAIL_REPLY"
   smtpUrl: "EMAIL_SMTP_URL"
 
 registry:
   auth:
     __name: "REGISTRY_AUTH"
-    __form: "json"
+    __format: "json"
+  certPath: "REGISTRY_CERT_PATH"
+  issuer: "REGISTRY_ISSUER"
+  service: "REGISTRY_SERVICE"
 
 repository: "REPOSITORY"
 

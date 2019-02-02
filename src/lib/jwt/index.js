@@ -38,3 +38,18 @@ export function setJWTCookie(response, token) {
     secure: true
   });
 }
+
+/*
+ * Decode a JWT.
+ * @return {Object} The decoded JWT.
+ */
+export function decodeJWT(token) {
+  // Decode the JWT.
+  const passphrase = config.get("jwtPassphrase");
+  return new Promise(resolve => {
+    jwt.verify(token, passphrase, (err, decoded) => {
+      if (err) return resolve({});
+      return resolve(decoded);
+    });
+  });
+}

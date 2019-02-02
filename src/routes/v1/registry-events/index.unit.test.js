@@ -3,16 +3,17 @@ import * as prismaExports from "generated/client";
 import casual from "casual";
 import request from "supertest";
 import express from "express";
+import { DOCKER_REGISTRY_CONTENT_TYPE } from "constants";
 
 // Create test application.
 const app = express().use(router);
 
-describe("POST /registry_events", () => {
+describe("POST /registry-events", () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
-  test("registry_events are mapped to a deployment upgrade", async () => {
+  test("registry events are mapped to a deployment upgrade", async () => {
     // Set up our spies.
     const deployment = jest
       .spyOn(prismaExports.prisma, "deployment")
@@ -30,6 +31,7 @@ describe("POST /registry_events", () => {
 
     const res = await request(app)
       .post("/")
+      .set("Content-Type", DOCKER_REGISTRY_CONTENT_TYPE)
       .send({
         events: [
           {

@@ -140,6 +140,11 @@ type DeploymentUrl {
   url: String
 }
 
+type DeployInfo {
+  latest: String
+  next: String
+}
+
 # Deployment properties are only to support the legacy API.
 # Properties have been moved to top-level fields on Deployment internally.
 type Deployment {
@@ -155,6 +160,7 @@ type Deployment {
   status: String
   type: String
   version: String
+  deployInfo: DeployInfo
   workspace: Workspace
   createdAt: DateTime!
   updatedAt: DateTime!

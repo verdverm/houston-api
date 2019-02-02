@@ -28,9 +28,7 @@ export default async function(req, res) {
       );
 
       // Get the existing config for this deployment.
-      const config = await prisma
-        .deployment({ where: { releaseName } })
-        .config();
+      const config = await prisma.deployment({ releaseName }).config();
 
       // Merge the new image tag in.
       const updatedConfig = merge({}, config, {

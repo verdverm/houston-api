@@ -61,6 +61,9 @@ orbit:
 # Docker registry configuration.
 registry:
   auth: ~
+  certPath: ~
+  issuer: ~
+  service: ~
 
 # Charts live here.
 # This is where the airflow chart is installed from.

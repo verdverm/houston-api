@@ -1,6 +1,17 @@
 import { parseJSON } from "utilities";
 import log from "logger";
-import { curry, find, fromPairs, get, map, set, merge } from "lodash";
+import {
+  curry,
+  find,
+  fromPairs,
+  get,
+  last,
+  map,
+  maxBy,
+  merge,
+  set,
+  split
+} from "lodash";
 import config from "config";
 import yaml from "yamljs";
 import {
@@ -11,7 +22,8 @@ import {
   AIRFLOW_EXECUTOR_CELERY,
   AIRFLOW_COMPONENT_SCHEDULER,
   AIRFLOW_COMPONENT_WORKERS,
-  AIRFLOW_COMPONENT_PGBOUNCER
+  AIRFLOW_COMPONENT_PGBOUNCER,
+  DEFAULT_NEXT_IMAGE_TAG
 } from "constants";
 
 /*
@@ -30,7 +42,8 @@ export function generateHelmValues(deployment, values = {}) {
     resources(), // Apply resource requests and limits.
     limitRange(), // Apply the limit range.
     constraints(deployment), // Apply any constraints (quotas, pgbouncer, etc).
-    platform(deployment), // Apply astronomer platform specific values.
+    registry(deployment), // Apply the registry connection details.
+    // platform(deployment), // Apply astronomer platform specific values.
     deployment.config // The deployment level config.
   );
 
@@ -218,9 +231,9 @@ export function constraints(deployment) {
 
 /*
  * Return the resource defaults for each component.
- * @param {Object} Astro Unit.
- * @param {[]Object} List of components.
- * @return {[]Object} List of components and resource defaults.
+ * @param {String} type Resource type.
+ * @param {String} includeUnits If true include millicpu and memory units.
+ * @return {Object} The resource values.
  */
 export function resources(type = "default", includeUnits = true) {
   const astroUnit = config.get("deployments.astroUnit");
@@ -229,13 +242,40 @@ export function resources(type = "default", includeUnits = true) {
   return merge(...components.map(mapper));
 }
 
+/*
+ * Return connection information for the docker registry.
+ * Each deployment has a unique password that is auto-generated and
+ * lives in a kubernetes secret. This function maps those values into
+ * the helm configuration.
+ * @param {Object} deployment A deployment object.
+ * @return {Object} The registry settings.
+ */
+export function registry(deployment) {
+  const { baseDomain } = config.get("helm");
+
+  return {
+    registry: {
+      connection: {
+        user: deployment.releaseName,
+        host: `registry.${baseDomain}`,
+        email: `admin@${baseDomain}`
+      }
+    }
+  };
+}
+
 /* Return the platform specific settings.
  * @param {Object} deployment A deployment object.
  * @return {Object} Helm values.
  */
-export function platform(deployment) {
-  return { platform: { release: deployment.releaseName } };
-}
+// export function platform(deployment) {
+//   return {
+//     platform: {
+//       release: deployment.releaseName,
+//       workspace: deployment.workspace.id
+//     }
+//   };
+// }
 
 /*
  * HOF to help create mergeable resources
@@ -344,4 +384,30 @@ export function mapDeploymentToProperties(dep = {}) {
   }
 
   return mapped;
+}
+
+/*
+ * Find the most recent tag in a list of image tags.
+ */
+export function findLatestTag(tags = []) {
+  const filtered = tags.filter(t => t.startsWith("cli-"));
+  return maxBy(filtered, t => last(split(t, "-")));
+}
+
+/*
+ * Generate the next tag name for a deployment image.
+ */
+export function generateNextTag(latest) {
+  if (!latest) return DEFAULT_NEXT_IMAGE_TAG;
+  const num = parseInt(last(split(latest, "-")));
+  return `cli-${num + 1}`;
+}
+
+/*
+ * Generate the default `config` for a new deployment, if nothing
+ * is passed to the mutation.
+ * @return {Object} The default config.
+ */
+export function generateDefaultDeploymentConfig() {
+  return { executor: AIRFLOW_EXECUTOR_CELERY };
 }

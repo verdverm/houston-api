@@ -1,7 +1,5 @@
-import fragment from "./fragment";
-import { prisma } from "generated/client";
-import config from "config";
-import jwt from "jsonwebtoken";
+import { decodeJWT } from "jwt";
+import { getUserWithRoleBindings } from "rbac";
 import { AUTH_COOKIE_NAME } from "constants";
 
 /*
@@ -23,19 +21,10 @@ export function authenticateRequest() {
     const token = authHeader || req.cookies[AUTH_COOKIE_NAME];
 
     // Decode the JWT.
-    const passphrase = config.get("jwtPassphrase");
-    const { uuid: id } = await new Promise(resolve => {
-      jwt.verify(token, passphrase, (err, decoded) => {
-        if (err) return resolve({});
-        return resolve(decoded);
-      });
-    });
+    const { uuid: id } = await decodeJWT(token);
 
     // If we have a userId, set the user on the session.
-    if (id) {
-      const user = await prisma.user({ id }).$fragment(fragment);
-      req.session.user = user;
-    }
+    if (id) req.session.user = await getUserWithRoleBindings(id);
 
     // Pass execution downstream.
     next();
