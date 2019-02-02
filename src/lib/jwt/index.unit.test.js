@@ -8,7 +8,6 @@ describe("createJWT", () => {
     expect(token).toHaveProperty("token");
     expect(token).toHaveProperty("payload");
     expect(token.payload.uuid).toBe(id);
-    // expect(token.payload.iat).toBe(Math.floor(new Date() / 1000));
     expect(token.payload.iat).toBeDefined();
     expect(token.payload.exp).toBeGreaterThan(Math.floor(new Date() / 1000));
   });
