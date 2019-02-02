@@ -1,9 +1,10 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 set -e
 
 HOST=$(echo "${PRISMA_ENDPOINT}" | awk -F// '{print $2}' | awk -F: '{print $1}')
 PORT=$(echo "${PRISMA_ENDPOINT}" | awk -F// '{print $2}' | awk -F: '{print $2}')
+echo "Waiting for host: ${HOST} ${PORT}"
 while ! nc -w 1 -z "${HOST}" "${PORT}"; do
     sleep 0.001
 done
