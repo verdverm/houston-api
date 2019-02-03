@@ -1,3 +1,5 @@
+import fragment from "./fragment";
+import { addFragmentToInfo } from "graphql-binding";
 import { WORKSPACE_ADMIN } from "constants";
 
 /*
@@ -26,6 +28,6 @@ export default async function createWorkspace(parent, args, ctx, info) {
         }
       }
     },
-    info
+    addFragmentToInfo(info, fragment)
   );
 }
