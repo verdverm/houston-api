@@ -16,12 +16,12 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import { createServer } from "http";
 
-// Get configuration from config dir and environment
+// Get configuration from config dir and environment.
 const serverConfig = config.get("webserver");
 const helmConfig = config.get("helm");
 const prismaConfig = config.get("prisma");
 
-// Create express server
+// Create express server.
 const app = express();
 app.use(cookieParser(), authenticateRequest());
 
@@ -32,10 +32,10 @@ app.use(
   })
 );
 
-// Setup REST routes
+// Setup REST routes.
 app.use("/v1", v1);
 
-// Instantiate a new GraphQL Apollo Server
+// Instantiate a new GraphQL Apollo Server.
 const server = new ApolloServer({
   typeDefs: [importSchema("./src/schema.graphql")],
   resolvers,
@@ -61,7 +61,7 @@ const server = new ApolloServer({
   })
 });
 
-// Apply express middleware
+// Apply express middleware.
 server.applyMiddleware({
   app,
   path: serverConfig.endpoint,
@@ -83,13 +83,13 @@ server.applyMiddleware({
   }
 });
 
-// Create HTTP server
+// Create HTTP server.
 const httpServer = createServer(app);
 
-// Install subscriptions handlers on our server
+// Install subscriptions handlers on our server.
 server.installSubscriptionHandlers(httpServer);
 
-// Start the HTTP server
+// Start the HTTP server.
 httpServer.listen({ port: serverConfig.port }, () => {
   log.info(
     `Server ready at http://localhost:${serverConfig.port}${server.graphqlPath}`
