@@ -83,8 +83,8 @@ export function githubEnabled() {
  * Return a string for Github OAuth url.
  * @return {Boolean} Github OAuth url.
  */
-export function githubOAuthUrl() {
-  return null;
+export function githubOAuthUrl(parent) {
+  return providers.auth0.authUrl(parent, oauthRedirectUrl(), "github");
 }
 
 export default {

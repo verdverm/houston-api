@@ -69,6 +69,10 @@ auth:
       __name: "AUTH_GOOGLE_ENABLED"
       __format: "json"
     clientId: "AUTH_GOOGLE_CLIENT_ID"
+  github:
+    enabled:
+      __name: "AUTH_GITHUB_ENABLED"
+      __format: "json"
 
 jwtPassphrase: "JWT_PASSPHRASE"
 
