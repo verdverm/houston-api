@@ -24,9 +24,11 @@ export function scheme() {
  * @return {String} The orbit url.
  */
 export function orbit() {
+  const isProd = process.env.NODE_ENV === "production";
   const baseDomain = config.get("helm.baseDomain");
   const { subdomain, port } = config.get("orbit");
-  return `${scheme()}://${subdomain}.${baseDomain}:${port}`;
+  const url = `${scheme()}://${subdomain}.${baseDomain}`;
+  return isProd ? url : `${url}:${port}`;
 }
 
 /*
@@ -34,10 +36,12 @@ export function orbit() {
  * @return {String} The houston url.
  */
 export function houston() {
+  const isProd = process.env.NODE_ENV === "production";
   const baseDomain = config.get("helm.baseDomain");
   const port = config.get("webserver.port");
   const subdomain = config.get("subdomain");
-  return `${scheme()}://${subdomain}.${baseDomain}:${port}`;
+  const url = `${scheme()}://${subdomain}.${baseDomain}`;
+  return isProd ? url : `${url}:${port}`;
 }
 
 /*
@@ -54,9 +58,7 @@ export function oauthUrl() {
  */
 export function oauthRedirectUrl() {
   const isProd = process.env.NODE_ENV === "production";
-  const { enabled: auth0Enabled, baseDomain: auth0Domain } = config.get(
-    "auth.auth0"
-  );
+  const { baseDomain: auth0Domain } = config.get("auth.auth0");
   const defaultAuth0 = auth0Domain === "astronomerio.auth0.com";
 
   // If we're in prod with the default auth0 domain configured,
@@ -65,7 +67,7 @@ export function oauthRedirectUrl() {
   // of redirect urls that are authorized. When a user installs
   // at a custom domain, the redirect won't work. To get around this,
   // we host a well-known url to use by default.
-  if (isProd && auth0Enabled && defaultAuth0) {
+  if (isProd && defaultAuth0) {
     return "https://redirect.astronomer.io";
   }
 
