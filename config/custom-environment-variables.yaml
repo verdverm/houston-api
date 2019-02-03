@@ -64,7 +64,6 @@ auth:
       __format: "json"
     clientId: "AUTH_AUTH0_CLIENT_ID"
     baseDomain: "AUTH_AUTH0_BASE_DOMAIN"
-    externalLogin: "AUTH_AUTH0_EXTERNAL_LOGIN"
   google:
     enabled:
       __name: "AUTH_GOOGLE_ENABLED"

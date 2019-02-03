@@ -76,7 +76,7 @@ export function auth0OAuthUrl(parent) {
  * @return {Boolean} Github auth enabled.
  */
 export function githubEnabled() {
-  return false;
+  return config.get("auth.github.enabled");
 }
 
 /*

@@ -87,15 +87,24 @@ auth:
 
   # Auth0 integration configuration.
   auth0:
+    # This "enabled" flag is currently a little misleading.
+    # The enabled flag refers only to showing the native
+    # Auth0 button in the UI. The rest of the settings here
+    # could potentially be used as to auth with Google/Github/etc
+    # if those integrations are enabled, but do not have connection
+    # information.
     enabled: false
-    clientId: "rH2L4yKctlepniTyJW3MkuXuTreOHHn1"
-    baseDomain: "astronomerio.auth0.com"
-    externalLogin: false
+    clientId: ~
+    baseDomain: ~
 
-  # Direct oauth integration to google.
+  # Google oauth configuration.
   google:
     enabled: false
     clientId: ~
+
+  # Github oauth configuration.
+  github:
+    enabled: false
 
 # Passphrase to sign JWTs with.
 jwtPassphrase: ~
