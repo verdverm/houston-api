@@ -4,7 +4,7 @@
   "description": "GraphQL API for the Astronomer Platform",
   "scripts": {
     "build": "babel src -d dist --copy-files && prisma generate",
-    "start": "prisma deploy && nodemon --exec babel-node -e js,graphql src/index.js",
+    "start": "prisma deploy && prisma generate && nodemon --exec babel-node -e js,graphql src/index.js",
     "serve": "prisma deploy && node dist/index.js",
     "test": "jest",
     "coverage": "jest --coverage",
