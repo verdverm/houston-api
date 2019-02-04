@@ -4,74 +4,74 @@ webserver:
   subscriptions: "WEBERVER__SUBCRIPTIONS"
 
 prisma:
-  endpoint: "PRISMA_ENDPOINT"
-  secret: "PRISMA_SECRET"
+  endpoint: "PRISMA__ENDPOINT"
+  secret: "PRISMA__SECRET"
   debug:
-    __name: "PRISMA_DEBUG"
+    __name: "PRISMA__DEBUG"
     __format: "json"
 
 commander:
   enabled:
-    __name: "COMMANDER_ENABLED"
+    __name: "COMMANDER__ENABLED"
     __format: "json"
-  host: "COMMANDER_HOST"
-  port: "COMMANDER_PORT"
+  host: "COMMANDER__HOST"
+  port: "COMMANDER__PORT"
 
 email:
   enabled:
-    __name: "EMAIL_ENABLED"
+    __name: "EMAIL__ENABLED"
     __format: "json"
   preview:
-    __name: "EMAIL_PREVIEW"
+    __name: "EMAIL__PREVIEW"
     __format: "json"
-  reply: "EMAIL_REPLY"
-  smtpUrl: "EMAIL_SMTP_URL"
+  reply: "EMAIL__REPLY"
+  smtpUrl: "EMAIL__SMTP_URL"
 
 registry:
   auth:
-    __name: "REGISTRY_AUTH"
+    __name: "REGISTRY__AUTH"
     __format: "json"
-  certPath: "REGISTRY_CERT_PATH"
-  issuer: "REGISTRY_ISSUER"
-  service: "REGISTRY_SERVICE"
+  certPath: "REGISTRY__CERT_PATH"
+  issuer: "REGISTRY__ISSUER"
+  service: "REGISTRY__SERVICE"
 
 repository: "REPOSITORY"
 
 helm:
-  baseDomain: "HELM_BASE_DOMAIN"
-  registryAuthSecret: "HELM_REGISTRY_AUTH_SECRET"
+  baseDomain: "HELM__BASE_DOMAIN"
+  registryAuthSecret: "HELM__REGISTRY_AUTH_SECRET"
   acme:
-    __name: "HELM_ACME"
+    __name: "HELM__ACME"
     __format: "json"
   rbacEnabled:
-    __name: "HELM_RBAC_ENABLED"
+    __name: "HELM__RBAC_ENABLED"
     __format: "json"
-  releaseName: "HELM_RELEASE_NAME"
-  releaseNamespace: "HELM_RELEASE_NAMESPACE"
-  releaseVersion: "HELM_RELEASE_VERSION"
+  releaseName: "HELM__RELEASE_NAME"
+  releaseNamespace: "HELM__RELEASE_NAMESPACE"
+  releaseVersion: "HELM__RELEASE_VERSION"
   singleNamespace:
-    __name: "HELM_SINGLE_NAMESPACE"
+    __name: "HELM__SINGLE_NAMESPACE"
     __format: "json"
 
 auth:
   local:
     enabled:
-      __name: "AUTH_LOCAL_ENABLED"
+      __name: "AUTH__LOCAL_ENABLED"
       __format: "json"
   auth0:
     enabled:
-      __name: "AUTH_AUTH0_ENABLED"
+      __name: "AUTH__AUTH0_ENABLED"
       __format: "json"
-    clientId: "AUTH_AUTH0_CLIENT_ID"
-    baseDomain: "AUTH_AUTH0_BASE_DOMAIN"
+    clientId: "AUTH__AUTH0_CLIENT_ID"
+    baseDomain: "AUTH__AUTH0_BASE_DOMAIN"
   google:
     enabled:
-      __name: "AUTH_GOOGLE_ENABLED"
+      __name: "AUTH__GOOGLE_ENABLED"
       __format: "json"
-    clientId: "AUTH_GOOGLE_CLIENT_ID"
+    clientId: "AUTH__GOOGLE_CLIENT_ID"
   github:
     enabled:
-      __name: "AUTH_GITHUB_ENABLED"
+      __name: "AUTH__GITHUB_ENABLED"
       __format: "json"
 
 jwtPassphrase: "JWT_PASSPHRASE"
@@ -88,16 +88,16 @@ emailConfirmation:
 
 deployments:
   logHelmValues:
-    __name: "DEPLOYMENTS_LOG_HELM_VALUES"
+    __name: "DEPLOYMENTS__LOG_HELM_VALUES"
     __format: "json"
   database:
     enabled:
-      __name: "DEPLOYMENTS_DATBASE_ENABLED"
+      __name: "DEPLOYMENTS__DATBASE__ENABLED"
       __format: "json"
     retainOnDelete:
-      __name: "DEPLOYMENTS_DATBASE_RETAIN_ON_DELETE"
+      __name: "DEPLOYMENTS__DATBASE__RETAIN_ON_DELETE"
       __format: "json"
     allowRootAccess:
-      __name: "DEPLOYMENTS_DATBASE_ALLOW_ROOT_ACCES"
+      __name: "DEPLOYMENTS__DATBASE__ALLOW_ROOT_ACCES"
       __format: "json"
-    connection: "DEPLOYMENTS_DATABASE_CONNECTION"
+    connection: "DEPLOYMENTS__DATABASE__CONNECTION"

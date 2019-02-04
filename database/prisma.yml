@@ -1,11 +1,11 @@
 # Pull endpoint from env
-endpoint: ${env:PRISMA_ENDPOINT}
+endpoint: ${env:PRISMA__ENDPOINT}
 
 # Location of datamodel
 datamodel: datamodel.graphql
 
 # Pull secret from env
-secret: ${env:PRISMA_SECRET}
+secret: ${env:PRISMA__SECRET}
 
 # Generate graphql schema
 generate:
