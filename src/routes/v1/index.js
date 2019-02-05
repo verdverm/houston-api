@@ -4,7 +4,6 @@ import healthz from "./healthz";
 import oauthRedirect from "./oauth-redirect";
 import oauth from "./oauth";
 import registry from "./registry";
-import registryEvents from "./registry-events";
 import express from "express";
 
 // Create top level router for v1.
@@ -17,7 +16,6 @@ router.use("/healthz", healthz);
 router.use("/oauth-redirect", oauthRedirect);
 router.use("/oauth", oauth);
 router.use("/registry", registry);
-router.use("/registry-events", registryEvents);
 
 // Export the v1 router.
 export default router;

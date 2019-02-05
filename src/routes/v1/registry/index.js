@@ -1,14 +1,12 @@
-import handler from "./handler";
+import authorization from "./authorization";
+import events from "./events";
 import express from "express";
-import { DOCKER_REGISTRY_CONTENT_TYPE } from "constants";
 
+// Create router for registry.
 const router = new express.Router();
 
-// Configure JSON parsing express middleware.
-router.use(express.json({ type: [DOCKER_REGISTRY_CONTENT_TYPE] }));
-
-// Houston 1 currently defines both methods.
-router.post("/", handler);
-router.get("/", handler);
+// Set up nested routes.
+router.use("/authorization", authorization);
+router.use("/events", events);
 
 export default router;
