@@ -2072,6 +2072,7 @@ input ServiceAccountWhereInput {
 
 input ServiceAccountWhereUniqueInput {
   id: ID
+  apiKey: String
 }
 
 type Subscription {

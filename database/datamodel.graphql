@@ -73,7 +73,7 @@ type InviteToken {
 
 type ServiceAccount {
   id: ID! @unique
-  apiKey: String
+  apiKey: String @unique
   label: String
   category: String
   active: Boolean

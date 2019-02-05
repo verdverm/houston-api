@@ -1,8 +1,7 @@
 import { prisma } from "generated/client";
-import { checkPermission, getUserWithRoleBindings } from "rbac";
+import { hasPermission, getAuthUser } from "rbac";
 import log from "logger";
 import { InvalidCredentialsError } from "errors";
-import { decodeJWT } from "jwt";
 import { createDockerJWT } from "registry/jwt";
 import bcrypt from "bcryptjs";
 import { compact, first, isArray } from "lodash";
@@ -43,7 +42,7 @@ export default async function(req, res) {
     );
   }
 
-  // Pull authorization token out of headers and parse it.
+  // Pull authorization token out of header and parse it into user and password.
   const token = authorization.substr(6);
   const [authUser, authPassword] = Buffer.from(token, "base64")
     .toString()
@@ -51,9 +50,11 @@ export default async function(req, res) {
 
   // Determine if this is a user triggered action, or from a running deployment.
   const isDeployment = await isDeploymentRegistryAuth(authUser, authPassword);
-  const userId = isDeployment
-    ? "registry"
-    : (await decodeJWT(authPassword)).uuid;
+
+  // Look up the requesting User or Service Account.
+  const user = await getAuthUser(authPassword);
+  const userId = isDeployment ? "registry" : user ? user.id : null;
+  if (!userId) return sendError(res, REGISTRY_CODES.DENIED, "Access denied");
 
   // JWT response payload.
   const payload = [];
@@ -79,15 +80,25 @@ export default async function(req, res) {
 
     // This path is for a code push.
     if (!isDeployment) {
-      log.info(`Checking permissions for ${userId} on ${releaseName}`);
-      const user = await getUserWithRoleBindings(userId);
+      // Look up deploymentId by releaseName.
       const deploymentId = await prisma.deployment({ releaseName }).id();
-      checkPermission(
+
+      // Check if the User or Service Account has permission to update this deployment.
+      const allowed = hasPermission(
         user,
         "user.deployment.update",
         ENTITY_DEPLOYMENT.toLowerCase(),
         deploymentId
       );
+
+      // If not allowed, return access denied message.
+      if (!allowed) {
+        return sendError(
+          res,
+          REGISTRY_CODES.DENIED,
+          `You do not have permission to manage ${releaseName}`
+        );
+      }
     }
 
     payload.push({ type, actions, name: `${releaseName}/${image}` });

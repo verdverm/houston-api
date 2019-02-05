@@ -1334,6 +1334,7 @@ export type RoleBindingWhereUniqueInput = AtLeastOne<{
 
 export type ServiceAccountWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
+  apiKey?: String;
 }>;
 
 export type UserWhereUniqueInput = AtLeastOne<{

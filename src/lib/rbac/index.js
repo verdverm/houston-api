@@ -1,7 +1,9 @@
-import fragment from "./fragment";
+import userFragment from "./user-fragment";
+import serviceAccountFragment from "./service-account-fragment";
+import { decodeJWT } from "jwt";
 import { PermissionError } from "errors";
 import { prisma } from "generated/client";
-import { filter, find, flatten, includes } from "lodash";
+import { filter, find, flatten, includes, size } from "lodash";
 import config from "config";
 import {
   ENTITY_DEPLOYMENT,
@@ -22,6 +24,9 @@ export const serviceAccountRoleMappings = {
  * @param {String} permission The required permission.
  */
 export function hasPermission(user, permission, entityType, entityId) {
+  // If user is falsy, immediately fail.
+  if (!user) return false;
+
   // Check if we're looking for a global permission.
   const globalPermission = permission.startsWith("global");
 
@@ -80,17 +85,70 @@ export function checkPermission(user, permission, entityType, entityId) {
 /* Get a user that has the required information to make
  * RBAC decisions.
  * @param {String} id The user id.
- * @return {Promise<Object>} The user object with RoleBindings.
+ * @return {Promise<Object>} The User object with RoleBindings.
  */
 export function getUserWithRoleBindings(id) {
-  return prisma.user({ id }).$fragment(fragment);
+  return prisma.user({ id }).$fragment(userFragment);
 }
 
-/* If the passed argument is a string, lookup the user by id.
- * Otherwise use the user.id to get the user, with RoleBindings.
- * @param {String|Object} user The user object or id.
- * @return {Promise<Object} The user object with RoleBindings.
+/* Get a ServiceAccount that has the required information to make
+ * RBAC decisions.
+ * @param {String} apiKey The apiKey.
+ * @return {Object} The ServiceAccount object with RoleBindings.
  */
+export async function getServiceAccountWithRoleBindings(apiKey) {
+  // Get the Service Account by API Key.
+  const serviceAccount = await prisma
+    .serviceAccount({ apiKey })
+    .$fragment(serviceAccountFragment);
+
+  // Return early if we didn't find a service account.
+  if (!serviceAccount) return;
+
+  // Return a slightly modified version, to mimic what we return
+  // for a user.
+  return {
+    id: serviceAccount.id,
+    roleBindings: [serviceAccount.roleBinding]
+  };
+}
+
+/*
+ * Check if the authorization header looks like a service account.
+ * @param {String} authorization An authorization header.
+ * @return {Boolean} If the header looks like a service account
+ */
+export function isServiceAccount(authorization) {
+  return size(authorization) === 32 && !includes(authorization, ".");
+}
+
+/*
+ * Get either a user or a Service Account from an Authorization header.
+ * @param {String} authorization An authorization header.
+ * @return {Object} The authed user or Service Account.
+ */
+export async function getAuthUser(authorization) {
+  // Check if the header is a service account.
+  const isServiceAcct = isServiceAccount(authorization);
+
+  // If we do have a service account, set it as the user on the context.
+  if (isServiceAcct) {
+    return await getServiceAccountWithRoleBindings(authorization);
+  }
+
+  // Decode the JWT.
+  const { uuid } = await decodeJWT(authorization);
+
+  // If we have a userId, set the user on the session,
+  // otherwise return nothing.
+  if (uuid) return await getUserWithRoleBindings(uuid);
+}
+
+// /* If the passed argument is a string, lookup the user by id.
+//  * Otherwise use the user.id to get the user, with RoleBindings.
+//  * @param {String|Object} user The user object or id.
+//  * @return {Promise<Object} The user object with RoleBindings.
+//  */
 // export function ensureUserRoleBindings(user) {
 //   if (isString(user)) return getUserWithRoleBindings(user);
 //   return getUserWithRoleBindings(user.id);

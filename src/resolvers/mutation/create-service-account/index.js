@@ -40,8 +40,8 @@ export default async function createServiceAccount(parent, args, ctx, info) {
       active: true,
       roleBinding: {
         create: {
-          role: serviceAccountRoleMappings[entityType],
-          [entityType.toLowerCase()]: {
+          role: serviceAccountRoleMappings[upperEntityType],
+          [entityType]: {
             connect: { id: entityUuid }
           }
         }

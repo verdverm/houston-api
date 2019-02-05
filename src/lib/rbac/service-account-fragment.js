@@ -1,7 +1,6 @@
 export default `{
   id,
-  username,
-  roleBindings {
+  roleBinding {
     role,
     workspace { id },
     deployment { id }

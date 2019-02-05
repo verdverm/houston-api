@@ -1,4 +1,9 @@
-import { hasPermission, hasGlobalPermission, checkPermission } from "./index";
+import {
+  hasPermission,
+  hasGlobalPermission,
+  checkPermission,
+  isServiceAccount
+} from "./index";
 import casual from "casual";
 import { ENTITY_WORKSPACE } from "constants";
 
@@ -21,6 +26,20 @@ describe("hasPermission", () => {
     );
 
     expect(hasPerm).toBe(true);
+  });
+
+  test("denies an undefined user", () => {
+    const workspaceId = casual.uuid;
+    const user = null;
+
+    const hasPerm = hasPermission(
+      user,
+      "user.workspace.get",
+      ENTITY_WORKSPACE.toLowerCase(),
+      workspaceId
+    );
+
+    expect(hasPerm).toBe(false);
   });
 
   test("denies user without matching entity id", () => {
@@ -94,5 +113,26 @@ describe("checkPermission", () => {
     expect(() => {
       checkPermission(user, "global.monitoring.view");
     }).toThrow();
+  });
+});
+
+describe("isServiceAccount", () => {
+  test("returns true for a valid service account", () => {
+    const header = "abcdefghijklmnopqrstuvwxyz012345";
+    const isServiceAcct = isServiceAccount(header);
+    expect(isServiceAcct).toBe(true);
+  });
+
+  test("returns false for an invalid length", () => {
+    const header = "abcdefghijklmnop";
+    const isServiceAcct = isServiceAccount(header);
+    expect(isServiceAcct).toBe(false);
+  });
+
+  test("returns false for a header with dots in it (jwt)", () => {
+    const header =
+      "abcdefghijklmnopqrstuvwxyz012345.abcdefghijklmnopqrstuvwxyz012345.abcdefghijklmnopqrstuvwxyz012345";
+    const isServiceAcct = isServiceAccount(header);
+    expect(isServiceAcct).toBe(false);
   });
 });

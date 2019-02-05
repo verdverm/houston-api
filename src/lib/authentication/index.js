@@ -1,5 +1,4 @@
-import { decodeJWT } from "jwt";
-import { getUserWithRoleBindings } from "rbac";
+import { getAuthUser } from "rbac";
 import { AUTH_COOKIE_NAME } from "constants";
 
 /*
@@ -20,11 +19,8 @@ export function authenticateRequest() {
     const authHeader = (req.get("Authorization") || "").replace("Bearer ", "");
     const token = authHeader || req.cookies[AUTH_COOKIE_NAME];
 
-    // Decode the JWT.
-    const { uuid: id } = await decodeJWT(token);
-
-    // If we have a userId, set the user on the session.
-    if (id) req.session.user = await getUserWithRoleBindings(id);
+    // Set the user on the request session if we have one.
+    req.session.user = await getAuthUser(token);
 
     // Pass execution downstream.
     next();
