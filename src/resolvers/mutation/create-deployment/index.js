@@ -26,13 +26,16 @@ import { DEPLOYMENT_ADMIN, DEPLOYMENT_AIRFLOW } from "constants";
  * @return {Deployment} The newly created Deployment.
  */
 export default async function createDeployment(parent, args, ctx, info) {
+  const {
+    releaseVersion: platformReleaseVersion,
+    releaseName: platformReleaseName
+  } = config.get("helm");
+
   // Validate deployment args.
   await validate(args.workspaceUuid, args);
 
   // Default deployment version to platform version.
-  const version = args.version
-    ? args.version
-    : config.get("helm.releaseVersion");
+  const version = args.version ? args.version : platformReleaseVersion;
 
   // Generate a unique registry password for this deployment.
   const registryPassword = crypto.randomBytes(16).toString("hex");
@@ -88,7 +91,10 @@ export default async function createDeployment(parent, args, ctx, info) {
   // and subsequent helm upgrades will use the --reuse-values option.
   const data = { metadataConnection, resultBackendConnection };
   const registry = { connection: { pass: registryPassword } };
-  const platform = { release: releaseName, workspace: args.workspaceUuid };
+  const platform = {
+    release: platformReleaseName,
+    workspace: args.workspaceUuid
+  };
   const values = { data, registry, platform };
 
   // Fire off createDeployment to commander.
