@@ -1,17 +1,12 @@
-import post from "./post";
+import callback from "./callback";
+import redirect from "./redirect";
 import express from "express";
 
+// Create router for oauth.
 const router = new express.Router();
 
-// Configure JSON parsing express middleware.
-router.use(
-  express.json({
-    type: ["application/json"]
-  }),
-  express.urlencoded({ extended: false })
-);
-
-// Setup the POST route.
-router.post("/", post);
+// Set up nested routes.
+router.use("/callback", callback);
+router.use("/redirect", redirect);
 
 export default router;

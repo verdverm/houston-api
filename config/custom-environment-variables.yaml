@@ -56,22 +56,22 @@ helm:
 auth:
   local:
     enabled:
-      __name: "AUTH__LOCAL_ENABLED"
+      __name: "AUTH__LOCAL__ENABLED"
       __format: "json"
   auth0:
     enabled:
-      __name: "AUTH__AUTH0_ENABLED"
+      __name: "AUTH__AUTH0__ENABLED"
       __format: "json"
-    clientId: "AUTH__AUTH0_CLIENT_ID"
-    baseDomain: "AUTH__AUTH0_BASE_DOMAIN"
+    clientId: "AUTH__AUTH0__CLIENT_ID"
+    baseDomain: "AUTH__AUTH0__BASE_DOMAIN"
   google:
     enabled:
-      __name: "AUTH__GOOGLE_ENABLED"
+      __name: "AUTH__GOOGLE__ENABLED"
       __format: "json"
-    clientId: "AUTH__GOOGLE_CLIENT_ID"
+    clientId: "AUTH__GOOGLE__CLIENT_ID"
   github:
     enabled:
-      __name: "AUTH__GITHUB_ENABLED"
+      __name: "AUTH__GITHUB__ENABLED"
       __format: "json"
 
 jwtPassphrase: "JWT_PASSPHRASE"

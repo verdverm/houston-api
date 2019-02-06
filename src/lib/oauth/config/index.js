@@ -49,7 +49,7 @@ export function houston() {
  * @return {String} The oauth url.
  */
 export function oauthUrl() {
-  return `${houston()}/${version()}/oauth`;
+  return `${houston()}/${version()}/oauth/callback`;
 }
 
 /*
@@ -73,7 +73,7 @@ export function oauthRedirectUrl() {
 
   // Otherwise return the redirect url of the installation. If a user, brings
   // their own auth0 account, this will be used and will skip the shared url.
-  return `${houston()}/${version()}/oauth-redirect`;
+  return `${houston()}/${version()}/oauth/redirect`;
 }
 
 /*
