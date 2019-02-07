@@ -15,10 +15,16 @@ export class InviteTokenNotFoundError extends UserInputError {
   message = this.message || "Invite token not found";
 }
 
-export class InviteTokenEmailError extends UserInputError {
-  message =
-    this.message ||
-    "The email specified is not associated with the invite token";
+export class InviteTokenEmailError extends ApolloError {
+  name = "InviteTokenEmailError";
+  constructor() {
+    // Orbit currently looks at the _text_ of the error message, so don't
+    // change this without updating Orbit to look at the code, not the message
+    super(
+      "This email is not associated with the specified invite token",
+      "INVITE_EMAIL_NOT_MATCH"
+    );
+  }
 }
 
 export class ResourceNotFoundError extends Error {

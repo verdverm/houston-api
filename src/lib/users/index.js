@@ -74,7 +74,7 @@ export async function createUser(opts) {
   }
 
   // Run the mutation and return id.
-  const id = prisma.createUser(mutation).id();
+  const id = await prisma.createUser(mutation).id();
 
   if (emailToken != null) {
     sendEmail(email, "confirm-email", {
