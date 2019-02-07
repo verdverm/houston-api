@@ -1,9 +1,11 @@
+import { orbit } from "oauth/config";
 import {
   PublicSignupsDisabledError,
   InviteTokenNotFoundError,
   InviteTokenEmailError
 } from "errors";
 import { prisma } from "generated/client";
+import { sendEmail } from "emails";
 import config from "config";
 import shortid from "shortid";
 import { first } from "lodash";
@@ -19,7 +21,13 @@ import {
  */
 export async function createUser(opts) {
   // Pull out some options.
-  const { username, fullName, email, inviteToken: rawInviteToken } = opts;
+  const {
+    username,
+    fullName,
+    email,
+    inviteToken: rawInviteToken,
+    active
+  } = opts;
   const inviteToken = await validateInviteToken(rawInviteToken, email);
 
   // Grab some configuration.
@@ -35,10 +43,11 @@ export async function createUser(opts) {
   }
 
   // Determine default status.
-  const status = emailConfirmation ? USER_STATUS_PENDING : USER_STATUS_ACTIVE;
+  const status =
+    active || !emailConfirmation ? USER_STATUS_ACTIVE : USER_STATUS_PENDING;
 
   // Generate an verification token.
-  const emailToken = shortid.generate();
+  const emailToken = status == USER_STATUS_ACTIVE ? null : shortid.generate();
 
   // Generate the role bindings.
   const roleBindings = generateRoleBindings(first, inviteToken, opts);
@@ -65,7 +74,17 @@ export async function createUser(opts) {
   }
 
   // Run the mutation and return id.
-  return prisma.createUser(mutation).id();
+  const id = prisma.createUser(mutation).id();
+
+  if (emailToken != null) {
+    sendEmail(email, "confirm-email", {
+      token: emailToken,
+      orbitUrl: orbit(),
+      strict: true
+    });
+  }
+
+  return id;
 }
 
 /*

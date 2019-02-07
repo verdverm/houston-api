@@ -4,6 +4,7 @@ import casual from "casual";
 import { graphql } from "graphql";
 import { makeExecutableSchema } from "graphql-tools";
 import { importSchema } from "graphql-import";
+import { USER_STATUS_ACTIVE } from "constants";
 
 // Import our application schema
 const schema = makeExecutableSchema({
@@ -45,7 +46,10 @@ describe("createUser", () => {
   test("typical request is successful", async () => {
     // Mock up some functions.
     const createLocalCredential = jest.fn();
-    const user = jest.fn();
+    const user = jest.fn(() => ({
+      status: USER_STATUS_ACTIVE,
+      id: casual.uuid
+    }));
     const cookie = jest.fn();
 
     // Construct db object for context.
@@ -76,9 +80,15 @@ describe("createUser", () => {
     );
 
     expect(res.errors).toBeUndefined();
+
     expect(createUserSpy.mock.calls).toHaveLength(1);
+    // We shouldn't be orverriding the active property here, that is only for
+    // oAuth flows.
+    expect(createUserSpy.mock.calls[0][0]).not.toHaveProperty("active");
+
     expect(createLocalCredential.mock.calls).toHaveLength(1);
     expect(cookie.mock.calls).toHaveLength(1);
+
     expect(res.data.createUser.token.payload.iat).toBeDefined();
     expect(res.data.createUser.token.payload.exp).toBeGreaterThan(
       Math.floor(new Date() / 1000)

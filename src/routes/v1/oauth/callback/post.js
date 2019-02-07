@@ -51,7 +51,8 @@ export default async function(req, res) {
         username: email,
         fullName,
         email,
-        inviteToken: state.inviteToken
+        inviteToken: state.inviteToken,
+        active: true // OAuth users are active immediately
       });
 
   // If we already have a user, update it.

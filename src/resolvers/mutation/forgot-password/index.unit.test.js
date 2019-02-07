@@ -21,8 +21,6 @@ describe("forgotPassword", () => {
   const email = casual.email;
   const sendEmail = jest.spyOn(emailExports, "sendEmail");
 
-  beforeEach(sendEmail.mockClear);
-
   describe("when email doesn't exist", () => {
     test("should not leak information about existing users", async () => {
       const emailQuery = jest.fn().mockReturnValue(null);

@@ -52,6 +52,17 @@ export class PermissionError extends ForbiddenError {
     this.message || "You do not have the appropriate permissions for that";
 }
 
+export class EmailNotConfirmedError extends ApolloError {
+  constructor() {
+    // Orbit currently looks at the _text_ of the error message, so don't
+    // change this without updating Orbit to look at the code, not the message
+    super(
+      "Your account is awaiting email confirmation",
+      "ACCOUNT_NOT_CONFIRMED"
+    );
+  }
+}
+
 export class DuplicateDeploymentLabelError extends UserInputError {
   constructor(deploymentName) {
     super(`Workspace already has a deployment named ${deploymentName}`);
@@ -84,4 +95,8 @@ export class MissingTLSCertificateError extends Error {
 
 export class InvalidResetToken extends UserInputError {
   message = this.message || "Invalid resetToken";
+}
+
+export class InvalidToken extends UserInputError {
+  message = this.message || "Invalid token";
 }

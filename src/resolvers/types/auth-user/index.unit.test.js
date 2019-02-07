@@ -1,10 +1,16 @@
 import { token, permissions, isAdmin } from "./index";
+import { USER_STATUS_ACTIVE } from "constants";
 
 describe("AuthUser", () => {
-  test("token resolves a valid token", () => {
+  test("token resolves a valid token", async () => {
     const userId = "12345";
     const cookie = jest.fn();
-    const res = token({ userId }, {}, { res: { cookie } });
+    const db = {
+      query: {
+        user: jest.fn().mockReturnValueOnce({ status: USER_STATUS_ACTIVE })
+      }
+    };
+    const res = await token({ userId }, {}, { db, res: { cookie } });
 
     // Test that uuid gets set propertly.
     expect(res.payload.uuid).toBe(userId);

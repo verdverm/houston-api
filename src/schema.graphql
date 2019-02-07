@@ -243,6 +243,11 @@ type Mutation {
     duration: Int
   ): AuthUser
 
+  confirmEmail(
+    token: String!
+    duration: Int
+  ): AuthUser
+
   createToken(
     password: String!
     identity: String
@@ -252,6 +257,10 @@ type Mutation {
   forgotPassword(
     email: String!
   ) : Boolean!
+
+  resendConfirmation(
+    email: String!
+  ): Boolean!
 
   resetPassword(
     token: String!

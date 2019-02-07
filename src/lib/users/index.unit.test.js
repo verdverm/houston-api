@@ -4,40 +4,77 @@ import {
   defaultWorkspaceDescription,
   validateInviteToken
 } from "./index";
+import { sendEmail } from "emails";
 import * as exports from "generated/client";
 import {
   InviteTokenNotFoundError,
   InviteTokenEmailError,
   PublicSignupsDisabledError
 } from "errors";
+import config from "config";
 import casual from "casual";
+import { USER_STATUS_PENDING, USER_STATUS_ACTIVE } from "constants";
+
+jest.mock("emails");
 
 describe("createUser", () => {
+  const usersConnection = () => {
+    return {
+      aggregate() {
+        return { count: () => 1 };
+      }
+    };
+  };
+
+  jest
+    .spyOn(exports.prisma, "usersConnection")
+    .mockImplementation(usersConnection);
+
+  const prismaCreateUser = jest
+    .spyOn(exports.prisma, "createUser")
+    .mockImplementation(() => {
+      return { id: () => 1 };
+    });
+
+  const opts = {
+    user: casual.username,
+    email: casual.email
+  };
+
+  beforeEach(() => {
+    config.publicSignups = true;
+  });
+
   test("throws error if not the first signup and public signups disabled", async () => {
+    config.publicSignups = false;
+    await expect(createUser(opts)).rejects.toThrow(
+      new PublicSignupsDisabledError()
+    );
+    expect(prismaCreateUser).not.toHaveBeenCalled();
+  });
+
+  test("creates an pending user by default", async () => {
     const opts = {
       user: casual.username,
       email: casual.email
     };
 
-    const usersConnection = function() {
-      return {
-        aggregate() {
-          return {
-            count() {
-              return 1;
-            }
-          };
-        }
-      };
-    };
+    expect(await createUser(opts)).toBe(1);
+    expect(prismaCreateUser.mock.calls[0][0].status).toBe(USER_STATUS_PENDING);
+    expect(sendEmail).toHaveBeenCalledTimes(1);
+    expect(sendEmail).toHaveBeenCalledWith(opts.email, "confirm-email", {
+      token: expect.any(String),
+      orbitUrl: "http://app.astronomer.io:5000",
+      strict: true
+    });
+  });
 
-    jest
-      .spyOn(exports.prisma, "usersConnection")
-      .mockImplementation(usersConnection);
+  test("creates an active user on request", async () => {
+    // I.e. for oauth user signup flow.
+    let activeOpts = { ...opts, active: true };
 
-    await expect(createUser(opts)).rejects.toThrow(
-      new PublicSignupsDisabledError()
-    );
+    expect(await createUser(activeOpts)).toBe(1);
+    expect(prismaCreateUser.mock.calls[0][0].status).toBe(USER_STATUS_ACTIVE);
   });
 });
 

@@ -1,6 +1,7 @@
 import fragment from "./fragment";
 import { createJWT, setJWTCookie } from "jwt";
 import { addFragmentToInfo } from "graphql-binding";
+import { USER_STATUS_ACTIVE } from "constants";
 
 // Grab the user object for this id.
 export function user(parent, args, ctx, info) {
@@ -11,7 +12,17 @@ export function user(parent, args, ctx, info) {
 }
 
 // Generate a JWT using the user id.
-export function token(parent, args, ctx) {
+export async function token(parent, args, ctx) {
+  let user = await ctx.db.query.user(
+    { where: { id: parent.userId } },
+    `{ status }`
+  );
+
+  if (user.status != USER_STATUS_ACTIVE) {
+    //  User is not active, so they can't log in
+    return null;
+  }
+
   // Create our JWT.
   const { token, payload } = createJWT(parent.userId);
 

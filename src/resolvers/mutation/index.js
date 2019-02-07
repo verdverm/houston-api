@@ -1,3 +1,4 @@
+import confirmEmail from "./confirm-email";
 import createDeployment from "./create-deployment";
 import createServiceAccount from "./create-service-account";
 import createToken from "./create-token";
@@ -8,6 +9,7 @@ import deleteInviteToken from "./delete-invite-token";
 import deleteServiceAccount from "./delete-service-account";
 import deleteWorkspace from "./delete-workspace";
 import forgotPassword from "./forgot-password";
+import resendConfirmation from "./resend-confirmation";
 import resetPassword from "./reset-password";
 import updateDeployment from "./update-deployment";
 import updateUser from "./update-user";
@@ -16,6 +18,7 @@ import upgradeDeployment from "./upgrade-deployment";
 import workspaceAddUser from "./workspace-add-user";
 
 export default {
+  confirmEmail,
   createDeployment,
   createServiceAccount,
   createToken,
@@ -26,6 +29,7 @@ export default {
   deleteServiceAccount,
   deleteWorkspace,
   forgotPassword,
+  resendConfirmation,
   resetPassword,
   updateDeployment,
   updateUser,

@@ -4,6 +4,7 @@ import { graphql } from "graphql";
 import { makeExecutableSchema } from "graphql-tools";
 import { importSchema } from "graphql-import";
 import bcrypt from "bcryptjs";
+import { USER_STATUS_ACTIVE } from "constants";
 
 const mutation = `
 mutation resetPassword($token: String!, $pass: String!) {
@@ -52,7 +53,7 @@ describe("resetPassword", () => {
 
   describe("when token is valid", () => {
     const hash = jest.spyOn(bcrypt, "hash"),
-      user = { id: 0, avatarUrl: "" },
+      user = { id: 0, status: USER_STATUS_ACTIVE },
       localCred = { id: casual.uuid, user };
 
     test("should change the password", async () => {
