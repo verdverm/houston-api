@@ -1033,9 +1033,6 @@ export interface UserWhereInput {
   roleBindings_every?: RoleBindingWhereInput;
   roleBindings_some?: RoleBindingWhereInput;
   roleBindings_none?: RoleBindingWhereInput;
-  inviteTokens_every?: InviteTokenWhereInput;
-  inviteTokens_some?: InviteTokenWhereInput;
-  inviteTokens_none?: InviteTokenWhereInput;
   localCredential?: LocalCredentialWhereInput;
   oauthCredentials_every?: OAuthCredentialWhereInput;
   oauthCredentials_some?: OAuthCredentialWhereInput;
@@ -1317,6 +1314,7 @@ export type EmailWhereUniqueInput = AtLeastOne<{
 
 export type InviteTokenWhereUniqueInput = AtLeastOne<{
   id: ID_Input;
+  token?: String;
 }>;
 
 export type LocalCredentialWhereUniqueInput = AtLeastOne<{
@@ -1384,8 +1382,8 @@ export interface InviteTokenCreateManyWithoutWorkspaceInput {
 }
 
 export interface InviteTokenCreateWithoutWorkspaceInput {
-  email?: String;
-  token?: String;
+  email: String;
+  token: String;
 }
 
 export interface RoleBindingCreateManyWithoutWorkspaceInput {
@@ -1413,7 +1411,6 @@ export interface UserCreateWithoutRoleBindingsInput {
   fullName?: String;
   avatarUrl?: String;
   emails?: EmailCreateManyWithoutUserInput;
-  inviteTokens?: InviteTokenCreateManyInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
   oauthCredentials?: OAuthCredentialCreateManyWithoutUserInput;
 }
@@ -1428,49 +1425,6 @@ export interface EmailCreateWithoutUserInput {
   primary?: Boolean;
   token?: String;
   verified?: Boolean;
-}
-
-export interface InviteTokenCreateManyInput {
-  create?: InviteTokenCreateInput[] | InviteTokenCreateInput;
-  connect?: InviteTokenWhereUniqueInput[] | InviteTokenWhereUniqueInput;
-}
-
-export interface InviteTokenCreateInput {
-  email?: String;
-  token?: String;
-  workspace?: WorkspaceCreateOneWithoutInvitesInput;
-}
-
-export interface WorkspaceCreateOneWithoutInvitesInput {
-  create?: WorkspaceCreateWithoutInvitesInput;
-  connect?: WorkspaceWhereUniqueInput;
-}
-
-export interface WorkspaceCreateWithoutInvitesInput {
-  active?: Boolean;
-  deployments?: DeploymentCreateManyWithoutWorkspaceInput;
-  description?: String;
-  label?: String;
-  roleBindings?: RoleBindingCreateManyWithoutWorkspaceInput;
-}
-
-export interface DeploymentCreateManyWithoutWorkspaceInput {
-  create?:
-    | DeploymentCreateWithoutWorkspaceInput[]
-    | DeploymentCreateWithoutWorkspaceInput;
-  connect?: DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput;
-}
-
-export interface DeploymentCreateWithoutWorkspaceInput {
-  config?: Json;
-  description?: String;
-  label?: String;
-  registryPassword?: String;
-  releaseName?: String;
-  version?: String;
-  extraAu?: Int;
-  airflowVersion?: String;
-  alertEmails?: DeploymentCreatealertEmailsInput;
 }
 
 export interface LocalCredentialCreateOneWithoutUserInput {
@@ -1703,7 +1657,6 @@ export interface UserUpdateWithoutRoleBindingsDataInput {
   fullName?: String;
   avatarUrl?: String;
   emails?: EmailUpdateManyWithoutUserInput;
-  inviteTokens?: InviteTokenUpdateManyInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
   oauthCredentials?: OAuthCredentialUpdateManyWithoutUserInput;
 }
@@ -1805,249 +1758,6 @@ export interface EmailUpdateManyDataInput {
   primary?: Boolean;
   token?: String;
   verified?: Boolean;
-}
-
-export interface InviteTokenUpdateManyInput {
-  create?: InviteTokenCreateInput[] | InviteTokenCreateInput;
-  update?:
-    | InviteTokenUpdateWithWhereUniqueNestedInput[]
-    | InviteTokenUpdateWithWhereUniqueNestedInput;
-  upsert?:
-    | InviteTokenUpsertWithWhereUniqueNestedInput[]
-    | InviteTokenUpsertWithWhereUniqueNestedInput;
-  delete?: InviteTokenWhereUniqueInput[] | InviteTokenWhereUniqueInput;
-  connect?: InviteTokenWhereUniqueInput[] | InviteTokenWhereUniqueInput;
-  disconnect?: InviteTokenWhereUniqueInput[] | InviteTokenWhereUniqueInput;
-  deleteMany?: InviteTokenScalarWhereInput[] | InviteTokenScalarWhereInput;
-  updateMany?:
-    | InviteTokenUpdateManyWithWhereNestedInput[]
-    | InviteTokenUpdateManyWithWhereNestedInput;
-}
-
-export interface InviteTokenUpdateWithWhereUniqueNestedInput {
-  where: InviteTokenWhereUniqueInput;
-  data: InviteTokenUpdateDataInput;
-}
-
-export interface InviteTokenUpdateDataInput {
-  email?: String;
-  token?: String;
-  workspace?: WorkspaceUpdateOneWithoutInvitesInput;
-}
-
-export interface WorkspaceUpdateOneWithoutInvitesInput {
-  create?: WorkspaceCreateWithoutInvitesInput;
-  update?: WorkspaceUpdateWithoutInvitesDataInput;
-  upsert?: WorkspaceUpsertWithoutInvitesInput;
-  delete?: Boolean;
-  disconnect?: Boolean;
-  connect?: WorkspaceWhereUniqueInput;
-}
-
-export interface WorkspaceUpdateWithoutInvitesDataInput {
-  active?: Boolean;
-  deployments?: DeploymentUpdateManyWithoutWorkspaceInput;
-  description?: String;
-  label?: String;
-  roleBindings?: RoleBindingUpdateManyWithoutWorkspaceInput;
-}
-
-export interface DeploymentUpdateManyWithoutWorkspaceInput {
-  create?:
-    | DeploymentCreateWithoutWorkspaceInput[]
-    | DeploymentCreateWithoutWorkspaceInput;
-  delete?: DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput;
-  connect?: DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput;
-  disconnect?: DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput;
-  update?:
-    | DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput[]
-    | DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput;
-  upsert?:
-    | DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput[]
-    | DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput;
-  deleteMany?: DeploymentScalarWhereInput[] | DeploymentScalarWhereInput;
-  updateMany?:
-    | DeploymentUpdateManyWithWhereNestedInput[]
-    | DeploymentUpdateManyWithWhereNestedInput;
-}
-
-export interface DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput {
-  where: DeploymentWhereUniqueInput;
-  data: DeploymentUpdateWithoutWorkspaceDataInput;
-}
-
-export interface DeploymentUpdateWithoutWorkspaceDataInput {
-  config?: Json;
-  description?: String;
-  label?: String;
-  registryPassword?: String;
-  releaseName?: String;
-  version?: String;
-  extraAu?: Int;
-  airflowVersion?: String;
-  alertEmails?: DeploymentUpdatealertEmailsInput;
-}
-
-export interface DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput {
-  where: DeploymentWhereUniqueInput;
-  update: DeploymentUpdateWithoutWorkspaceDataInput;
-  create: DeploymentCreateWithoutWorkspaceInput;
-}
-
-export interface DeploymentScalarWhereInput {
-  id?: ID_Input;
-  id_not?: ID_Input;
-  id_in?: ID_Input[] | ID_Input;
-  id_not_in?: ID_Input[] | ID_Input;
-  id_lt?: ID_Input;
-  id_lte?: ID_Input;
-  id_gt?: ID_Input;
-  id_gte?: ID_Input;
-  id_contains?: ID_Input;
-  id_not_contains?: ID_Input;
-  id_starts_with?: ID_Input;
-  id_not_starts_with?: ID_Input;
-  id_ends_with?: ID_Input;
-  id_not_ends_with?: ID_Input;
-  description?: String;
-  description_not?: String;
-  description_in?: String[] | String;
-  description_not_in?: String[] | String;
-  description_lt?: String;
-  description_lte?: String;
-  description_gt?: String;
-  description_gte?: String;
-  description_contains?: String;
-  description_not_contains?: String;
-  description_starts_with?: String;
-  description_not_starts_with?: String;
-  description_ends_with?: String;
-  description_not_ends_with?: String;
-  label?: String;
-  label_not?: String;
-  label_in?: String[] | String;
-  label_not_in?: String[] | String;
-  label_lt?: String;
-  label_lte?: String;
-  label_gt?: String;
-  label_gte?: String;
-  label_contains?: String;
-  label_not_contains?: String;
-  label_starts_with?: String;
-  label_not_starts_with?: String;
-  label_ends_with?: String;
-  label_not_ends_with?: String;
-  registryPassword?: String;
-  registryPassword_not?: String;
-  registryPassword_in?: String[] | String;
-  registryPassword_not_in?: String[] | String;
-  registryPassword_lt?: String;
-  registryPassword_lte?: String;
-  registryPassword_gt?: String;
-  registryPassword_gte?: String;
-  registryPassword_contains?: String;
-  registryPassword_not_contains?: String;
-  registryPassword_starts_with?: String;
-  registryPassword_not_starts_with?: String;
-  registryPassword_ends_with?: String;
-  registryPassword_not_ends_with?: String;
-  releaseName?: String;
-  releaseName_not?: String;
-  releaseName_in?: String[] | String;
-  releaseName_not_in?: String[] | String;
-  releaseName_lt?: String;
-  releaseName_lte?: String;
-  releaseName_gt?: String;
-  releaseName_gte?: String;
-  releaseName_contains?: String;
-  releaseName_not_contains?: String;
-  releaseName_starts_with?: String;
-  releaseName_not_starts_with?: String;
-  releaseName_ends_with?: String;
-  releaseName_not_ends_with?: String;
-  version?: String;
-  version_not?: String;
-  version_in?: String[] | String;
-  version_not_in?: String[] | String;
-  version_lt?: String;
-  version_lte?: String;
-  version_gt?: String;
-  version_gte?: String;
-  version_contains?: String;
-  version_not_contains?: String;
-  version_starts_with?: String;
-  version_not_starts_with?: String;
-  version_ends_with?: String;
-  version_not_ends_with?: String;
-  extraAu?: Int;
-  extraAu_not?: Int;
-  extraAu_in?: Int[] | Int;
-  extraAu_not_in?: Int[] | Int;
-  extraAu_lt?: Int;
-  extraAu_lte?: Int;
-  extraAu_gt?: Int;
-  extraAu_gte?: Int;
-  airflowVersion?: String;
-  airflowVersion_not?: String;
-  airflowVersion_in?: String[] | String;
-  airflowVersion_not_in?: String[] | String;
-  airflowVersion_lt?: String;
-  airflowVersion_lte?: String;
-  airflowVersion_gt?: String;
-  airflowVersion_gte?: String;
-  airflowVersion_contains?: String;
-  airflowVersion_not_contains?: String;
-  airflowVersion_starts_with?: String;
-  airflowVersion_not_starts_with?: String;
-  airflowVersion_ends_with?: String;
-  airflowVersion_not_ends_with?: String;
-  createdAt?: DateTimeInput;
-  createdAt_not?: DateTimeInput;
-  createdAt_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
-  createdAt_lt?: DateTimeInput;
-  createdAt_lte?: DateTimeInput;
-  createdAt_gt?: DateTimeInput;
-  createdAt_gte?: DateTimeInput;
-  updatedAt?: DateTimeInput;
-  updatedAt_not?: DateTimeInput;
-  updatedAt_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
-  updatedAt_lt?: DateTimeInput;
-  updatedAt_lte?: DateTimeInput;
-  updatedAt_gt?: DateTimeInput;
-  updatedAt_gte?: DateTimeInput;
-  AND?: DeploymentScalarWhereInput[] | DeploymentScalarWhereInput;
-  OR?: DeploymentScalarWhereInput[] | DeploymentScalarWhereInput;
-  NOT?: DeploymentScalarWhereInput[] | DeploymentScalarWhereInput;
-}
-
-export interface DeploymentUpdateManyWithWhereNestedInput {
-  where: DeploymentScalarWhereInput;
-  data: DeploymentUpdateManyDataInput;
-}
-
-export interface DeploymentUpdateManyDataInput {
-  config?: Json;
-  description?: String;
-  label?: String;
-  registryPassword?: String;
-  releaseName?: String;
-  version?: String;
-  extraAu?: Int;
-  airflowVersion?: String;
-  alertEmails?: DeploymentUpdatealertEmailsInput;
-}
-
-export interface WorkspaceUpsertWithoutInvitesInput {
-  update: WorkspaceUpdateWithoutInvitesDataInput;
-  create: WorkspaceCreateWithoutInvitesInput;
-}
-
-export interface InviteTokenUpsertWithWhereUniqueNestedInput {
-  where: InviteTokenWhereUniqueInput;
-  update: InviteTokenUpdateDataInput;
-  create: InviteTokenCreateInput;
 }
 
 export interface LocalCredentialUpdateOneWithoutUserInput {
@@ -2305,7 +2015,6 @@ export interface UserCreateWithoutEmailsInput {
   fullName?: String;
   avatarUrl?: String;
   roleBindings?: RoleBindingCreateManyWithoutUserInput;
-  inviteTokens?: InviteTokenCreateManyInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
   oauthCredentials?: OAuthCredentialCreateManyWithoutUserInput;
 }
@@ -2337,6 +2046,25 @@ export interface WorkspaceCreateWithoutRoleBindingsInput {
   label?: String;
 }
 
+export interface DeploymentCreateManyWithoutWorkspaceInput {
+  create?:
+    | DeploymentCreateWithoutWorkspaceInput[]
+    | DeploymentCreateWithoutWorkspaceInput;
+  connect?: DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput;
+}
+
+export interface DeploymentCreateWithoutWorkspaceInput {
+  config?: Json;
+  description?: String;
+  label?: String;
+  registryPassword?: String;
+  releaseName?: String;
+  version?: String;
+  extraAu?: Int;
+  airflowVersion?: String;
+  alertEmails?: DeploymentCreatealertEmailsInput;
+}
+
 export interface EmailUpdateInput {
   address?: String;
   primary?: Boolean;
@@ -2360,7 +2088,6 @@ export interface UserUpdateWithoutEmailsDataInput {
   fullName?: String;
   avatarUrl?: String;
   roleBindings?: RoleBindingUpdateManyWithoutUserInput;
-  inviteTokens?: InviteTokenUpdateManyInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
   oauthCredentials?: OAuthCredentialUpdateManyWithoutUserInput;
 }
@@ -2413,6 +2140,193 @@ export interface WorkspaceUpdateWithoutRoleBindingsDataInput {
   label?: String;
 }
 
+export interface DeploymentUpdateManyWithoutWorkspaceInput {
+  create?:
+    | DeploymentCreateWithoutWorkspaceInput[]
+    | DeploymentCreateWithoutWorkspaceInput;
+  delete?: DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput;
+  connect?: DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput;
+  disconnect?: DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput;
+  update?:
+    | DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    | DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput;
+  upsert?:
+    | DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    | DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput;
+  deleteMany?: DeploymentScalarWhereInput[] | DeploymentScalarWhereInput;
+  updateMany?:
+    | DeploymentUpdateManyWithWhereNestedInput[]
+    | DeploymentUpdateManyWithWhereNestedInput;
+}
+
+export interface DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput {
+  where: DeploymentWhereUniqueInput;
+  data: DeploymentUpdateWithoutWorkspaceDataInput;
+}
+
+export interface DeploymentUpdateWithoutWorkspaceDataInput {
+  config?: Json;
+  description?: String;
+  label?: String;
+  registryPassword?: String;
+  releaseName?: String;
+  version?: String;
+  extraAu?: Int;
+  airflowVersion?: String;
+  alertEmails?: DeploymentUpdatealertEmailsInput;
+}
+
+export interface DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput {
+  where: DeploymentWhereUniqueInput;
+  update: DeploymentUpdateWithoutWorkspaceDataInput;
+  create: DeploymentCreateWithoutWorkspaceInput;
+}
+
+export interface DeploymentScalarWhereInput {
+  id?: ID_Input;
+  id_not?: ID_Input;
+  id_in?: ID_Input[] | ID_Input;
+  id_not_in?: ID_Input[] | ID_Input;
+  id_lt?: ID_Input;
+  id_lte?: ID_Input;
+  id_gt?: ID_Input;
+  id_gte?: ID_Input;
+  id_contains?: ID_Input;
+  id_not_contains?: ID_Input;
+  id_starts_with?: ID_Input;
+  id_not_starts_with?: ID_Input;
+  id_ends_with?: ID_Input;
+  id_not_ends_with?: ID_Input;
+  description?: String;
+  description_not?: String;
+  description_in?: String[] | String;
+  description_not_in?: String[] | String;
+  description_lt?: String;
+  description_lte?: String;
+  description_gt?: String;
+  description_gte?: String;
+  description_contains?: String;
+  description_not_contains?: String;
+  description_starts_with?: String;
+  description_not_starts_with?: String;
+  description_ends_with?: String;
+  description_not_ends_with?: String;
+  label?: String;
+  label_not?: String;
+  label_in?: String[] | String;
+  label_not_in?: String[] | String;
+  label_lt?: String;
+  label_lte?: String;
+  label_gt?: String;
+  label_gte?: String;
+  label_contains?: String;
+  label_not_contains?: String;
+  label_starts_with?: String;
+  label_not_starts_with?: String;
+  label_ends_with?: String;
+  label_not_ends_with?: String;
+  registryPassword?: String;
+  registryPassword_not?: String;
+  registryPassword_in?: String[] | String;
+  registryPassword_not_in?: String[] | String;
+  registryPassword_lt?: String;
+  registryPassword_lte?: String;
+  registryPassword_gt?: String;
+  registryPassword_gte?: String;
+  registryPassword_contains?: String;
+  registryPassword_not_contains?: String;
+  registryPassword_starts_with?: String;
+  registryPassword_not_starts_with?: String;
+  registryPassword_ends_with?: String;
+  registryPassword_not_ends_with?: String;
+  releaseName?: String;
+  releaseName_not?: String;
+  releaseName_in?: String[] | String;
+  releaseName_not_in?: String[] | String;
+  releaseName_lt?: String;
+  releaseName_lte?: String;
+  releaseName_gt?: String;
+  releaseName_gte?: String;
+  releaseName_contains?: String;
+  releaseName_not_contains?: String;
+  releaseName_starts_with?: String;
+  releaseName_not_starts_with?: String;
+  releaseName_ends_with?: String;
+  releaseName_not_ends_with?: String;
+  version?: String;
+  version_not?: String;
+  version_in?: String[] | String;
+  version_not_in?: String[] | String;
+  version_lt?: String;
+  version_lte?: String;
+  version_gt?: String;
+  version_gte?: String;
+  version_contains?: String;
+  version_not_contains?: String;
+  version_starts_with?: String;
+  version_not_starts_with?: String;
+  version_ends_with?: String;
+  version_not_ends_with?: String;
+  extraAu?: Int;
+  extraAu_not?: Int;
+  extraAu_in?: Int[] | Int;
+  extraAu_not_in?: Int[] | Int;
+  extraAu_lt?: Int;
+  extraAu_lte?: Int;
+  extraAu_gt?: Int;
+  extraAu_gte?: Int;
+  airflowVersion?: String;
+  airflowVersion_not?: String;
+  airflowVersion_in?: String[] | String;
+  airflowVersion_not_in?: String[] | String;
+  airflowVersion_lt?: String;
+  airflowVersion_lte?: String;
+  airflowVersion_gt?: String;
+  airflowVersion_gte?: String;
+  airflowVersion_contains?: String;
+  airflowVersion_not_contains?: String;
+  airflowVersion_starts_with?: String;
+  airflowVersion_not_starts_with?: String;
+  airflowVersion_ends_with?: String;
+  airflowVersion_not_ends_with?: String;
+  createdAt?: DateTimeInput;
+  createdAt_not?: DateTimeInput;
+  createdAt_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_not_in?: DateTimeInput[] | DateTimeInput;
+  createdAt_lt?: DateTimeInput;
+  createdAt_lte?: DateTimeInput;
+  createdAt_gt?: DateTimeInput;
+  createdAt_gte?: DateTimeInput;
+  updatedAt?: DateTimeInput;
+  updatedAt_not?: DateTimeInput;
+  updatedAt_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_not_in?: DateTimeInput[] | DateTimeInput;
+  updatedAt_lt?: DateTimeInput;
+  updatedAt_lte?: DateTimeInput;
+  updatedAt_gt?: DateTimeInput;
+  updatedAt_gte?: DateTimeInput;
+  AND?: DeploymentScalarWhereInput[] | DeploymentScalarWhereInput;
+  OR?: DeploymentScalarWhereInput[] | DeploymentScalarWhereInput;
+  NOT?: DeploymentScalarWhereInput[] | DeploymentScalarWhereInput;
+}
+
+export interface DeploymentUpdateManyWithWhereNestedInput {
+  where: DeploymentScalarWhereInput;
+  data: DeploymentUpdateManyDataInput;
+}
+
+export interface DeploymentUpdateManyDataInput {
+  config?: Json;
+  description?: String;
+  label?: String;
+  registryPassword?: String;
+  releaseName?: String;
+  version?: String;
+  extraAu?: Int;
+  airflowVersion?: String;
+  alertEmails?: DeploymentUpdatealertEmailsInput;
+}
+
 export interface WorkspaceUpsertWithoutRoleBindingsInput {
   update: WorkspaceUpdateWithoutRoleBindingsDataInput;
   create: WorkspaceCreateWithoutRoleBindingsInput;
@@ -2436,10 +2350,49 @@ export interface EmailUpdateManyMutationInput {
   verified?: Boolean;
 }
 
+export interface InviteTokenCreateInput {
+  email: String;
+  token: String;
+  workspace: WorkspaceCreateOneWithoutInvitesInput;
+}
+
+export interface WorkspaceCreateOneWithoutInvitesInput {
+  create?: WorkspaceCreateWithoutInvitesInput;
+  connect?: WorkspaceWhereUniqueInput;
+}
+
+export interface WorkspaceCreateWithoutInvitesInput {
+  active?: Boolean;
+  deployments?: DeploymentCreateManyWithoutWorkspaceInput;
+  description?: String;
+  label?: String;
+  roleBindings?: RoleBindingCreateManyWithoutWorkspaceInput;
+}
+
 export interface InviteTokenUpdateInput {
   email?: String;
   token?: String;
-  workspace?: WorkspaceUpdateOneWithoutInvitesInput;
+  workspace?: WorkspaceUpdateOneRequiredWithoutInvitesInput;
+}
+
+export interface WorkspaceUpdateOneRequiredWithoutInvitesInput {
+  create?: WorkspaceCreateWithoutInvitesInput;
+  update?: WorkspaceUpdateWithoutInvitesDataInput;
+  upsert?: WorkspaceUpsertWithoutInvitesInput;
+  connect?: WorkspaceWhereUniqueInput;
+}
+
+export interface WorkspaceUpdateWithoutInvitesDataInput {
+  active?: Boolean;
+  deployments?: DeploymentUpdateManyWithoutWorkspaceInput;
+  description?: String;
+  label?: String;
+  roleBindings?: RoleBindingUpdateManyWithoutWorkspaceInput;
+}
+
+export interface WorkspaceUpsertWithoutInvitesInput {
+  update: WorkspaceUpdateWithoutInvitesDataInput;
+  create: WorkspaceCreateWithoutInvitesInput;
 }
 
 export interface InviteTokenUpdateManyMutationInput {
@@ -2465,7 +2418,6 @@ export interface UserCreateWithoutLocalCredentialInput {
   avatarUrl?: String;
   emails?: EmailCreateManyWithoutUserInput;
   roleBindings?: RoleBindingCreateManyWithoutUserInput;
-  inviteTokens?: InviteTokenCreateManyInput;
   oauthCredentials?: OAuthCredentialCreateManyWithoutUserInput;
 }
 
@@ -2491,7 +2443,6 @@ export interface UserUpdateWithoutLocalCredentialDataInput {
   avatarUrl?: String;
   emails?: EmailUpdateManyWithoutUserInput;
   roleBindings?: RoleBindingUpdateManyWithoutUserInput;
-  inviteTokens?: InviteTokenUpdateManyInput;
   oauthCredentials?: OAuthCredentialUpdateManyWithoutUserInput;
 }
 
@@ -2524,7 +2475,6 @@ export interface UserCreateWithoutOauthCredentialsInput {
   avatarUrl?: String;
   emails?: EmailCreateManyWithoutUserInput;
   roleBindings?: RoleBindingCreateManyWithoutUserInput;
-  inviteTokens?: InviteTokenCreateManyInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
 }
 
@@ -2551,7 +2501,6 @@ export interface UserUpdateWithoutOauthCredentialsDataInput {
   avatarUrl?: String;
   emails?: EmailUpdateManyWithoutUserInput;
   roleBindings?: RoleBindingUpdateManyWithoutUserInput;
-  inviteTokens?: InviteTokenUpdateManyInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
 }
 
@@ -2652,7 +2601,6 @@ export interface UserCreateInput {
   avatarUrl?: String;
   emails?: EmailCreateManyWithoutUserInput;
   roleBindings?: RoleBindingCreateManyWithoutUserInput;
-  inviteTokens?: InviteTokenCreateManyInput;
   localCredential?: LocalCredentialCreateOneWithoutUserInput;
   oauthCredentials?: OAuthCredentialCreateManyWithoutUserInput;
 }
@@ -2664,7 +2612,6 @@ export interface UserUpdateInput {
   avatarUrl?: String;
   emails?: EmailUpdateManyWithoutUserInput;
   roleBindings?: RoleBindingUpdateManyWithoutUserInput;
-  inviteTokens?: InviteTokenUpdateManyInput;
   localCredential?: LocalCredentialUpdateOneWithoutUserInput;
   oauthCredentials?: OAuthCredentialUpdateManyWithoutUserInput;
 }
@@ -2967,8 +2914,8 @@ export interface WorkspaceSubscription
 
 export interface InviteToken {
   id: ID_Output;
-  email?: String;
-  token?: String;
+  email: String;
+  token: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -3056,17 +3003,6 @@ export interface UserPromise extends Promise<User>, Fragmentable {
       last?: Int;
     }
   ) => T;
-  inviteTokens: <T = FragmentableArray<InviteToken>>(
-    args?: {
-      where?: InviteTokenWhereInput;
-      orderBy?: InviteTokenOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
   localCredential: <T = LocalCredentialPromise>() => T;
   oauthCredentials: <T = FragmentableArray<OAuthCredential>>(
     args?: {
@@ -3106,17 +3042,6 @@ export interface UserSubscription
     args?: {
       where?: RoleBindingWhereInput;
       orderBy?: RoleBindingOrderByInput;
-      skip?: Int;
-      after?: String;
-      before?: String;
-      first?: Int;
-      last?: Int;
-    }
-  ) => T;
-  inviteTokens: <T = Promise<AsyncIterator<InviteTokenSubscription>>>(
-    args?: {
-      where?: InviteTokenWhereInput;
-      orderBy?: InviteTokenOrderByInput;
       skip?: Int;
       after?: String;
       before?: String;
@@ -3951,8 +3876,8 @@ export interface InviteTokenSubscriptionPayloadSubscription
 
 export interface InviteTokenPreviousValues {
   id: ID_Output;
-  email?: String;
-  token?: String;
+  email: String;
+  token: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }

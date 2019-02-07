@@ -786,9 +786,9 @@ input EmailWhereUniqueInput {
 
 type InviteToken {
   id: ID!
-  email: String
-  token: String
-  workspace: Workspace
+  email: String!
+  token: String!
+  workspace: Workspace!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -800,14 +800,9 @@ type InviteTokenConnection {
 }
 
 input InviteTokenCreateInput {
-  email: String
-  token: String
-  workspace: WorkspaceCreateOneWithoutInvitesInput
-}
-
-input InviteTokenCreateManyInput {
-  create: [InviteTokenCreateInput!]
-  connect: [InviteTokenWhereUniqueInput!]
+  email: String!
+  token: String!
+  workspace: WorkspaceCreateOneWithoutInvitesInput!
 }
 
 input InviteTokenCreateManyWithoutWorkspaceInput {
@@ -816,8 +811,8 @@ input InviteTokenCreateManyWithoutWorkspaceInput {
 }
 
 input InviteTokenCreateWithoutWorkspaceInput {
-  email: String
-  token: String
+  email: String!
+  token: String!
 }
 
 type InviteTokenEdge {
@@ -840,8 +835,8 @@ enum InviteTokenOrderByInput {
 
 type InviteTokenPreviousValues {
   id: ID!
-  email: String
-  token: String
+  email: String!
+  token: String!
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -928,32 +923,15 @@ input InviteTokenSubscriptionWhereInput {
   NOT: [InviteTokenSubscriptionWhereInput!]
 }
 
-input InviteTokenUpdateDataInput {
-  email: String
-  token: String
-  workspace: WorkspaceUpdateOneWithoutInvitesInput
-}
-
 input InviteTokenUpdateInput {
   email: String
   token: String
-  workspace: WorkspaceUpdateOneWithoutInvitesInput
+  workspace: WorkspaceUpdateOneRequiredWithoutInvitesInput
 }
 
 input InviteTokenUpdateManyDataInput {
   email: String
   token: String
-}
-
-input InviteTokenUpdateManyInput {
-  create: [InviteTokenCreateInput!]
-  update: [InviteTokenUpdateWithWhereUniqueNestedInput!]
-  upsert: [InviteTokenUpsertWithWhereUniqueNestedInput!]
-  delete: [InviteTokenWhereUniqueInput!]
-  connect: [InviteTokenWhereUniqueInput!]
-  disconnect: [InviteTokenWhereUniqueInput!]
-  deleteMany: [InviteTokenScalarWhereInput!]
-  updateMany: [InviteTokenUpdateManyWithWhereNestedInput!]
 }
 
 input InviteTokenUpdateManyMutationInput {
@@ -982,20 +960,9 @@ input InviteTokenUpdateWithoutWorkspaceDataInput {
   token: String
 }
 
-input InviteTokenUpdateWithWhereUniqueNestedInput {
-  where: InviteTokenWhereUniqueInput!
-  data: InviteTokenUpdateDataInput!
-}
-
 input InviteTokenUpdateWithWhereUniqueWithoutWorkspaceInput {
   where: InviteTokenWhereUniqueInput!
   data: InviteTokenUpdateWithoutWorkspaceDataInput!
-}
-
-input InviteTokenUpsertWithWhereUniqueNestedInput {
-  where: InviteTokenWhereUniqueInput!
-  update: InviteTokenUpdateDataInput!
-  create: InviteTokenCreateInput!
 }
 
 input InviteTokenUpsertWithWhereUniqueWithoutWorkspaceInput {
@@ -1071,6 +1038,7 @@ input InviteTokenWhereInput {
 
 input InviteTokenWhereUniqueInput {
   id: ID
+  token: String
 }
 
 scalar Json
@@ -2095,7 +2063,6 @@ type User {
   avatarUrl: String
   emails(where: EmailWhereInput, orderBy: EmailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Email!]
   roleBindings(where: RoleBindingWhereInput, orderBy: RoleBindingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleBinding!]
-  inviteTokens(where: InviteTokenWhereInput, orderBy: InviteTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [InviteToken!]
   localCredential: LocalCredential
   oauthCredentials(where: OAuthCredentialWhereInput, orderBy: OAuthCredentialOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [OAuthCredential!]
   createdAt: DateTime!
@@ -2115,7 +2082,6 @@ input UserCreateInput {
   avatarUrl: String
   emails: EmailCreateManyWithoutUserInput
   roleBindings: RoleBindingCreateManyWithoutUserInput
-  inviteTokens: InviteTokenCreateManyInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
   oauthCredentials: OAuthCredentialCreateManyWithoutUserInput
 }
@@ -2146,7 +2112,6 @@ input UserCreateWithoutEmailsInput {
   fullName: String
   avatarUrl: String
   roleBindings: RoleBindingCreateManyWithoutUserInput
-  inviteTokens: InviteTokenCreateManyInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
   oauthCredentials: OAuthCredentialCreateManyWithoutUserInput
 }
@@ -2158,7 +2123,6 @@ input UserCreateWithoutLocalCredentialInput {
   avatarUrl: String
   emails: EmailCreateManyWithoutUserInput
   roleBindings: RoleBindingCreateManyWithoutUserInput
-  inviteTokens: InviteTokenCreateManyInput
   oauthCredentials: OAuthCredentialCreateManyWithoutUserInput
 }
 
@@ -2169,7 +2133,6 @@ input UserCreateWithoutOauthCredentialsInput {
   avatarUrl: String
   emails: EmailCreateManyWithoutUserInput
   roleBindings: RoleBindingCreateManyWithoutUserInput
-  inviteTokens: InviteTokenCreateManyInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
 }
 
@@ -2179,7 +2142,6 @@ input UserCreateWithoutRoleBindingsInput {
   fullName: String
   avatarUrl: String
   emails: EmailCreateManyWithoutUserInput
-  inviteTokens: InviteTokenCreateManyInput
   localCredential: LocalCredentialCreateOneWithoutUserInput
   oauthCredentials: OAuthCredentialCreateManyWithoutUserInput
 }
@@ -2241,7 +2203,6 @@ input UserUpdateInput {
   avatarUrl: String
   emails: EmailUpdateManyWithoutUserInput
   roleBindings: RoleBindingUpdateManyWithoutUserInput
-  inviteTokens: InviteTokenUpdateManyInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
   oauthCredentials: OAuthCredentialUpdateManyWithoutUserInput
 }
@@ -2295,7 +2256,6 @@ input UserUpdateWithoutEmailsDataInput {
   fullName: String
   avatarUrl: String
   roleBindings: RoleBindingUpdateManyWithoutUserInput
-  inviteTokens: InviteTokenUpdateManyInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
   oauthCredentials: OAuthCredentialUpdateManyWithoutUserInput
 }
@@ -2307,7 +2267,6 @@ input UserUpdateWithoutLocalCredentialDataInput {
   avatarUrl: String
   emails: EmailUpdateManyWithoutUserInput
   roleBindings: RoleBindingUpdateManyWithoutUserInput
-  inviteTokens: InviteTokenUpdateManyInput
   oauthCredentials: OAuthCredentialUpdateManyWithoutUserInput
 }
 
@@ -2318,7 +2277,6 @@ input UserUpdateWithoutOauthCredentialsDataInput {
   avatarUrl: String
   emails: EmailUpdateManyWithoutUserInput
   roleBindings: RoleBindingUpdateManyWithoutUserInput
-  inviteTokens: InviteTokenUpdateManyInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
 }
 
@@ -2328,7 +2286,6 @@ input UserUpdateWithoutRoleBindingsDataInput {
   fullName: String
   avatarUrl: String
   emails: EmailUpdateManyWithoutUserInput
-  inviteTokens: InviteTokenUpdateManyInput
   localCredential: LocalCredentialUpdateOneWithoutUserInput
   oauthCredentials: OAuthCredentialUpdateManyWithoutUserInput
 }
@@ -2430,9 +2387,6 @@ input UserWhereInput {
   roleBindings_every: RoleBindingWhereInput
   roleBindings_some: RoleBindingWhereInput
   roleBindings_none: RoleBindingWhereInput
-  inviteTokens_every: InviteTokenWhereInput
-  inviteTokens_some: InviteTokenWhereInput
-  inviteTokens_none: InviteTokenWhereInput
   localCredential: LocalCredentialWhereInput
   oauthCredentials_every: OAuthCredentialWhereInput
   oauthCredentials_some: OAuthCredentialWhereInput
@@ -2591,19 +2545,17 @@ input WorkspaceUpdateManyMutationInput {
   label: String
 }
 
+input WorkspaceUpdateOneRequiredWithoutInvitesInput {
+  create: WorkspaceCreateWithoutInvitesInput
+  update: WorkspaceUpdateWithoutInvitesDataInput
+  upsert: WorkspaceUpsertWithoutInvitesInput
+  connect: WorkspaceWhereUniqueInput
+}
+
 input WorkspaceUpdateOneWithoutDeploymentsInput {
   create: WorkspaceCreateWithoutDeploymentsInput
   update: WorkspaceUpdateWithoutDeploymentsDataInput
   upsert: WorkspaceUpsertWithoutDeploymentsInput
-  delete: Boolean
-  disconnect: Boolean
-  connect: WorkspaceWhereUniqueInput
-}
-
-input WorkspaceUpdateOneWithoutInvitesInput {
-  create: WorkspaceCreateWithoutInvitesInput
-  update: WorkspaceUpdateWithoutInvitesDataInput
-  upsert: WorkspaceUpsertWithoutInvitesInput
   delete: Boolean
   disconnect: Boolean
   connect: WorkspaceWhereUniqueInput

@@ -1,6 +1,7 @@
 import fragment from "./fragment";
 import { UserInviteExistsError } from "errors";
-import { gt, first, size } from "lodash";
+import { orbit } from "oauth/config";
+import { sendEmail } from "emails";
 import shortid from "shortid";
 import { addFragmentToInfo } from "graphql-binding";
 import { WORKSPACE_ADMIN } from "constants";
@@ -17,12 +18,12 @@ export default async function workspaceAddUser(parent, args, ctx, info) {
   const { email, workspaceUuid } = args;
 
   // Check for user by incoming email arg.
-  const user = first(
-    await ctx.db.query.users(
-      { where: { emails_some: { address: email } } },
-      `{ id }`
-    )
+  const emailRow = await ctx.db.query.email(
+    { where: { address: email } },
+    `{ user { id } }`
   );
+
+  const user = emailRow ? emailRow.user : null;
 
   // If we already have a user, create the role binding to the workspace.
   if (user) {
@@ -33,25 +34,36 @@ export default async function workspaceAddUser(parent, args, ctx, info) {
         workspace: { connect: { id: workspaceUuid } }
       }
     });
-  }
-
-  if (!user) {
+  } else {
     // Check if we have an invite for incoming email and user.
-    const existingInvites = await ctx.db.query.inviteTokens(
+    const existingInvites = await ctx.db.query.inviteTokensConnection(
       {
         where: { email, workspace: { id: workspaceUuid } }
       },
-      `{ id }`
+      `{ aggregate { count } }`
     );
-    if (gt(size(existingInvites), 0)) throw new UserInviteExistsError();
+    if (existingInvites.aggregate.count > 0) throw new UserInviteExistsError();
 
+    const token = shortid.generate();
     // Create the invite token if we didn't already have one.
-    await ctx.db.mutation.createInviteToken({
-      data: {
-        email,
-        token: shortid.generate(),
-        workspace: { connect: { id: workspaceUuid } }
-      }
+    // Multi-column unique fields would be nice, but not supported yet
+    // https://github.com/prisma/prisma/issues/3405
+    const res = await ctx.db.mutation.createInviteToken(
+      {
+        data: {
+          email,
+          token,
+          workspace: { connect: { id: workspaceUuid } }
+        }
+      },
+      `{workspace { label } }`
+    );
+
+    sendEmail(email, "user-invite", {
+      strict: true,
+      orbitUrl: orbit(),
+      token,
+      workspaceLabel: res.workspace.label
     });
   }
 
