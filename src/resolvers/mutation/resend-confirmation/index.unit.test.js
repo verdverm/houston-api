@@ -1,5 +1,4 @@
 import resolvers from "resolvers";
-import * as emailExports from "emails";
 import { sendEmail } from "emails";
 import shortid from "shortid";
 import casual from "casual";
