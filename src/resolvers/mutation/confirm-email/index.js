@@ -14,7 +14,7 @@ export default async function confirmEmail(parent, args, ctx) {
     {
       where: { token: args.token }
     },
-    `{ 
+    `{
       verified
       primary
       user {
@@ -29,7 +29,7 @@ export default async function confirmEmail(parent, args, ctx) {
     throw new InvalidToken();
   }
 
-  let mutation = {
+  const mutation = {
     verified: true,
     token: null
   };

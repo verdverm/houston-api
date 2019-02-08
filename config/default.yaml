@@ -65,6 +65,11 @@ registry:
   issuer: ~
   service: ~
 
+# Elasticsearch configuration.
+elasticsearch:
+  host: ~
+  log: ~
+
 # Charts live here.
 # This is where the airflow chart is installed from.
 repository: "https://helm.astronomer.io/"

@@ -13,7 +13,7 @@ export function user(parent, args, ctx, info) {
 
 // Generate a JWT using the user id.
 export async function token(parent, args, ctx) {
-  let user = await ctx.db.query.user(
+  const user = await ctx.db.query.user(
     { where: { id: parent.userId } },
     `{ status }`
   );

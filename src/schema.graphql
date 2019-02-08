@@ -180,6 +180,17 @@ type ServiceAccount {
   updatedAt: DateTime!
 }
 
+type DeploymentLog {
+  id: ID!
+  uuid: Uuid @alias(field: "id")
+  timestamp: String
+  workspace: String
+  release: String
+  component: String
+  level: String
+  message: String
+}
+
 #
 # Queries
 #
@@ -228,6 +239,12 @@ type Query {
     workspaceUuid: Uuid
     email: String
   ): [Invite] @auth(permission: "user.workspace.get")
+
+  logs(
+    component: String!
+    timestamp: JSON!
+    search: JSON
+  ): [DeploymentLog]
 }
 
 #
@@ -334,4 +351,15 @@ type Mutation {
     deploymentUuid: Uuid!
     version: String!
   ): Deployment @auth(permission: "user.deployment.update")
+}
+
+#
+# Subscriptions
+#
+type Subscription {
+  log(
+    component: String!
+    timestamp: JSON
+    search: JSON
+  ): DeploymentLog
 }
