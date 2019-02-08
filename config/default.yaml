@@ -65,7 +65,8 @@ registry:
   issuer: ~
   service: ~
 
-# Elasticsearch configuration.
+# Elasticsearch configuration for Houston to pull logs.
+# This is passed striaght to the es client.
 elasticsearch:
   host: ~
   log: ~
@@ -235,6 +236,15 @@ deployments:
       host: localhost
       port: 5432
       database: postgres
+
+  # Elasticsearch configuration for deployments.
+  # Airflow clients access Elasticsearch differently.
+  # Houston has full acces, while the deployments connect 
+  # via NGINX for auth.
+  elasticsearch:
+    connection:
+      host: localhost
+      port: 9200
 
   # An astro unit defines the smallest billable unit
   # in the system. Default values are based on

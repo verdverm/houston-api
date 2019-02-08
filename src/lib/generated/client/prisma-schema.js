@@ -47,6 +47,7 @@ type Deployment {
   description: String
   label: String
   registryPassword: String
+  elasticsearchPassword: String
   releaseName: String
   version: String
   extraAu: Int
@@ -72,6 +73,7 @@ input DeploymentCreateInput {
   description: String
   label: String
   registryPassword: String
+  elasticsearchPassword: String
   releaseName: String
   version: String
   extraAu: Int
@@ -95,6 +97,7 @@ input DeploymentCreateWithoutWorkspaceInput {
   description: String
   label: String
   registryPassword: String
+  elasticsearchPassword: String
   releaseName: String
   version: String
   extraAu: Int
@@ -118,6 +121,8 @@ enum DeploymentOrderByInput {
   label_DESC
   registryPassword_ASC
   registryPassword_DESC
+  elasticsearchPassword_ASC
+  elasticsearchPassword_DESC
   releaseName_ASC
   releaseName_DESC
   version_ASC
@@ -138,6 +143,7 @@ type DeploymentPreviousValues {
   description: String
   label: String
   registryPassword: String
+  elasticsearchPassword: String
   releaseName: String
   version: String
   extraAu: Int
@@ -204,6 +210,20 @@ input DeploymentScalarWhereInput {
   registryPassword_not_starts_with: String
   registryPassword_ends_with: String
   registryPassword_not_ends_with: String
+  elasticsearchPassword: String
+  elasticsearchPassword_not: String
+  elasticsearchPassword_in: [String!]
+  elasticsearchPassword_not_in: [String!]
+  elasticsearchPassword_lt: String
+  elasticsearchPassword_lte: String
+  elasticsearchPassword_gt: String
+  elasticsearchPassword_gte: String
+  elasticsearchPassword_contains: String
+  elasticsearchPassword_not_contains: String
+  elasticsearchPassword_starts_with: String
+  elasticsearchPassword_not_starts_with: String
+  elasticsearchPassword_ends_with: String
+  elasticsearchPassword_not_ends_with: String
   releaseName: String
   releaseName_not: String
   releaseName_in: [String!]
@@ -302,6 +322,7 @@ input DeploymentUpdateDataInput {
   description: String
   label: String
   registryPassword: String
+  elasticsearchPassword: String
   releaseName: String
   version: String
   extraAu: Int
@@ -315,6 +336,7 @@ input DeploymentUpdateInput {
   description: String
   label: String
   registryPassword: String
+  elasticsearchPassword: String
   releaseName: String
   version: String
   extraAu: Int
@@ -328,6 +350,7 @@ input DeploymentUpdateManyDataInput {
   description: String
   label: String
   registryPassword: String
+  elasticsearchPassword: String
   releaseName: String
   version: String
   extraAu: Int
@@ -340,6 +363,7 @@ input DeploymentUpdateManyMutationInput {
   description: String
   label: String
   registryPassword: String
+  elasticsearchPassword: String
   releaseName: String
   version: String
   extraAu: Int
@@ -351,6 +375,7 @@ input DeploymentUpdateManyWithoutWorkspaceInput {
   create: [DeploymentCreateWithoutWorkspaceInput!]
   delete: [DeploymentWhereUniqueInput!]
   connect: [DeploymentWhereUniqueInput!]
+  set: [DeploymentWhereUniqueInput!]
   disconnect: [DeploymentWhereUniqueInput!]
   update: [DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput!]
   upsert: [DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput!]
@@ -377,6 +402,7 @@ input DeploymentUpdateWithoutWorkspaceDataInput {
   description: String
   label: String
   registryPassword: String
+  elasticsearchPassword: String
   releaseName: String
   version: String
   extraAu: Int
@@ -457,6 +483,20 @@ input DeploymentWhereInput {
   registryPassword_not_starts_with: String
   registryPassword_ends_with: String
   registryPassword_not_ends_with: String
+  elasticsearchPassword: String
+  elasticsearchPassword_not: String
+  elasticsearchPassword_in: [String!]
+  elasticsearchPassword_not_in: [String!]
+  elasticsearchPassword_lt: String
+  elasticsearchPassword_lte: String
+  elasticsearchPassword_gt: String
+  elasticsearchPassword_gte: String
+  elasticsearchPassword_contains: String
+  elasticsearchPassword_not_contains: String
+  elasticsearchPassword_starts_with: String
+  elasticsearchPassword_not_starts_with: String
+  elasticsearchPassword_ends_with: String
+  elasticsearchPassword_not_ends_with: String
   releaseName: String
   releaseName_not: String
   releaseName_in: [String!]
@@ -695,6 +735,7 @@ input EmailUpdateManyWithoutUserInput {
   create: [EmailCreateWithoutUserInput!]
   delete: [EmailWhereUniqueInput!]
   connect: [EmailWhereUniqueInput!]
+  set: [EmailWhereUniqueInput!]
   disconnect: [EmailWhereUniqueInput!]
   update: [EmailUpdateWithWhereUniqueWithoutUserInput!]
   upsert: [EmailUpsertWithWhereUniqueWithoutUserInput!]
@@ -943,6 +984,7 @@ input InviteTokenUpdateManyWithoutWorkspaceInput {
   create: [InviteTokenCreateWithoutWorkspaceInput!]
   delete: [InviteTokenWhereUniqueInput!]
   connect: [InviteTokenWhereUniqueInput!]
+  set: [InviteTokenWhereUniqueInput!]
   disconnect: [InviteTokenWhereUniqueInput!]
   update: [InviteTokenUpdateWithWhereUniqueWithoutWorkspaceInput!]
   upsert: [InviteTokenUpsertWithWhereUniqueWithoutWorkspaceInput!]
@@ -1423,6 +1465,7 @@ input OAuthCredentialUpdateManyWithoutUserInput {
   create: [OAuthCredentialCreateWithoutUserInput!]
   delete: [OAuthCredentialWhereUniqueInput!]
   connect: [OAuthCredentialWhereUniqueInput!]
+  set: [OAuthCredentialWhereUniqueInput!]
   disconnect: [OAuthCredentialWhereUniqueInput!]
   update: [OAuthCredentialUpdateWithWhereUniqueWithoutUserInput!]
   upsert: [OAuthCredentialUpsertWithWhereUniqueWithoutUserInput!]
@@ -1705,6 +1748,7 @@ input RoleBindingUpdateManyWithoutUserInput {
   create: [RoleBindingCreateWithoutUserInput!]
   delete: [RoleBindingWhereUniqueInput!]
   connect: [RoleBindingWhereUniqueInput!]
+  set: [RoleBindingWhereUniqueInput!]
   disconnect: [RoleBindingWhereUniqueInput!]
   update: [RoleBindingUpdateWithWhereUniqueWithoutUserInput!]
   upsert: [RoleBindingUpsertWithWhereUniqueWithoutUserInput!]
@@ -1716,6 +1760,7 @@ input RoleBindingUpdateManyWithoutWorkspaceInput {
   create: [RoleBindingCreateWithoutWorkspaceInput!]
   delete: [RoleBindingWhereUniqueInput!]
   connect: [RoleBindingWhereUniqueInput!]
+  set: [RoleBindingWhereUniqueInput!]
   disconnect: [RoleBindingWhereUniqueInput!]
   update: [RoleBindingUpdateWithWhereUniqueWithoutWorkspaceInput!]
   upsert: [RoleBindingUpsertWithWhereUniqueWithoutWorkspaceInput!]

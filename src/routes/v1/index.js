@@ -1,5 +1,6 @@
 import alerts from "./alerts";
 import authorization from "./authorization";
+import elasticsearch from "./elasticsearch";
 import healthz from "./healthz";
 import oauth from "./oauth";
 import registry from "./registry";
@@ -11,6 +12,7 @@ const router = new express.Router();
 // Attach routes.
 router.use("/alerts", alerts);
 router.use("/authorization", authorization);
+router.use("/elasticsearch", elasticsearch);
 router.use("/healthz", healthz);
 router.use("/oauth", oauth);
 router.use("/registry", registry);

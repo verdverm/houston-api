@@ -43,6 +43,7 @@ export function generateHelmValues(deployment, values = {}) {
     limitRange(), // Apply the limit range.
     constraints(deployment), // Apply any constraints (quotas, pgbouncer, etc).
     registry(deployment), // Apply the registry connection details.
+    elasticsearch(deployment), // Apply the elasticsearch connection details
     // platform(deployment), // Apply astronomer platform specific values.
     deployment.config // The deployment level config.
   );
@@ -260,6 +261,25 @@ export function registry(deployment) {
         host: `registry.${baseDomain}`,
         email: `admin@${baseDomain}`
       }
+    }
+  };
+}
+
+/*
+ * Return connection information for the elasticsearch connection.
+ * Each deployment has a unique password that is auto-generated and
+ * lives in a kubernetes secret. This function maps those values into
+ * the helm configuration.
+ * @param {Object} deployment A deployment object.
+ * @return {Object} The elasticsearch settings.
+ */
+
+export function elasticsearch(deployment) {
+  const { connection } = config.get("deployments.elasticsearch");
+
+  return {
+    elasticsearch: {
+      connection: merge({ user: deployment.releaseName }, connection)
     }
   };
 }

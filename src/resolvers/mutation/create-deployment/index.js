@@ -41,6 +41,13 @@ export default async function createDeployment(parent, args, ctx, info) {
   const registryPassword = crypto.randomBytes(16).toString("hex");
   const hashedRegistryPassword = await bcrypt.hash(registryPassword, 10);
 
+  // Generate a unique elasticsearch password for this deployment
+  const elasticsearchPassword = crypto.randomBytes(16).toString("hex");
+  const hashedElasticsearchPassword = await bcrypt.hash(
+    elasticsearchPassword,
+    10
+  );
+
   // Generate a random space-themed release name.
   const releaseName = generateReleaseName();
 
@@ -53,6 +60,7 @@ export default async function createDeployment(parent, args, ctx, info) {
       version,
       releaseName,
       registryPassword: hashedRegistryPassword,
+      elasticsearchPassword: hashedElasticsearchPassword,
       ...mapPropertiesToDeployment(args.properties),
       workspace: {
         connect: {
@@ -91,11 +99,12 @@ export default async function createDeployment(parent, args, ctx, info) {
   // and subsequent helm upgrades will use the --reuse-values option.
   const data = { metadataConnection, resultBackendConnection };
   const registry = { connection: { pass: registryPassword } };
+  const elasticsearch = { connection: { pass: elasticsearchPassword } };
   const platform = {
     release: platformReleaseName,
     workspace: args.workspaceUuid
   };
-  const values = { data, registry, platform };
+  const values = { data, registry, elasticsearch, platform };
 
   // Fire off createDeployment to commander.
   await ctx.commander.request("createDeployment", {

@@ -102,6 +102,7 @@ type Deployment {
   description: String
   label: String
   registryPassword: String
+  elasticsearchPassword: String
   releaseName: String @unique
   version: String
   extraAu: Int

@@ -3,6 +3,7 @@ import { hasPermission, getAuthUser } from "rbac";
 import log from "logger";
 import { InvalidCredentialsError } from "errors";
 import { createDockerJWT } from "registry/jwt";
+import validateDeploymentCredentials from "deployments/validate/authorization";
 import bcrypt from "bcryptjs";
 import { compact, first, isArray } from "lodash";
 import { ENTITY_DEPLOYMENT } from "constants";
@@ -49,7 +50,11 @@ export default async function(req, res) {
     .split(":");
 
   // Determine if this is a user triggered action, or from a running deployment.
-  const isDeployment = await isDeploymentRegistryAuth(authUser, authPassword);
+  const isDeployment = await validateDeploymentCredentials(
+    authUser,
+    authPassword,
+    "registryPassword"
+  );
 
   // Look up the requesting User or Service Account.
   const user = await getAuthUser(authPassword);
@@ -156,35 +161,6 @@ export function parseScope(scope) {
 //   const registryAuth = config.get("registry.auth");
 //   return !!find(registryAuth.auths, value => value.auth === token);
 // }
-
-/*
- * Check if token is a deployment token.
- * @param {String} token The authorization token.
- */
-export async function isDeploymentRegistryAuth(releaseName, password) {
-  // Return false if password is empty.
-  if (!password) return false;
-
-  // Return false if releaseName doesn't look right.
-  if (releaseName.split("-").length !== 3) return false;
-
-  // Get the registryPassword for this deployment.
-  const registryPassword = await prisma
-    .deployment({ releaseName })
-    .registryPassword();
-
-  // Return false if no result.
-  if (!registryPassword) return false;
-
-  // Check the password.
-  const valid = await bcrypt.compare(password, registryPassword);
-
-  // Throw error if we don't have a match.
-  if (!valid) throw new InvalidCredentialsError();
-
-  // If we make it here, return true.
-  return true;
-}
 
 /*
  * Send correctly formatted error response back to registry.
