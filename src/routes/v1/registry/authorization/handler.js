@@ -1,10 +1,8 @@
 import { prisma } from "generated/client";
 import { hasPermission, getAuthUser } from "rbac";
 import log from "logger";
-import { InvalidCredentialsError } from "errors";
 import { createDockerJWT } from "registry/jwt";
 import validateDeploymentCredentials from "deployments/validate/authorization";
-import bcrypt from "bcryptjs";
 import { compact, first, isArray } from "lodash";
 import { ENTITY_DEPLOYMENT } from "constants";
 
