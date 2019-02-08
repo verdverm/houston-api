@@ -19,7 +19,7 @@ setInterval(() => {
   });
 }, 1000);
 
-export function subscribe(parent, args, ctx) {
+export function subscribe() {
   log.info("Starting log subscription");
   return pubsub.asyncIterator([TOPIC]);
 }

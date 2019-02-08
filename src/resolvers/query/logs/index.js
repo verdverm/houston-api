@@ -7,10 +7,11 @@ import elasticsearch from "elasticsearch";
  * @param {Object} ctx The graphql context.
  * @return {[]DeploymentLog} A list of DeploymentLogs.
  */
-export default async function logs(parent, args, ctx) {
+export default async function logs(parent, args) {
   const config = config.get("elasticsearch");
   const es = elasticsearch.Client(config);
   const startTS = args.timestamp.get;
   const minutesToAdd = args.timestamp.since;
+  console.log(es, startTS, minutesToAdd);
   return [];
 }
