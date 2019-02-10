@@ -351,9 +351,3 @@ deployments:
       # Adds a pgbouncer service between the airflow pods (scheduler / webserver/ workers),
       # and the backend database.
       enabled: true
-    workers:
-      persistence:
-        # This disables StatefulSet workers and uses a Deployment instead.
-        # By default we use the Elasticsearch log plugin. This means we print
-        # the logs to stdout, which get shipped to Elasticsearch via Fluentd.
-        enabled: false

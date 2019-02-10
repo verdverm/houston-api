@@ -277,11 +277,19 @@ export function registry(deployment) {
 export function elasticsearch(deployment) {
   const { connection } = config.get("deployments.elasticsearch");
 
-  return {
-    elasticsearch: {
-      connection: merge({ user: deployment.releaseName }, connection)
-    }
-  };
+  return !connection
+    ? {}
+    : {
+        elasticsearch: {
+          connection: merge({ user: deployment.releaseName }, connection)
+        },
+        // This disables StatefulSet workers and uses a Deployment instead.
+        // By default we use the Elasticsearch log plugin. This means we print
+        // the logs to stdout, which get shipped to Elasticsearch via Fluentd.
+        workers: {
+          persistence: { enabled: false }
+        }
+      };
 }
 
 /* Return the platform specific settings.
