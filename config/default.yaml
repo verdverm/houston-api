@@ -338,11 +338,22 @@ deployments:
   # These are static configs that get merged directly into the values
   # passed to helm for each deployment.
   helm:
+    # If enabled, deploy ServiceAccounts / Roles / RoleBindings
+    # for components that require kubernetes apiserver access.
     rbacEnabled: true
     ingress:
+      # Attach an airflow deployment to the system level ingress controller.
       enabled: true
-      acme: false
     networkPolicies:
+      # Enabled network polices to restrict the way pods can communicate.
       enabled: true
     pgbouncer:
+      # Adds a pgbouncer service between the airflow pods (scheduler / webserver/ workers),
+      # and the backend database.
       enabled: true
+    workers:
+      persistence:
+        # This disables StatefulSet workers and uses a Deployment instead.
+        # By default we use the Elasticsearch log plugin. This means we print
+        # the logs to stdout, which get shipped to Elasticsearch via Fluentd.
+        enabled: false
