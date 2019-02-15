@@ -5,7 +5,6 @@ describe("createLogQuery", () => {
     const query = createLogQuery(
       "planetary-nebula-1234",
       "webserver",
-      new Date(),
       new Date()
     );
     const musts = query.body.query.bool.must;
@@ -16,7 +15,6 @@ describe("createLogQuery", () => {
     const query = createLogQuery(
       "planetary-nebula-1234",
       "webserver",
-      new Date(),
       new Date(),
       "blah"
     );
