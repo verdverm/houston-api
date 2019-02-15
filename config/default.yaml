@@ -58,12 +58,6 @@ orbit:
   subdomain: app
   port: 5000
 
-# Docker registry configuration.
-registry:
-  auth: ~
-  certPath: ~
-  issuer: ~
-  service: ~
 
 # Elasticsearch configuration for Houston to pull logs.
 # This is passed striaght to the es client.
@@ -114,11 +108,22 @@ auth:
   github:
     enabled: false
 
-# Passphrase to sign JWTs with.
-jwtPassphrase: ~
+jwt:
+  # Development only: Passphrase to sign JWTs used to authenticate our GraphQL
+  # API.
+  #passphrase: ~
 
-# JWT / Cookie duration in milliseconds.
-authDuration: 86400000
+  # JWT / Cookie duration in milliseconds.
+  authDuration: 86400000
+
+  # Path to folder containing tls.crt and tls.ket, used for signing JWT tokens
+  # to authenticate against the Docker registry and Airflow FAB UI
+  certPath: ~
+
+  # Docker registry configuration.
+  registry:
+    issuer: ~
+    service: ~
 
 # Allow public signups.
 publicSignups: false

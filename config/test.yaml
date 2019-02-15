@@ -46,10 +46,12 @@ auth:
     enabled: false
 
 # Passphrase to sign JWTs with.
-jwtPassphrase: "abcdefg"
+jwt:
+  passphrase: "abcdefg"
 
-# JWT / Cookie duration in milliseconds.
-authDuration: 86400000
+  # JWT / Cookie duration in milliseconds.
+  authDuration: 86400000
+  certPath: ./test-data/certs/
 
 # Deployment configuration.
 deployments:

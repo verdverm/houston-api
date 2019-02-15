@@ -27,14 +27,6 @@ email:
   reply: "EMAIL__REPLY"
   smtpUrl: "EMAIL__SMTP_URL"
 
-registry:
-  auth:
-    __name: "REGISTRY__AUTH"
-    __format: "json"
-  certPath: "REGISTRY__CERT_PATH"
-  issuer: "REGISTRY__ISSUER"
-  service: "REGISTRY__SERVICE"
-
 repository: "REPOSITORY"
 
 helm:
@@ -74,9 +66,14 @@ auth:
       __name: "AUTH__GITHUB__ENABLED"
       __format: "json"
 
-jwtPassphrase: "JWT_PASSPHRASE"
+jwt:
+  passphrase: "JWT__PASSPHRASE"
+  certPath: "JWT__CERT_PATH"
+  authDuration: "JWT__AUTH_DURATION"
 
-authDuration: "AUTH_DURATION"
+  registry:
+    issuer: "JWT__REGISTRY__ISSUER"
+    service: "JWT__REGISTRY__SERVICE"
 
 publicSignups:
   __name: "PUBLIC_SIGNUPS"

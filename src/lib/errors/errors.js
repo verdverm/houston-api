@@ -95,8 +95,7 @@ export class JWTValidationError extends AuthenticationError {
 }
 
 export class MissingTLSCertificateError extends Error {
-  message =
-    this.message || "TLS Certificate not found, can't sign docker registry JWT";
+  message = this.message || "TLS Certificate not found, can't sign JWT tokens";
 }
 
 export class InvalidResetToken extends UserInputError {
