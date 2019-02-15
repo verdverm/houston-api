@@ -75,7 +75,7 @@ export async function search(...args) {
  */
 export function formatLogDocument({ _id: id, _source: src }) {
   // Deconstruct and rename some variables from the log object.
-  const { component, release, "@timestamp": timestamp, log: message } = src;
+  const { component, release, "@timestamp": timestamp, message } = src;
 
   // Return the fields in the expected format.
   return { id, component, release, timestamp, message };
