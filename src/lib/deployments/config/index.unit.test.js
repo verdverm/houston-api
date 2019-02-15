@@ -8,7 +8,8 @@ import {
   mapPropertiesToDeployment,
   mapDeploymentToProperties,
   findLatestTag,
-  generateNextTag
+  generateNextTag,
+  deploymentOverrides
 } from "./index";
 import { generateReleaseName } from "deployments/naming";
 import casual from "casual";
@@ -292,5 +293,40 @@ describe("generateNextTag", () => {
     const latest = undefined;
     const next = generateNextTag(latest);
     expect(next).toBe(DEFAULT_NEXT_IMAGE_TAG);
+  });
+});
+
+describe("deploymentOverrides", () => {
+  test("adds resource units to numeric inputs", () => {
+    const deployment = {
+      config: {
+        scheduler: {
+          resources: {
+            limits: {
+              cpu: 500,
+              memory: 1920
+            }
+          }
+        },
+        webserver: {
+          resources: {
+            requests: {
+              cpu: 100,
+              memory: 384
+            }
+          }
+        },
+        workers: {
+          replicas: 1
+        }
+      }
+    };
+
+    const res = deploymentOverrides(deployment);
+    expect(res.scheduler.resources.limits.cpu).toEqual("500m");
+    expect(res.scheduler.resources.limits.memory).toEqual("1920Mi");
+    expect(res.webserver.resources.requests.cpu).toEqual("100m");
+    expect(res.webserver.resources.requests.memory).toEqual("384Mi");
+    expect(res.workers.replicas).toEqual(1);
   });
 });

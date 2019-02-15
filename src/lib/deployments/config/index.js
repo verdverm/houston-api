@@ -5,8 +5,10 @@ import {
   find,
   fromPairs,
   get,
+  isNumber,
   last,
   map,
+  mapValues,
   maxBy,
   merge,
   set,
@@ -36,16 +38,17 @@ export function generateHelmValues(deployment, values = {}) {
   const logValues = config.get("deployments.logHelmValues");
 
   const helmValues = merge(
+    {}, // Start with an empty object.
     base, // Apply base settings from config YAML.
     values, // Apply any settings passed in directly.
     ingress(), // Apply ingress settings.
-    resources(), // Apply resource requests and limits.
+    defaultResources(), // Apply resource requests and limits.
     limitRange(), // Apply the limit range.
     constraints(deployment), // Apply any constraints (quotas, pgbouncer, etc).
     registry(deployment), // Apply the registry connection details.
     elasticsearch(deployment), // Apply the elasticsearch connection details
     // platform(deployment), // Apply astronomer platform specific values.
-    deployment.config // The deployment level config.
+    deploymentOverrides(deployment) // The deployment level config.
   );
 
   // Log out the YAML values if enabled.
@@ -236,7 +239,7 @@ export function constraints(deployment) {
  * @param {String} includeUnits If true include millicpu and memory units.
  * @return {Object} The resource values.
  */
-export function resources(type = "default", includeUnits = true) {
+export function defaultResources(type = "default", includeUnits = true) {
   const astroUnit = config.get("deployments.astroUnit");
   const components = config.get("deployments.components");
   const mapper = curry(mapResources)(astroUnit, type, includeUnits);
@@ -438,4 +441,50 @@ export function generateNextTag(latest) {
  */
 export function generateDefaultDeploymentConfig() {
   return { executor: AIRFLOW_EXECUTOR_CELERY };
+}
+
+/*
+ * Generate the deployment specific overrides.
+ * Specfically, this currently maps numeric resources
+ * values that are sent by orbit to be valid for helm.
+ * @param {Object} deployment A deployment object.
+ * @return {Object} Properly formatted config, pulled from deployment.
+ */
+export function deploymentOverrides(deployment) {
+  // Get the deployment config.
+  const cfg = get(deployment, "config", {});
+
+  // Map over all keys on deployment config, looking for components that have
+  // resources defined.
+  return mapValues(cfg, val1 => {
+    if (val1.resources) {
+      // Create a modified component, possibly altering resources.
+      const component = {
+        ...val1,
+        resources: mapValues(val1.resources, val2 => {
+          return mapValues(val2, (val3, key3) => {
+            // Wrap numeric values with units.
+            if (key3 === "cpu" && isNumber(val3)) return `${val3}m`;
+            if (key3 === "memory" && isNumber(val3)) return `${val3}Mi`;
+            return val3;
+          });
+        })
+      };
+
+      // Currently, orbit sends up limits, which are stored on the deployment
+      // config. When we merge these in, we need to ensure that requests and limits match.
+      // Typically the first condition here will be hit. Else condition provided as fallback.
+      if (component.resources.limits) {
+        component.resources.requests = component.resources.limits;
+      } else if (component.resources.requests) {
+        component.resources.limits = component.resources.requests;
+      }
+
+      // Return the new component.
+      return component;
+    }
+
+    // If no resources defined, just return the object as is.
+    return val1;
+  });
 }

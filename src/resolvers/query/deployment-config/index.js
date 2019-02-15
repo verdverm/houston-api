@@ -1,4 +1,4 @@
-import { resources } from "deployments/config";
+import { defaultResources } from "deployments/config";
 import config from "config";
 import { keyBy } from "lodash";
 
@@ -17,10 +17,10 @@ export default async function deploymentConfig() {
   const maxExtraAu = config.get("deployments.maxExtraAu");
 
   // Generate defaults.
-  const defaults = resources("default", false);
+  const defaults = defaultResources("default", false);
 
   // Generate limits.
-  const limits = resources("limit", false);
+  const limits = defaultResources("limit", false);
 
   // Get list of executors, transform to object, keyed by name.
   const executors = keyBy(config.get("deployments.executors"), "name");
