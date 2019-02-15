@@ -184,7 +184,6 @@ type DeploymentLog {
   id: ID!
   uuid: Uuid @alias(field: "id")
   timestamp: String
-  workspace: String
   release: String
   component: String
   level: String
@@ -241,10 +240,11 @@ type Query {
   ): [Invite] @auth(permission: "user.workspace.get")
 
   logs(
+    deploymentUuid: Uuid!
     component: String!
-    timestamp: JSON!
-    search: JSON
-  ): [DeploymentLog]
+    timestamp: DateTime!
+    search: String
+  ): [DeploymentLog] @auth(permission: "user.deployment.get")
 }
 
 #
@@ -358,8 +358,9 @@ type Mutation {
 #
 type Subscription {
   log(
+    deploymentUuid: Uuid!
     component: String!
-    timestamp: JSON
-    search: JSON
-  ): DeploymentLog
+    timestamp: DateTime
+    search: String
+  ): DeploymentLog @auth(permission: "user.deployment.get")
 }

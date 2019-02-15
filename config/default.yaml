@@ -68,8 +68,10 @@ registry:
 # Elasticsearch configuration for Houston to pull logs.
 # This is passed striaght to the es client.
 elasticsearch:
-  host: ~
-  log: ~
+  enabled: false
+  client:
+    host: ~
+    log: ~
 
 # Charts live here.
 # This is where the airflow chart is installed from.
@@ -239,7 +241,7 @@ deployments:
 
   # Elasticsearch configuration for deployments.
   # Airflow clients access Elasticsearch differently.
-  # Houston has full acces, while the deployments connect 
+  # Houston has full acces, while the deployments connect
   # via NGINX for auth.
   elasticsearch:
     connection:

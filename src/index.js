@@ -6,7 +6,7 @@ import log from "logger";
 import directives from "directives";
 import { formatError } from "errors";
 import commander from "commander";
-import { authenticateRequest } from "authentication";
+import { authenticateRequest, wsOnConnect } from "authentication";
 import config from "config";
 import express from "express";
 import { ApolloServer } from "apollo-server-express";
@@ -45,20 +45,30 @@ const server = new ApolloServer({
   introspection: true,
   playground: true,
   subscriptions: {
-    path: serverConfig.subscriptions
+    path: serverConfig.subscriptions,
+    onConnect: wsOnConnect
   },
   formatError,
-  context: req => ({
-    ...req,
-    db: new Prisma({
-      typeDefs: "src/lib/generated/schema/prisma.graphql",
-      endpoint: prismaConfig.endpoint,
-      secret: prismaConfig.secret,
-      debug: prismaConfig.debug
-    }),
-    commander,
-    config
-  })
+  context: ctx => {
+    const context = {
+      ...ctx,
+      db: new Prisma({
+        typeDefs: "src/lib/generated/schema/prisma.graphql",
+        endpoint: prismaConfig.endpoint,
+        secret: prismaConfig.secret,
+        debug: prismaConfig.debug
+      }),
+      commander,
+      config
+    };
+
+    // If it's a subscription, merge the result of the onConnect function
+    // into the context.
+    if (ctx.connection) return { ...context, ...ctx.connection.context };
+
+    // Otherwise return the normal context.
+    return context;
+  }
 });
 
 // Apply express middleware.

@@ -26,3 +26,27 @@ export function authenticateRequest() {
     next();
   };
 }
+
+/* This is an onConnect handler for Apollo Server subscriptions.
+ * This is functionally equivalent to the express middleware above,
+ * except for websockets.
+ * @return {Object} Object to merged to context for downstream resolvers.
+ */
+export async function wsOnConnect(connParams) {
+  // Parse the token out of connParams.
+  const token = (
+    connParams.authorization ||
+    connParams.Authorization ||
+    ""
+  ).replace("Bearer ", "");
+
+  // Find the user
+  const user = await getAuthUser(token);
+
+  // If we have a user, return it in a structure that mimics the normal
+  // authentication middleware above. It will get merged into the context
+  // and will work just like normal with downstream resolvers, including
+  // the auth directive. If we don't have a user, return false and the
+  // subscription will not start.
+  return user ? { req: { session: { user } } } : false;
+}
