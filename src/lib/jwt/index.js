@@ -62,7 +62,7 @@ export function decodeJWT(token) {
 }
 
 // To make it easier in development we fallback to signing JWTs with a
-// symetrric passhprase. But in any other NODE_ENV the certificiate is a
+// symetric passhprase. But in any other NODE_ENV the certificiate is a
 // requirment.
 const jwtSigningParam = memoize(() => {
   if (
