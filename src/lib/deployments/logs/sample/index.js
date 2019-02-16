@@ -18,9 +18,9 @@ export default [
   "Initializing airflow database...",
   `____________       _____________
    ____    |__( )_________  __/__  /________      __
-   ____  /| |_  /__  ___/_  /_ __  /_  __ \_ | /| / /
+   ____  /| |_  /__  ___/_  /_ __  /_  __ \\_ | /| / /
    ___  ___ |  / _  /   _  __/ _  / / /_/ /_ |/ |/ /
-   _/_/  |_/_/  /_/    /_/    /_/  \____/____/|__/`,
+   _/_/  |_/_/  /_/    /_/    /_/  \\____/____/|__/`,
   "{__init__.py:45} INFO - Using executor LocalExecutor",
   "{models.py:189} INFO - Filling up the DagBag from /usr/local/airflow/dags",
   '172.19.0.1 - "GET / HTTP/1.1" 302 221 "-" "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.68 Safari/537.36"'
