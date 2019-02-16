@@ -1,7 +1,45 @@
+import sampleLogs from "./sample";
 import log from "logger";
 import config from "config";
 import elasticsearch from "elasticsearch";
-import { clone } from "lodash";
+import { clone, random, range } from "lodash";
+import casual from "casual";
+
+/*
+ * This is a singleton instance of a log generator. It
+ * infinately iterates over sample logs.
+ */
+export const generateLogMessage = (function* generateLogs() {
+  const max = sampleLogs.length;
+  let counter = 0;
+  while (true) {
+    yield sampleLogs[++counter];
+    if (counter == max) counter = 0;
+  }
+})();
+
+/*
+ * Generate full sample elasticsearch log records, using
+ * the log message generator, for a given release, component.
+ * @param {String} release A release name.
+ * @param {String} component A deployment component.
+ * @return {[]Object} A randomly sized array of log records.
+ */
+export function generateLogRecords(release, component) {
+  return {
+    hits: {
+      hits: range(random(5)).map(() => ({
+        _id: casual.uuid,
+        _source: {
+          release,
+          component,
+          message: generateLogMessage.next().value,
+          "@timestamp": new Date()
+        }
+      }))
+    }
+  };
+}
 
 /*
  * Return an elasticsearch search query for the given args.
@@ -65,7 +103,8 @@ export async function search(...args) {
     return await es.search(query);
   }
 
-  log.info(`Elasticsearch disabled, returning empty result set`);
+  log.info(`Elasticsearch disabled, returning sample logs`);
+  return generateLogRecords(args[0], args[1]);
 }
 
 /*
