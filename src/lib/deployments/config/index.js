@@ -118,6 +118,7 @@ export function constraints(deployment) {
 
   // Get some config settings.
   const { astroUnit, components, executors } = config.get("deployments");
+  const elasticsearchEnabled = config.get("elasticsearch.enabled");
 
   // Get the executor on this deployment.
   const executor = get(deployment, "config.executor", AIRFLOW_EXECUTOR_CELERY);
@@ -160,12 +161,14 @@ export function constraints(deployment) {
         executor === AIRFLOW_EXECUTOR_LOCAL &&
         cur === AIRFLOW_COMPONENT_SCHEDULER
       ) {
-        // LocalExecutor has a log server and worker log trimming sidecars.
+        // LocalExecutor could possibly have a log server
+        // and/or worker log trimming sidecars.
+        const n = elasticsearchEnabled ? 1 : 2;
         return {
-          cpu: acc.cpu + parseInt(astroUnit.cpu) * 2,
-          memory: acc.memory + parseInt(astroUnit.memory) * 2
+          cpu: acc.cpu + parseInt(astroUnit.cpu) * n,
+          memory: acc.memory + parseInt(astroUnit.memory) * n
         };
-      } else if (cur === AIRFLOW_COMPONENT_WORKERS) {
+      } else if (cur === AIRFLOW_COMPONENT_WORKERS && !elasticsearchEnabled) {
         // Workers have a log trimming sidecar.
         return {
           cpu: acc.cpu + parseInt(astroUnit.cpu) * replicas,
