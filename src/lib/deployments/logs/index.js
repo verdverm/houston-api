@@ -25,10 +25,10 @@ export const generateLogMessage = (function* generateLogs() {
  * @param {String} component A deployment component.
  * @return {[]Object} A randomly sized array of log records.
  */
-export function generateLogRecords(release, component) {
+export function generateMockLogRecords(release, component) {
   return {
     hits: {
-      hits: range(random(5)).map(() => ({
+      hits: range(random(2)).map(() => ({
         _id: casual.uuid,
         _source: {
           release,
@@ -50,39 +50,29 @@ export function createLogQuery(release, component, gt, searchPhrase) {
   const query = {
     index: `fluentd.${release}.*`,
     sort: "@timestamp:asc",
-    size: 1000, // XXX: Change to scroll query.
+    // This matches a value in orbit.
+    // It's equal to the maximum records orbit will keep in its cache.
+    size: 300,
     body: {
-      query: {
-        bool: {
-          must: [
-            {
-              match: {
-                component: component
-              }
-            },
-            {
-              match: {
-                release: release
-              }
-            }
-          ],
-          filter: {
-            range: {
-              "@timestamp": {
-                gt
-              }
-            }
-          }
-        }
-      }
+      query: { bool: { must: [{ match: { release: release } }] } }
     }
   };
 
+  if (gt) {
+    query.body.query.bool.filter = {
+      range: { "@timestamp": { gt } }
+    };
+  }
+
+  if (component) {
+    query.body.query.bool.must.push({
+      match: { component: component }
+    });
+  }
+
   if (searchPhrase) {
     query.body.query.bool.must.push({
-      match_phrase: {
-        log: searchPhrase
-      }
+      match_phrase: { message: searchPhrase }
     });
   }
 
@@ -95,7 +85,7 @@ export function createLogQuery(release, component, gt, searchPhrase) {
  * if elasticsearch is disabled.
  */
 export async function search(...args) {
-  const { enabled, client } = config.get("elasticsearch");
+  const { enabled, client, mockInDevelopment } = config.get("elasticsearch");
 
   if (enabled) {
     const es = elasticsearch.Client(clone(client));
@@ -103,8 +93,12 @@ export async function search(...args) {
     return await es.search(query);
   }
 
-  log.info(`Elasticsearch disabled, returning sample logs`);
-  return generateLogRecords(args[0], args[1]);
+  const isDev = process.env.NODE_ENV !== "production";
+  if (isDev && mockInDevelopment) {
+    log.info(`Elasticsearch disabled, returning sample logs`);
+    return generateMockLogRecords(args[0], args[1]);
+  }
+  log.info(`Elasticsearch disabled, returning nothing`);
 }
 
 /*

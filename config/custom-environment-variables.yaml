@@ -17,6 +17,17 @@ commander:
   host: "COMMANDER__HOST"
   port: "COMMANDER__PORT"
 
+elasticsearch:
+  enabled:
+    __name: "ELASTICSEARCH__ENABLED"
+    __format: "json"
+  client:
+    host: "ELASTICSEARCH__CLIENT__HOST"
+    log: "ELASTICSEATCH__CLIENT__LOG"
+  mockInDevelopment:
+    __name: "ELASTICSEARCH__MOCK_IN_DEVELOPMENT"
+    __format: "json"
+
 email:
   enabled:
     __name: "EMAIL__ENABLED"

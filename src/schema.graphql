@@ -241,8 +241,8 @@ type Query {
 
   logs(
     deploymentUuid: Uuid!
-    component: String!
-    timestamp: DateTime!
+    component: String
+    timestamp: DateTime
     search: String
   ): [DeploymentLog] @auth(permission: "user.deployment.get")
 }
@@ -359,7 +359,7 @@ type Mutation {
 type Subscription {
   log(
     deploymentUuid: Uuid!
-    component: String!
+    component: String
     timestamp: DateTime
     search: String
   ): DeploymentLog @auth(permission: "user.deployment.get")

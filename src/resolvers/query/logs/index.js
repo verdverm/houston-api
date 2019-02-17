@@ -16,7 +16,7 @@ export default async function logs(parent, args, ctx) {
     `{ releaseName }`
   );
 
-  const gt = moment(args.timestamp);
+  const gt = moment(args.timestamp || 0); // Epoch if null.
   const component = args.component;
   const searchPhrase = get(args, "search");
   const res = await search(releaseName, component, gt, searchPhrase);

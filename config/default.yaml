@@ -62,10 +62,16 @@ orbit:
 # Elasticsearch configuration for Houston to pull logs.
 # This is passed striaght to the es client.
 elasticsearch:
+  # Enable or disable querying for logs in ES. This supersedes mock configuration below.
   enabled: false
+
+  # Client configuration, passed directly to es-client constructor.
   client:
     host: ~
-    log: ~
+    log: error
+
+  # If in NODE_ENV is development and this is enabled, generate sample log records.
+  mockInDevelopment: true
 
 # Charts live here.
 # This is where the airflow chart is installed from.
