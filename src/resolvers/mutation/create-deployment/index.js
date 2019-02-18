@@ -15,6 +15,7 @@ import validate from "deployments/validate";
 import { addFragmentToInfo } from "graphql-binding";
 import config from "config";
 import bcrypt from "bcryptjs";
+import { get } from "lodash";
 import crypto from "crypto";
 import { DEPLOYMENT_ADMIN, DEPLOYMENT_AIRFLOW } from "constants";
 
@@ -35,7 +36,8 @@ export default async function createDeployment(parent, args, ctx, info) {
   await validate(args.workspaceUuid, args);
 
   // Default deployment version to platform version.
-  const version = args.version ? args.version : platformReleaseVersion;
+  const version = get(args, "version", platformReleaseVersion);
+  const airflowVersion = get(args, "airflowVersion", "1.10.2");
 
   // Generate a unique registry password for this deployment.
   const registryPassword = crypto.randomBytes(16).toString("hex");
@@ -58,6 +60,7 @@ export default async function createDeployment(parent, args, ctx, info) {
       description: args.description,
       config: args.config || generateDefaultDeploymentConfig(),
       version,
+      airflowVersion,
       releaseName,
       registryPassword: hashedRegistryPassword,
       elasticsearchPassword: hashedElasticsearchPassword,

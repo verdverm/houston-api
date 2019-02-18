@@ -160,6 +160,7 @@ type Deployment {
   status: String
   type: String
   version: String
+  airflowVersion: String
   deployInfo: DeployInfo
   workspace: Workspace
   createdAt: DateTime!
@@ -291,6 +292,7 @@ type Mutation {
     label: String!
     description: String
     version: String
+    airflowVersion: String
     config: JSON
     env: JSON
     properties: JSON
