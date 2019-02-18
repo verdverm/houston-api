@@ -1,10 +1,10 @@
 import { MissingTLSCertificateError } from "errors";
 import log from "logger";
+import { getCookieName } from "utilities";
 import jwt from "jsonwebtoken";
 import config from "config";
 import ms from "ms";
 import { memoize } from "lodash";
-import { AUTH_COOKIE_NAME } from "constants";
 import path from "path";
 import fs from "fs";
 
@@ -38,7 +38,7 @@ export function setJWTCookie(response, token) {
   const millis = config.get("jwt.authDuration");
 
   // Set the cookie.
-  return response.cookie(AUTH_COOKIE_NAME, token, {
+  return response.cookie(getCookieName(), token, {
     domain: `.${config.get("helm.baseDomain")}`,
     path: "/",
     expires: new Date(Date.now() + millis),

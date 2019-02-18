@@ -128,6 +128,9 @@ export function isServiceAccount(authorization) {
  * @return {Object} The authed user or Service Account.
  */
 export async function getAuthUser(authorization) {
+  // Return early if empty.
+  if (!authorization) return;
+
   // Check if the header is a service account.
   const isServiceAcct = isServiceAccount(authorization);
 

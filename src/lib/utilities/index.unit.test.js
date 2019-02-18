@@ -1,4 +1,5 @@
-import { parseJSON } from "./index";
+import { parseJSON, getCookieName } from "./index";
+import config from "config";
 
 describe("parseJSON", () => {
   test("correctly parses a valid JSON object", () => {
@@ -17,5 +18,13 @@ describe("parseJSON", () => {
     const str = "someone@somewhere.com";
     const res = parseJSON(str);
     expect(res).toBe(str);
+  });
+});
+
+describe("getCookieName", () => {
+  test("correctly sets a cookie name", () => {
+    config.helm.baseDomain = "datarouter.ai";
+    const name = getCookieName();
+    expect(name).toBe("astronomer_datarouter_ai_auth");
   });
 });

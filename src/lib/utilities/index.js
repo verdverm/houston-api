@@ -1,3 +1,6 @@
+import config from "config";
+import { snakeCase } from "lodash";
+
 /*
  * Attempt to parse a value as JSON, and either return
  * the parsed JSON object/array, or the primitive if fails.
@@ -11,4 +14,14 @@ export function parseJSON(thing) {
   } catch {
     return thing;
   }
+}
+
+/*
+ * Utility function to get the generated cookie name
+ * for this cluster.
+ * @return {String} The cookie name.
+ */
+export function getCookieName() {
+  const baseDomain = config.get("helm.baseDomain");
+  return `astronomer_${snakeCase(baseDomain)}_auth`;
 }
