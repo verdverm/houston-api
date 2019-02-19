@@ -95,10 +95,10 @@ export async function search(...args) {
 
   const isDev = process.env.NODE_ENV !== "production";
   if (isDev && mockInDevelopment) {
-    log.info(`Elasticsearch disabled, returning sample logs`);
+    log.debug(`Elasticsearch disabled, returning sample logs`);
     return generateMockLogRecords(args[0], args[1]);
   }
-  log.info(`Elasticsearch disabled, returning nothing`);
+  log.debug(`Elasticsearch disabled, returning nothing`);
 }
 
 /*

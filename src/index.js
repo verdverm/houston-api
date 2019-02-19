@@ -14,6 +14,7 @@ import { Prisma } from "prisma-binding";
 import { importSchema } from "graphql-import";
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
+import { PubSub } from "apollo-server";
 import { createServer } from "http";
 
 // Get configuration from config dir and environment.
@@ -58,8 +59,8 @@ const server = new ApolloServer({
         secret: prismaConfig.secret,
         debug: prismaConfig.debug
       }),
-      commander,
-      config
+      pubsub: new PubSub(),
+      commander
     };
 
     // If it's a subscription, merge the result of the onConnect function

@@ -4,10 +4,10 @@ import { formatLogDocument, search } from "deployments/logs";
 import { get } from "lodash";
 import moment from "moment";
 
-export async function subscribe(parent, args, ctx) {
+export async function subscribe(parent, args, { db, pubsub }) {
   log.info("Starting log subscription");
 
-  const { releaseName } = await ctx.db.query.deployment(
+  const { releaseName } = await db.query.deployment(
     { where: { id: args.deploymentUuid } },
     `{ releaseName }`
   );
@@ -21,21 +21,26 @@ export async function subscribe(parent, args, ctx) {
   // in the next iteration to get new records.
   let gt = moment();
 
-  // Return a wrapped asyncIterator.
-  return createPoller(publish => {
-    search(releaseName, component, gt, searchPhrase).then(res => {
-      // Pull out the result documents.
-      const hits = get(res, "hits.hits", []);
-      log.debug(`Got ${hits.length} hits in subscription query`);
+  // Return a wrapped asyncIterator, killing the subscription after 20 minutes.
+  return createPoller(
+    publish => {
+      search(releaseName, component, gt, searchPhrase).then(res => {
+        // Pull out the result documents.
+        const hits = get(res, "hits.hits", []);
+        log.debug(`Got ${hits.length} hits in subscription query`);
 
-      // Publish the records to the PubSub engine, and set the
-      // most recent record timestamp.
-      hits.forEach(log => {
-        publish({ log: formatLogDocument(log) });
-        gt = moment(log._source["@timestamp"]);
+        // Publish the records to the PubSub engine, and set the
+        // most recent record timestamp.
+        hits.forEach(log => {
+          publish({ log: formatLogDocument(log) });
+          gt = moment(log._source["@timestamp"]);
+        });
       });
-    });
-  }, interval);
+    },
+    pubsub,
+    interval,
+    1200000
+  );
 }
 
 export default { subscribe };
