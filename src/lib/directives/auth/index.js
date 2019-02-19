@@ -1,5 +1,4 @@
 import { PermissionError } from "errors";
-import log from "logger";
 import { checkPermission } from "rbac";
 import { SchemaDirectiveVisitor } from "graphql-tools";
 import { defaultFieldResolver } from "graphql";
