@@ -1,6 +1,7 @@
 import confirmEmail from "./confirm-email";
 import createDeployment from "./create-deployment";
 import createServiceAccount from "./create-service-account";
+import createSystemRoleBinding from "./create-system-rolebinding";
 import createToken from "./create-token";
 import createUser from "./create-user";
 import createWorkspace from "./create-workspace";
@@ -16,11 +17,13 @@ import updateUser from "./update-user";
 import updateWorkspace from "./update-workspace";
 import upgradeDeployment from "./upgrade-deployment";
 import workspaceAddUser from "./workspace-add-user";
+import workspaceRemoveUser from "./workspace-remove-user";
 
 export default {
   confirmEmail,
   createDeployment,
   createServiceAccount,
+  createSystemRoleBinding,
   createToken,
   createUser,
   createWorkspace,
@@ -35,5 +38,6 @@ export default {
   updateUser,
   updateWorkspace,
   upgradeDeployment,
-  workspaceAddUser
+  workspaceAddUser,
+  workspaceRemoveUser
 };

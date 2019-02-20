@@ -28,10 +28,10 @@ export function hasPermission(user, permission, entityType, entityId) {
   if (!user) return false;
 
   // Check if we're looking for a global permission.
-  const globalPermission = permission.startsWith("global");
+  const systemPermission = permission.startsWith("system");
 
-  // If we're looking for a global permission, return if user has it.
-  if (globalPermission) return hasGlobalPermission(user, permission);
+  // If we're looking for a system permission, return if user has it.
+  if (systemPermission) return hasSystemPermission(user, permission);
 
   // If we don't have both of these, return false from here.
   if (!entityType || !entityId) return false;
@@ -54,16 +54,16 @@ export function hasPermission(user, permission, entityType, entityId) {
 }
 
 /*
- * Check if the user has a global permission.
+ * Check if the user has a system permission.
  * @param {Object} user The current user.
  * @param {String} user The desired permission.
- * @param {Boolean} If the user has the global permission.
+ * @param {Boolean} If the user has the system permission.
  */
-export function hasGlobalPermission(user, permission) {
+export function hasSystemPermission(user, permission) {
   const permissions = flatten(
     user.roleBindings.map(binding => {
       const role = find(config.get("roles"), { id: binding.role });
-      return filter(role.permissions, p => p.startsWith("global"));
+      return filter(role.permissions, p => p.startsWith("system"));
     })
   );
 

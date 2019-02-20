@@ -1,6 +1,6 @@
 import {
   hasPermission,
-  hasGlobalPermission,
+  hasSystemPermission,
   checkPermission,
   isServiceAccount
 } from "./index";
@@ -20,7 +20,7 @@ describe("hasPermission", () => {
 
     const hasPerm = hasPermission(
       user,
-      "user.workspace.get",
+      "workspace.deployments.list",
       ENTITY_WORKSPACE.toLowerCase(),
       workspaceId
     );
@@ -34,7 +34,7 @@ describe("hasPermission", () => {
 
     const hasPerm = hasPermission(
       user,
-      "user.workspace.get",
+      "workspace.deployments.list",
       ENTITY_WORKSPACE.toLowerCase(),
       workspaceId
     );
@@ -52,7 +52,7 @@ describe("hasPermission", () => {
 
     const hasPerm = hasPermission(
       user,
-      "user.workspace.get",
+      "workspace.deployments.list",
       ENTITY_WORKSPACE.toLowerCase(),
       casual.uuid
     );
@@ -81,14 +81,14 @@ describe("hasPermission", () => {
   });
 });
 
-describe("hasGlobalPermission", () => {
-  test("permits user with matching global permission", () => {
+describe("hasSystemPermission", () => {
+  test("permits user with matching system permission", () => {
     const user = {
       id: casual.uuid,
       roleBindings: [{ role: "SYSTEM_ADMIN" }]
     };
 
-    const hasPerm = hasGlobalPermission(user, "global.monitoring.view");
+    const hasPerm = hasSystemPermission(user, "system.monitoring.view");
     expect(hasPerm).toBe(true);
   });
 
@@ -98,7 +98,7 @@ describe("hasGlobalPermission", () => {
       roleBindings: [{ role: "WORKSPACE_ADMIN" }]
     };
 
-    const hasPerm = hasGlobalPermission(user, "global.monitoring.view");
+    const hasPerm = hasSystemPermission(user, "system.monitoring.view");
     expect(hasPerm).toBe(false);
   });
 });
@@ -111,7 +111,7 @@ describe("checkPermission", () => {
     };
 
     expect(() => {
-      checkPermission(user, "global.monitoring.view");
+      checkPermission(user, "system.monitoring.view");
     }).toThrow();
   });
 });

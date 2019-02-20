@@ -20,7 +20,7 @@ export default async function(req, res) {
 
   // If we're accessing a monitoring service and we have permission, allow it.
   const monitoringSubdomain = /^(grafana|kibana)$/.test(subdomain);
-  if (monitoringSubdomain && hasPermission(user, "global.monitoring.view")) {
+  if (monitoringSubdomain && hasPermission(user, "system.monitoring.view")) {
     log.info(`Authorizing request to ${originalUrl}`);
     return res.sendStatus(200);
   }
@@ -36,7 +36,7 @@ export default async function(req, res) {
     // Check if we have deployment level access to it.
     const hasDeploymentPermission = hasPermission(
       user,
-      "user.deployment.update",
+      "deployment.airflow.view",
       ENTITY_DEPLOYMENT.toLowerCase(),
       deploymentId
     );

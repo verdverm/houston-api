@@ -3,7 +3,7 @@ import { prisma } from "generated/client";
 import { checkPermission } from "rbac";
 import { addFragmentToInfo } from "graphql-binding";
 import { compact } from "lodash";
-import { ENTITY_DEPLOYMENT } from "constants";
+import { ENTITY_WORKSPACE, ENTITY_DEPLOYMENT } from "constants";
 
 /*
  * Get list of deployments for a workspace.
@@ -13,16 +13,37 @@ import { ENTITY_DEPLOYMENT } from "constants";
  * @return {[]Deployment} List of Deployments.
  */
 export default async function deployments(parent, args, ctx, info) {
-  // Perform extra check here if passing in releaseName,
+  // Pull out some args.
+  const { deploymentUuid, releaseName, workspaceUuid } = args;
+
+  // Perform extra checks here if passing in releaseName,
   // because it passes right through the auth directive.
-  if (args.releaseName) {
+  if (workspaceUuid) {
+    checkPermission(
+      ctx.user,
+      "workspace.deployments.list",
+      ENTITY_WORKSPACE.toLowerCase(),
+      workspaceUuid
+    );
+  }
+
+  if (deploymentUuid) {
+    checkPermission(
+      ctx.user,
+      "deployment.config.get",
+      ENTITY_DEPLOYMENT.toLowerCase(),
+      deploymentUuid
+    );
+  }
+
+  if (releaseName) {
     const deploymentId = await prisma
       .deployment({ releaseName: args.releaseName })
       .id();
 
     checkPermission(
       ctx.user,
-      "user.deployment.get",
+      "deployment.config.get",
       ENTITY_DEPLOYMENT.toLowerCase(),
       deploymentId
     );
@@ -66,7 +87,7 @@ export function deploymentsQuery(args, ctx) {
     query.where.AND.push({ workspace: { id: workspaceUuid } });
   }
 
-  if (!(deploymentUuid || /*releaseName ||*/ workspaceUuid)) {
+  if (!(deploymentUuid || releaseName || workspaceUuid)) {
     // Get a list of deployment ids that this user can access.
     const deploymentIds = ctx.user.roleBindings.map(rb =>
       rb.deployment ? rb.deployment.id : null

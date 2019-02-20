@@ -105,3 +105,11 @@ export class InvalidResetToken extends UserInputError {
 export class InvalidToken extends UserInputError {
   message = this.message || "Invalid token";
 }
+
+export class InvalidRoleError extends UserInputError {
+  message = this.message || "Invalid role";
+}
+
+export class DuplicateRoleBindingError extends UserInputError {
+  message = this.message || "A duplicate role binding already exists";
+}

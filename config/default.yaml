@@ -148,28 +148,19 @@ roles:
   - id: SYSTEM_ADMIN
     name: System Admin
     permissions:
-      - global.systemSettings.get
-      - global.systemSettings.list
-      - global.systemSettings.update
-      - global.monitoring.view
-      - global.workspace.get
-      - global.workspace.update
-      - global.workspace.delete
-      - global.deployment.get
-      - global.deployment.update
-      - global.deployment.delete
+      - system.monitoring.view
+      - system.iam.update
 
   - id: SYSTEM_EDITOR
     name: System Editor
     permissions:
-      - global.systemSettings.get
-      - global.systemSettings.list
-      - global.systemSettings.update
+      - system.monitoring.view
+      - system.iam.update
 
   - id: SYSTEM_VIEWER
     name: System Viewer
     permissions:
-      - global.systemSettings.get
+      - system.monitoring.view
 
   #
   # Workspace
@@ -177,25 +168,29 @@ roles:
   - id: WORKSPACE_ADMIN
     name: Workspace Admin
     permissions:
-      - user.workspace.get
-      - user.workspace.update
-      - user.workspace.delete
-      - user.deployment.create
-      - user.deployment.get
+      - workspace.config.update
+      - workspace.config.delete
+      - workspace.invites.get
+      - workspace.deployments.list
+      - workspace.deployments.create
+      - workspace.serviceAccounts.create
+      - workspace.serviceAccounts.delete
+      - workspace.iam.update
 
   - id: WORKSPACE_EDITOR
     name: Workspace Editor
     permissions:
-      - user.workspace.get
-      - user.workspace.update
-      - user.deployment.create
-      - user.deployment.get
+      - workspace.config.update
+      - workspace.invites.get
+      - workspace.deployments.list
+      - workspace.deployments.create
+      - workspace.serviceAccounts.create
+      - workspace.serviceAccounts.delete
+      - workspace.iam.update
 
   - id: WORKSPACE_VIEWER
     name: Workspace Viewer
-    permissions:
-      - user.workspace.get
-      - user.deployment.get
+    permissions: []
 
   #
   # Deployment
@@ -203,20 +198,30 @@ roles:
   - id: DEPLOYMENT_ADMIN
     name: Deployment Admin
     permissions:
-      - user.deployment.get
-      - user.deployment.update
-      - user.deployment.delete
+      - deployment.config.get
+      - deployment.config.update
+      - deployment.config.delete
+      - deployment.images.push
+      - deployment.airflow.view
+      - deployment.serviceAccounts.create
+      - deployment.serviceAccounts.delete
+      - deployment.logs.get
 
   - id: DEPLOYMENT_EDITOR
     name: Deployment Editor
     permissions:
-      - user.deployment.get
-      - user.deployment.update
+      - deployment.config.get
+      - deployment.config.update
+      - deployment.images.push
+      - deployment.airflow.view
+      - deployment.serviceAccounts.create
+      - deployment.serviceAccounts.delete
 
   - id: DEPLOYMENT_VIEWER
     name: Deployment Viewer
     permissions:
-      - user.deployment.get
+      - deployment.config.get
+      - deployment.airflow.view
 
 #
 # Airflow Deployment Configurations

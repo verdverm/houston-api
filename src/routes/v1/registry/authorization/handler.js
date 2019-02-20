@@ -89,7 +89,7 @@ export default async function(req, res) {
       // Check if the User or Service Account has permission to update this deployment.
       const allowed = hasPermission(
         user,
-        "user.deployment.update",
+        "deployment.images.push",
         ENTITY_DEPLOYMENT.toLowerCase(),
         deploymentId
       );

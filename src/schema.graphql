@@ -199,7 +199,7 @@ type Query {
     userUuid: Uuid
     username: String
     email: String
-  ): [User]
+  ): [User] @auth
 
   authConfig(
     redirect: String
@@ -225,9 +225,9 @@ type Query {
 
   deployments(
     workspaceUuid:  Uuid
-    deploymentUuid: Uuid
+    deploymentUuid: Uuid # Ignored, only here for backward compatibility.
     releaseName: String
-  ): [Deployment] @auth(permission: "user.deployment.get")
+  ): [Deployment] @auth # Permissions checked in resolver, due to limitations with current API design.
 
   serviceAccounts(
     serviceAccountUuid: Uuid
@@ -238,14 +238,14 @@ type Query {
   invites(
     workspaceUuid: Uuid
     email: String
-  ): [Invite] @auth(permission: "user.workspace.get")
+  ): [Invite] @auth(permission: "workspace.invites.get")
 
   logs(
     deploymentUuid: Uuid!
     component: String
     timestamp: DateTime
     search: String
-  ): [DeploymentLog] @auth(permission: "user.deployment.get")
+  ): [DeploymentLog] @auth(permission: "deployment.logs.get")
 }
 
 #
@@ -296,7 +296,7 @@ type Mutation {
     config: JSON
     env: JSON
     properties: JSON
-  ): Deployment @auth(permission: "user.deployment.create")
+  ): Deployment @auth(permission: "workspace.deployments.create")
 
   updateDeployment(
     deploymentUuid: Uuid!
@@ -304,22 +304,15 @@ type Mutation {
     config: JSON
     env: JSON
     sync: Boolean
-  ): Deployment @auth(permission: "user.deployment.update")
+  ): Deployment @auth(permission: "deployment.config.update")
 
   deleteDeployment(
     deploymentUuid: Uuid!
-  ): Deployment @auth(permission: "user.deployment.delete")
-
-  createServiceAccount(
-    label: String!
-    category: String
-    entityType: EntityType!
-    entityUuid: Uuid
-  ): ServiceAccount @auth(permission: "user.serviceAccount.create")
+  ): Deployment @auth(permission: "deployment.config.delete")
 
   deleteWorkspace(
     workspaceUuid: Uuid
-  ): Workspace @auth(permission: "user.workspace.delete")
+  ): Workspace @auth(permission: "workspace.config.delete")
 
   updateUser(
     userId: Uuid,
@@ -334,7 +327,13 @@ type Mutation {
   workspaceAddUser(
     workspaceUuid: Uuid
     email: String!
-  ): Workspace @auth(permission: "user.workspace.update")
+  ): Workspace @auth(permission: "workspace.iam.update")
+
+  workspaceRemoveUser(
+    workspaceUuid: Uuid
+    userUuid: Uuid
+    email: String
+  ): Workspace @auth(permission: "workspace.iam.update")
 
   deleteInviteToken(
     inviteUuid: Uuid
@@ -343,16 +342,31 @@ type Mutation {
   updateWorkspace(
     workspaceUuid: Uuid!
     payload: JSON!
-  ): Workspace @auth(permission: "user.workspace.update")
-
-  deleteServiceAccount(
-    serviceAccountUuid: Uuid!
-  ): ServiceAccount @auth(permission: "user.serviceAccount.create")
+  ): Workspace @auth(permission: "workspace.config.update")
 
   upgradeDeployment(
     deploymentUuid: Uuid!
     version: String!
-  ): Deployment @auth(permission: "user.deployment.update")
+  ): Deployment @auth(permission: "deployment.config.update")
+
+  # ServiceAccoun mutations are handled differently at the moment to maintain
+  # backward compatibility with CLI / UI. We should refactor to
+  # more explicit, scoped mutations.
+  createServiceAccount(
+    label: String!
+    category: String
+    entityType: EntityType!
+    entityUuid: Uuid
+  ): ServiceAccount @auth
+
+  deleteServiceAccount(
+    serviceAccountUuid: Uuid!
+  ): ServiceAccount @auth
+
+  createSystemRoleBinding(
+    userId: ID!
+    role: Role!
+  ): RoleBinding @auth(permission: "system.iam.update")
 }
 
 #
@@ -364,5 +378,5 @@ type Subscription {
     component: String
     timestamp: DateTime
     search: String
-  ): DeploymentLog @auth(permission: "user.deployment.get")
+  ): DeploymentLog @auth(permission: "deployment.logs.get")
 }

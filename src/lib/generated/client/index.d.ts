@@ -506,15 +506,15 @@ export interface ClientConstructor<T> {
  */
 
 export type Role =
+  | "SYSTEM_ADMIN"
+  | "SYSTEM_EDITOR"
+  | "SYSTEM_VIEWER"
   | "WORKSPACE_ADMIN"
   | "WORKSPACE_EDITOR"
   | "WORKSPACE_VIEWER"
   | "DEPLOYMENT_ADMIN"
   | "DEPLOYMENT_EDITOR"
-  | "DEPLOYMENT_VIEWER"
-  | "SYSTEM_ADMIN"
-  | "SYSTEM_EDITOR"
-  | "SYSTEM_VIEWER";
+  | "DEPLOYMENT_VIEWER";
 
 export type DeploymentOrderByInput =
   | "id_ASC"

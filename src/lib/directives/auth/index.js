@@ -30,28 +30,31 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
       if (!ctx.user) throw new PermissionError();
 
       // Pull out some vars for checking permissions.
-      const { workspaceUuid, deploymentUuid } = args[1];
       const { permission } = this.args;
 
-      // If we have a permission and a workspace, ensure we have an appropriate role.
-      permission &&
-        workspaceUuid &&
-        checkPermission(
-          ctx.user,
-          permission,
-          ENTITY_WORKSPACE.toLowerCase(),
-          workspaceUuid
-        );
+      // If this instance of the directive is specifying a permission,
+      // check it. Otherwise, skip this part.
+      if (permission) {
+        // Check for standard scope defining variables.
+        const { workspaceUuid, deploymentUuid } = args[1];
 
-      // If we have a permission and a deployment, ensure we have an appropriate role.
-      permission &&
-        deploymentUuid &&
-        checkPermission(
-          ctx.user,
-          permission,
-          ENTITY_DEPLOYMENT.toLowerCase(),
-          deploymentUuid
-        );
+        // Determine the entityType from args.
+        const entityType = workspaceUuid
+          ? ENTITY_WORKSPACE.toLowerCase()
+          : deploymentUuid
+          ? ENTITY_DEPLOYMENT.toLowerCase()
+          : null;
+
+        // Determine the entityId from args.
+        const entityId = workspaceUuid
+          ? workspaceUuid
+          : deploymentUuid
+          ? deploymentUuid
+          : null;
+
+        // Check permission, throw if not authorized.
+        checkPermission(ctx.user, permission, entityType, entityId);
+      }
 
       // Execute the actual request.
       return resolve.apply(this, args);
