@@ -79,22 +79,27 @@ describe("createUser", () => {
 });
 
 describe("validateInviteToken", () => {
+  // Set by each test case
+  let inviteRecord;
+  jest
+    .spyOn(exports.prisma, "inviteToken")
+    .mockReturnValue({ $fragment: () => inviteRecord });
+
+  beforeEach(() => (inviteRecord = null));
+
   test("return nothing if nothing passed", async () => {
     const res = await validateInviteToken(undefined, casual.email);
     expect(res).toBeUndefined();
   });
 
   test("throws if token is not found", async () => {
-    jest.spyOn(exports.prisma, "inviteTokens").mockReturnValue([]);
     await expect(
       validateInviteToken(casual.word, casual.email)
     ).rejects.toThrow(new InviteTokenNotFoundError());
   });
 
   test("throws if email does not match token email", async () => {
-    jest
-      .spyOn(exports.prisma, "inviteTokens")
-      .mockReturnValue([{ email: casual.email }]);
+    inviteRecord = { email: casual.email };
     await expect(
       validateInviteToken(casual.word, casual.email)
     ).rejects.toThrow(new InviteTokenEmailError());
@@ -102,7 +107,7 @@ describe("validateInviteToken", () => {
 
   test("does not throw if token found and email matches", async () => {
     const email = casual.email;
-    jest.spyOn(exports.prisma, "inviteTokens").mockReturnValue([{ email }]);
+    inviteRecord = { email };
     await expect(
       validateInviteToken(casual.word, email)
     ).resolves.toBeDefined();
