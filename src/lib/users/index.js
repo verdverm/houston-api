@@ -27,7 +27,7 @@ export async function createUser(opts) {
     inviteToken: rawInviteToken,
     active
   } = opts;
-  const inviteToken = await validateInviteToken(rawInviteToken, email);
+  const inviteToken = await exports.validateInviteToken(rawInviteToken, email);
 
   // Grab some configuration.
   const emailConfirmation = config.get("emailConfirmation");
@@ -41,15 +41,23 @@ export async function createUser(opts) {
     throw new PublicSignupsDisabledError();
   }
 
-  // Determine default status.
+  // Determine default status. The user is active (doesn't need email
+  // confirming) if any of:
+  //
+  // - Did caller of this function (else where in the code) say we should
+  //   create an active user?
+  // - Do we have a valid invite token (which must have come via the same
+  //   email we are creating)?
+  // - Or if emailConfirmation is turned off in the system
   const status =
-    active || !emailConfirmation ? USER_STATUS_ACTIVE : USER_STATUS_PENDING;
-
+    active || inviteToken || !emailConfirmation
+      ? USER_STATUS_ACTIVE
+      : USER_STATUS_PENDING;
   // Generate an verification token.
   const emailToken = status == USER_STATUS_ACTIVE ? null : shortid.generate();
 
   // Generate the role bindings.
-  const roleBindings = generateRoleBindings(first, inviteToken, opts);
+  const roleBindings = exports.generateRoleBindings(first, inviteToken, opts);
 
   // Create our base mutation.
   const mutation = {
@@ -60,7 +68,7 @@ export async function createUser(opts) {
       create: {
         address: email,
         primary: true,
-        verified: !emailConfirmation,
+        verified: !!(!emailConfirmation || inviteToken),
         token: emailToken
       }
     },

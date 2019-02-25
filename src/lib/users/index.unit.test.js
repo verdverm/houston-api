@@ -1,11 +1,6 @@
-import {
-  createUser,
-  defaultWorkspaceLabel,
-  defaultWorkspaceDescription,
-  validateInviteToken
-} from "./index";
+import * as userExports from "./index";
 import { sendEmail } from "emails";
-import * as exports from "generated/client";
+import * as prismaExports from "generated/client";
 import {
   InviteTokenNotFoundError,
   InviteTokenEmailError,
@@ -17,7 +12,7 @@ import { USER_STATUS_PENDING, USER_STATUS_ACTIVE } from "constants";
 
 jest.mock("emails");
 
-describe("createUser", () => {
+describe("userExports.createUser", () => {
   const usersConnection = () => {
     return {
       aggregate() {
@@ -27,11 +22,11 @@ describe("createUser", () => {
   };
 
   jest
-    .spyOn(exports.prisma, "usersConnection")
+    .spyOn(prismaExports.prisma, "usersConnection")
     .mockImplementation(usersConnection);
 
   const prismaCreateUser = jest
-    .spyOn(exports.prisma, "createUser")
+    .spyOn(prismaExports.prisma, "createUser")
     .mockImplementation(() => {
       return { id: () => 1 };
     });
@@ -47,7 +42,7 @@ describe("createUser", () => {
 
   test("throws error if not the first signup and public signups disabled", async () => {
     config.publicSignups = false;
-    await expect(createUser(opts)).rejects.toThrow(
+    await expect(userExports.createUser(opts)).rejects.toThrow(
       new PublicSignupsDisabledError()
     );
     expect(prismaCreateUser).not.toHaveBeenCalled();
@@ -59,8 +54,15 @@ describe("createUser", () => {
       email: casual.email
     };
 
-    expect(await createUser(opts)).toBe(1);
-    expect(prismaCreateUser.mock.calls[0][0].status).toBe(USER_STATUS_PENDING);
+    expect(await userExports.createUser(opts)).toBe(1);
+    expect(prismaCreateUser.mock.calls[0][0]).toHaveProperty(
+      "status",
+      USER_STATUS_PENDING
+    );
+    expect(prismaCreateUser.mock.calls[0][0]).toHaveProperty(
+      "emails.create.verified",
+      false
+    );
     expect(sendEmail).toHaveBeenCalledTimes(1);
     expect(sendEmail).toHaveBeenCalledWith(opts.email, "confirm-email", {
       token: expect.any(String),
@@ -73,35 +75,75 @@ describe("createUser", () => {
     // I.e. for oauth user signup flow.
     let activeOpts = { ...opts, active: true };
 
-    expect(await createUser(activeOpts)).toBe(1);
-    expect(prismaCreateUser.mock.calls[0][0].status).toBe(USER_STATUS_ACTIVE);
+    expect(await userExports.createUser(activeOpts)).toBe(1);
+    expect(prismaCreateUser.mock.calls[0][0]).toHaveProperty(
+      "status",
+      USER_STATUS_ACTIVE
+    );
+    expect(prismaCreateUser.mock.calls[0][0]).toHaveProperty(
+      "emails.create.verified",
+      false
+    );
+  });
+
+  describe("when given a valid inviteToken", () => {
+    beforeEach(() => {
+      jest
+        .spyOn(prismaExports.prisma, "deleteInviteToken")
+        .mockReturnValue(true);
+    });
+    test("creates an active user", async () => {
+      const invite = casual.uuid;
+      const mockValidateInvite = jest
+        .spyOn(userExports, "validateInviteToken")
+        .mockImplementation(() => ({ id: invite }));
+
+      const opts = {
+        user: casual.username,
+        email: casual.email,
+        inviteToken: invite
+      };
+
+      expect(await userExports.createUser(opts)).toBe(1);
+      expect(prismaCreateUser.mock.calls[0][0]).toHaveProperty(
+        "status",
+        USER_STATUS_ACTIVE
+      );
+      expect(prismaCreateUser.mock.calls[0][0]).toHaveProperty(
+        "emails.create.verified",
+        true
+      );
+      expect(sendEmail).not.toHaveBeenCalled();
+
+      mockValidateInvite.mockRestore();
+    });
   });
 });
 
-describe("validateInviteToken", () => {
+describe("userExports.validateInviteToken", () => {
   // Set by each test case
   let inviteRecord;
   jest
-    .spyOn(exports.prisma, "inviteToken")
+    .spyOn(prismaExports.prisma, "inviteToken")
     .mockReturnValue({ $fragment: () => inviteRecord });
 
   beforeEach(() => (inviteRecord = null));
 
   test("return nothing if nothing passed", async () => {
-    const res = await validateInviteToken(undefined, casual.email);
+    const res = await userExports.validateInviteToken(undefined, casual.email);
     expect(res).toBeUndefined();
   });
 
   test("throws if token is not found", async () => {
     await expect(
-      validateInviteToken(casual.word, casual.email)
+      userExports.validateInviteToken(casual.word, casual.email)
     ).rejects.toThrow(new InviteTokenNotFoundError());
   });
 
   test("throws if email does not match token email", async () => {
     inviteRecord = { email: casual.email };
     await expect(
-      validateInviteToken(casual.word, casual.email)
+      userExports.validateInviteToken(casual.word, casual.email)
     ).rejects.toThrow(new InviteTokenEmailError());
   });
 
@@ -109,53 +151,53 @@ describe("validateInviteToken", () => {
     const email = casual.email;
     inviteRecord = { email };
     await expect(
-      validateInviteToken(casual.word, email)
+      userExports.validateInviteToken(casual.word, email)
     ).resolves.toBeDefined();
   });
 });
 
-describe("defaultWorkspaceLabel", () => {
+describe("userExports.defaultWorkspaceLabel", () => {
   test("generates workspace label with full name", () => {
     const opts = { fullName: "Elon Musk", username: "elon1" };
-    const res = defaultWorkspaceLabel(opts);
+    const res = userExports.defaultWorkspaceLabel(opts);
     expect(res).toBe("Elon Musk's Workspace");
   });
 
   test("generates workspace label with username", () => {
     const opts = { username: "elon1" };
-    const res = defaultWorkspaceLabel(opts);
+    const res = userExports.defaultWorkspaceLabel(opts);
     expect(res).toBe("elon1's Workspace");
   });
 
   test("generates workspace label no user information", () => {
     const opts = {};
-    const res = defaultWorkspaceLabel(opts);
+    const res = userExports.defaultWorkspaceLabel(opts);
     expect(res).toBe("Default Workspace");
   });
 });
 
-describe("defaultWorkspaceDescription", () => {
+describe("userExports.defaultWorkspaceDescription", () => {
   test("generates workspace description with full name", () => {
     const opts = { fullName: "Elon Musk", username: "elon1" };
-    const res = defaultWorkspaceDescription(opts);
+    const res = userExports.defaultWorkspaceDescription(opts);
     expect(res).toBe("Default workspace for Elon Musk");
   });
 
   test("generates workspace description with email", () => {
     const opts = { username: "elon1" };
-    const res = defaultWorkspaceDescription(opts);
+    const res = userExports.defaultWorkspaceDescription(opts);
     expect(res).toBe("Default workspace for elon1");
   });
 
   test("generates workspace description with username", () => {
     const opts = { email: "elon1@gmail.com" };
-    const res = defaultWorkspaceDescription(opts);
+    const res = userExports.defaultWorkspaceDescription(opts);
     expect(res).toBe("Default workspace for elon1@gmail.com");
   });
 
   test("generates workspace description no user information", () => {
     const opts = {};
-    const res = defaultWorkspaceDescription(opts);
+    const res = userExports.defaultWorkspaceDescription(opts);
     expect(res).toBe("Default Workspace");
   });
 });
