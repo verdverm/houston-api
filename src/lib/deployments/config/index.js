@@ -425,7 +425,7 @@ export function mapDeploymentToProperties(dep = {}) {
  */
 export function findLatestTag(tags = []) {
   const filtered = tags.filter(t => t.startsWith("cli-"));
-  return maxBy(filtered, t => last(split(t, "-")));
+  return maxBy(filtered, t => parseInt(last(split(t, "-"))));
 }
 
 /*

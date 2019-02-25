@@ -275,10 +275,10 @@ describe("findLatestTag", () => {
     expect(latest).toBe("cli-3");
   });
 
-  test("returns undefined for an empty list", () => {
-    const tags = [];
+  test("correctly sorts tags", () => {
+    const tags = ["cli-1", "cli-3", "cli-2", "cli-10", "cli-9"];
     const latest = findLatestTag(tags);
-    expect(latest).toBeUndefined();
+    expect(latest).toBe("cli-10");
   });
 });
 
