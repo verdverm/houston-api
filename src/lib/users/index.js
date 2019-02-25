@@ -8,7 +8,6 @@ import { prisma } from "generated/client";
 import { sendEmail } from "emails";
 import config from "config";
 import shortid from "shortid";
-import { first } from "lodash";
 import {
   WORKSPACE_ADMIN,
   SYSTEM_ADMIN,
@@ -106,7 +105,7 @@ export async function isFirst() {
  * @param {Object} inviteToken An invite token.
  */
 export function generateRoleBindings(first, inviteToken, opts) {
-  // Add the default rolebinding to the users personal workspace.
+  // Add the default rolebinding to the user's personal workspace.
   const roleBindings = [
     {
       role: WORKSPACE_ADMIN,
@@ -154,9 +153,16 @@ export async function validateInviteToken(inviteToken, email) {
   if (!inviteToken) return;
 
   // Grab the invite token.
-  const token = first(
-    await prisma.inviteTokens({ where: { token: inviteToken } })
-  );
+  const token = await prisma.inviteToken({ token: inviteToken }).$fragment(`
+    fragment EnsureFiields on InviteToken {
+      id
+      email
+      token
+      workspace {
+        id
+      }
+    }
+  `);
 
   // Throw error if token not found.
   if (!token) throw new InviteTokenNotFoundError();
