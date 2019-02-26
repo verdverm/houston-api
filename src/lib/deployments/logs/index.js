@@ -54,7 +54,14 @@ export function createLogQuery(release, component, gt, searchPhrase) {
     // It's equal to the maximum records orbit will keep in its cache.
     size: 300,
     body: {
-      query: { bool: { must: [{ match: { release: release } }] } }
+      query: {
+        bool: {
+          // Always match against the deployment release name.
+          must: [{ match: { release: release } }],
+          // Filter out the end_of_log messages the airflow task logs use.
+          must_not: [{ match: { message: "end_of_log" } }]
+        }
+      }
     }
   };
 
