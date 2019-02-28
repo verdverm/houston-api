@@ -274,7 +274,7 @@ deployments:
     pods: 1
     airflowConns: 5
     actualConns: 0.5
-    price: ~
+    price: 0
 
   # This defines how much extra capacity, in astro units,
   # that a user can expand a deployment to. This is currently
