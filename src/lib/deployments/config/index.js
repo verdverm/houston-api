@@ -279,7 +279,6 @@ export function registry(deployment) {
  * @param {Object} deployment A deployment object.
  * @return {Object} The elasticsearch settings.
  */
-
 export function elasticsearch(deployment) {
   const { connection } = config.get("deployments.elasticsearch");
 
@@ -367,7 +366,7 @@ export function envArrayToObject(arr = []) {
  * @return {[]Object} The object with key/value pairs.
  */
 export function envObjectToArray(obj = {}) {
-  return map(obj, (val, key) => ({ [key]: val }));
+  return map(obj, (value, key) => ({ key, value }));
 }
 
 /*

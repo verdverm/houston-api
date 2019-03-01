@@ -212,8 +212,10 @@ describe("envObjectToArary", () => {
     const arr = envObjectToArray(obj);
 
     expect(arr.length).toBe(2);
-    expect(arr[0]).toHaveProperty("AIRFLOW_HOME", "/tmp");
-    expect(arr[1]).toHaveProperty("SCHEDULER_HEARTBEAT", "5");
+    expect(arr[0]).toHaveProperty("key", "AIRFLOW_HOME");
+    expect(arr[0]).toHaveProperty("value", "/tmp");
+    expect(arr[1]).toHaveProperty("key", "SCHEDULER_HEARTBEAT");
+    expect(arr[1]).toHaveProperty("value", "5");
   });
 
   test("correctly handles an undefined environment list", () => {
