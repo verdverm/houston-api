@@ -1,5 +1,5 @@
 import fragment from "./fragment";
-import { createAuthJWT, setJWTCookie } from "jwt";
+import { createJWT, setJWTCookie } from "jwt";
 import { addFragmentToInfo } from "graphql-binding";
 import { USER_STATUS_ACTIVE } from "constants";
 
@@ -24,7 +24,7 @@ export async function token(parent, args, ctx) {
   }
 
   // Create our JWT.
-  const { token, payload } = createAuthJWT(parent.userId);
+  const { token, payload } = createJWT(parent.userId);
 
   // Set the cookie.
   setJWTCookie(ctx.res, token);

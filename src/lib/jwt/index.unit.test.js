@@ -1,10 +1,10 @@
-import { createAuthJWT, setJWTCookie } from "./index";
+import { createJWT, setJWTCookie } from "./index";
 import casual from "casual";
 
-describe("createAuthJWT", () => {
+describe("createJWT", () => {
   test("successfully creates a jwt for a userId", () => {
     const id = casual.uuid;
-    const token = createAuthJWT(id);
+    const token = createJWT(id);
     expect(token).toHaveProperty("token");
     expect(token).toHaveProperty("payload");
     expect(token.payload.uuid).toBe(id);
@@ -16,7 +16,7 @@ describe("createAuthJWT", () => {
 describe("setJWTCookie", () => {
   test("successfully sets cookie on http response", () => {
     const response = { cookie: jest.fn() };
-    const { token } = createAuthJWT(casual.uuid);
+    const token = createJWT(casual.uuid);
     setJWTCookie(response, token);
     expect(response.cookie.mock.calls).toHaveLength(1);
   });

@@ -1,7 +1,6 @@
 import { hasPermission } from "rbac";
 import { prisma } from "generated/client";
 import log from "logger";
-import { createJWT } from "jwt";
 import { ENTITY_DEPLOYMENT } from "constants";
 import url from "url";
 
@@ -35,12 +34,16 @@ export default async function(req, res) {
       .id();
 
     // Check if we have deployment level access to it.
-    const airflowRoles = mapLocalRolesToAirflow(user, deploymentId);
+    const hasDeploymentPermission = hasPermission(
+      user,
+      "deployment.airflow.view",
+      ENTITY_DEPLOYMENT.toLowerCase(),
+      deploymentId
+    );
 
     // If we have permission, authorize it.
-    if (airflowRoles.length > 0) {
-      const jwt = exports.airflowJWT(user, airflowRoles, hostname);
-      res.set("Authorization", "Bearer " + jwt);
+    if (hasDeploymentPermission) {
+      log.info(`Authorizing request to ${originalUrl}`);
       return res.sendStatus(200);
     }
   }
@@ -48,29 +51,4 @@ export default async function(req, res) {
   // If we made it this far, deny the request.
   log.info(`Denying request to ${originalUrl}`);
   return res.sendStatus(401);
-}
-
-export function airflowJWT(user, roles, hostname) {
-  const token = createJWT({
-    // Make sure that we can't use tokens from one deployment against
-    // another somehow.
-    aud: hostname,
-    sub: user.id,
-    roles: roles,
-    email: user.username,
-    full_name: user.fullName
-  });
-  return token;
-}
-
-export function mapLocalRolesToAirflow(user, deploymentId) {
-  const entityType = ENTITY_DEPLOYMENT.toLowerCase();
-  if (hasPermission(user, "deployment.airflow.op", entityType, deploymentId))
-    return ["Op"];
-  if (hasPermission(user, "deployment.airflow.user", entityType, deploymentId))
-    return ["User"];
-  if (hasPermission(user, "deployment.airflow.view", entityType, deploymentId))
-    return ["Viewer"];
-
-  return [];
 }
