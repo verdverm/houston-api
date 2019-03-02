@@ -260,6 +260,7 @@ deployments:
   # Houston has full acces, while the deployments connect
   # via NGINX for auth.
   elasticsearch:
+    enabled: false
     connection:
       host: localhost
       port: 9200
