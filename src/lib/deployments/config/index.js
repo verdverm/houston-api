@@ -292,7 +292,9 @@ export function elasticsearch(deployment) {
     // By default we use the Elasticsearch log plugin. This means we print
     // the logs to stdout, which get shipped to Elasticsearch via Fluentd.
     workers: {
-      persistence: { enabled: false }
+      persistence: {
+        enabled: !enabled
+      }
     }
   };
 }
