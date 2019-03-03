@@ -37,6 +37,7 @@ const query = `
       executors
       latestVersion
       singleNamespace
+      loggingEnabled
     }
   }
 `;
@@ -53,5 +54,6 @@ describe("deploymentConfig", () => {
     expect(data.deploymentConfig).toHaveProperty("executors");
     expect(data.deploymentConfig).toHaveProperty("latestVersion");
     expect(data.deploymentConfig).toHaveProperty("singleNamespace");
+    expect(data.deploymentConfig).toHaveProperty("loggingEnabled");
   });
 });

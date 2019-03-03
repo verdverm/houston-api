@@ -124,6 +124,7 @@ type DeploymentConfig {
   executors: JSON
   latestVersion: String
   singleNamespace: Boolean!
+  loggingEnabled: Boolean!
 }
 
 type AstroUnit {
@@ -349,7 +350,7 @@ type Mutation {
     version: String!
   ): Deployment @auth(permission: "deployment.config.update")
 
-  # ServiceAccoun mutations are handled differently at the moment to maintain
+  # ServiceAccount mutations are handled differently at the moment to maintain
   # backward compatibility with CLI / UI. We should refactor to
   # more explicit, scoped mutations.
   createServiceAccount(
