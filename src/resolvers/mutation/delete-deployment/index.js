@@ -8,13 +8,13 @@ import config from "config";
  * @param {Object} ctx The graphql context.
  * @return {Deployment} The deleted Deployment.
  */
-export default async function deleteDeployment(parent, args, ctx) {
+export default async function deleteDeployment(parent, args, ctx, info) {
   // Delete the record from the database.
   const deployment = await ctx.db.mutation.deleteDeployment(
     {
       where: { id: args.deploymentUuid }
     },
-    `{ id, releaseName }`
+    info
   );
 
   // Delete deployment from helm.
