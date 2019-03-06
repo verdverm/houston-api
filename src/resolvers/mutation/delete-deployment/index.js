@@ -1,4 +1,6 @@
+import fragment from "./fragment";
 import { generateNamespace } from "deployments/naming";
+import { addFragmentToInfo } from "graphql-binding";
 import config from "config";
 
 /*
@@ -14,7 +16,7 @@ export default async function deleteDeployment(parent, args, ctx, info) {
     {
       where: { id: args.deploymentUuid }
     },
-    info
+    addFragmentToInfo(info, fragment)
   );
 
   // Delete deployment from helm.
