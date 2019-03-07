@@ -110,7 +110,7 @@ describe("createToken", () => {
     const res = await graphql(schema, mutation, null, { db }, vars);
     expect(res.errors).toHaveLength(1);
     expect(res.errors[0].message).toEqual(
-      expect.stringMatching(/^Credentials not found/)
+      expect.stringMatching(/^No password credentials found/)
     );
   });
 
@@ -128,7 +128,6 @@ describe("createToken", () => {
       // Orbit expects this to match to show the right message
       expect.stringMatching(/invalid password/i)
     );
-    expect(res.errors[0].extensions.code).toBe("INVAILD_USERNAME_PASSWORD");
   });
 
   test("throws error if user is not active", async () => {

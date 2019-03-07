@@ -32,21 +32,13 @@ export class ResourceNotFoundError extends Error {
 }
 
 export class CredentialsNotFoundError extends AuthenticationError {
-  message =
-    this.message ||
-    "Credentials not found for this user, did you mean to sign in with OAuth?";
+  message = this.message || "No password credentials found";
 }
 
 export class InvalidCredentialsError extends ApolloError {
-  name = "InvalidCredentialsError";
-  constructor() {
-    // Orbit currently looks at the _text_ of the error message, so don't
-    // change this without updating Orbit to look at the code, not the message
-    super(
-      "Invalid password and username combination",
-      "INVAILD_USERNAME_PASSWORD"
-    );
-  }
+  // Orbit currently looks at the _text_ of the error message, so don't
+  // change this without updating Orbit to look at the code, not the message
+  message = this.message || "Invalid password and username combination";
 }
 
 export class InvalidAuthenticationProviderError extends Error {
@@ -112,4 +104,8 @@ export class InvalidRoleError extends UserInputError {
 
 export class DuplicateRoleBindingError extends UserInputError {
   message = this.message || "A duplicate role binding already exists";
+}
+
+export class DuplicateEmailError extends Error {
+  message = this.message || "Email already in use";
 }

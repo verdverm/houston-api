@@ -1,4 +1,5 @@
 import { createUser as _createUser } from "users";
+import { throwPrismaError } from "errors";
 import { get } from "lodash";
 import bcrypt from "bcryptjs";
 
@@ -19,21 +20,29 @@ export default async function createUser(parent, args, ctx) {
   // Hash password.
   const password = await bcrypt.hash(args.password, 10);
 
-  // Create the user and nested relations.
-  const userId = await _createUser({
-    username,
-    fullName,
-    email: args.email,
-    inviteToken: args.inviteToken
-  });
+  // Try to create the user,
+  // handling error in an orbit-compatible way.
+  try {
+    // Create the user and nested relations.
+    const userId = await _createUser({
+      username,
+      fullName,
+      email: args.email,
+      inviteToken: args.inviteToken
+    });
 
-  // Create the local credential and connect to user.
-  await ctx.db.mutation.createLocalCredential({
-    data: {
-      password,
-      user: { connect: { id: userId } }
-    }
-  });
+    // Create the local credential and connect to user.
+    await ctx.db.mutation.createLocalCredential({
+      data: {
+        password,
+        user: { connect: { id: userId } }
+      }
+    });
 
-  return { userId };
+    return { userId };
+  } catch (e) {
+    // This is mostly for compatibility with Orbit.
+    // Take a prisma error and throw an error that orbit expects.
+    throwPrismaError(e);
+  }
 }
