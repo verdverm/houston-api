@@ -1,4 +1,11 @@
-import { parseJSON, getCookieName } from "./index";
+import {
+  parseJSON,
+  getCookieName,
+  version,
+  scheme,
+  houston,
+  orbit
+} from "./index";
 import config from "config";
 
 describe("parseJSON", () => {
@@ -26,5 +33,29 @@ describe("getCookieName", () => {
     config.helm.baseDomain = "datarouter.ai";
     const name = getCookieName();
     expect(name).toBe("astronomer_datarouter_ai_auth");
+  });
+});
+
+describe("version", () => {
+  test("version is correctly set by config", () => {
+    expect(version()).toEqual("v1");
+  });
+});
+
+describe("scheme", () => {
+  test("scheme is correctly set by environment", () => {
+    expect(scheme()).toEqual("http");
+  });
+});
+
+describe("houston", () => {
+  test("houston url is generated successfully", () => {
+    expect(houston()).toContain("houston.");
+  });
+});
+
+describe("orbit", () => {
+  test("orbit url is generated successfully", () => {
+    expect(orbit()).toContain("app.");
   });
 });

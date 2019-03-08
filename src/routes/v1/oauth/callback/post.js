@@ -1,6 +1,7 @@
 import fragment from "./fragment";
 import { createUser as _createUser } from "users";
-import { getProvider, orbit } from "oauth/config";
+import { getProvider } from "oauth/config";
+import { orbit } from "utilities";
 import { prisma } from "generated/client";
 import { createJWT, setJWTCookie } from "jwt";
 import { first } from "lodash";

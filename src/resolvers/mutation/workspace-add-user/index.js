@@ -1,6 +1,6 @@
 import fragment from "./fragment";
 import { UserInviteExistsError } from "errors";
-import { orbit } from "oauth/config";
+import { orbit } from "utilities";
 import { sendEmail } from "emails";
 import shortid from "shortid";
 import { addFragmentToInfo } from "graphql-binding";

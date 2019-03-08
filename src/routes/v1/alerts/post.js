@@ -1,6 +1,8 @@
 import { prisma } from "generated/client";
 import { sendEmail } from "emails";
 import log from "logger";
+import { orbit } from "utilities";
+import moment from "moment";
 
 /*
  * Handle alert notifications from AlertManager.
@@ -15,11 +17,31 @@ export default async function(req, res) {
       const releaseName = alert.labels.deployment;
       log.info(`Sending email alerts for ${releaseName}`);
 
-      const emails = await prisma
-        .deployment({ where: { releaseName } })
-        .alertEmails();
+      // Get a list of emails to send alerts to.
+      const emails = await prisma.deployment({ releaseName }).alertEmails();
 
-      await Promise.all(emails.map(email => sendEmail(email, "alert", alert)));
+      // Bail if we have no emails to send.
+      if (!emails) return;
+
+      // Modify the alert to transform / append useful information
+      const modifiedAlert = {
+        ...alert,
+        startsAt: moment(alert.startsAt).format(
+          "dddd, MMMM Do YYYY, h:mm:ss a"
+        ),
+        endsAt: moment(alert.startsAt).format("dddd, MMMM Do YYYY, h:mm:ss a"),
+        isFiring: alert.status === "firing"
+      };
+
+      // Send all the emails for this deployment.
+      await Promise.all(
+        emails.map(email =>
+          sendEmail(email, "alert", {
+            orbitUrl: orbit(),
+            alert: modifiedAlert
+          })
+        )
+      );
     })
   );
 

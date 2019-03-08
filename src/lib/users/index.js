@@ -1,4 +1,4 @@
-import { orbit } from "oauth/config";
+import { orbit } from "utilities";
 import {
   PublicSignupsDisabledError,
   InviteTokenNotFoundError,

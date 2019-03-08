@@ -1,4 +1,4 @@
-import { orbit } from "oauth/config";
+import { orbit } from "utilities";
 import { sendEmail } from "emails";
 import shortid from "shortid";
 
@@ -21,7 +21,7 @@ export default async function forgotPassword(parent, args, ctx) {
     { where: { address: args.email } },
     `{
       address
-      user { 
+      user {
         id
         localCredential {
           id
