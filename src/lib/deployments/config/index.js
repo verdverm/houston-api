@@ -161,9 +161,8 @@ export function constraints(deployment) {
         executor === AIRFLOW_EXECUTOR_LOCAL &&
         cur === AIRFLOW_COMPONENT_SCHEDULER
       ) {
-        // LocalExecutor could possibly have a log server
-        // and/or worker log trimming sidecars.
-        const n = elasticsearchEnabled ? 1 : 2;
+        // LocalExecutor could possibly have a log server.
+        const n = elasticsearchEnabled ? 0 : 1;
         return {
           cpu: acc.cpu + parseInt(astroUnit.cpu) * n,
           memory: acc.memory + parseInt(astroUnit.memory) * n
@@ -183,7 +182,8 @@ export function constraints(deployment) {
       }
       return acc;
     },
-    { cpu: 0, memory: 0 }
+    // Start off with 1 sidecar for scheduler log trimmer, no matter what.
+    { cpu: parseInt(astroUnit.cpu) * 1, memory: parseInt(astroUnit.memory) * 1 }
   );
 
   // Check for any extra Au on deployment.

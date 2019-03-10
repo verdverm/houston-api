@@ -64,8 +64,8 @@ describe("constraints", () => {
     };
     const config = constraints(deployment);
     expect(config.quotas.pods).toBe(14); // Default celery (7 pods), doubled.
-    expect(config.quotas["requests.cpu"]).toBe("5400m"); // 2500 doubled + 200 sidecar doubled
-    expect(config.quotas["requests.memory"]).toBe("20736Mi"); // 9600 doubled + 768 sidecar doubled
+    expect(config.quotas["requests.cpu"]).toBe("5600m"); // 2500 doubled + 300 sidecar doubled
+    expect(config.quotas["requests.memory"]).toBe("21504Mi"); // 9600 doubled + 768 sidecar doubled
     expect(config.quotas["requests.cpu"]).toBe(config.quotas["requests.cpu"]);
     expect(config.quotas["requests.memory"]).toBe(
       config.quotas["requests.memory"]
@@ -93,8 +93,8 @@ describe("constraints", () => {
     };
     const config = constraints(deployment);
     expect(config.quotas.pods).toBe(24); // Same as default celery + 10 extra
-    expect(config.quotas["requests.cpu"]).toBe("6400m"); // Same as default celery + 1000 extra
-    expect(config.quotas["requests.memory"]).toBe("24576Mi"); // Same as default celery + 3840 extra
+    expect(config.quotas["requests.cpu"]).toBe("6600m"); // Same as default celery + 1000 extra
+    expect(config.quotas["requests.memory"]).toBe("25344Mi"); // Same as default celery + 3840 extra
     expect(config.quotas["requests.cpu"]).toBe(config.quotas["requests.cpu"]);
     expect(config.quotas["requests.memory"]).toBe(
       config.quotas["requests.memory"]
