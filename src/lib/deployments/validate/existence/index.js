@@ -24,6 +24,9 @@ export default async function validateExistence(
   // Get first.
   const deployment = head(deployments);
 
+  // If we didn't find a deployment, just return early.
+  if (!deployment) return;
+
   // Throw error if one already exists. (Creation)
   if (!deploymentId && deployment) {
     throw new DuplicateDeploymentLabelError(label);

@@ -62,4 +62,24 @@ describe("validateExistence", () => {
       validateExistence(workspaceId, label, deploymentId)
     ).rejects.toThrow(new DuplicateDeploymentLabelError(label));
   });
+
+  test("does not throw an error if no deployment found", async () => {
+    const workspaceId = casual.uuid;
+    const label = casual.word;
+    const deploymentId = casual.uuid;
+
+    const deployments = function() {
+      return {
+        id: () => []
+      };
+    };
+
+    // Set up our spy.
+    jest.spyOn(exports.prisma, "deployments").mockImplementation(deployments);
+
+    // Call the function.
+    await expect(
+      validateExistence(workspaceId, label, deploymentId)
+    ).resolves.not.toThrow();
+  });
 });
