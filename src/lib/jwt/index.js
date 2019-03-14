@@ -9,24 +9,39 @@ import path from "path";
 import fs from "fs";
 
 /*
- * Create a new JWT for houston.
+ * Create a new auth JWT for houston.
  * @param {String} userId A users id.
  * @return {String} The token.
  */
-export function createJWT(userId) {
+export function createAuthJWT(userId) {
+  // Return token and claims object for legacy purposes.
+  return createJWT({ uuid: userId }, { returnPayload: true });
+}
+
+/*
+ * Create a signed JWT token
+ * @param {Object} payload Claims to turn in to JWT token
+ * @param {Object} [opts] Options
+ * @param {boolean} opts.returnPayload Do we return the token and the modified
+ *                  payload object, or just the token
+ * @return {(string|Object)} The signed token, or `{token, payload}`
+ */
+export function createJWT(payload, opts) {
   const millis = config.get("jwt.authDuration");
 
+  opts = opts || {};
+
   // Create the payload.
-  const payload = { uuid: userId };
   const { signWith, alg } = jwtSigningParam();
   const token = jwt.sign(payload, signWith, {
     expiresIn: ms(millis),
-    mutatePayload: true,
+    notBefore: 0,
+    mutatePayload: !!opts.returnPayload,
     algorithm: alg
   });
 
-  // Return both for legacy purposes.
-  return { token, payload };
+  if (opts.returnPayload) return { token, payload };
+  return token;
 }
 
 /*
