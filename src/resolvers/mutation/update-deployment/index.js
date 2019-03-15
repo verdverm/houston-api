@@ -3,7 +3,8 @@ import validate from "deployments/validate";
 import {
   envArrayToObject,
   generateHelmValues,
-  mapPropertiesToDeployment
+  mapPropertiesToDeployment,
+  mapCustomEnvironmentVariables
 } from "deployments/config";
 import {
   generateEnvironmentSecretName,
@@ -62,8 +63,9 @@ export default async function updateDeployment(parent, args, ctx, info) {
     addFragmentToInfo(info, fragment)
   );
 
-  // Set any environment variables.
-  if (args.env) {
+  // If we're syncing to kubernetes, fire updates to commander.
+  if (args.sync) {
+    // Set any environment variables.
     await ctx.commander.request("setSecret", {
       releaseName: updatedDeployment.releaseName,
       namespace: generateNamespace(updatedDeployment.releaseName),
@@ -72,17 +74,18 @@ export default async function updateDeployment(parent, args, ctx, info) {
         data: envArrayToObject(args.env)
       }
     });
-  }
 
-  // If we're syncing to kubernetes, fire update to commander.
-  if (args.sync) {
+    // Map the user input env vars to a format that the helm chart expects.
+    const envs = mapCustomEnvironmentVariables(updatedDeployment, args.env);
+
+    // Update the deployment, passing in our custom env vars.
     await ctx.commander.request("updateDeployment", {
       releaseName: updatedDeployment.releaseName,
       chart: {
         name: DEPLOYMENT_AIRFLOW,
         version: updatedDeployment.version
       },
-      rawConfig: JSON.stringify(generateHelmValues(updatedDeployment))
+      rawConfig: JSON.stringify(generateHelmValues(updatedDeployment, envs))
     });
   }
 

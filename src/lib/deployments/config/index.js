@@ -492,3 +492,23 @@ export function deploymentOverrides(deployment) {
     return val1;
   });
 }
+
+/*
+ * Transform an array of environment variables to a format
+ * that the airflow helm chart expects. The values themselves are
+ * stored in a kubernetes secret. This maps user input to helm values.
+ * @param {Object} deployment The deployment these variables belong to.
+ * @param {[]Object} envs The list of user inputed environment variables.
+ * @reuturn {[]Object} The values ready to be passed to helm.
+ */
+export function mapCustomEnvironmentVariables(deployment, envs = []) {
+  const secrets = envs.map(env => {
+    return {
+      envName: env.key,
+      secretName: `${deployment.releaseName.replace(/_/g, "-")}-env`,
+      secretKey: env.key
+    };
+  });
+
+  return { secret: secrets };
+}

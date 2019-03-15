@@ -9,7 +9,8 @@ import {
   mapDeploymentToProperties,
   findLatestTag,
   generateNextTag,
-  deploymentOverrides
+  deploymentOverrides,
+  mapCustomEnvironmentVariables
 } from "./index";
 import { generateReleaseName } from "deployments/naming";
 import casual from "casual";
@@ -330,5 +331,24 @@ describe("deploymentOverrides", () => {
     expect(res.webserver.resources.requests.cpu).toEqual("100m");
     expect(res.webserver.resources.requests.memory).toEqual("384Mi");
     expect(res.workers.replicas).toEqual(1);
+  });
+});
+
+describe("mapCustomEnvironmentVariables", () => {
+  test("correctly maps an input array of environment variables", () => {
+    const deployment = { releaseName: casual.word };
+    const envs = [
+      { key: "AIRFLOW_HOME", value: "/tmp" },
+      { key: "SCHEDULER_HEARTBEAT", value: "5" }
+    ];
+    const env = mapCustomEnvironmentVariables(deployment, envs);
+    expect(env).toHaveProperty("secret");
+    expect(env.secret).toHaveLength(2);
+    expect(env.secret[0]).toHaveProperty("envName", envs[0].key);
+    expect(env.secret[0]).toHaveProperty(
+      "secretName",
+      expect.stringContaining(deployment.releaseName)
+    );
+    expect(env.secret[0]).toHaveProperty("secretKey", envs[0].key);
   });
 });
