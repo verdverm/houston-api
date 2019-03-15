@@ -3,7 +3,7 @@ import { createUser as _createUser } from "users";
 import { getProvider } from "oauth/config";
 import { orbit } from "utilities";
 import { prisma } from "generated/client";
-import { createJWT, setJWTCookie } from "jwt";
+import { createAuthJWT, setJWTCookie } from "jwt";
 import { first } from "lodash";
 import querystring from "querystring";
 
@@ -74,7 +74,7 @@ export default async function(req, res) {
   }
 
   // Create the JWT.
-  const { token } = createJWT(userId);
+  const { token } = createAuthJWT(userId);
 
   // Set the cookie.
   setJWTCookie(res, token);
