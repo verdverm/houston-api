@@ -186,12 +186,8 @@ export function constraints(deployment) {
     { cpu: parseInt(astroUnit.cpu) * 1, memory: parseInt(astroUnit.memory) * 1 }
   );
 
-  // Check for any extra Au on deployment.
-  const extraProp = find(deployment.properties, [
-    "key",
-    DEPLOYMENT_PROPERTY_EXTRA_AU
-  ]);
-  const extraAu = extraProp ? extraProp.value : 0;
+  // Grab extra au.
+  const extraAu = deployment.extraAu || 0;
 
   // Calculate total extra capacity.
   const extra = {

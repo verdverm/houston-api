@@ -90,7 +90,7 @@ describe("constraints", () => {
   test("correctly applies constraints for extra au property", () => {
     const deployment = {
       id: casual.uuid,
-      properties: [{ key: DEPLOYMENT_PROPERTY_EXTRA_AU, value: 10 }]
+      extraAu: 10
     };
     const config = constraints(deployment);
     expect(config.quotas.pods).toBe(24); // Same as default celery + 10 extra
