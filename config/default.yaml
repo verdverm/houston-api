@@ -350,7 +350,7 @@ deployments:
         - flower
         - redis
     - name: KubernetesExecutor
-      enabled: false
+      enabled: true
       components:
         - scheduler
         - webserver
