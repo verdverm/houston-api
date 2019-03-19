@@ -225,9 +225,6 @@ export function constraints(deployment) {
     Math.floor(astroUnit.airflowConns * totalAu)
   );
 
-  // If we have extraAu, enable pod launching (KubeExecutor, KubePodOperator, etc).
-  if (extraAu > 0) set(res, "allowPodLaunching", true);
-
   // Return the final object.
   return res;
 }
