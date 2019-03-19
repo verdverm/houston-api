@@ -373,3 +373,7 @@ deployments:
       # Adds a pgbouncer service between the airflow pods (scheduler / webserver/ workers),
       # and the backend database.
       enabled: true
+    # Allow scheduler/workers to launch pods by default. This is required for
+    # the KubernetesPodOperator and KubernetesExecutor. This is what signals to apply the
+    # required RoleBindings.
+    allowPodLaunching: true

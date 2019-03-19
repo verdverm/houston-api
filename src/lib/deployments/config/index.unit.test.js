@@ -102,7 +102,6 @@ describe("constraints", () => {
     );
     expect(config.pgbouncer.metadataPoolSize).toBe(17); // Same as celery default + 5 (.5 * 10)
     expect(config.pgbouncer.maxClientConn).toBe(175); // Same as celery default + 50 (5 * 10)
-    expect(config.allowPodLaunching).toBeTruthy();
   });
 
   test("correctly applies constraints for LocalExecutor config", () => {
