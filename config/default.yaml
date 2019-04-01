@@ -208,6 +208,7 @@ roles:
       - deployment.serviceAccounts.create
       - deployment.serviceAccounts.delete
       - deployment.logs.get
+      - deployment.status.get
 
   - id: DEPLOYMENT_EDITOR
     name: Deployment Editor
@@ -219,12 +220,16 @@ roles:
       - deployment.airflow.view
       - deployment.serviceAccounts.create
       - deployment.serviceAccounts.delete
+      - deployment.logs.get
+      - deployment.status.get
 
   - id: DEPLOYMENT_VIEWER
     name: Deployment Viewer
     permissions:
       - deployment.config.get
       - deployment.airflow.view
+      - deployment.logs.get
+      - deployment.status.get
 
 #
 # Airflow Deployment Configurations

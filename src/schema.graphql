@@ -127,6 +127,11 @@ type DeploymentConfig {
   loggingEnabled: Boolean!
 }
 
+type DeploymentStatus {
+  webserver: Boolean
+  scheduler: Boolean
+}
+
 type AstroUnit {
   cpu: Int
   memory: Int
@@ -247,6 +252,10 @@ type Query {
     timestamp: DateTime
     search: String
   ): [DeploymentLog] @auth(permission: "deployment.logs.get")
+
+  deploymentStatus(
+    deploymentUuid: Uuid!
+  ): DeploymentStatus @auth(permission: "deployment.status.get")
 }
 
 #

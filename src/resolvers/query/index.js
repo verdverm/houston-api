@@ -1,5 +1,6 @@
 import authConfig from "./auth-config";
 import deploymentConfig from "./deployment-config";
+import deploymentStatus from "./deployment-status";
 import deployments from "./deployments";
 import invites from "./invites";
 import logs from "./logs";
@@ -11,6 +12,7 @@ import workspaces from "./workspaces";
 export default {
   authConfig,
   deploymentConfig,
+  deploymentStatus,
   deployments,
   invites,
   logs,
