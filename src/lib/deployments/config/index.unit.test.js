@@ -248,6 +248,26 @@ describe("mapPropertiesToDeployment", () => {
     expect(renamed.alertEmails.set).toHaveLength(1);
     expect(renamed.alertEmails.set[0]).toEqual(email);
   });
+
+  test("correctly handles empty values", () => {
+    // Create a test object.
+    const obj = {
+      [DEPLOYMENT_PROPERTY_EXTRA_AU]: 0,
+      [DEPLOYMENT_PROPERTY_COMPONENT_VERSION]: "",
+      [DEPLOYMENT_PROPERTY_ALERT_EMAILS]: []
+    };
+
+    // Run the transformation.
+    const renamed = mapPropertiesToDeployment(obj);
+
+    expect(renamed.extraAu).toEqual(obj[DEPLOYMENT_PROPERTY_EXTRA_AU]);
+    expect(renamed.airflowVersion).toEqual(
+      obj[DEPLOYMENT_PROPERTY_COMPONENT_VERSION]
+    );
+
+    expect(renamed.alertEmails).toHaveProperty("set");
+    expect(renamed.alertEmails.set).toHaveLength(0);
+  });
 });
 
 describe("mapDeploymentToProperties", () => {

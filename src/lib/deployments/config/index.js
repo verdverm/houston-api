@@ -371,15 +371,10 @@ export function envObjectToArray(obj = {}) {
  * @return {[]Object} The object with key/value pairs.
  */
 export function mapPropertiesToDeployment(obj = {}) {
-  const mapped = {};
-
-  if (obj[DEPLOYMENT_PROPERTY_EXTRA_AU]) {
-    mapped.extraAu = obj[DEPLOYMENT_PROPERTY_EXTRA_AU];
-  }
-
-  if (obj[DEPLOYMENT_PROPERTY_COMPONENT_VERSION]) {
-    mapped.airflowVersion = obj[DEPLOYMENT_PROPERTY_COMPONENT_VERSION];
-  }
+  const mapped = {
+    extraAu: get(obj, DEPLOYMENT_PROPERTY_EXTRA_AU, 0),
+    airflowVersion: get(obj, DEPLOYMENT_PROPERTY_COMPONENT_VERSION, "")
+  };
 
   if (obj[DEPLOYMENT_PROPERTY_ALERT_EMAILS]) {
     mapped.alertEmails = {
