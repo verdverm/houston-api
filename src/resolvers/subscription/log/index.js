@@ -26,7 +26,11 @@ export async function subscribe(parent, args, { db, pubsub }) {
     publish => {
       search(releaseName, component, gt, searchPhrase).then(res => {
         // Pull out the result documents.
-        const hits = get(res, "hits.hits", []);
+        // We reverse the results here because we're sorting in
+        // decending order in our ES query to ensure we're getting
+        // the latest chunk of records if the result set is larger than our
+        // size parameter.
+        const hits = get(res, "hits.hits", []).reverse();
         log.debug(`Got ${hits.length} hits in subscription query`);
 
         // Publish the records to the PubSub engine, and set the

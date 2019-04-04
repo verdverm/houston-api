@@ -78,7 +78,8 @@ server.applyMiddleware({
   path: serverConfig.endpoint,
   cors: {
     origin: [
-      "http://app.local.astronomer.io:5000",
+      "http://app.local.astronomer.io:5000", // Development orbit build
+      "http://app.local.astronomer.io:8080", // Production orbit build
       new RegExp(":\\/\\/localhost[:\\d+]?"),
       new RegExp(`.${helmConfig.baseDomain}$`)
     ],
