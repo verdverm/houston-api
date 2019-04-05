@@ -80,8 +80,8 @@ export default async function(req, res) {
   setJWTCookie(res, token);
 
   // Add userId and email for in-app tracking
-  state.extras = { ...state.extras, userId, email }
-  
+  state.extras = { ...state.extras, userId, email };
+
   // Build redirect query string.
   const qs = querystring.stringify({
     extras: JSON.stringify(state.extras),
