@@ -53,6 +53,7 @@ type Deployment {
   extraAu: Int
   airflowVersion: String
   alertEmails: [String!]!
+  roleBindings(where: RoleBindingWhereInput, orderBy: RoleBindingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleBinding!]
   workspace: Workspace
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -79,6 +80,7 @@ input DeploymentCreateInput {
   extraAu: Int
   airflowVersion: String
   alertEmails: DeploymentCreatealertEmailsInput
+  roleBindings: RoleBindingCreateManyWithoutDeploymentInput
   workspace: WorkspaceCreateOneWithoutDeploymentsInput
 }
 
@@ -87,9 +89,23 @@ input DeploymentCreateManyWithoutWorkspaceInput {
   connect: [DeploymentWhereUniqueInput!]
 }
 
-input DeploymentCreateOneInput {
-  create: DeploymentCreateInput
+input DeploymentCreateOneWithoutRoleBindingsInput {
+  create: DeploymentCreateWithoutRoleBindingsInput
   connect: DeploymentWhereUniqueInput
+}
+
+input DeploymentCreateWithoutRoleBindingsInput {
+  config: Json
+  description: String
+  label: String
+  registryPassword: String
+  elasticsearchPassword: String
+  releaseName: String
+  version: String
+  extraAu: Int
+  airflowVersion: String
+  alertEmails: DeploymentCreatealertEmailsInput
+  workspace: WorkspaceCreateOneWithoutDeploymentsInput
 }
 
 input DeploymentCreateWithoutWorkspaceInput {
@@ -103,6 +119,7 @@ input DeploymentCreateWithoutWorkspaceInput {
   extraAu: Int
   airflowVersion: String
   alertEmails: DeploymentCreatealertEmailsInput
+  roleBindings: RoleBindingCreateManyWithoutDeploymentInput
 }
 
 type DeploymentEdge {
@@ -317,20 +334,6 @@ input DeploymentUpdatealertEmailsInput {
   set: [String!]
 }
 
-input DeploymentUpdateDataInput {
-  config: Json
-  description: String
-  label: String
-  registryPassword: String
-  elasticsearchPassword: String
-  releaseName: String
-  version: String
-  extraAu: Int
-  airflowVersion: String
-  alertEmails: DeploymentUpdatealertEmailsInput
-  workspace: WorkspaceUpdateOneWithoutDeploymentsInput
-}
-
 input DeploymentUpdateInput {
   config: Json
   description: String
@@ -342,6 +345,7 @@ input DeploymentUpdateInput {
   extraAu: Int
   airflowVersion: String
   alertEmails: DeploymentUpdatealertEmailsInput
+  roleBindings: RoleBindingUpdateManyWithoutDeploymentInput
   workspace: WorkspaceUpdateOneWithoutDeploymentsInput
 }
 
@@ -388,13 +392,27 @@ input DeploymentUpdateManyWithWhereNestedInput {
   data: DeploymentUpdateManyDataInput!
 }
 
-input DeploymentUpdateOneInput {
-  create: DeploymentCreateInput
-  update: DeploymentUpdateDataInput
-  upsert: DeploymentUpsertNestedInput
+input DeploymentUpdateOneWithoutRoleBindingsInput {
+  create: DeploymentCreateWithoutRoleBindingsInput
+  update: DeploymentUpdateWithoutRoleBindingsDataInput
+  upsert: DeploymentUpsertWithoutRoleBindingsInput
   delete: Boolean
   disconnect: Boolean
   connect: DeploymentWhereUniqueInput
+}
+
+input DeploymentUpdateWithoutRoleBindingsDataInput {
+  config: Json
+  description: String
+  label: String
+  registryPassword: String
+  elasticsearchPassword: String
+  releaseName: String
+  version: String
+  extraAu: Int
+  airflowVersion: String
+  alertEmails: DeploymentUpdatealertEmailsInput
+  workspace: WorkspaceUpdateOneWithoutDeploymentsInput
 }
 
 input DeploymentUpdateWithoutWorkspaceDataInput {
@@ -408,6 +426,7 @@ input DeploymentUpdateWithoutWorkspaceDataInput {
   extraAu: Int
   airflowVersion: String
   alertEmails: DeploymentUpdatealertEmailsInput
+  roleBindings: RoleBindingUpdateManyWithoutDeploymentInput
 }
 
 input DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput {
@@ -415,9 +434,9 @@ input DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput {
   data: DeploymentUpdateWithoutWorkspaceDataInput!
 }
 
-input DeploymentUpsertNestedInput {
-  update: DeploymentUpdateDataInput!
-  create: DeploymentCreateInput!
+input DeploymentUpsertWithoutRoleBindingsInput {
+  update: DeploymentUpdateWithoutRoleBindingsDataInput!
+  create: DeploymentCreateWithoutRoleBindingsInput!
 }
 
 input DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput {
@@ -547,6 +566,9 @@ input DeploymentWhereInput {
   airflowVersion_not_starts_with: String
   airflowVersion_ends_with: String
   airflowVersion_not_ends_with: String
+  roleBindings_every: RoleBindingWhereInput
+  roleBindings_some: RoleBindingWhereInput
+  roleBindings_none: RoleBindingWhereInput
   workspace: WorkspaceWhereInput
   createdAt: DateTime
   createdAt_not: DateTime
@@ -1626,7 +1648,12 @@ input RoleBindingCreateInput {
   user: UserCreateOneWithoutRoleBindingsInput
   serviceAccount: ServiceAccountCreateOneWithoutRoleBindingInput
   workspace: WorkspaceCreateOneWithoutRoleBindingsInput
-  deployment: DeploymentCreateOneInput
+  deployment: DeploymentCreateOneWithoutRoleBindingsInput
+}
+
+input RoleBindingCreateManyWithoutDeploymentInput {
+  create: [RoleBindingCreateWithoutDeploymentInput!]
+  connect: [RoleBindingWhereUniqueInput!]
 }
 
 input RoleBindingCreateManyWithoutUserInput {
@@ -1644,25 +1671,32 @@ input RoleBindingCreateOneWithoutServiceAccountInput {
   connect: RoleBindingWhereUniqueInput
 }
 
+input RoleBindingCreateWithoutDeploymentInput {
+  role: Role
+  user: UserCreateOneWithoutRoleBindingsInput
+  serviceAccount: ServiceAccountCreateOneWithoutRoleBindingInput
+  workspace: WorkspaceCreateOneWithoutRoleBindingsInput
+}
+
 input RoleBindingCreateWithoutServiceAccountInput {
   role: Role
   user: UserCreateOneWithoutRoleBindingsInput
   workspace: WorkspaceCreateOneWithoutRoleBindingsInput
-  deployment: DeploymentCreateOneInput
+  deployment: DeploymentCreateOneWithoutRoleBindingsInput
 }
 
 input RoleBindingCreateWithoutUserInput {
   role: Role
   serviceAccount: ServiceAccountCreateOneWithoutRoleBindingInput
   workspace: WorkspaceCreateOneWithoutRoleBindingsInput
-  deployment: DeploymentCreateOneInput
+  deployment: DeploymentCreateOneWithoutRoleBindingsInput
 }
 
 input RoleBindingCreateWithoutWorkspaceInput {
   role: Role
   user: UserCreateOneWithoutRoleBindingsInput
   serviceAccount: ServiceAccountCreateOneWithoutRoleBindingInput
-  deployment: DeploymentCreateOneInput
+  deployment: DeploymentCreateOneWithoutRoleBindingsInput
 }
 
 type RoleBindingEdge {
@@ -1733,7 +1767,7 @@ input RoleBindingUpdateInput {
   user: UserUpdateOneWithoutRoleBindingsInput
   serviceAccount: ServiceAccountUpdateOneWithoutRoleBindingInput
   workspace: WorkspaceUpdateOneWithoutRoleBindingsInput
-  deployment: DeploymentUpdateOneInput
+  deployment: DeploymentUpdateOneWithoutRoleBindingsInput
 }
 
 input RoleBindingUpdateManyDataInput {
@@ -1742,6 +1776,18 @@ input RoleBindingUpdateManyDataInput {
 
 input RoleBindingUpdateManyMutationInput {
   role: Role
+}
+
+input RoleBindingUpdateManyWithoutDeploymentInput {
+  create: [RoleBindingCreateWithoutDeploymentInput!]
+  delete: [RoleBindingWhereUniqueInput!]
+  connect: [RoleBindingWhereUniqueInput!]
+  set: [RoleBindingWhereUniqueInput!]
+  disconnect: [RoleBindingWhereUniqueInput!]
+  update: [RoleBindingUpdateWithWhereUniqueWithoutDeploymentInput!]
+  upsert: [RoleBindingUpsertWithWhereUniqueWithoutDeploymentInput!]
+  deleteMany: [RoleBindingScalarWhereInput!]
+  updateMany: [RoleBindingUpdateManyWithWhereNestedInput!]
 }
 
 input RoleBindingUpdateManyWithoutUserInput {
@@ -1782,25 +1828,37 @@ input RoleBindingUpdateOneWithoutServiceAccountInput {
   connect: RoleBindingWhereUniqueInput
 }
 
+input RoleBindingUpdateWithoutDeploymentDataInput {
+  role: Role
+  user: UserUpdateOneWithoutRoleBindingsInput
+  serviceAccount: ServiceAccountUpdateOneWithoutRoleBindingInput
+  workspace: WorkspaceUpdateOneWithoutRoleBindingsInput
+}
+
 input RoleBindingUpdateWithoutServiceAccountDataInput {
   role: Role
   user: UserUpdateOneWithoutRoleBindingsInput
   workspace: WorkspaceUpdateOneWithoutRoleBindingsInput
-  deployment: DeploymentUpdateOneInput
+  deployment: DeploymentUpdateOneWithoutRoleBindingsInput
 }
 
 input RoleBindingUpdateWithoutUserDataInput {
   role: Role
   serviceAccount: ServiceAccountUpdateOneWithoutRoleBindingInput
   workspace: WorkspaceUpdateOneWithoutRoleBindingsInput
-  deployment: DeploymentUpdateOneInput
+  deployment: DeploymentUpdateOneWithoutRoleBindingsInput
 }
 
 input RoleBindingUpdateWithoutWorkspaceDataInput {
   role: Role
   user: UserUpdateOneWithoutRoleBindingsInput
   serviceAccount: ServiceAccountUpdateOneWithoutRoleBindingInput
-  deployment: DeploymentUpdateOneInput
+  deployment: DeploymentUpdateOneWithoutRoleBindingsInput
+}
+
+input RoleBindingUpdateWithWhereUniqueWithoutDeploymentInput {
+  where: RoleBindingWhereUniqueInput!
+  data: RoleBindingUpdateWithoutDeploymentDataInput!
 }
 
 input RoleBindingUpdateWithWhereUniqueWithoutUserInput {
@@ -1816,6 +1874,12 @@ input RoleBindingUpdateWithWhereUniqueWithoutWorkspaceInput {
 input RoleBindingUpsertWithoutServiceAccountInput {
   update: RoleBindingUpdateWithoutServiceAccountDataInput!
   create: RoleBindingCreateWithoutServiceAccountInput!
+}
+
+input RoleBindingUpsertWithWhereUniqueWithoutDeploymentInput {
+  where: RoleBindingWhereUniqueInput!
+  update: RoleBindingUpdateWithoutDeploymentDataInput!
+  create: RoleBindingCreateWithoutDeploymentInput!
 }
 
 input RoleBindingUpsertWithWhereUniqueWithoutUserInput {

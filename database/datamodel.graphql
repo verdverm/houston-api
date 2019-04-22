@@ -17,9 +17,9 @@ type User {
   fullName: String
   avatarUrl: String
   emails: [Email!]!
-  roleBindings: [RoleBinding!]!
+  roleBindings: [RoleBinding!]! @relation(name: "RoleBindingToUser", onDelete: CASCADE)
   localCredential: LocalCredential
-  oauthCredentials: [OAuthCredential!]!
+  oauthCredentials: [OAuthCredential!]! @relation(name: "OAuthCredentialToUser", onDelete: CASCADE)
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -31,10 +31,10 @@ type User {
 type RoleBinding {
   id: ID! @unique
   role: Role
-  user: User
-  serviceAccount: ServiceAccount
-  workspace: Workspace
-  deployment: Deployment
+  user: User @relation(name: "RoleBindingToUser")
+  serviceAccount: ServiceAccount @relation(name: "RoleBindingToServiceAccount")
+  workspace: Workspace @relation(name: "RoleBindingToWorkspace")
+  deployment: Deployment @relation(name: "DeploymentRoleBindings")
 }
 
 type Email {
@@ -58,7 +58,7 @@ type OAuthCredential {
   expiresAt: DateTime
   oauthProvider: String!
   oauthUserId: String!
-  user: User
+  user: User @relation(name: "OAuthCredentialToUser", onDelete: CASCADE)
 }
 
 type InviteToken {
@@ -78,7 +78,7 @@ type ServiceAccount {
   label: String
   category: String
   active: Boolean
-  roleBinding: RoleBinding
+  roleBinding: RoleBinding @relation(name: "RoleBindingToServiceAccount", onDelete: CASCADE)
   lastUsedAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
@@ -91,7 +91,7 @@ type Workspace {
   description: String
   invites: [InviteToken!]!
   label: String
-  roleBindings: [RoleBinding!]!
+  roleBindings: [RoleBinding!]!  @relation(name: "RoleBindingToWorkspace", onDelete: CASCADE)
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -108,6 +108,7 @@ type Deployment {
   extraAu: Int
   airflowVersion: String
   alertEmails: [String!]
+  roleBindings: [RoleBinding!]! @relation(name: "DeploymentRoleBindings", onDelete: CASCADE)
   workspace: Workspace
   createdAt: DateTime!
   updatedAt: DateTime!
