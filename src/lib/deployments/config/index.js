@@ -266,9 +266,6 @@ export function registry(deployment) {
 
 /*
  * Return connection information for the elasticsearch connection.
- * Each deployment has a unique password that is auto-generated and
- * lives in a kubernetes secret. This function maps those values into
- * the helm configuration.
  * @param {Object} deployment A deployment object.
  * @return {Object} The elasticsearch settings.
  */
