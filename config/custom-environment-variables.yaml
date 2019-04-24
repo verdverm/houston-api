@@ -100,12 +100,12 @@ deployments:
     __format: "json"
   database:
     enabled:
-      __name: "DEPLOYMENTS__DATBASE__ENABLED"
+      __name: "DEPLOYMENTS__DATABASE__ENABLED"
       __format: "json"
     retainOnDelete:
-      __name: "DEPLOYMENTS__DATBASE__RETAIN_ON_DELETE"
+      __name: "DEPLOYMENTS__DATABASE__RETAIN_ON_DELETE"
       __format: "json"
     allowRootAccess:
-      __name: "DEPLOYMENTS__DATBASE__ALLOW_ROOT_ACCES"
+      __name: "DEPLOYMENTS__DATABASE__ALLOW_ROOT_ACCESS"
       __format: "json"
     connection: "DEPLOYMENTS__DATABASE__CONNECTION"
