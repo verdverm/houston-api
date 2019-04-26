@@ -17,7 +17,7 @@ import config from "config";
 import bcrypt from "bcryptjs";
 import { get } from "lodash";
 import crypto from "crypto";
-import { DEPLOYMENT_ADMIN, DEPLOYMENT_AIRFLOW } from "constants";
+import { DEPLOYMENT_AIRFLOW } from "constants";
 
 /*
  * Create a deployment.
@@ -80,18 +80,6 @@ export default async function createDeployment(parent, args, ctx, info) {
   const deployment = await ctx.db.mutation.createDeployment(
     mutation,
     addFragmentToInfo(info, fragment)
-  );
-
-  // Create the role binding for the user.
-  await ctx.db.mutation.createRoleBinding(
-    {
-      data: {
-        role: DEPLOYMENT_ADMIN,
-        user: { connect: { id: ctx.user.id } },
-        deployment: { connect: { id: deployment.id } }
-      }
-    },
-    `{ id }`
   );
 
   // Create the database for this deployment.

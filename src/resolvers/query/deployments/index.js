@@ -1,9 +1,10 @@
 import fragment from "./fragment";
-import { prisma } from "generated/client";
-import { checkPermission } from "rbac";
+import {
+  hasPermission,
+  checkPermission,
+  fragments as rbacFragments
+} from "rbac";
 import { addFragmentToInfo } from "graphql-binding";
-import { compact } from "lodash";
-import { ENTITY_WORKSPACE, ENTITY_DEPLOYMENT } from "constants";
 
 /*
  * Get list of deployments for a workspace.
@@ -19,38 +20,30 @@ export default async function deployments(parent, args, ctx, info) {
   // Perform extra checks here if passing in releaseName,
   // because it passes right through the auth directive.
   if (workspaceUuid) {
-    checkPermission(
-      ctx.user,
-      "workspace.deployments.list",
-      ENTITY_WORKSPACE.toLowerCase(),
-      workspaceUuid
+    const entity = await ctx.db.query.workspace(
+      { where: { id: workspaceUuid } },
+      rbacFragments.workspace
     );
+    checkPermission(ctx.user, "workspace.deployments.list", entity);
   }
-
   if (deploymentUuid) {
-    checkPermission(
-      ctx.user,
-      "deployment.config.get",
-      ENTITY_DEPLOYMENT.toLowerCase(),
-      deploymentUuid
+    const entity = await ctx.db.query.deployment(
+      { where: { id: deploymentUuid } },
+      rbacFragments.deployment
     );
+    checkPermission(ctx.user, "deployment.config.get", entity);
   }
 
   if (releaseName) {
-    const deploymentId = await prisma
-      .deployment({ releaseName: args.releaseName })
-      .id();
-
-    checkPermission(
-      ctx.user,
-      "deployment.config.get",
-      ENTITY_DEPLOYMENT.toLowerCase(),
-      deploymentId
+    const entity = await ctx.db.query.deployment(
+      { where: { releaseName } },
+      rbacFragments.deployment
     );
+    checkPermission(ctx.user, "deployment.config.get", entity);
   }
 
   // Build the deployments query.
-  const query = deploymentsQuery(args, ctx);
+  const query = await deploymentsQuery(args, ctx);
 
   // Run final query
   return await ctx.db.query.deployments(
@@ -89,10 +82,35 @@ export function deploymentsQuery(args, ctx) {
 
   if (!(deploymentUuid || releaseName || workspaceUuid)) {
     // Get a list of deployment ids that this user can access.
-    const deploymentIds = ctx.user.roleBindings.map(rb =>
-      rb.deployment ? rb.deployment.id : null
-    );
-    query.where.AND.push({ id_in: compact(deploymentIds) });
+    const deploymentIds = new Set();
+    const workspaceIds = new Set();
+    for (let rb of ctx.user.roleBindings) {
+      if (
+        rb.deployment &&
+        hasPermission(ctx.user, "deployment.config.get", rb.deployment)
+      ) {
+        deploymentIds.add(rb.deployment.id);
+      } else if (
+        rb.workspace &&
+        hasPermission(ctx.user, "workspace.deployments.list", rb.workspace)
+      ) {
+        workspaceIds.add(rb.workspace.id);
+      }
+    }
+    const workspaceTerm = {
+      OR: [...workspaceIds].map(id => {
+        return { workspace: { id } };
+      })
+    };
+    if (deploymentIds.size && workspaceTerm.OR.length) {
+      query.where = {
+        OR: [{ id_in: [...deploymentIds] }, ...workspaceTerm.OR]
+      };
+    } else if (workspaceTerm.OR.length) {
+      query.where = workspaceTerm;
+    } else {
+      query.where.AND.push({ id_in: [...deploymentIds] });
+    }
   }
 
   // Return the final query.

@@ -1,10 +1,9 @@
 import { prisma } from "generated/client";
-import { hasPermission, getAuthUser } from "rbac";
+import { hasPermission, getAuthUser, fragments } from "rbac";
 import log from "logger";
 import { createDockerJWT } from "registry/jwt";
 import validateDeploymentCredentials from "deployments/validate/authorization";
 import { compact, first, isArray } from "lodash";
-import { ENTITY_DEPLOYMENT } from "constants";
 
 // List of expected registry codes.
 const REGISTRY_CODES = {
@@ -84,15 +83,12 @@ export default async function(req, res) {
     // This path is for a code push.
     if (!isDeployment) {
       // Look up deploymentId by releaseName.
-      const deploymentId = await prisma.deployment({ releaseName }).id();
+      const deployment = await prisma
+        .deployment({ releaseName })
+        .$fragment(fragments.deployment);
 
       // Check if the User or Service Account has permission to update this deployment.
-      const allowed = hasPermission(
-        user,
-        "deployment.images.push",
-        ENTITY_DEPLOYMENT.toLowerCase(),
-        deploymentId
-      );
+      const allowed = hasPermission(user, "deployment.images.push", deployment);
 
       // If not allowed, return access denied message.
       if (!allowed) {

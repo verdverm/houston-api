@@ -1,8 +1,12 @@
 import fragment from "./fragment";
-import { serviceAccountRoleMappings } from "rbac";
-import { PermissionError } from "errors";
-import { compact, includes } from "lodash";
+import {
+  serviceAccountRoleMappings,
+  checkPermission,
+  fragments as rbacFragments
+} from "rbac";
 import { addFragmentToInfo } from "graphql-binding";
+import { UserInputError } from "apollo-server";
+import { ENTITY_DEPLOYMENT, ENTITY_WORKSPACE } from "constants";
 import crypto from "crypto";
 
 /*
@@ -19,16 +23,24 @@ export default async function createServiceAccount(parent, args, ctx, info) {
   const { label, category, entityType: upperEntityType, entityUuid } = args;
   const entityType = upperEntityType.toLowerCase();
 
-  // Get a list of ids of entityType that this user has access to.
-  const ids = compact(
-    ctx.user.roleBindings.map(binding =>
-      binding[entityType] ? binding[entityType].id : null
-    )
-  );
-
-  // Throw error if the incoming entityId is not in the list of ids for this user.
-  if (entityUuid && !includes(ids, entityUuid)) {
-    throw new PermissionError();
+  let entity;
+  switch (upperEntityType) {
+    case ENTITY_DEPLOYMENT:
+      entity = await ctx.db.query.deployment(
+        { where: { id: entityUuid } },
+        rbacFragments.deployment
+      );
+      checkPermission(ctx.user, "deployment.serviceAccounts.create", entity);
+      break;
+    case ENTITY_WORKSPACE:
+      entity = await ctx.db.query.workspace(
+        { where: { id: entityUuid } },
+        rbacFragments.workspace
+      );
+      checkPermission(ctx.user, "workspace.serviceAccounts.create", entity);
+      break;
+    default:
+      throw new UserInputError(`Unsupported entityType "${upperEntityType}"`);
   }
 
   // Create the base mutation.

@@ -65,7 +65,7 @@ const mutation = `
 `;
 
 describe("createDeployment", () => {
-  describe("typical request", async () => {
+  describe("typical request", () => {
     let user,
       deploymentId,
       createDeployment,

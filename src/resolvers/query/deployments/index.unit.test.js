@@ -5,6 +5,13 @@ import { graphql } from "graphql";
 import { makeExecutableSchema } from "graphql-tools";
 import { importSchema } from "graphql-import";
 
+import {
+  DEPLOYMENT_VIEWER,
+  DEPLOYMENT_EDITOR,
+  WORKSPACE_EDITOR,
+  WORKSPACE_VIEWER
+} from "constants";
+
 // Import our application schema
 const schema = makeExecutableSchema({
   typeDefs: importSchema("src/schema.graphql"),
@@ -41,7 +48,9 @@ describe("deployments", () => {
   test("typical request is successful", async () => {
     const user = {
       id: casual.uuid,
-      roleBindings: [{ deployment: { id: casual.uuid } }]
+      roleBindings: [
+        { deployment: { id: casual.uuid, __typename: "Deployment" } }
+      ]
     };
 
     // Mock up some db functions.
@@ -109,14 +118,25 @@ describe("deploymentsQuery", () => {
   test("correctly falls back if no arguments are provided", async () => {
     const deploymentId1 = casual.uuid;
     const deploymentId2 = casual.uuid;
+    const deploymentId3 = casual.uuid;
 
     const args = {};
 
     const user = {
       id: casual.uuid,
       roleBindings: [
-        { deployment: { id: deploymentId1 } },
-        { deployment: { id: deploymentId2 } }
+        {
+          deployment: { id: deploymentId1, __typename: "Deployment" },
+          role: DEPLOYMENT_VIEWER
+        },
+        {
+          deployment: { id: deploymentId2, __typename: "Deployment" },
+          role: DEPLOYMENT_EDITOR
+        },
+        {
+          deployment: { id: deploymentId3, __typename: "Deployment" },
+          role: "FAKE_ROLE"
+        }
       ]
     };
 
@@ -132,5 +152,111 @@ describe("deploymentsQuery", () => {
       deploymentId1,
       deploymentId2
     ]);
+  });
+
+  test("includes workspaces and deployments when no args provided", async () => {
+    const deploymentId1 = casual.uuid;
+    const deploymentId2 = casual.uuid;
+    const deploymentId3 = casual.uuid;
+    const workspaceId1 = casual.uuid;
+    const workspaceId2 = casual.uuid;
+    const workspaceId3 = casual.uuid;
+
+    const args = {};
+
+    const user = {
+      id: casual.uuid,
+      roleBindings: [
+        {
+          deployment: { id: deploymentId1, __typename: "Deployment" },
+          role: DEPLOYMENT_VIEWER
+        },
+        {
+          deployment: { id: deploymentId2, __typename: "Deployment" },
+          role: DEPLOYMENT_EDITOR
+        },
+        {
+          deployment: { id: deploymentId3, __typename: "Deployment" },
+          role: "FAKE_ROLE"
+        },
+        {
+          workspace: { id: workspaceId1, __typename: "Workspace" },
+          role: WORKSPACE_EDITOR
+        },
+        {
+          workspace: { id: workspaceId2, __typename: "Workspace" },
+          role: WORKSPACE_EDITOR
+        },
+        {
+          workspace: { id: workspaceId3, __typename: "Workspace" },
+          role: WORKSPACE_VIEWER
+        }
+      ]
+    };
+
+    // Build context.
+    const ctx = { user };
+
+    // Run the graphql mutation.
+    const query = deploymentsQuery(args, ctx);
+
+    expect(query).toHaveProperty("where.OR");
+    expect(query.where.OR).toHaveLength(3);
+    expect(query.where).toHaveProperty("OR.0.id_in", [
+      deploymentId1,
+      deploymentId2
+    ]);
+    expect(query.where).toHaveProperty("OR.1", {
+      workspace: { id: workspaceId1 }
+    });
+    expect(query.where).toHaveProperty("OR.2", {
+      workspace: { id: workspaceId2 }
+    });
+  });
+
+  test("includes workspaces when no args provided", async () => {
+    const deploymentId1 = casual.uuid;
+    const workspaceId1 = casual.uuid;
+    const workspaceId2 = casual.uuid;
+    const workspaceId3 = casual.uuid;
+
+    const args = {};
+
+    const user = {
+      id: casual.uuid,
+      roleBindings: [
+        {
+          deployment: { id: deploymentId1, __typename: "Deployment" },
+          role: "FAKE_ROLE"
+        },
+        {
+          workspace: { id: workspaceId1, __typename: "Workspace" },
+          role: WORKSPACE_EDITOR
+        },
+        {
+          workspace: { id: workspaceId2, __typename: "Workspace" },
+          role: WORKSPACE_EDITOR
+        },
+        {
+          workspace: { id: workspaceId3, __typename: "Workspace" },
+          role: WORKSPACE_VIEWER
+        }
+      ]
+    };
+
+    // Build context.
+    const ctx = { user };
+
+    // Run the graphql mutation.
+    const query = deploymentsQuery(args, ctx);
+
+    expect(query).toHaveProperty("where.OR");
+    expect(query.where.OR).toHaveLength(2);
+    expect(query.where).toHaveProperty("OR.0", {
+      workspace: { id: workspaceId1 }
+    });
+    expect(query.where).toHaveProperty("OR.1", {
+      workspace: { id: workspaceId2 }
+    });
   });
 });

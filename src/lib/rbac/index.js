@@ -1,18 +1,17 @@
-import userFragment from "./user-fragment";
-import serviceAccountFragment from "./service-account-fragment";
+import * as fragments from "./fragments";
 import { decodeJWT } from "jwt";
 import { PermissionError } from "errors";
 import { prisma } from "generated/client";
-import { filter, find, flatten, includes, map, size } from "lodash";
+import { find, includes, size } from "lodash";
 import config from "config";
 import {
   ENTITY_DEPLOYMENT,
   ENTITY_WORKSPACE,
-  DEPLOYMENT_ADMIN,
   DEPLOYMENT_EDITOR,
-  WORKSPACE_ADMIN,
   WORKSPACE_EDITOR
 } from "constants";
+
+export { fragments };
 
 // Mapping of entityTypes to role.
 export const serviceAccountRoleMappings = {
@@ -24,8 +23,9 @@ export const serviceAccountRoleMappings = {
  * Check if the user has the given permission for the entity.
  * @param {Object} user The current user.
  * @param {String} permission The required permission.
+ * @param {Object} entity Entity to restrict access to. Must have a `__typename` field
  */
-export function hasPermission(user, permission, entityType, entityId) {
+export function hasPermission(user, permission, entity) {
   // If user is falsy, immediately fail.
   if (!user) return false;
 
@@ -35,24 +35,43 @@ export function hasPermission(user, permission, entityType, entityId) {
   // If we're looking for a system permission, return if user has it.
   if (systemPermission) return hasSystemPermission(user, permission);
 
-  // If we don't have both of these, return false from here.
-  if (!entityType || !entityId) return false;
+  if (!entity) return false;
+  if (!entity.__typename || !entity.id)
+    // This shouldn't happen - this is a logic error!
+    throw new Error(
+      "Missing id or __typename property on entity to hasPermission"
+    );
 
-  // Otherwise we have to ensure the user has access to the entity.
-  const binding = find(user.roleBindings, binding => {
-    // Return true if we're looking for a scoped permission,
-    // and this binding has the entity type we're interested
-    // in and the id matches.
-    const hasEntity = !!binding[entityType];
-    return hasEntity && binding[entityType].id === entityId;
+  const entityType = entity.__typename.toLowerCase();
+
+  const [parentType, parentId] = getParentEntity(entity);
+
+  const roles = config.get("roles");
+
+  // Check if the user has the required permission on the entity, or the
+  // permission from the parent entity. For example the WORKSPACE_EDITOR role
+  // has "deployment.airflow.user" which grants that permission on all
+  // deployments in the workspace.
+  return !!find(user.roleBindings, binding => {
+    // Since the user might have a role binding to the deployment and workspace
+    // we need to check each binding as we find it.
+    if (
+      (binding[entityType] && binding[entityType].id === entity.id) ||
+      (binding[parentType] && binding[parentType].id === parentId)
+    ) {
+      const role = find(roles, { id: binding.role });
+      return role && permission in role.permissions;
+    }
   });
+}
 
-  // If we didn't find a roleBinding, return false.
-  if (!binding) return false;
-
-  // Otherwise return if this role has an appropriate permission.
-  const role = find(config.get("roles"), { id: binding.role });
-  return includes(role.permissions, permission);
+export function getParentEntity(entity) {
+  switch (entity.__typename.toLowerCase()) {
+    case ENTITY_DEPLOYMENT:
+      return [ENTITY_WORKSPACE, entity.workspace.id];
+    default:
+      return [null, null];
+  }
 }
 
 /*
@@ -62,14 +81,12 @@ export function hasPermission(user, permission, entityType, entityId) {
  * @param {Boolean} If the user has the system permission.
  */
 export function hasSystemPermission(user, permission) {
-  const permissions = flatten(
+  return !!find(
     user.roleBindings.map(binding => {
       const role = find(config.get("roles"), { id: binding.role });
-      return filter(role.permissions, p => p.startsWith("system"));
+      return permission in role.permissions;
     })
   );
-
-  return includes(permissions, permission);
 }
 
 /*
@@ -77,9 +94,10 @@ export function hasSystemPermission(user, permission) {
  * Throws if the user does not have permission.
  * @param {Object} user The current user.
  * @param {String} permission The required permission.
+ * @param {Object} entity Entity to restrict access to
  */
-export function checkPermission(user, permission, entityType, entityId) {
-  if (!hasPermission(user, permission, entityType, entityId)) {
+export function checkPermission(user, permission, entity) {
+  if (!hasPermission(user, permission, entity)) {
     throw new PermissionError();
   }
 }
@@ -90,7 +108,7 @@ export function checkPermission(user, permission, entityType, entityId) {
  * @return {Promise<Object>} The User object with RoleBindings.
  */
 export function getUserWithRoleBindings(id) {
-  return prisma.user({ id }).$fragment(userFragment);
+  return prisma.user({ id }).$fragment(fragments.user);
 }
 
 /* Get a ServiceAccount that has the required information to make
@@ -102,7 +120,7 @@ export async function getServiceAccountWithRoleBindings(apiKey) {
   // Get the Service Account by API Key.
   const serviceAccount = await prisma
     .serviceAccount({ apiKey })
-    .$fragment(serviceAccountFragment);
+    .$fragment(fragments.serviceAccount);
 
   // Return early if we didn't find a service account.
   if (!serviceAccount) return;
@@ -138,9 +156,7 @@ export async function getAuthUser(authorization) {
 
   // If we do have a service account, set it as the user on the context.
   if (isServiceAcct) {
-    return await addDeploymentRoleBindings(
-      getServiceAccountWithRoleBindings(authorization)
-    );
+    return await getServiceAccountWithRoleBindings(authorization);
   }
 
   // Decode the JWT.
@@ -148,54 +164,5 @@ export async function getAuthUser(authorization) {
 
   // If we have a userId, set the user on the session,
   // otherwise return nothing.
-  if (uuid)
-    return await addDeploymentRoleBindings(getUserWithRoleBindings(uuid));
+  if (uuid) return await getUserWithRoleBindings(uuid);
 }
-
-/*
- * TODO: Remove me and the two references to me right above when
- * deployment level RBAC is in place.
- * This function wraps the two calls above to append fake roleBindings
- * to the user object for any deployments that belong to workspaces where
- * the user has WORKSPACE_ADMIN role.
- * @param {Promise} promise A proimse for a user or service account.
- * @return {Object} The user object with roleBindings.
- */
-async function addDeploymentRoleBindings(promise) {
-  // Resolve the promise for user/service account.
-  const user = await promise;
-  if (!user) return;
-
-  // Get the list of workspace ids where user is admin.
-  const workspaceIds = map(
-    filter(user.roleBindings, rb => rb.role === WORKSPACE_ADMIN),
-    "workspace.id"
-  );
-
-  // Get the deployments that are under any of our workspaces.
-  const deployments = await prisma
-    .deployments({
-      where: { workspace: { id_in: workspaceIds } }
-    })
-    .id();
-
-  // Generate fake rolebindings for deployment level admin.
-  const roleBindings = map(deployments, deployment => ({
-    role: DEPLOYMENT_ADMIN,
-    workspace: null,
-    deployment: { id: deployment.id }
-  }));
-
-  // Return a modified user, spreading existing rolebindings, with new fake ones.
-  return { ...user, roleBindings: [...user.roleBindings, ...roleBindings] };
-}
-
-// /* If the passed argument is a string, lookup the user by id.
-//  * Otherwise use the user.id to get the user, with RoleBindings.
-//  * @param {String|Object} user The user object or id.
-//  * @return {Promise<Object} The user object with RoleBindings.
-//  */
-// export function ensureUserRoleBindings(user) {
-//   if (isString(user)) return getUserWithRoleBindings(user);
-//   return getUserWithRoleBindings(user.id);
-// }

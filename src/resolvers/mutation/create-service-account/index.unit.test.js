@@ -40,29 +40,31 @@ const mutation = `
 `;
 
 describe("createServiceAccount", () => {
+  const workspaceId = casual.uuid;
+
+  // Create mock user.
+  const user = {
+    id: casual.uuid,
+    username: casual.email,
+    roleBindings: [
+      {
+        role: WORKSPACE_ADMIN,
+        workspace: { id: workspaceId, __typename: "Workspace" }
+      }
+    ]
+  };
+
+  // Create mock function.
+  const createServiceAccount = jest.fn();
+
+  // Construct db object for context.
+  const db = {
+    mutation: { createServiceAccount },
+    query: {
+      workspace: jest.fn()
+    }
+  };
   test("typical request is successful", async () => {
-    const workspaceId = casual.uuid;
-
-    // Create mock user.
-    const user = {
-      id: casual.uuid,
-      username: casual.email,
-      roleBindings: [
-        {
-          role: WORKSPACE_ADMIN,
-          workspace: { id: workspaceId }
-        }
-      ]
-    };
-
-    // Create mock function.
-    const createServiceAccount = jest.fn();
-
-    // Construct db object for context.
-    const db = {
-      mutation: { createServiceAccount }
-    };
-
     // Create variables.
     const vars = {
       label: casual.word,
@@ -70,6 +72,7 @@ describe("createServiceAccount", () => {
       entityType: ENTITY_WORKSPACE,
       entityUuid: workspaceId
     };
+    db.query.workspace.mockReturnValueOnce(user.roleBindings[0].workspace);
 
     // Run the graphql mutation.
     const res = await graphql(schema, mutation, null, { db, user }, vars);
@@ -79,26 +82,7 @@ describe("createServiceAccount", () => {
   });
 
   test("error is thrown if passing entityUuid and does not have access", async () => {
-    // Create mock user.
-    const user = {
-      id: casual.uuid,
-      username: casual.email,
-      roleBindings: [
-        {
-          role: WORKSPACE_ADMIN,
-          workspace: { id: casual.uuid }
-        }
-      ]
-    };
-
-    // Create mock function.
-    const createServiceAccount = jest.fn();
-
-    // Construct db object for context.
-    const db = {
-      mutation: { createServiceAccount }
-    };
-
+    db.query.workspace.mockReturnValueOnce(null);
     // Create variables.
     const vars = {
       label: casual.word,
