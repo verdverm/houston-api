@@ -48,7 +48,7 @@ describe("serviceAccounts", () => {
       roleBindings: [
         {
           role: WORKSPACE_ADMIN,
-          workspace: { id: workspaceId }
+          workspace: { id: workspaceId, __typename: "Workspace" }
         }
       ]
     };
@@ -58,7 +58,10 @@ describe("serviceAccounts", () => {
 
     // Construct db object for context.
     const db = {
-      query: { serviceAccounts }
+      query: {
+        serviceAccounts,
+        workspace: jest.fn().mockReturnValue(user.roleBindings[0].workspace)
+      }
     };
 
     const vars = {
@@ -93,10 +96,12 @@ describe("serviceAccounts", () => {
       roleBindings: [
         {
           role: WORKSPACE_ADMIN,
-          workspace: { id: casual.uuid }
+          workspace: { id: casual.uuid, __typename: "Workspace" }
         }
       ]
     };
+
+    const db = { query: { workspace: jest.fn() } };
 
     const vars = {
       entityType: ENTITY_WORKSPACE,
@@ -104,7 +109,7 @@ describe("serviceAccounts", () => {
     };
 
     // Run the graphql mutation.
-    const res = await graphql(schema, query, null, { user }, vars);
+    const res = await graphql(schema, query, null, { user, db }, vars);
     expect(res.errors).toHaveLength(1);
     expect(res.errors[0].message).toEqual(
       expect.stringMatching(/^You do not have the appropriate permissions/)

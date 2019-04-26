@@ -35,7 +35,7 @@ describe("deleteServiceAccount", () => {
       roleBindings: [
         {
           role: WORKSPACE_ADMIN,
-          workspace: { id: workspaceId }
+          workspace: { id: workspaceId, __typename: "Workspace" }
         }
       ]
     };
@@ -43,7 +43,7 @@ describe("deleteServiceAccount", () => {
     // Mock up some db functions.
     const serviceAccount = jest.fn().mockReturnValue({
       id: casual.id,
-      roleBinding: { workspace: { id: workspaceId } }
+      roleBinding: { workspace: { id: workspaceId, __typename: "Workspace" } }
     });
 
     const deleteServiceAccount = jest.fn();
@@ -75,7 +75,7 @@ describe("deleteServiceAccount", () => {
       roleBindings: [
         {
           role: WORKSPACE_ADMIN,
-          workspace: { id: workspaceId }
+          workspace: { id: workspaceId, __typename: "Workspace" }
         }
       ]
     };
@@ -109,7 +109,7 @@ describe("deleteServiceAccount", () => {
       roleBindings: [
         {
           role: WORKSPACE_ADMIN,
-          workspace: { id: casual.uuid }
+          workspace: { id: casual.uuid, __typename: "Workspace" }
         }
       ]
     };
@@ -117,7 +117,7 @@ describe("deleteServiceAccount", () => {
     // Mock up some db functions.
     const serviceAccount = jest.fn().mockReturnValue({
       id: casual.id,
-      roleBinding: { workspace: { id: casual.uuid } }
+      roleBinding: { workspace: { id: casual.uuid, __typename: "Workspace" } }
     });
 
     const deleteServiceAccount = jest.fn();

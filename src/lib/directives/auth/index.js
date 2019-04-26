@@ -1,8 +1,8 @@
 import { PermissionError } from "errors";
+import { prisma } from "generated/client";
 import * as rbac from "rbac";
 import { SchemaDirectiveVisitor } from "graphql-tools";
 import { defaultFieldResolver } from "graphql";
-import { ENTITY_WORKSPACE, ENTITY_DEPLOYMENT } from "constants";
 
 /*
  * Directive to enforce authentication and authorization
@@ -16,6 +16,24 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
 
     this.checkPermission = checkPermission;
   }
+
+  async permissionedEntity(args) {
+    // Check for standard scope defining variables.
+    const { workspaceUuid, deploymentUuid } = args[1];
+
+    // Determine the entityType from args.
+    if (workspaceUuid) {
+      return await prisma
+        .workspace({ id: workspaceUuid })
+        .$fragment(rbac.fragments.workspace);
+    } else if (deploymentUuid) {
+      return await prisma
+        .deployment({ id: deploymentUuid })
+        .$fragment(rbac.fragments.deployment);
+    }
+    return null;
+  }
+
   visitObject() {}
 
   // Visitor methods for nested types like fields and arguments
@@ -50,25 +68,10 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
       // If this instance of the directive is specifying a permission,
       // check it. Otherwise, skip this part.
       if (permission) {
-        // Check for standard scope defining variables.
-        const { workspaceUuid, deploymentUuid } = args[1];
-
-        // Determine the entityType from args.
-        const entityType = workspaceUuid
-          ? ENTITY_WORKSPACE.toLowerCase()
-          : deploymentUuid
-          ? ENTITY_DEPLOYMENT.toLowerCase()
-          : null;
-
-        // Determine the entityId from args.
-        const entityId = workspaceUuid
-          ? workspaceUuid
-          : deploymentUuid
-          ? deploymentUuid
-          : null;
+        const entity = await this.permissionedEntity(args);
 
         // Check permission, throw if not authorized.
-        this.checkPermission(ctx.user, permission, entityType, entityId);
+        this.checkPermission(ctx.user, permission, entity);
       }
 
       // Execute the actual request.

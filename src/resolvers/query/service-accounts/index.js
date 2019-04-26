@@ -1,6 +1,7 @@
 import fragment from "./fragment";
-import { PermissionError, MissingArgumentError } from "errors";
-import { compact, includes } from "lodash";
+import { checkPermission, fragments as rbacFragments } from "rbac";
+import { MissingArgumentError } from "errors";
+import { findKey } from "lodash";
 import { addFragmentToInfo } from "graphql-binding";
 
 /*
@@ -23,39 +24,27 @@ export default async function serviceAccounts(parent, args, ctx, info) {
     throw new MissingArgumentError("serviceAccountUuid or entityUuid");
   }
 
-  // Get a list of ids of entityType that this user has access to.
-  const ids = compact(
-    ctx.user.roleBindings.map(binding =>
-      binding[entityType] ? binding[entityType].id : null
-    )
-  );
-
   // Build query structure.
-  const query = { where: { AND: [] } };
+  const query = { where: {} };
 
-  // If we have service account id, add to filter, along with
-  // a roleBinding filter to the ones the user has access to.
   if (serviceAccountUuid) {
-    query.where.AND.push({
-      id: serviceAccountUuid,
-      roleBinding: {
-        [entityType]: { id_in: ids }
-      }
-    });
-  }
+    // Get the SA object, then check permissions on it
+    const sa = ctx.db.serviceAccount(
+      { where: { id: serviceAccountUuid } },
+      rbacFragments.serviceAccount
+    );
+    const entity = findKey(sa.roleBinding);
+    checkPermission(ctx.user, `${entityType}.serviceAccounts.list`, entity);
 
-  // Throw an error if the entityUuid is not in the list of ids.
-  if (entityUuid && !includes(ids, entityUuid)) {
-    throw new PermissionError();
-  }
+    query.where = { id: serviceAccountUuid };
+  } else {
+    const entity = await ctx.db.query[entityType](
+      { where: { id: entityUuid } },
+      rbacFragments[entityType] //eslint-disable-line import/namespace
+    );
+    checkPermission(ctx.user, `${entityType}.serviceAccounts.list`, entity);
 
-  // If we have entityUuid, add to filter.
-  if (entityUuid) {
-    query.where.AND.push({
-      roleBinding: {
-        [entityType]: { id: entityUuid }
-      }
-    });
+    query.where = { [entityType]: { id: entityUuid } };
   }
 
   // Run final query

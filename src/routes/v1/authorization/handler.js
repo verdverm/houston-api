@@ -1,8 +1,7 @@
-import { hasPermission } from "rbac";
+import { hasPermission, fragments } from "rbac";
 import { prisma } from "generated/client";
 import log from "logger";
 import { createJWT } from "jwt";
-import { ENTITY_DEPLOYMENT } from "constants";
 import url from "url";
 
 /*
@@ -21,7 +20,10 @@ export default async function(req, res) {
 
   // If we're accessing a monitoring service and we have permission, allow it.
   const monitoringSubdomain = /^(grafana|kibana)$/.test(subdomain);
-  if (monitoringSubdomain && hasPermission(user, "system.monitoring.view")) {
+  if (
+    monitoringSubdomain &&
+    (await hasPermission(user, "system.monitoring.view"))
+  ) {
     log.info(`Authorizing request to ${originalUrl}`);
     return res.sendStatus(200);
   }
@@ -30,12 +32,12 @@ export default async function(req, res) {
   const matches = subdomain.match(/^([\w]+-[\w]+-[\d]+)-(airflow|flower)$/);
   if (matches) {
     // Get the deploymentId for the parsed releaseName.
-    const deploymentId = await prisma
+    const deployment = await prisma
       .deployment({ releaseName: matches[1] })
-      .id();
+      .$fragment(fragments.deployment);
 
     // Check if we have deployment level access to it.
-    const airflowRoles = mapLocalRolesToAirflow(user, deploymentId);
+    const airflowRoles = mapLocalRolesToAirflow(user, deployment);
 
     // If we have permission, authorize it.
     if (airflowRoles.length > 0) {
@@ -63,13 +65,11 @@ export function airflowJWT(user, roles, hostname) {
   return token;
 }
 
-export function mapLocalRolesToAirflow(user, deploymentId) {
-  const entityType = ENTITY_DEPLOYMENT.toLowerCase();
-  if (hasPermission(user, "deployment.airflow.op", entityType, deploymentId))
-    return ["Op"];
-  if (hasPermission(user, "deployment.airflow.user", entityType, deploymentId))
+export function mapLocalRolesToAirflow(user, deployment) {
+  if (hasPermission(user, "deployment.airflow.op", deployment)) return ["Op"];
+  if (hasPermission(user, "deployment.airflow.user", deployment))
     return ["User"];
-  if (hasPermission(user, "deployment.airflow.view", entityType, deploymentId))
+  if (hasPermission(user, "deployment.airflow.view", deployment))
     return ["Viewer"];
 
   return [];

@@ -43,7 +43,8 @@ const resolvers = {
   }
 };
 
-const mockCheckPerms = jest.fn();
+const mockCheckPerms = jest.fn(),
+  mockPermissionedEntity = jest.fn();
 
 // A Test class that uses a mock checkPermissions to ease testing
 class TestingAuthDirective extends AuthDirective {
@@ -51,6 +52,8 @@ class TestingAuthDirective extends AuthDirective {
     args.checkPermission = mockCheckPerms;
     super(args);
   }
+
+  permissionedEntity = mockPermissionedEntity;
 }
 
 let schema;
@@ -149,8 +152,7 @@ describe("@auth directive", () => {
       expect(mockCheckPerms).toHaveBeenCalledWith(
         { roleBinding: [{ role: "admin" }] },
         "system.fake.permission",
-        null,
-        null
+        undefined
       );
     });
 
@@ -165,8 +167,7 @@ describe("@auth directive", () => {
       expect(mockCheckPerms).toHaveBeenCalledWith(
         expect.anything(),
         "system.fake.permission",
-        null,
-        null
+        undefined
       );
     });
   });
@@ -180,13 +181,15 @@ describe("@auth directive", () => {
 
     test("should check the permissions for the specific entity", async () => {
       let vars = { id: "d-2" };
+      let d = { id: vars.id, __typename: "Deployment" };
+      mockPermissionedEntity.mockImplementationOnce(async () => d);
+
       const { errors } = await runQuery(query, { auth: true }, vars);
       expect(errors).toBeUndefined();
       expect(mockCheckPerms).toHaveBeenCalledWith(
         expect.anything(),
         "deployment.fake.permission",
-        "deployment",
-        vars.id
+        d
       );
     });
   });
@@ -200,13 +203,15 @@ describe("@auth directive", () => {
 
     test("should check the permissions for the specific entity", async () => {
       let vars = { id: "w-2" };
+      let ws = { id: vars.id, __typename: "Workspace" };
+      mockPermissionedEntity.mockImplementationOnce(async () => ws);
+
       const { errors } = await runQuery(query, { auth: true }, vars);
       expect(errors).toBeUndefined();
       expect(mockCheckPerms).toHaveBeenCalledWith(
         expect.anything(),
         "workspace.fake.permission",
-        "workspace",
-        vars.id
+        ws
       );
     });
   });
