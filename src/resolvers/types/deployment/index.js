@@ -28,7 +28,7 @@ export function urls(parent) {
   const urls = [
     {
       type: `airflow`,
-      url: `https://${releaseName}-airflow.${baseDomain}/admin`
+      url: `https://${releaseName}-airflow.${baseDomain}/`
     }
   ];
 
