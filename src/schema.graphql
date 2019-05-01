@@ -99,6 +99,7 @@ type User {
   profile: [UserProp!]!
   createdAt: DateTime!
   updatedAt: DateTime!
+  roleBindings: [RoleBinding!]
 }
 
 type Workspace {
@@ -114,6 +115,7 @@ type Workspace {
   deploymentCount: Int
   createdAt: DateTime!
   updatedAt: DateTime!
+  roleBindings: [RoleBinding!]
 }
 
 type DeploymentConfig {
@@ -166,6 +168,7 @@ type Deployment {
   workspace: Workspace
   createdAt: DateTime!
   updatedAt: DateTime!
+  roleBindings: [RoleBinding!]
 }
 
 type ServiceAccount {
@@ -180,6 +183,7 @@ type ServiceAccount {
   lastUsedAt: DateTime
   createdAt: DateTime!
   updatedAt: DateTime!
+  roleBinding: RoleBinding!
 }
 
 type DeploymentLog {
