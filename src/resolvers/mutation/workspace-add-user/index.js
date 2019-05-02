@@ -2,9 +2,10 @@ import fragment from "./fragment";
 import { UserInviteExistsError } from "errors";
 import { orbit } from "utilities";
 import { sendEmail } from "emails";
+import { UserInputError } from "apollo-server";
 import shortid from "shortid";
 import { addFragmentToInfo } from "graphql-binding";
-import { WORKSPACE_ADMIN } from "constants";
+import { ENTITY_WORKSPACE } from "constants";
 
 /*
  * Add a user to a workspace.
@@ -15,7 +16,7 @@ import { WORKSPACE_ADMIN } from "constants";
  */
 export default async function workspaceAddUser(parent, args, ctx, info) {
   // Pull out some args.
-  const { email, workspaceUuid } = args;
+  const { email, workspaceUuid, role } = args;
 
   // Check for user by incoming email arg.
   const emailRow = await ctx.db.query.email(
@@ -23,13 +24,16 @@ export default async function workspaceAddUser(parent, args, ctx, info) {
     `{ user { id } }`
   );
 
+  if (!role.startsWith(`${ENTITY_WORKSPACE}_`))
+    throw new UserInputError("invalid workspace role");
+
   const user = emailRow ? emailRow.user : null;
 
   // If we already have a user, create the role binding to the workspace.
   if (user) {
     await ctx.db.mutation.createRoleBinding({
       data: {
-        role: WORKSPACE_ADMIN,
+        role,
         user: { connect: { id: user.id } },
         workspace: { connect: { id: workspaceUuid } }
       }
@@ -53,6 +57,7 @@ export default async function workspaceAddUser(parent, args, ctx, info) {
         data: {
           email,
           token,
+          role,
           workspace: { connect: { id: workspaceUuid } }
         }
       },

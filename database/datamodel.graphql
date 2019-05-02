@@ -68,6 +68,11 @@ type InviteToken {
   email: String!
   token: String! @unique
   workspace: Workspace!
+
+  # This should be required but Prisma won't set default values when creating the column so this will fail.
+  # https://github.com/prisma/prisma/issues/3408 adds `@default` that should help us.
+  role: Role
+
   createdAt: DateTime!
   updatedAt: DateTime!
 }

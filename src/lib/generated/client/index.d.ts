@@ -589,6 +589,8 @@ export type InviteTokenOrderByInput =
   | "email_DESC"
   | "token_ASC"
   | "token_DESC"
+  | "role_ASC"
+  | "role_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -1304,6 +1306,10 @@ export interface InviteTokenWhereInput {
   token_ends_with?: String;
   token_not_ends_with?: String;
   workspace?: WorkspaceWhereInput;
+  role?: Role;
+  role_not?: Role;
+  role_in?: Role[] | Role;
+  role_not_in?: Role[] | Role;
   createdAt?: DateTimeInput;
   createdAt_not?: DateTimeInput;
   createdAt_in?: DateTimeInput[] | DateTimeInput;
@@ -1503,6 +1509,7 @@ export interface InviteTokenCreateManyWithoutWorkspaceInput {
 export interface InviteTokenCreateWithoutWorkspaceInput {
   email: String;
   token: String;
+  role?: Role;
 }
 
 export interface WorkspaceCreateOneWithoutDeploymentsInput {
@@ -2125,6 +2132,7 @@ export interface InviteTokenUpdateWithWhereUniqueWithoutWorkspaceInput {
 export interface InviteTokenUpdateWithoutWorkspaceDataInput {
   email?: String;
   token?: String;
+  role?: Role;
 }
 
 export interface InviteTokenUpsertWithWhereUniqueWithoutWorkspaceInput {
@@ -2176,6 +2184,10 @@ export interface InviteTokenScalarWhereInput {
   token_not_starts_with?: String;
   token_ends_with?: String;
   token_not_ends_with?: String;
+  role?: Role;
+  role_not?: Role;
+  role_in?: Role[] | Role;
+  role_not_in?: Role[] | Role;
   createdAt?: DateTimeInput;
   createdAt_not?: DateTimeInput;
   createdAt_in?: DateTimeInput[] | DateTimeInput;
@@ -2205,6 +2217,7 @@ export interface InviteTokenUpdateManyWithWhereNestedInput {
 export interface InviteTokenUpdateManyDataInput {
   email?: String;
   token?: String;
+  role?: Role;
 }
 
 export interface WorkspaceUpsertWithoutRoleBindingsInput {
@@ -2470,6 +2483,7 @@ export interface InviteTokenCreateInput {
   email: String;
   token: String;
   workspace: WorkspaceCreateOneWithoutInvitesInput;
+  role?: Role;
 }
 
 export interface WorkspaceCreateOneWithoutInvitesInput {
@@ -2489,6 +2503,7 @@ export interface InviteTokenUpdateInput {
   email?: String;
   token?: String;
   workspace?: WorkspaceUpdateOneRequiredWithoutInvitesInput;
+  role?: Role;
 }
 
 export interface WorkspaceUpdateOneRequiredWithoutInvitesInput {
@@ -2514,6 +2529,7 @@ export interface WorkspaceUpsertWithoutInvitesInput {
 export interface InviteTokenUpdateManyMutationInput {
   email?: String;
   token?: String;
+  role?: Role;
 }
 
 export interface LocalCredentialCreateInput {
@@ -3300,6 +3316,7 @@ export interface InviteToken {
   id: ID_Output;
   email: String;
   token: String;
+  role?: Role;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -3309,6 +3326,7 @@ export interface InviteTokenPromise extends Promise<InviteToken>, Fragmentable {
   email: () => Promise<String>;
   token: () => Promise<String>;
   workspace: <T = WorkspacePromise>() => T;
+  role: () => Promise<Role>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
@@ -3320,6 +3338,7 @@ export interface InviteTokenSubscription
   email: () => Promise<AsyncIterator<String>>;
   token: () => Promise<AsyncIterator<String>>;
   workspace: <T = WorkspaceSubscription>() => T;
+  role: () => Promise<AsyncIterator<Role>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
@@ -4022,6 +4041,7 @@ export interface InviteTokenPreviousValues {
   id: ID_Output;
   email: String;
   token: String;
+  role?: Role;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -4032,6 +4052,7 @@ export interface InviteTokenPreviousValuesPromise
   id: () => Promise<ID_Output>;
   email: () => Promise<String>;
   token: () => Promise<String>;
+  role: () => Promise<Role>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
@@ -4042,6 +4063,7 @@ export interface InviteTokenPreviousValuesSubscription
   id: () => Promise<AsyncIterator<ID_Output>>;
   email: () => Promise<AsyncIterator<String>>;
   token: () => Promise<AsyncIterator<String>>;
+  role: () => Promise<AsyncIterator<Role>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }

@@ -64,7 +64,8 @@ type AuthConfig {
 type Invite {
   id: ID!
   uuid: Uuid @alias(field: "id")
-  assignments: String # Legacy field.
+  assignments: String @deprecated
+  role: Role!
   email: String
   token: String
   createdAt: DateTime!
@@ -332,6 +333,8 @@ type Mutation {
   workspaceAddUser(
     workspaceUuid: Uuid
     email: String!
+    # For backwards compatibility specify the previous behaviour as default value
+    role: Role! = WORKSPACE_ADMIN
   ): Workspace @auth(permission: "workspace.iam.update")
 
   workspaceRemoveUser(
