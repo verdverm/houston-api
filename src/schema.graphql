@@ -337,6 +337,12 @@ type Mutation {
     role: Role! = WORKSPACE_ADMIN
   ): Workspace @auth(permission: "workspace.iam.update")
 
+  workspaceUpdateUserRole(
+    workspaceUuid: Uuid!
+    email: String!
+    role: Role!
+  ): Role @auth(permission: "workspace.iam.update")
+
   workspaceRemoveUser(
     workspaceUuid: Uuid
     userUuid: Uuid

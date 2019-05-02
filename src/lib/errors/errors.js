@@ -27,7 +27,7 @@ export class InviteTokenEmailError extends ApolloError {
   }
 }
 
-export class ResourceNotFoundError extends Error {
+export class ResourceNotFoundError extends UserInputError {
   message = this.message || "The requested resource was not found";
 }
 
