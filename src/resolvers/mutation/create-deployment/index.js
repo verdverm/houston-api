@@ -110,7 +110,7 @@ export default async function createDeployment(parent, args, ctx, info) {
     release: platformReleaseName,
     workspace: args.workspaceUuid
   };
-  const values = { data, registry, elasticsearch, platform };
+  const values = { data, registry, elasticsearch, platform, airflowVersion };
 
   // Fire off createDeployment to commander.
   await ctx.commander.request("createDeployment", {
