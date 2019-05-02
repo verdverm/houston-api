@@ -32,12 +32,15 @@ export default async function createDeployment(parent, args, ctx, info) {
     releaseName: platformReleaseName
   } = config.get("helm");
 
+  // Grab the default airflow version.
+  const defaultAirflowVersion = config.get("deployments.defaultAirflowVersion");
+
   // Validate deployment args.
   await validate(args.workspaceUuid, args);
 
   // Default deployment version to platform version.
   const version = get(args, "version", platformReleaseVersion);
-  const airflowVersion = get(args, "airflowVersion", "1.10.2");
+  const airflowVersion = get(args, "airflowVersion", defaultAirflowVersion);
 
   // Generate a unique registry password for this deployment.
   const registryPassword = crypto.randomBytes(16).toString("hex");
