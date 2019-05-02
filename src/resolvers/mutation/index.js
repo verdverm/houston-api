@@ -18,6 +18,7 @@ import updateWorkspace from "./update-workspace";
 import upgradeDeployment from "./upgrade-deployment";
 import workspaceAddUser from "./workspace-add-user";
 import workspaceRemoveUser from "./workspace-remove-user";
+import workspaceUpdateUserRole from "./workspace-update-user-role";
 
 export default {
   confirmEmail,
@@ -39,5 +40,6 @@ export default {
   updateWorkspace,
   upgradeDeployment,
   workspaceAddUser,
-  workspaceRemoveUser
+  workspaceRemoveUser,
+  workspaceUpdateUserRole
 };

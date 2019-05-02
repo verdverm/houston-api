@@ -8,7 +8,12 @@ import {
 } from "errors";
 import config from "config";
 import casual from "casual";
-import { USER_STATUS_PENDING, USER_STATUS_ACTIVE } from "constants";
+import {
+  USER_STATUS_PENDING,
+  USER_STATUS_ACTIVE,
+  WORKSPACE_ADMIN,
+  WORKSPACE_EDITOR
+} from "constants";
 
 jest.mock("emails");
 
@@ -94,9 +99,14 @@ describe("userExports.createUser", () => {
     });
     test("creates an active user", async () => {
       const invite = casual.uuid;
+      const workspace = casual.uuid;
       const mockValidateInvite = jest
         .spyOn(userExports, "validateInviteToken")
-        .mockImplementation(() => ({ id: invite }));
+        .mockImplementation(() => ({
+          id: invite,
+          workspace: { id: workspace },
+          role: WORKSPACE_EDITOR
+        }));
 
       const opts = {
         user: casual.username,
@@ -105,15 +115,19 @@ describe("userExports.createUser", () => {
       };
 
       expect(await userExports.createUser(opts)).toBe(1);
-      expect(prismaCreateUser.mock.calls[0][0]).toHaveProperty(
-        "status",
-        USER_STATUS_ACTIVE
-      );
-      expect(prismaCreateUser.mock.calls[0][0]).toHaveProperty(
-        "emails.create.verified",
-        true
-      );
       expect(sendEmail).not.toHaveBeenCalled();
+      expect(prismaExports.prisma.deleteInviteToken).toHaveBeenCalled();
+
+      const createData = prismaCreateUser.mock.calls[0][0];
+      expect(createData).toHaveProperty("status", USER_STATUS_ACTIVE);
+      expect(createData).toHaveProperty("emails.create.verified", true);
+      expect(createData).toHaveProperty("roleBindings.create");
+      const roleBindings = createData.roleBindings.create;
+      expect(roleBindings).toHaveLength(2);
+      expect(roleBindings[0]).toHaveProperty("workspace.create");
+      expect(roleBindings[0]).toHaveProperty("role", WORKSPACE_ADMIN);
+      expect(roleBindings[1]).toHaveProperty("workspace.connect.id", workspace);
+      expect(roleBindings[1]).toHaveProperty("role", WORKSPACE_EDITOR);
 
       mockValidateInvite.mockRestore();
     });

@@ -852,6 +852,7 @@ type InviteToken {
   email: String!
   token: String!
   workspace: Workspace!
+  role: Role
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -866,6 +867,7 @@ input InviteTokenCreateInput {
   email: String!
   token: String!
   workspace: WorkspaceCreateOneWithoutInvitesInput!
+  role: Role
 }
 
 input InviteTokenCreateManyWithoutWorkspaceInput {
@@ -876,6 +878,7 @@ input InviteTokenCreateManyWithoutWorkspaceInput {
 input InviteTokenCreateWithoutWorkspaceInput {
   email: String!
   token: String!
+  role: Role
 }
 
 type InviteTokenEdge {
@@ -890,6 +893,8 @@ enum InviteTokenOrderByInput {
   email_DESC
   token_ASC
   token_DESC
+  role_ASC
+  role_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -900,6 +905,7 @@ type InviteTokenPreviousValues {
   id: ID!
   email: String!
   token: String!
+  role: Role
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -947,6 +953,10 @@ input InviteTokenScalarWhereInput {
   token_not_starts_with: String
   token_ends_with: String
   token_not_ends_with: String
+  role: Role
+  role_not: Role
+  role_in: [Role!]
+  role_not_in: [Role!]
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]
@@ -990,16 +1000,19 @@ input InviteTokenUpdateInput {
   email: String
   token: String
   workspace: WorkspaceUpdateOneRequiredWithoutInvitesInput
+  role: Role
 }
 
 input InviteTokenUpdateManyDataInput {
   email: String
   token: String
+  role: Role
 }
 
 input InviteTokenUpdateManyMutationInput {
   email: String
   token: String
+  role: Role
 }
 
 input InviteTokenUpdateManyWithoutWorkspaceInput {
@@ -1022,6 +1035,7 @@ input InviteTokenUpdateManyWithWhereNestedInput {
 input InviteTokenUpdateWithoutWorkspaceDataInput {
   email: String
   token: String
+  role: Role
 }
 
 input InviteTokenUpdateWithWhereUniqueWithoutWorkspaceInput {
@@ -1079,6 +1093,10 @@ input InviteTokenWhereInput {
   token_ends_with: String
   token_not_ends_with: String
   workspace: WorkspaceWhereInput
+  role: Role
+  role_not: Role
+  role_in: [Role!]
+  role_not_in: [Role!]
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]

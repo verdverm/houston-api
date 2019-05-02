@@ -130,7 +130,9 @@ export function generateRoleBindings(first, inviteToken, opts) {
   // If we have an invite token, add user to the originating workspace.
   if (inviteToken && inviteToken.workspace) {
     roleBindings.push({
-      role: WORKSPACE_ADMIN,
+      // We didn't used to put the role in the invite token - if it was missing
+      // the invite is from the days when everyone was an admin.
+      role: inviteToken.role || WORKSPACE_ADMIN,
       workspace: {
         connect: {
           id: inviteToken.workspace.id
@@ -166,6 +168,7 @@ export async function validateInviteToken(inviteToken, email) {
       id
       email
       token
+      role
       workspace {
         id
       }
