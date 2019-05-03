@@ -23,9 +23,8 @@ export const serviceAccountRoleMappings = {
  * Check if the user has the given permission for the entity.
  * @param {Object} user The current user.
  * @param {String} permission The required permission.
- * @param {Object} entity Entity to restrict access to. Must have a `__typename` field
  */
-export function hasPermission(user, permission, entity) {
+export function hasPermission(user, permission, entityType, entityId) {
   // If user is falsy, immediately fail.
   if (!user) return false;
 
@@ -94,10 +93,9 @@ export function hasSystemPermission(user, permission) {
  * Throws if the user does not have permission.
  * @param {Object} user The current user.
  * @param {String} permission The required permission.
- * @param {Object} entity Entity to restrict access to
  */
-export function checkPermission(user, permission, entity) {
-  if (!hasPermission(user, permission, entity)) {
+export function checkPermission(user, permission, entityType, entityId) {
+  if (!hasPermission(user, permission, entityType, entityId)) {
     throw new PermissionError();
   }
 }

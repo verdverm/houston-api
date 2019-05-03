@@ -1,6 +1,5 @@
-import { checkPermission, fragments as rbacFragments } from "rbac";
-import { ResourceNotFoundError } from "errors";
-import { findKey } from "lodash";
+import { PermissionError, ResourceNotFoundError } from "errors";
+import { compact, findKey, includes } from "lodash";
 
 /*
  * Delete a service account.
@@ -20,7 +19,7 @@ export default async function deleteServiceAccount(parent, args, ctx) {
     {
       where: { id: serviceAccountUuid }
     },
-    rbacFragments.serviceAccount
+    `{ roleBinding { workspace { id }, deployment { id } } }`
   );
 
   // Throw if it doesn't exist.
@@ -29,11 +28,17 @@ export default async function deleteServiceAccount(parent, args, ctx) {
   // Determine the entityType by looking at the roleBinding.
   const entityType = findKey(serviceAccount.roleBinding);
 
-  checkPermission(
-    ctx.user,
-    `${entityType}.serviceAccounts.delete`,
-    serviceAccount.roleBinding[entityType]
+  // Get a list of ids of entityType that this user has access to.
+  const ids = compact(
+    ctx.user.roleBindings.map(binding =>
+      binding[entityType] ? binding[entityType].id : null
+    )
   );
+
+  // Throw error if the incoming entityId is not in the list of ids for this user.
+  if (!includes(ids, serviceAccount.roleBinding[entityType].id)) {
+    throw new PermissionError();
+  }
 
   // Delete the record from the database.
   return ctx.db.mutation.deleteServiceAccount(

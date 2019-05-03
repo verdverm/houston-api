@@ -4,7 +4,7 @@ export const user = `{
   fullName
   roleBindings {
     role
-    workspace { id __typename }
+    workspace { id __typename deployments { id __typename } }
     deployment { id workspace { id __typename } __typename }
   }
 }`;
@@ -24,7 +24,7 @@ export const serviceAccount = `{
   id,
   roleBinding {
     role
-    workspace { id  __typename}
+    workspace { id  __typename deployments { id __typename }}
     deployment { id workspace { id } __typename }
   }
 }`;

@@ -152,7 +152,8 @@ describe("@auth directive", () => {
       expect(mockCheckPerms).toHaveBeenCalledWith(
         { roleBinding: [{ role: "admin" }] },
         "system.fake.permission",
-        undefined
+        null,
+        null
       );
     });
 
@@ -167,7 +168,8 @@ describe("@auth directive", () => {
       expect(mockCheckPerms).toHaveBeenCalledWith(
         expect.anything(),
         "system.fake.permission",
-        undefined
+        null,
+        null
       );
     });
   });
@@ -181,15 +183,13 @@ describe("@auth directive", () => {
 
     test("should check the permissions for the specific entity", async () => {
       let vars = { id: "d-2" };
-      let d = { id: vars.id, __typename: "Deployment" };
-      mockPermissionedEntity.mockImplementationOnce(async () => d);
-
       const { errors } = await runQuery(query, { auth: true }, vars);
       expect(errors).toBeUndefined();
       expect(mockCheckPerms).toHaveBeenCalledWith(
         expect.anything(),
         "deployment.fake.permission",
-        d
+        "deployment",
+        vars.id
       );
     });
   });
@@ -203,15 +203,13 @@ describe("@auth directive", () => {
 
     test("should check the permissions for the specific entity", async () => {
       let vars = { id: "w-2" };
-      let ws = { id: vars.id, __typename: "Workspace" };
-      mockPermissionedEntity.mockImplementationOnce(async () => ws);
-
       const { errors } = await runQuery(query, { auth: true }, vars);
       expect(errors).toBeUndefined();
       expect(mockCheckPerms).toHaveBeenCalledWith(
         expect.anything(),
         "workspace.fake.permission",
-        ws
+        "workspace",
+        vars.id
       );
     });
   });

@@ -5,33 +5,38 @@ import {
   isServiceAccount
 } from "./index";
 import casual from "casual";
+import { ENTITY_WORKSPACE } from "constants";
 
 describe("hasPermission", () => {
   test("permits user with matching entity id", () => {
-    const workspace = { id: casual.uuid, __typename: "Workspace" };
+    const workspaceId = casual.uuid;
 
     const user = {
       id: casual.uuid,
-      roleBindings: [{ role: "WORKSPACE_ADMIN", workspace }]
+      roleBindings: [
+        { role: "WORKSPACE_ADMIN", workspace: { id: workspaceId } }
+      ]
     };
 
     const hasPerm = hasPermission(
       user,
       "workspace.deployments.list",
-      workspace
+      ENTITY_WORKSPACE.toLowerCase(),
+      workspaceId
     );
 
     expect(hasPerm).toBe(true);
   });
 
   test("denies an undefined user", () => {
-    const workspace = { workspace: casual.uuid, __typename: "Workspace" };
+    const workspaceId = casual.uuid;
     const user = null;
 
     const hasPerm = hasPermission(
       user,
       "workspace.deployments.list",
-      workspace
+      ENTITY_WORKSPACE.toLowerCase(),
+      workspaceId
     );
 
     expect(hasPerm).toBe(false);
@@ -41,54 +46,36 @@ describe("hasPermission", () => {
     const user = {
       id: casual.uuid,
       roleBindings: [
-        {
-          role: "WORKSPACE_ADMIN",
-          workspace: { id: casual.uuid, __typename: "Workspace" }
-        }
+        { role: "WORKSPACE_ADMIN", workspace: { id: casual.uuid } }
       ]
     };
 
-    const hasPerm = hasPermission(user, "workspace.deployments.list", {
-      id: casual.uuid,
-      __typename: "Workspace"
-    });
+    const hasPerm = hasPermission(
+      user,
+      "workspace.deployments.list",
+      ENTITY_WORKSPACE.toLowerCase(),
+      casual.uuid
+    );
 
     expect(hasPerm).toBe(false);
   });
 
   test("denies user without matching permission", () => {
-    const workspace = { id: casual.uuid, __typename: "Workspace" };
+    const workspaceId = casual.uuid;
 
     const user = {
       id: casual.uuid,
-      roleBindings: [{ role: "WORKSPACE_ADMIN", workspace }]
-    };
-
-    const hasPerm = hasPermission(user, "some.other.permission", workspace);
-
-    expect(hasPerm).toBe(false);
-  });
-
-  test("cascades to workspace roles for deployments", async () => {
-    const workspace = { id: casual.uuid, __typename: "Workspace" },
-      deployment = {
-        id: casual.uuid,
-        workspace,
-        __typename: "Deployment"
-      };
-
-    const user = {
-      id: casual.uuid,
-      // Check that even though we have a deployment permission for the the
-      // deployment we've asked for that we check the workspace level
-      // permission as we don't have the perm from the deployment role.
       roleBindings: [
-        { role: "DEPLOYMENT_VIEWER", deployment },
-        { role: "WORKSPACE_ADMIN", workspace }
+        { role: "WORKSPACE_ADMIN", workspace: { id: workspaceId } }
       ]
     };
 
-    const hasPerm = hasPermission(user, "deployment.config.delete", deployment);
+    const hasPerm = hasPermission(
+      user,
+      "some.other.permission",
+      ENTITY_WORKSPACE.toLowerCase(),
+      workspaceId
+    );
 
     expect(hasPerm).toBe(false);
   });
