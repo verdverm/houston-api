@@ -54,23 +54,18 @@ export function hasPermission(user, permission, entityType, entityId) {
   return !!find(user.roleBindings, binding => {
     // Since the user might have a role binding to the deployment and workspace
     // we need to check each binding as we find it.
-    if (
-      (binding[entityType] && binding[entityType].id === entity.id) ||
-      (binding[parentType] && binding[parentType].id === parentId)
-    ) {
-      const role = find(roles, { id: binding.role });
-      return role && permission in role.permissions;
+    if (entityType == ENTITY_DEPLOYMENT && binding.workspace) {
+      // Check if the asked-for deployment is under this workspace grant
+      if (!find(binding.workspace.deployments, _ => _.id == entityId)) {
+        return false;
+      }
+    } else if (!binding[entityType] || binding[entityType].id !== entityId) {
+      return false;
     }
-  });
-}
 
-export function getParentEntity(entity) {
-  switch (entity.__typename.toLowerCase()) {
-    case ENTITY_DEPLOYMENT:
-      return [ENTITY_WORKSPACE, entity.workspace.id];
-    default:
-      return [null, null];
-  }
+    const role = find(roles, { id: binding.role });
+    return role && permission in role.permissions;
+  });
 }
 
 /*

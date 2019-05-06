@@ -43,8 +43,7 @@ const resolvers = {
   }
 };
 
-const mockCheckPerms = jest.fn(),
-  mockPermissionedEntity = jest.fn();
+const mockCheckPerms = jest.fn();
 
 // A Test class that uses a mock checkPermissions to ease testing
 class TestingAuthDirective extends AuthDirective {
@@ -52,8 +51,6 @@ class TestingAuthDirective extends AuthDirective {
     args.checkPermission = mockCheckPerms;
     super(args);
   }
-
-  permissionedEntity = mockPermissionedEntity;
 }
 
 let schema;

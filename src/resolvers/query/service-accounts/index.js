@@ -38,11 +38,12 @@ export default async function serviceAccounts(parent, args, ctx, info) {
 
     query.where = { id: serviceAccountUuid };
   } else {
-    const entity = await ctx.db.query[entityType](
-      { where: { id: entityUuid } },
-      rbacFragments[entityType] //eslint-disable-line import/namespace
+    checkPermission(
+      ctx.user,
+      `${entityType}.serviceAccounts.list`,
+      entityType,
+      entityUuid
     );
-    checkPermission(ctx.user, `${entityType}.serviceAccounts.list`, entity);
 
     query.where = { [entityType]: { id: entityUuid } };
   }

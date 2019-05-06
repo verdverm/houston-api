@@ -48,7 +48,7 @@ describe("serviceAccounts", () => {
       roleBindings: [
         {
           role: WORKSPACE_ADMIN,
-          workspace: { id: workspaceId, __typename: "Workspace" }
+          workspace: { id: workspaceId }
         }
       ]
     };
@@ -96,7 +96,7 @@ describe("serviceAccounts", () => {
       roleBindings: [
         {
           role: WORKSPACE_ADMIN,
-          workspace: { id: casual.uuid, __typename: "Workspace" }
+          workspace: { id: casual.uuid }
         }
       ]
     };

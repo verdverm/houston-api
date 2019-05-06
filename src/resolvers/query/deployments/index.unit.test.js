@@ -48,9 +48,7 @@ describe("deployments", () => {
   test("typical request is successful", async () => {
     const user = {
       id: casual.uuid,
-      roleBindings: [
-        { deployment: { id: casual.uuid, __typename: "Deployment" } }
-      ]
+      roleBindings: [{ deployment: { id: casual.uuid } }]
     };
 
     // Mock up some db functions.
@@ -126,15 +124,15 @@ describe("deploymentsQuery", () => {
       id: casual.uuid,
       roleBindings: [
         {
-          deployment: { id: deploymentId1, __typename: "Deployment" },
+          deployment: { id: deploymentId1 },
           role: DEPLOYMENT_VIEWER
         },
         {
-          deployment: { id: deploymentId2, __typename: "Deployment" },
+          deployment: { id: deploymentId2 },
           role: DEPLOYMENT_EDITOR
         },
         {
-          deployment: { id: deploymentId3, __typename: "Deployment" },
+          deployment: { id: deploymentId3 },
           role: "FAKE_ROLE"
         }
       ]
@@ -168,27 +166,27 @@ describe("deploymentsQuery", () => {
       id: casual.uuid,
       roleBindings: [
         {
-          deployment: { id: deploymentId1, __typename: "Deployment" },
+          deployment: { id: deploymentId1 },
           role: DEPLOYMENT_VIEWER
         },
         {
-          deployment: { id: deploymentId2, __typename: "Deployment" },
+          deployment: { id: deploymentId2 },
           role: DEPLOYMENT_EDITOR
         },
         {
-          deployment: { id: deploymentId3, __typename: "Deployment" },
+          deployment: { id: deploymentId3 },
           role: "FAKE_ROLE"
         },
         {
-          workspace: { id: workspaceId1, __typename: "Workspace" },
+          workspace: { id: workspaceId1 },
           role: WORKSPACE_EDITOR
         },
         {
-          workspace: { id: workspaceId2, __typename: "Workspace" },
+          workspace: { id: workspaceId2 },
           role: WORKSPACE_EDITOR
         },
         {
-          workspace: { id: workspaceId3, __typename: "Workspace" },
+          workspace: { id: workspaceId },
           role: WORKSPACE_VIEWER
         }
       ]
@@ -226,19 +224,19 @@ describe("deploymentsQuery", () => {
       id: casual.uuid,
       roleBindings: [
         {
-          deployment: { id: deploymentId1, __typename: "Deployment" },
+          deployment: { id: deploymentId1 },
           role: "FAKE_ROLE"
         },
         {
-          workspace: { id: workspaceId1, __typename: "Workspace" },
+          workspace: { id: workspaceId1 },
           role: WORKSPACE_EDITOR
         },
         {
-          workspace: { id: workspaceId2, __typename: "Workspace" },
+          workspace: { id: workspaceId2 },
           role: WORKSPACE_EDITOR
         },
         {
-          workspace: { id: workspaceId3, __typename: "Workspace" },
+          workspace: { id: workspaceId3 },
           role: WORKSPACE_VIEWER
         }
       ]

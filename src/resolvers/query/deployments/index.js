@@ -5,6 +5,7 @@ import {
   fragments as rbacFragments
 } from "rbac";
 import { addFragmentToInfo } from "graphql-binding";
+import { ENTITY_DEPLOYMENT, ENTITY_WORKSPACE } from "constants";
 
 /*
  * Get list of deployments for a workspace.
@@ -20,18 +21,20 @@ export default async function deployments(parent, args, ctx, info) {
   // Perform extra checks here if passing in releaseName,
   // because it passes right through the auth directive.
   if (workspaceUuid) {
-    const entity = await ctx.db.query.workspace(
-      { where: { id: workspaceUuid } },
-      rbacFragments.workspace
+    checkPermission(
+      ctx.user,
+      "workspace.deployments.list",
+      ENTITY_WORKSPACE,
+      workspaceUuid
     );
-    checkPermission(ctx.user, "workspace.deployments.list", entity);
   }
   if (deploymentUuid) {
-    const entity = await ctx.db.query.deployment(
-      { where: { id: deploymentUuid } },
-      rbacFragments.deployment
+    checkPermission(
+      ctx.user,
+      "deployment.config.get",
+      ENTITY_DEPLOYMENT,
+      deploymentUuid
     );
-    checkPermission(ctx.user, "deployment.config.get", entity);
   }
 
   if (releaseName) {
@@ -39,7 +42,12 @@ export default async function deployments(parent, args, ctx, info) {
       { where: { releaseName } },
       rbacFragments.deployment
     );
-    checkPermission(ctx.user, "deployment.config.get", entity);
+    checkPermission(
+      ctx.user,
+      "deployment.config.get",
+      ENTITY_DEPLOYMENT,
+      entity.id
+    );
   }
 
   // Build the deployments query.
