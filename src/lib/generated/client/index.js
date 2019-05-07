@@ -5,15 +5,19 @@ var typeDefs = require("./prisma-schema").typeDefs;
 
 var models = [
   {
-    name: "Deployment",
+    name: "Role",
+    embedded: false
+  },
+  {
+    name: "User",
+    embedded: false
+  },
+  {
+    name: "RoleBinding",
     embedded: false
   },
   {
     name: "Email",
-    embedded: false
-  },
-  {
-    name: "InviteToken",
     embedded: false
   },
   {
@@ -25,11 +29,7 @@ var models = [
     embedded: false
   },
   {
-    name: "Role",
-    embedded: false
-  },
-  {
-    name: "RoleBinding",
+    name: "InviteToken",
     embedded: false
   },
   {
@@ -37,11 +37,11 @@ var models = [
     embedded: false
   },
   {
-    name: "User",
+    name: "Workspace",
     embedded: false
   },
   {
-    name: "Workspace",
+    name: "Deployment",
     embedded: false
   }
 ];

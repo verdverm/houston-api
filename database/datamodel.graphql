@@ -11,17 +11,17 @@ enum Role {
 }
 
 type User {
-  id: ID! @unique
+  id: ID! @id
   username: String @unique
   status: String
   fullName: String
   avatarUrl: String
   emails: [Email!]!
   roleBindings: [RoleBinding!]! @relation(name: "RoleBindingToUser", onDelete: CASCADE)
-  localCredential: LocalCredential
+  localCredential: LocalCredential @relation(name: "LocalCredentialToUser", onDelete: CASCADE, link: TABLE)
   oauthCredentials: [OAuthCredential!]! @relation(name: "OAuthCredentialToUser", onDelete: CASCADE)
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 # Ideally this type uses a union type once prisma supports it.
@@ -29,16 +29,16 @@ type User {
 # principal: Workspace | Deployment
 # https://github.com/prisma/prisma/issues/165
 type RoleBinding {
-  id: ID! @unique
+  id: ID! @id
   role: Role
   user: User @relation(name: "RoleBindingToUser")
-  serviceAccount: ServiceAccount @relation(name: "RoleBindingToServiceAccount")
+  serviceAccount: ServiceAccount @relation(name: "RoleBindingToServiceAccount", link: TABLE)
   workspace: Workspace @relation(name: "RoleBindingToWorkspace")
   deployment: Deployment @relation(name: "DeploymentRoleBindings")
 }
 
 type Email {
-  id: ID! @unique
+  id: ID! @id
   address: String @unique
   primary: Boolean
   token: String @unique
@@ -47,24 +47,24 @@ type Email {
 }
 
 type LocalCredential {
-  id: ID! @unique
-  user: User
+  id: ID! @id
+  user: User @relation(name: "LocalCredentialToUser")
   password: String
   resetToken: String @unique
 }
 
 type OAuthCredential {
-  id: ID! @unique
+  id: ID! @id
   expiresAt: DateTime
   oauthProvider: String!
   oauthUserId: String!
-  user: User @relation(name: "OAuthCredentialToUser", onDelete: CASCADE)
+  user: User @relation(name: "OAuthCredentialToUser")
 }
 
 type InviteToken {
   # Multi-column unique fields would be nice, but not supported yet
   # https://github.com/prisma/prisma/issues/3405
-  id: ID! @unique
+  id: ID! @id
   email: String!
   token: String! @unique
   workspace: Workspace!
@@ -73,36 +73,36 @@ type InviteToken {
   # https://github.com/prisma/prisma/issues/3408 adds `@default` that should help us.
   role: Role
 
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type ServiceAccount {
-  id: ID! @unique
+  id: ID! @id
   apiKey: String @unique
   label: String
   category: String
   active: Boolean
   roleBinding: RoleBinding @relation(name: "RoleBindingToServiceAccount", onDelete: CASCADE)
   lastUsedAt: DateTime
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type Workspace {
-  id: ID! @unique
+  id: ID! @id
   active: Boolean
   deployments: [Deployment!]!
   description: String
   invites: [InviteToken!]!
   label: String
-  roleBindings: [RoleBinding!]!  @relation(name: "RoleBindingToWorkspace", onDelete: CASCADE)
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  roleBindings: [RoleBinding!]! @relation(name: "RoleBindingToWorkspace", onDelete: CASCADE)
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type Deployment {
-  id: ID! @unique
+  id: ID! @id
   config: Json
   description: String
   label: String
@@ -112,9 +112,9 @@ type Deployment {
   version: String
   extraAu: Int
   airflowVersion: String
-  alertEmails: [String!]
+  alertEmails: [String!] @scalarList(strategy: RELATION)
   roleBindings: [RoleBinding!]! @relation(name: "DeploymentRoleBindings", onDelete: CASCADE)
   workspace: Workspace
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
