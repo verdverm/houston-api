@@ -83,6 +83,7 @@ jwt:
   authDuration: "JWT__AUTH_DURATION"
 
   registry:
+    certPath: "JWT__REGISTRY__CERT_PATH"
     issuer: "JWT__REGISTRY__ISSUER"
     service: "JWT__REGISTRY__SERVICE"
 

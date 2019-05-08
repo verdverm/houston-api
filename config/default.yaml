@@ -122,12 +122,13 @@ jwt:
   # JWT / Cookie duration in milliseconds.
   authDuration: 86400000
 
-  # Path to folder containing tls.crt and tls.ket, used for signing JWT tokens
+  # Path to folder containing tls.crt and tls.key, used for signing JWT tokens
   # to authenticate against the Docker registry and Airflow FAB UI
   certPath: ~
 
   # Docker registry configuration.
   registry:
+    certPath: ~
     issuer: ~
     service: ~
 
