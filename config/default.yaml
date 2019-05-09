@@ -302,7 +302,7 @@ deployments:
         limit: 30
     - name: webserver
       au:
-        default: 2
+        default: 5
         limit: 30
     - name: statsd
       au:
