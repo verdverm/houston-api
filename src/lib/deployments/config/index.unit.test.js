@@ -65,14 +65,14 @@ describe("constraints", () => {
     };
     const config = constraints(deployment);
     expect(config.quotas.pods).toBe(14); // Default celery (7 pods), doubled.
-    expect(config.quotas["requests.cpu"]).toBe("5600m"); // 2500 doubled + 300 sidecar doubled
-    expect(config.quotas["requests.memory"]).toBe("21504Mi"); // 9600 doubled + 768 sidecar doubled
+    expect(config.quotas["requests.cpu"]).toBe("6200m"); // 2500 doubled + 300 sidecar doubled
+    expect(config.quotas["requests.memory"]).toBe("23808Mi"); // 9600 doubled + 768 sidecar doubled
     expect(config.quotas["requests.cpu"]).toBe(config.quotas["requests.cpu"]);
     expect(config.quotas["requests.memory"]).toBe(
       config.quotas["requests.memory"]
     );
-    expect(config.pgbouncer.metadataPoolSize).toBe(12);
-    expect(config.pgbouncer.maxClientConn).toBe(125);
+    expect(config.pgbouncer.metadataPoolSize).toBe(14);
+    expect(config.pgbouncer.maxClientConn).toBe(140);
     expect(config).not.toHaveProperty("allowPodLaunching");
   });
 
@@ -94,14 +94,14 @@ describe("constraints", () => {
     };
     const config = constraints(deployment);
     expect(config.quotas.pods).toBe(24); // Same as default celery + 10 extra
-    expect(config.quotas["requests.cpu"]).toBe("6600m"); // Same as default celery + 1000 extra
-    expect(config.quotas["requests.memory"]).toBe("25344Mi"); // Same as default celery + 3840 extra
+    expect(config.quotas["requests.cpu"]).toBe("7200m"); // Same as default celery + 1000 extra
+    expect(config.quotas["requests.memory"]).toBe("27648Mi"); // Same as default celery + 3840 extra
     expect(config.quotas["requests.cpu"]).toBe(config.quotas["requests.cpu"]);
     expect(config.quotas["requests.memory"]).toBe(
       config.quotas["requests.memory"]
     );
-    expect(config.pgbouncer.metadataPoolSize).toBe(17); // Same as celery default + 5 (.5 * 10)
-    expect(config.pgbouncer.maxClientConn).toBe(175); // Same as celery default + 50 (5 * 10)
+    expect(config.pgbouncer.metadataPoolSize).toBe(19); // Same as celery default + 5 (.5 * 10)
+    expect(config.pgbouncer.maxClientConn).toBe(190); // Same as celery default + 50 (5 * 10)
   });
 
   test("correctly applies constraints for LocalExecutor config", () => {
@@ -111,14 +111,14 @@ describe("constraints", () => {
     };
     const config = constraints(deployment);
     expect(config.quotas.pods).toBe(8); // Local (4 pods), doubled.
-    expect(config.quotas["requests.cpu"]).toBe("2800m"); // 1100 doubled + 300 sidecar doubled
-    expect(config.quotas["requests.memory"]).toBe("10752Mi"); // 4224 doubled + 1152 sidecar doubled
+    expect(config.quotas["requests.cpu"]).toBe("3400m"); // 1100 doubled + 300 sidecar doubled
+    expect(config.quotas["requests.memory"]).toBe("13056Mi"); // 4224 doubled + 1152 sidecar doubled
     expect(config.quotas["requests.cpu"]).toBe(config.quotas["requests.cpu"]);
     expect(config.quotas["requests.memory"]).toBe(
       config.quotas["requests.memory"]
     );
-    expect(config.pgbouncer.metadataPoolSize).toBe(5);
-    expect(config.pgbouncer.maxClientConn).toBe(55);
+    expect(config.pgbouncer.metadataPoolSize).toBe(7);
+    expect(config.pgbouncer.maxClientConn).toBe(70);
     expect(config).not.toHaveProperty("allowPodLaunching");
   });
 });
