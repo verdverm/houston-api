@@ -524,6 +524,8 @@ export type InviteTokenOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC";
 
+export type MutationType = "CREATED" | "UPDATED" | "DELETED";
+
 export type LocalCredentialOrderByInput =
   | "id_ASC"
   | "id_DESC"
@@ -580,464 +582,78 @@ export type WorkspaceOrderByInput =
   | "updatedAt_ASC"
   | "updatedAt_DESC";
 
-export type MutationType = "CREATED" | "UPDATED" | "DELETED";
+export interface OAuthCredentialUpdateManyDataInput {
+  expiresAt?: Maybe<DateTimeInput>;
+  oauthProvider?: Maybe<String>;
+  oauthUserId?: Maybe<String>;
+}
 
 export type DeploymentWhereUniqueInput = AtLeastOne<{
   id: Maybe<ID_Input>;
   releaseName?: Maybe<String>;
 }>;
 
-export interface RoleBindingWhereInput {
+export interface DeploymentCreateWithoutRoleBindingsInput {
   id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  role?: Maybe<Role>;
-  role_not?: Maybe<Role>;
-  role_in?: Maybe<Role[] | Role>;
-  role_not_in?: Maybe<Role[] | Role>;
-  user?: Maybe<UserWhereInput>;
-  serviceAccount?: Maybe<ServiceAccountWhereInput>;
-  workspace?: Maybe<WorkspaceWhereInput>;
-  deployment?: Maybe<DeploymentWhereInput>;
-  AND?: Maybe<RoleBindingWhereInput[] | RoleBindingWhereInput>;
-  OR?: Maybe<RoleBindingWhereInput[] | RoleBindingWhereInput>;
-  NOT?: Maybe<RoleBindingWhereInput[] | RoleBindingWhereInput>;
-}
-
-export interface UserWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  username?: Maybe<String>;
-  username_not?: Maybe<String>;
-  username_in?: Maybe<String[] | String>;
-  username_not_in?: Maybe<String[] | String>;
-  username_lt?: Maybe<String>;
-  username_lte?: Maybe<String>;
-  username_gt?: Maybe<String>;
-  username_gte?: Maybe<String>;
-  username_contains?: Maybe<String>;
-  username_not_contains?: Maybe<String>;
-  username_starts_with?: Maybe<String>;
-  username_not_starts_with?: Maybe<String>;
-  username_ends_with?: Maybe<String>;
-  username_not_ends_with?: Maybe<String>;
-  status?: Maybe<String>;
-  status_not?: Maybe<String>;
-  status_in?: Maybe<String[] | String>;
-  status_not_in?: Maybe<String[] | String>;
-  status_lt?: Maybe<String>;
-  status_lte?: Maybe<String>;
-  status_gt?: Maybe<String>;
-  status_gte?: Maybe<String>;
-  status_contains?: Maybe<String>;
-  status_not_contains?: Maybe<String>;
-  status_starts_with?: Maybe<String>;
-  status_not_starts_with?: Maybe<String>;
-  status_ends_with?: Maybe<String>;
-  status_not_ends_with?: Maybe<String>;
-  fullName?: Maybe<String>;
-  fullName_not?: Maybe<String>;
-  fullName_in?: Maybe<String[] | String>;
-  fullName_not_in?: Maybe<String[] | String>;
-  fullName_lt?: Maybe<String>;
-  fullName_lte?: Maybe<String>;
-  fullName_gt?: Maybe<String>;
-  fullName_gte?: Maybe<String>;
-  fullName_contains?: Maybe<String>;
-  fullName_not_contains?: Maybe<String>;
-  fullName_starts_with?: Maybe<String>;
-  fullName_not_starts_with?: Maybe<String>;
-  fullName_ends_with?: Maybe<String>;
-  fullName_not_ends_with?: Maybe<String>;
-  avatarUrl?: Maybe<String>;
-  avatarUrl_not?: Maybe<String>;
-  avatarUrl_in?: Maybe<String[] | String>;
-  avatarUrl_not_in?: Maybe<String[] | String>;
-  avatarUrl_lt?: Maybe<String>;
-  avatarUrl_lte?: Maybe<String>;
-  avatarUrl_gt?: Maybe<String>;
-  avatarUrl_gte?: Maybe<String>;
-  avatarUrl_contains?: Maybe<String>;
-  avatarUrl_not_contains?: Maybe<String>;
-  avatarUrl_starts_with?: Maybe<String>;
-  avatarUrl_not_starts_with?: Maybe<String>;
-  avatarUrl_ends_with?: Maybe<String>;
-  avatarUrl_not_ends_with?: Maybe<String>;
-  emails_every?: Maybe<EmailWhereInput>;
-  emails_some?: Maybe<EmailWhereInput>;
-  emails_none?: Maybe<EmailWhereInput>;
-  roleBindings_every?: Maybe<RoleBindingWhereInput>;
-  roleBindings_some?: Maybe<RoleBindingWhereInput>;
-  roleBindings_none?: Maybe<RoleBindingWhereInput>;
-  localCredential?: Maybe<LocalCredentialWhereInput>;
-  oauthCredentials_every?: Maybe<OAuthCredentialWhereInput>;
-  oauthCredentials_some?: Maybe<OAuthCredentialWhereInput>;
-  oauthCredentials_none?: Maybe<OAuthCredentialWhereInput>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<UserWhereInput[] | UserWhereInput>;
-  OR?: Maybe<UserWhereInput[] | UserWhereInput>;
-  NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
-}
-
-export interface EmailWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  address?: Maybe<String>;
-  address_not?: Maybe<String>;
-  address_in?: Maybe<String[] | String>;
-  address_not_in?: Maybe<String[] | String>;
-  address_lt?: Maybe<String>;
-  address_lte?: Maybe<String>;
-  address_gt?: Maybe<String>;
-  address_gte?: Maybe<String>;
-  address_contains?: Maybe<String>;
-  address_not_contains?: Maybe<String>;
-  address_starts_with?: Maybe<String>;
-  address_not_starts_with?: Maybe<String>;
-  address_ends_with?: Maybe<String>;
-  address_not_ends_with?: Maybe<String>;
-  primary?: Maybe<Boolean>;
-  primary_not?: Maybe<Boolean>;
-  token?: Maybe<String>;
-  token_not?: Maybe<String>;
-  token_in?: Maybe<String[] | String>;
-  token_not_in?: Maybe<String[] | String>;
-  token_lt?: Maybe<String>;
-  token_lte?: Maybe<String>;
-  token_gt?: Maybe<String>;
-  token_gte?: Maybe<String>;
-  token_contains?: Maybe<String>;
-  token_not_contains?: Maybe<String>;
-  token_starts_with?: Maybe<String>;
-  token_not_starts_with?: Maybe<String>;
-  token_ends_with?: Maybe<String>;
-  token_not_ends_with?: Maybe<String>;
-  user?: Maybe<UserWhereInput>;
-  verified?: Maybe<Boolean>;
-  verified_not?: Maybe<Boolean>;
-  AND?: Maybe<EmailWhereInput[] | EmailWhereInput>;
-  OR?: Maybe<EmailWhereInput[] | EmailWhereInput>;
-  NOT?: Maybe<EmailWhereInput[] | EmailWhereInput>;
-}
-
-export interface LocalCredentialWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  user?: Maybe<UserWhereInput>;
-  password?: Maybe<String>;
-  password_not?: Maybe<String>;
-  password_in?: Maybe<String[] | String>;
-  password_not_in?: Maybe<String[] | String>;
-  password_lt?: Maybe<String>;
-  password_lte?: Maybe<String>;
-  password_gt?: Maybe<String>;
-  password_gte?: Maybe<String>;
-  password_contains?: Maybe<String>;
-  password_not_contains?: Maybe<String>;
-  password_starts_with?: Maybe<String>;
-  password_not_starts_with?: Maybe<String>;
-  password_ends_with?: Maybe<String>;
-  password_not_ends_with?: Maybe<String>;
-  resetToken?: Maybe<String>;
-  resetToken_not?: Maybe<String>;
-  resetToken_in?: Maybe<String[] | String>;
-  resetToken_not_in?: Maybe<String[] | String>;
-  resetToken_lt?: Maybe<String>;
-  resetToken_lte?: Maybe<String>;
-  resetToken_gt?: Maybe<String>;
-  resetToken_gte?: Maybe<String>;
-  resetToken_contains?: Maybe<String>;
-  resetToken_not_contains?: Maybe<String>;
-  resetToken_starts_with?: Maybe<String>;
-  resetToken_not_starts_with?: Maybe<String>;
-  resetToken_ends_with?: Maybe<String>;
-  resetToken_not_ends_with?: Maybe<String>;
-  AND?: Maybe<LocalCredentialWhereInput[] | LocalCredentialWhereInput>;
-  OR?: Maybe<LocalCredentialWhereInput[] | LocalCredentialWhereInput>;
-  NOT?: Maybe<LocalCredentialWhereInput[] | LocalCredentialWhereInput>;
-}
-
-export interface OAuthCredentialWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  expiresAt?: Maybe<DateTimeInput>;
-  expiresAt_not?: Maybe<DateTimeInput>;
-  expiresAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  expiresAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  expiresAt_lt?: Maybe<DateTimeInput>;
-  expiresAt_lte?: Maybe<DateTimeInput>;
-  expiresAt_gt?: Maybe<DateTimeInput>;
-  expiresAt_gte?: Maybe<DateTimeInput>;
-  oauthProvider?: Maybe<String>;
-  oauthProvider_not?: Maybe<String>;
-  oauthProvider_in?: Maybe<String[] | String>;
-  oauthProvider_not_in?: Maybe<String[] | String>;
-  oauthProvider_lt?: Maybe<String>;
-  oauthProvider_lte?: Maybe<String>;
-  oauthProvider_gt?: Maybe<String>;
-  oauthProvider_gte?: Maybe<String>;
-  oauthProvider_contains?: Maybe<String>;
-  oauthProvider_not_contains?: Maybe<String>;
-  oauthProvider_starts_with?: Maybe<String>;
-  oauthProvider_not_starts_with?: Maybe<String>;
-  oauthProvider_ends_with?: Maybe<String>;
-  oauthProvider_not_ends_with?: Maybe<String>;
-  oauthUserId?: Maybe<String>;
-  oauthUserId_not?: Maybe<String>;
-  oauthUserId_in?: Maybe<String[] | String>;
-  oauthUserId_not_in?: Maybe<String[] | String>;
-  oauthUserId_lt?: Maybe<String>;
-  oauthUserId_lte?: Maybe<String>;
-  oauthUserId_gt?: Maybe<String>;
-  oauthUserId_gte?: Maybe<String>;
-  oauthUserId_contains?: Maybe<String>;
-  oauthUserId_not_contains?: Maybe<String>;
-  oauthUserId_starts_with?: Maybe<String>;
-  oauthUserId_not_starts_with?: Maybe<String>;
-  oauthUserId_ends_with?: Maybe<String>;
-  oauthUserId_not_ends_with?: Maybe<String>;
-  user?: Maybe<UserWhereInput>;
-  AND?: Maybe<OAuthCredentialWhereInput[] | OAuthCredentialWhereInput>;
-  OR?: Maybe<OAuthCredentialWhereInput[] | OAuthCredentialWhereInput>;
-  NOT?: Maybe<OAuthCredentialWhereInput[] | OAuthCredentialWhereInput>;
-}
-
-export interface ServiceAccountWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  apiKey?: Maybe<String>;
-  apiKey_not?: Maybe<String>;
-  apiKey_in?: Maybe<String[] | String>;
-  apiKey_not_in?: Maybe<String[] | String>;
-  apiKey_lt?: Maybe<String>;
-  apiKey_lte?: Maybe<String>;
-  apiKey_gt?: Maybe<String>;
-  apiKey_gte?: Maybe<String>;
-  apiKey_contains?: Maybe<String>;
-  apiKey_not_contains?: Maybe<String>;
-  apiKey_starts_with?: Maybe<String>;
-  apiKey_not_starts_with?: Maybe<String>;
-  apiKey_ends_with?: Maybe<String>;
-  apiKey_not_ends_with?: Maybe<String>;
-  label?: Maybe<String>;
-  label_not?: Maybe<String>;
-  label_in?: Maybe<String[] | String>;
-  label_not_in?: Maybe<String[] | String>;
-  label_lt?: Maybe<String>;
-  label_lte?: Maybe<String>;
-  label_gt?: Maybe<String>;
-  label_gte?: Maybe<String>;
-  label_contains?: Maybe<String>;
-  label_not_contains?: Maybe<String>;
-  label_starts_with?: Maybe<String>;
-  label_not_starts_with?: Maybe<String>;
-  label_ends_with?: Maybe<String>;
-  label_not_ends_with?: Maybe<String>;
-  category?: Maybe<String>;
-  category_not?: Maybe<String>;
-  category_in?: Maybe<String[] | String>;
-  category_not_in?: Maybe<String[] | String>;
-  category_lt?: Maybe<String>;
-  category_lte?: Maybe<String>;
-  category_gt?: Maybe<String>;
-  category_gte?: Maybe<String>;
-  category_contains?: Maybe<String>;
-  category_not_contains?: Maybe<String>;
-  category_starts_with?: Maybe<String>;
-  category_not_starts_with?: Maybe<String>;
-  category_ends_with?: Maybe<String>;
-  category_not_ends_with?: Maybe<String>;
-  active?: Maybe<Boolean>;
-  active_not?: Maybe<Boolean>;
-  roleBinding?: Maybe<RoleBindingWhereInput>;
-  lastUsedAt?: Maybe<DateTimeInput>;
-  lastUsedAt_not?: Maybe<DateTimeInput>;
-  lastUsedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  lastUsedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  lastUsedAt_lt?: Maybe<DateTimeInput>;
-  lastUsedAt_lte?: Maybe<DateTimeInput>;
-  lastUsedAt_gt?: Maybe<DateTimeInput>;
-  lastUsedAt_gte?: Maybe<DateTimeInput>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<ServiceAccountWhereInput[] | ServiceAccountWhereInput>;
-  OR?: Maybe<ServiceAccountWhereInput[] | ServiceAccountWhereInput>;
-  NOT?: Maybe<ServiceAccountWhereInput[] | ServiceAccountWhereInput>;
-}
-
-export interface WorkspaceWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  active?: Maybe<Boolean>;
-  active_not?: Maybe<Boolean>;
-  deployments_every?: Maybe<DeploymentWhereInput>;
-  deployments_some?: Maybe<DeploymentWhereInput>;
-  deployments_none?: Maybe<DeploymentWhereInput>;
+  config?: Maybe<Json>;
   description?: Maybe<String>;
-  description_not?: Maybe<String>;
-  description_in?: Maybe<String[] | String>;
-  description_not_in?: Maybe<String[] | String>;
-  description_lt?: Maybe<String>;
-  description_lte?: Maybe<String>;
-  description_gt?: Maybe<String>;
-  description_gte?: Maybe<String>;
-  description_contains?: Maybe<String>;
-  description_not_contains?: Maybe<String>;
-  description_starts_with?: Maybe<String>;
-  description_not_starts_with?: Maybe<String>;
-  description_ends_with?: Maybe<String>;
-  description_not_ends_with?: Maybe<String>;
-  invites_every?: Maybe<InviteTokenWhereInput>;
-  invites_some?: Maybe<InviteTokenWhereInput>;
-  invites_none?: Maybe<InviteTokenWhereInput>;
   label?: Maybe<String>;
-  label_not?: Maybe<String>;
-  label_in?: Maybe<String[] | String>;
-  label_not_in?: Maybe<String[] | String>;
-  label_lt?: Maybe<String>;
-  label_lte?: Maybe<String>;
-  label_gt?: Maybe<String>;
-  label_gte?: Maybe<String>;
-  label_contains?: Maybe<String>;
-  label_not_contains?: Maybe<String>;
-  label_starts_with?: Maybe<String>;
-  label_not_starts_with?: Maybe<String>;
-  label_ends_with?: Maybe<String>;
-  label_not_ends_with?: Maybe<String>;
-  roleBindings_every?: Maybe<RoleBindingWhereInput>;
-  roleBindings_some?: Maybe<RoleBindingWhereInput>;
-  roleBindings_none?: Maybe<RoleBindingWhereInput>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<WorkspaceWhereInput[] | WorkspaceWhereInput>;
-  OR?: Maybe<WorkspaceWhereInput[] | WorkspaceWhereInput>;
-  NOT?: Maybe<WorkspaceWhereInput[] | WorkspaceWhereInput>;
+  registryPassword?: Maybe<String>;
+  elasticsearchPassword?: Maybe<String>;
+  releaseName?: Maybe<String>;
+  version?: Maybe<String>;
+  extraAu?: Maybe<Int>;
+  airflowVersion?: Maybe<String>;
+  alertEmails?: Maybe<DeploymentCreatealertEmailsInput>;
+  workspace?: Maybe<WorkspaceCreateOneWithoutDeploymentsInput>;
+}
+
+export interface WorkspaceUpsertWithoutInvitesInput {
+  update: WorkspaceUpdateWithoutInvitesDataInput;
+  create: WorkspaceCreateWithoutInvitesInput;
+}
+
+export interface DeploymentUpdateInput {
+  config?: Maybe<Json>;
+  description?: Maybe<String>;
+  label?: Maybe<String>;
+  registryPassword?: Maybe<String>;
+  elasticsearchPassword?: Maybe<String>;
+  releaseName?: Maybe<String>;
+  version?: Maybe<String>;
+  extraAu?: Maybe<Int>;
+  airflowVersion?: Maybe<String>;
+  alertEmails?: Maybe<DeploymentUpdatealertEmailsInput>;
+  roleBindings?: Maybe<RoleBindingUpdateManyWithoutDeploymentInput>;
+  workspace?: Maybe<WorkspaceUpdateOneWithoutDeploymentsInput>;
+}
+
+export interface DeploymentUpdateManyWithoutWorkspaceInput {
+  create?: Maybe<
+    | DeploymentCreateWithoutWorkspaceInput[]
+    | DeploymentCreateWithoutWorkspaceInput
+  >;
+  delete?: Maybe<DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput>;
+  connect?: Maybe<DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput>;
+  set?: Maybe<DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput>;
+  disconnect?: Maybe<DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput>;
+  update?: Maybe<
+    | DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput[]
+    | DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput
+  >;
+  upsert?: Maybe<
+    | DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput[]
+    | DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput
+  >;
+  deleteMany?: Maybe<DeploymentScalarWhereInput[] | DeploymentScalarWhereInput>;
+  updateMany?: Maybe<
+    | DeploymentUpdateManyWithWhereNestedInput[]
+    | DeploymentUpdateManyWithWhereNestedInput
+  >;
+}
+
+export interface DeploymentUpdatealertEmailsInput {
+  set?: Maybe<String[] | String>;
 }
 
 export interface DeploymentWhereInput {
@@ -1186,341 +802,6 @@ export interface DeploymentWhereInput {
   NOT?: Maybe<DeploymentWhereInput[] | DeploymentWhereInput>;
 }
 
-export interface InviteTokenWhereInput {
-  id?: Maybe<ID_Input>;
-  id_not?: Maybe<ID_Input>;
-  id_in?: Maybe<ID_Input[] | ID_Input>;
-  id_not_in?: Maybe<ID_Input[] | ID_Input>;
-  id_lt?: Maybe<ID_Input>;
-  id_lte?: Maybe<ID_Input>;
-  id_gt?: Maybe<ID_Input>;
-  id_gte?: Maybe<ID_Input>;
-  id_contains?: Maybe<ID_Input>;
-  id_not_contains?: Maybe<ID_Input>;
-  id_starts_with?: Maybe<ID_Input>;
-  id_not_starts_with?: Maybe<ID_Input>;
-  id_ends_with?: Maybe<ID_Input>;
-  id_not_ends_with?: Maybe<ID_Input>;
-  email?: Maybe<String>;
-  email_not?: Maybe<String>;
-  email_in?: Maybe<String[] | String>;
-  email_not_in?: Maybe<String[] | String>;
-  email_lt?: Maybe<String>;
-  email_lte?: Maybe<String>;
-  email_gt?: Maybe<String>;
-  email_gte?: Maybe<String>;
-  email_contains?: Maybe<String>;
-  email_not_contains?: Maybe<String>;
-  email_starts_with?: Maybe<String>;
-  email_not_starts_with?: Maybe<String>;
-  email_ends_with?: Maybe<String>;
-  email_not_ends_with?: Maybe<String>;
-  token?: Maybe<String>;
-  token_not?: Maybe<String>;
-  token_in?: Maybe<String[] | String>;
-  token_not_in?: Maybe<String[] | String>;
-  token_lt?: Maybe<String>;
-  token_lte?: Maybe<String>;
-  token_gt?: Maybe<String>;
-  token_gte?: Maybe<String>;
-  token_contains?: Maybe<String>;
-  token_not_contains?: Maybe<String>;
-  token_starts_with?: Maybe<String>;
-  token_not_starts_with?: Maybe<String>;
-  token_ends_with?: Maybe<String>;
-  token_not_ends_with?: Maybe<String>;
-  workspace?: Maybe<WorkspaceWhereInput>;
-  role?: Maybe<Role>;
-  role_not?: Maybe<Role>;
-  role_in?: Maybe<Role[] | Role>;
-  role_not_in?: Maybe<Role[] | Role>;
-  createdAt?: Maybe<DateTimeInput>;
-  createdAt_not?: Maybe<DateTimeInput>;
-  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  createdAt_lt?: Maybe<DateTimeInput>;
-  createdAt_lte?: Maybe<DateTimeInput>;
-  createdAt_gt?: Maybe<DateTimeInput>;
-  createdAt_gte?: Maybe<DateTimeInput>;
-  updatedAt?: Maybe<DateTimeInput>;
-  updatedAt_not?: Maybe<DateTimeInput>;
-  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
-  updatedAt_lt?: Maybe<DateTimeInput>;
-  updatedAt_lte?: Maybe<DateTimeInput>;
-  updatedAt_gt?: Maybe<DateTimeInput>;
-  updatedAt_gte?: Maybe<DateTimeInput>;
-  AND?: Maybe<InviteTokenWhereInput[] | InviteTokenWhereInput>;
-  OR?: Maybe<InviteTokenWhereInput[] | InviteTokenWhereInput>;
-  NOT?: Maybe<InviteTokenWhereInput[] | InviteTokenWhereInput>;
-}
-
-export type EmailWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  address?: Maybe<String>;
-  token?: Maybe<String>;
-}>;
-
-export type InviteTokenWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  token?: Maybe<String>;
-}>;
-
-export type LocalCredentialWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  resetToken?: Maybe<String>;
-}>;
-
-export type OAuthCredentialWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export type RoleBindingWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export type ServiceAccountWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  apiKey?: Maybe<String>;
-}>;
-
-export type UserWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-  username?: Maybe<String>;
-}>;
-
-export type WorkspaceWhereUniqueInput = AtLeastOne<{
-  id: Maybe<ID_Input>;
-}>;
-
-export interface DeploymentCreateInput {
-  id?: Maybe<ID_Input>;
-  config?: Maybe<Json>;
-  description?: Maybe<String>;
-  label?: Maybe<String>;
-  registryPassword?: Maybe<String>;
-  elasticsearchPassword?: Maybe<String>;
-  releaseName?: Maybe<String>;
-  version?: Maybe<String>;
-  extraAu?: Maybe<Int>;
-  airflowVersion?: Maybe<String>;
-  alertEmails?: Maybe<DeploymentCreatealertEmailsInput>;
-  roleBindings?: Maybe<RoleBindingCreateManyWithoutDeploymentInput>;
-  workspace?: Maybe<WorkspaceCreateOneWithoutDeploymentsInput>;
-}
-
-export interface DeploymentCreatealertEmailsInput {
-  set?: Maybe<String[] | String>;
-}
-
-export interface RoleBindingCreateManyWithoutDeploymentInput {
-  create?: Maybe<
-    | RoleBindingCreateWithoutDeploymentInput[]
-    | RoleBindingCreateWithoutDeploymentInput
-  >;
-  connect?: Maybe<RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput>;
-}
-
-export interface RoleBindingCreateWithoutDeploymentInput {
-  id?: Maybe<ID_Input>;
-  role?: Maybe<Role>;
-  user?: Maybe<UserCreateOneWithoutRoleBindingsInput>;
-  serviceAccount?: Maybe<ServiceAccountCreateOneWithoutRoleBindingInput>;
-  workspace?: Maybe<WorkspaceCreateOneWithoutRoleBindingsInput>;
-}
-
-export interface UserCreateOneWithoutRoleBindingsInput {
-  create?: Maybe<UserCreateWithoutRoleBindingsInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface UserCreateWithoutRoleBindingsInput {
-  id?: Maybe<ID_Input>;
-  username?: Maybe<String>;
-  status?: Maybe<String>;
-  fullName?: Maybe<String>;
-  avatarUrl?: Maybe<String>;
-  emails?: Maybe<EmailCreateManyWithoutUserInput>;
-  localCredential?: Maybe<LocalCredentialCreateOneWithoutUserInput>;
-  oauthCredentials?: Maybe<OAuthCredentialCreateManyWithoutUserInput>;
-}
-
-export interface EmailCreateManyWithoutUserInput {
-  create?: Maybe<EmailCreateWithoutUserInput[] | EmailCreateWithoutUserInput>;
-  connect?: Maybe<EmailWhereUniqueInput[] | EmailWhereUniqueInput>;
-}
-
-export interface EmailCreateWithoutUserInput {
-  id?: Maybe<ID_Input>;
-  address?: Maybe<String>;
-  primary?: Maybe<Boolean>;
-  token?: Maybe<String>;
-  verified?: Maybe<Boolean>;
-}
-
-export interface LocalCredentialCreateOneWithoutUserInput {
-  create?: Maybe<LocalCredentialCreateWithoutUserInput>;
-  connect?: Maybe<LocalCredentialWhereUniqueInput>;
-}
-
-export interface LocalCredentialCreateWithoutUserInput {
-  id?: Maybe<ID_Input>;
-  password?: Maybe<String>;
-  resetToken?: Maybe<String>;
-}
-
-export interface OAuthCredentialCreateManyWithoutUserInput {
-  create?: Maybe<
-    | OAuthCredentialCreateWithoutUserInput[]
-    | OAuthCredentialCreateWithoutUserInput
-  >;
-  connect?: Maybe<
-    OAuthCredentialWhereUniqueInput[] | OAuthCredentialWhereUniqueInput
-  >;
-}
-
-export interface OAuthCredentialCreateWithoutUserInput {
-  id?: Maybe<ID_Input>;
-  expiresAt?: Maybe<DateTimeInput>;
-  oauthProvider: String;
-  oauthUserId: String;
-}
-
-export interface ServiceAccountCreateOneWithoutRoleBindingInput {
-  create?: Maybe<ServiceAccountCreateWithoutRoleBindingInput>;
-  connect?: Maybe<ServiceAccountWhereUniqueInput>;
-}
-
-export interface ServiceAccountCreateWithoutRoleBindingInput {
-  id?: Maybe<ID_Input>;
-  apiKey?: Maybe<String>;
-  label?: Maybe<String>;
-  category?: Maybe<String>;
-  active?: Maybe<Boolean>;
-  lastUsedAt?: Maybe<DateTimeInput>;
-}
-
-export interface WorkspaceCreateOneWithoutRoleBindingsInput {
-  create?: Maybe<WorkspaceCreateWithoutRoleBindingsInput>;
-  connect?: Maybe<WorkspaceWhereUniqueInput>;
-}
-
-export interface WorkspaceCreateWithoutRoleBindingsInput {
-  id?: Maybe<ID_Input>;
-  active?: Maybe<Boolean>;
-  deployments?: Maybe<DeploymentCreateManyWithoutWorkspaceInput>;
-  description?: Maybe<String>;
-  invites?: Maybe<InviteTokenCreateManyWithoutWorkspaceInput>;
-  label?: Maybe<String>;
-}
-
-export interface DeploymentCreateManyWithoutWorkspaceInput {
-  create?: Maybe<
-    | DeploymentCreateWithoutWorkspaceInput[]
-    | DeploymentCreateWithoutWorkspaceInput
-  >;
-  connect?: Maybe<DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput>;
-}
-
-export interface DeploymentCreateWithoutWorkspaceInput {
-  id?: Maybe<ID_Input>;
-  config?: Maybe<Json>;
-  description?: Maybe<String>;
-  label?: Maybe<String>;
-  registryPassword?: Maybe<String>;
-  elasticsearchPassword?: Maybe<String>;
-  releaseName?: Maybe<String>;
-  version?: Maybe<String>;
-  extraAu?: Maybe<Int>;
-  airflowVersion?: Maybe<String>;
-  alertEmails?: Maybe<DeploymentCreatealertEmailsInput>;
-  roleBindings?: Maybe<RoleBindingCreateManyWithoutDeploymentInput>;
-}
-
-export interface InviteTokenCreateManyWithoutWorkspaceInput {
-  create?: Maybe<
-    | InviteTokenCreateWithoutWorkspaceInput[]
-    | InviteTokenCreateWithoutWorkspaceInput
-  >;
-  connect?: Maybe<InviteTokenWhereUniqueInput[] | InviteTokenWhereUniqueInput>;
-}
-
-export interface InviteTokenCreateWithoutWorkspaceInput {
-  id?: Maybe<ID_Input>;
-  email: String;
-  token: String;
-  role?: Maybe<Role>;
-}
-
-export interface WorkspaceCreateOneWithoutDeploymentsInput {
-  create?: Maybe<WorkspaceCreateWithoutDeploymentsInput>;
-  connect?: Maybe<WorkspaceWhereUniqueInput>;
-}
-
-export interface WorkspaceCreateWithoutDeploymentsInput {
-  id?: Maybe<ID_Input>;
-  active?: Maybe<Boolean>;
-  description?: Maybe<String>;
-  invites?: Maybe<InviteTokenCreateManyWithoutWorkspaceInput>;
-  label?: Maybe<String>;
-  roleBindings?: Maybe<RoleBindingCreateManyWithoutWorkspaceInput>;
-}
-
-export interface RoleBindingCreateManyWithoutWorkspaceInput {
-  create?: Maybe<
-    | RoleBindingCreateWithoutWorkspaceInput[]
-    | RoleBindingCreateWithoutWorkspaceInput
-  >;
-  connect?: Maybe<RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput>;
-}
-
-export interface RoleBindingCreateWithoutWorkspaceInput {
-  id?: Maybe<ID_Input>;
-  role?: Maybe<Role>;
-  user?: Maybe<UserCreateOneWithoutRoleBindingsInput>;
-  serviceAccount?: Maybe<ServiceAccountCreateOneWithoutRoleBindingInput>;
-  deployment?: Maybe<DeploymentCreateOneWithoutRoleBindingsInput>;
-}
-
-export interface DeploymentCreateOneWithoutRoleBindingsInput {
-  create?: Maybe<DeploymentCreateWithoutRoleBindingsInput>;
-  connect?: Maybe<DeploymentWhereUniqueInput>;
-}
-
-export interface DeploymentCreateWithoutRoleBindingsInput {
-  id?: Maybe<ID_Input>;
-  config?: Maybe<Json>;
-  description?: Maybe<String>;
-  label?: Maybe<String>;
-  registryPassword?: Maybe<String>;
-  elasticsearchPassword?: Maybe<String>;
-  releaseName?: Maybe<String>;
-  version?: Maybe<String>;
-  extraAu?: Maybe<Int>;
-  airflowVersion?: Maybe<String>;
-  alertEmails?: Maybe<DeploymentCreatealertEmailsInput>;
-  workspace?: Maybe<WorkspaceCreateOneWithoutDeploymentsInput>;
-}
-
-export interface DeploymentUpdateInput {
-  config?: Maybe<Json>;
-  description?: Maybe<String>;
-  label?: Maybe<String>;
-  registryPassword?: Maybe<String>;
-  elasticsearchPassword?: Maybe<String>;
-  releaseName?: Maybe<String>;
-  version?: Maybe<String>;
-  extraAu?: Maybe<Int>;
-  airflowVersion?: Maybe<String>;
-  alertEmails?: Maybe<DeploymentUpdatealertEmailsInput>;
-  roleBindings?: Maybe<RoleBindingUpdateManyWithoutDeploymentInput>;
-  workspace?: Maybe<WorkspaceUpdateOneWithoutDeploymentsInput>;
-}
-
-export interface DeploymentUpdatealertEmailsInput {
-  set?: Maybe<String[] | String>;
-}
-
 export interface RoleBindingUpdateManyWithoutDeploymentInput {
   create?: Maybe<
     | RoleBindingCreateWithoutDeploymentInput[]
@@ -1549,9 +830,77 @@ export interface RoleBindingUpdateManyWithoutDeploymentInput {
   >;
 }
 
+export interface OAuthCredentialWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  expiresAt?: Maybe<DateTimeInput>;
+  expiresAt_not?: Maybe<DateTimeInput>;
+  expiresAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  expiresAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  expiresAt_lt?: Maybe<DateTimeInput>;
+  expiresAt_lte?: Maybe<DateTimeInput>;
+  expiresAt_gt?: Maybe<DateTimeInput>;
+  expiresAt_gte?: Maybe<DateTimeInput>;
+  oauthProvider?: Maybe<String>;
+  oauthProvider_not?: Maybe<String>;
+  oauthProvider_in?: Maybe<String[] | String>;
+  oauthProvider_not_in?: Maybe<String[] | String>;
+  oauthProvider_lt?: Maybe<String>;
+  oauthProvider_lte?: Maybe<String>;
+  oauthProvider_gt?: Maybe<String>;
+  oauthProvider_gte?: Maybe<String>;
+  oauthProvider_contains?: Maybe<String>;
+  oauthProvider_not_contains?: Maybe<String>;
+  oauthProvider_starts_with?: Maybe<String>;
+  oauthProvider_not_starts_with?: Maybe<String>;
+  oauthProvider_ends_with?: Maybe<String>;
+  oauthProvider_not_ends_with?: Maybe<String>;
+  oauthUserId?: Maybe<String>;
+  oauthUserId_not?: Maybe<String>;
+  oauthUserId_in?: Maybe<String[] | String>;
+  oauthUserId_not_in?: Maybe<String[] | String>;
+  oauthUserId_lt?: Maybe<String>;
+  oauthUserId_lte?: Maybe<String>;
+  oauthUserId_gt?: Maybe<String>;
+  oauthUserId_gte?: Maybe<String>;
+  oauthUserId_contains?: Maybe<String>;
+  oauthUserId_not_contains?: Maybe<String>;
+  oauthUserId_starts_with?: Maybe<String>;
+  oauthUserId_not_starts_with?: Maybe<String>;
+  oauthUserId_ends_with?: Maybe<String>;
+  oauthUserId_not_ends_with?: Maybe<String>;
+  user?: Maybe<UserWhereInput>;
+  AND?: Maybe<OAuthCredentialWhereInput[] | OAuthCredentialWhereInput>;
+  OR?: Maybe<OAuthCredentialWhereInput[] | OAuthCredentialWhereInput>;
+  NOT?: Maybe<OAuthCredentialWhereInput[] | OAuthCredentialWhereInput>;
+}
+
 export interface RoleBindingUpdateWithWhereUniqueWithoutDeploymentInput {
   where: RoleBindingWhereUniqueInput;
   data: RoleBindingUpdateWithoutDeploymentDataInput;
+}
+
+export interface UserSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<UserWhereInput>;
+  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
 }
 
 export interface RoleBindingUpdateWithoutDeploymentDataInput {
@@ -1559,6 +908,26 @@ export interface RoleBindingUpdateWithoutDeploymentDataInput {
   user?: Maybe<UserUpdateOneWithoutRoleBindingsInput>;
   serviceAccount?: Maybe<ServiceAccountUpdateOneWithoutRoleBindingInput>;
   workspace?: Maybe<WorkspaceUpdateOneWithoutRoleBindingsInput>;
+}
+
+export interface ServiceAccountSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<ServiceAccountWhereInput>;
+  AND?: Maybe<
+    | ServiceAccountSubscriptionWhereInput[]
+    | ServiceAccountSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    | ServiceAccountSubscriptionWhereInput[]
+    | ServiceAccountSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    | ServiceAccountSubscriptionWhereInput[]
+    | ServiceAccountSubscriptionWhereInput
+  >;
 }
 
 export interface UserUpdateOneWithoutRoleBindingsInput {
@@ -1570,6 +939,26 @@ export interface UserUpdateOneWithoutRoleBindingsInput {
   connect?: Maybe<UserWhereUniqueInput>;
 }
 
+export interface OAuthCredentialSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<OAuthCredentialWhereInput>;
+  AND?: Maybe<
+    | OAuthCredentialSubscriptionWhereInput[]
+    | OAuthCredentialSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    | OAuthCredentialSubscriptionWhereInput[]
+    | OAuthCredentialSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    | OAuthCredentialSubscriptionWhereInput[]
+    | OAuthCredentialSubscriptionWhereInput
+  >;
+}
+
 export interface UserUpdateWithoutRoleBindingsDataInput {
   username?: Maybe<String>;
   status?: Maybe<String>;
@@ -1578,6 +967,23 @@ export interface UserUpdateWithoutRoleBindingsDataInput {
   emails?: Maybe<EmailUpdateManyWithoutUserInput>;
   localCredential?: Maybe<LocalCredentialUpdateOneWithoutUserInput>;
   oauthCredentials?: Maybe<OAuthCredentialUpdateManyWithoutUserInput>;
+}
+
+export interface InviteTokenSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<InviteTokenWhereInput>;
+  AND?: Maybe<
+    InviteTokenSubscriptionWhereInput[] | InviteTokenSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    InviteTokenSubscriptionWhereInput[] | InviteTokenSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    InviteTokenSubscriptionWhereInput[] | InviteTokenSubscriptionWhereInput
+  >;
 }
 
 export interface EmailUpdateManyWithoutUserInput {
@@ -1600,9 +1006,79 @@ export interface EmailUpdateManyWithoutUserInput {
   >;
 }
 
+export interface EmailWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  address?: Maybe<String>;
+  address_not?: Maybe<String>;
+  address_in?: Maybe<String[] | String>;
+  address_not_in?: Maybe<String[] | String>;
+  address_lt?: Maybe<String>;
+  address_lte?: Maybe<String>;
+  address_gt?: Maybe<String>;
+  address_gte?: Maybe<String>;
+  address_contains?: Maybe<String>;
+  address_not_contains?: Maybe<String>;
+  address_starts_with?: Maybe<String>;
+  address_not_starts_with?: Maybe<String>;
+  address_ends_with?: Maybe<String>;
+  address_not_ends_with?: Maybe<String>;
+  primary?: Maybe<Boolean>;
+  primary_not?: Maybe<Boolean>;
+  token?: Maybe<String>;
+  token_not?: Maybe<String>;
+  token_in?: Maybe<String[] | String>;
+  token_not_in?: Maybe<String[] | String>;
+  token_lt?: Maybe<String>;
+  token_lte?: Maybe<String>;
+  token_gt?: Maybe<String>;
+  token_gte?: Maybe<String>;
+  token_contains?: Maybe<String>;
+  token_not_contains?: Maybe<String>;
+  token_starts_with?: Maybe<String>;
+  token_not_starts_with?: Maybe<String>;
+  token_ends_with?: Maybe<String>;
+  token_not_ends_with?: Maybe<String>;
+  user?: Maybe<UserWhereInput>;
+  verified?: Maybe<Boolean>;
+  verified_not?: Maybe<Boolean>;
+  AND?: Maybe<EmailWhereInput[] | EmailWhereInput>;
+  OR?: Maybe<EmailWhereInput[] | EmailWhereInput>;
+  NOT?: Maybe<EmailWhereInput[] | EmailWhereInput>;
+}
+
 export interface EmailUpdateWithWhereUniqueWithoutUserInput {
   where: EmailWhereUniqueInput;
   data: EmailUpdateWithoutUserDataInput;
+}
+
+export interface DeploymentSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<DeploymentWhereInput>;
+  AND?: Maybe<
+    DeploymentSubscriptionWhereInput[] | DeploymentSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    DeploymentSubscriptionWhereInput[] | DeploymentSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    DeploymentSubscriptionWhereInput[] | DeploymentSubscriptionWhereInput
+  >;
 }
 
 export interface EmailUpdateWithoutUserDataInput {
@@ -1612,10 +1088,26 @@ export interface EmailUpdateWithoutUserDataInput {
   verified?: Maybe<Boolean>;
 }
 
+export interface WorkspaceUpdateInput {
+  active?: Maybe<Boolean>;
+  deployments?: Maybe<DeploymentUpdateManyWithoutWorkspaceInput>;
+  description?: Maybe<String>;
+  invites?: Maybe<InviteTokenUpdateManyWithoutWorkspaceInput>;
+  label?: Maybe<String>;
+  roleBindings?: Maybe<RoleBindingUpdateManyWithoutWorkspaceInput>;
+}
+
 export interface EmailUpsertWithWhereUniqueWithoutUserInput {
   where: EmailWhereUniqueInput;
   update: EmailUpdateWithoutUserDataInput;
   create: EmailCreateWithoutUserInput;
+}
+
+export interface UserUpdateManyMutationInput {
+  username?: Maybe<String>;
+  status?: Maybe<String>;
+  fullName?: Maybe<String>;
+  avatarUrl?: Maybe<String>;
 }
 
 export interface EmailScalarWhereInput {
@@ -1670,9 +1162,28 @@ export interface EmailScalarWhereInput {
   NOT?: Maybe<EmailScalarWhereInput[] | EmailScalarWhereInput>;
 }
 
+export interface UserUpdateInput {
+  username?: Maybe<String>;
+  status?: Maybe<String>;
+  fullName?: Maybe<String>;
+  avatarUrl?: Maybe<String>;
+  emails?: Maybe<EmailUpdateManyWithoutUserInput>;
+  roleBindings?: Maybe<RoleBindingUpdateManyWithoutUserInput>;
+  localCredential?: Maybe<LocalCredentialUpdateOneWithoutUserInput>;
+  oauthCredentials?: Maybe<OAuthCredentialUpdateManyWithoutUserInput>;
+}
+
 export interface EmailUpdateManyWithWhereNestedInput {
   where: EmailScalarWhereInput;
   data: EmailUpdateManyDataInput;
+}
+
+export interface ServiceAccountUpdateManyMutationInput {
+  apiKey?: Maybe<String>;
+  label?: Maybe<String>;
+  category?: Maybe<String>;
+  active?: Maybe<Boolean>;
+  lastUsedAt?: Maybe<DateTimeInput>;
 }
 
 export interface EmailUpdateManyDataInput {
@@ -1680,6 +1191,11 @@ export interface EmailUpdateManyDataInput {
   primary?: Maybe<Boolean>;
   token?: Maybe<String>;
   verified?: Maybe<Boolean>;
+}
+
+export interface RoleBindingUpsertWithoutServiceAccountInput {
+  update: RoleBindingUpdateWithoutServiceAccountDataInput;
+  create: RoleBindingCreateWithoutServiceAccountInput;
 }
 
 export interface LocalCredentialUpdateOneWithoutUserInput {
@@ -1691,14 +1207,59 @@ export interface LocalCredentialUpdateOneWithoutUserInput {
   connect?: Maybe<LocalCredentialWhereUniqueInput>;
 }
 
+export interface RoleBindingUpdateOneWithoutServiceAccountInput {
+  create?: Maybe<RoleBindingCreateWithoutServiceAccountInput>;
+  update?: Maybe<RoleBindingUpdateWithoutServiceAccountDataInput>;
+  upsert?: Maybe<RoleBindingUpsertWithoutServiceAccountInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<RoleBindingWhereUniqueInput>;
+}
+
 export interface LocalCredentialUpdateWithoutUserDataInput {
   password?: Maybe<String>;
   resetToken?: Maybe<String>;
 }
 
+export interface RoleBindingWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  role?: Maybe<Role>;
+  role_not?: Maybe<Role>;
+  role_in?: Maybe<Role[] | Role>;
+  role_not_in?: Maybe<Role[] | Role>;
+  user?: Maybe<UserWhereInput>;
+  serviceAccount?: Maybe<ServiceAccountWhereInput>;
+  workspace?: Maybe<WorkspaceWhereInput>;
+  deployment?: Maybe<DeploymentWhereInput>;
+  AND?: Maybe<RoleBindingWhereInput[] | RoleBindingWhereInput>;
+  OR?: Maybe<RoleBindingWhereInput[] | RoleBindingWhereInput>;
+  NOT?: Maybe<RoleBindingWhereInput[] | RoleBindingWhereInput>;
+}
+
 export interface LocalCredentialUpsertWithoutUserInput {
   update: LocalCredentialUpdateWithoutUserDataInput;
   create: LocalCredentialCreateWithoutUserInput;
+}
+
+export interface RoleBindingCreateWithoutServiceAccountInput {
+  id?: Maybe<ID_Input>;
+  role?: Maybe<Role>;
+  user?: Maybe<UserCreateOneWithoutRoleBindingsInput>;
+  workspace?: Maybe<WorkspaceCreateOneWithoutRoleBindingsInput>;
+  deployment?: Maybe<DeploymentCreateOneWithoutRoleBindingsInput>;
 }
 
 export interface OAuthCredentialUpdateManyWithoutUserInput {
@@ -1735,9 +1296,17 @@ export interface OAuthCredentialUpdateManyWithoutUserInput {
   >;
 }
 
+export type OAuthCredentialWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
 export interface OAuthCredentialUpdateWithWhereUniqueWithoutUserInput {
   where: OAuthCredentialWhereUniqueInput;
   data: OAuthCredentialUpdateWithoutUserDataInput;
+}
+
+export interface RoleBindingUpdateManyMutationInput {
+  role?: Maybe<Role>;
 }
 
 export interface OAuthCredentialUpdateWithoutUserDataInput {
@@ -1746,10 +1315,20 @@ export interface OAuthCredentialUpdateWithoutUserDataInput {
   oauthUserId?: Maybe<String>;
 }
 
+export type RoleBindingWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
 export interface OAuthCredentialUpsertWithWhereUniqueWithoutUserInput {
   where: OAuthCredentialWhereUniqueInput;
   update: OAuthCredentialUpdateWithoutUserDataInput;
   create: OAuthCredentialCreateWithoutUserInput;
+}
+
+export interface OAuthCredentialUpdateManyMutationInput {
+  expiresAt?: Maybe<DateTimeInput>;
+  oauthProvider?: Maybe<String>;
+  oauthUserId?: Maybe<String>;
 }
 
 export interface OAuthCredentialScalarWhereInput {
@@ -1814,20 +1393,49 @@ export interface OAuthCredentialScalarWhereInput {
   >;
 }
 
+export type ServiceAccountWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  apiKey?: Maybe<String>;
+}>;
+
 export interface OAuthCredentialUpdateManyWithWhereNestedInput {
   where: OAuthCredentialScalarWhereInput;
   data: OAuthCredentialUpdateManyDataInput;
 }
 
-export interface OAuthCredentialUpdateManyDataInput {
-  expiresAt?: Maybe<DateTimeInput>;
-  oauthProvider?: Maybe<String>;
-  oauthUserId?: Maybe<String>;
+export interface UserUpdateOneWithoutOauthCredentialsInput {
+  create?: Maybe<UserCreateWithoutOauthCredentialsInput>;
+  update?: Maybe<UserUpdateWithoutOauthCredentialsDataInput>;
+  upsert?: Maybe<UserUpsertWithoutOauthCredentialsInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserCreateOneWithoutLocalCredentialInput {
+  create?: Maybe<UserCreateWithoutLocalCredentialInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface UserCreateWithoutOauthCredentialsInput {
+  id?: Maybe<ID_Input>;
+  username?: Maybe<String>;
+  status?: Maybe<String>;
+  fullName?: Maybe<String>;
+  avatarUrl?: Maybe<String>;
+  emails?: Maybe<EmailCreateManyWithoutUserInput>;
+  roleBindings?: Maybe<RoleBindingCreateManyWithoutUserInput>;
+  localCredential?: Maybe<LocalCredentialCreateOneWithoutUserInput>;
 }
 
 export interface UserUpsertWithoutRoleBindingsInput {
   update: UserUpdateWithoutRoleBindingsDataInput;
   create: UserCreateWithoutRoleBindingsInput;
+}
+
+export interface UserCreateOneWithoutOauthCredentialsInput {
+  create?: Maybe<UserCreateWithoutOauthCredentialsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
 }
 
 export interface ServiceAccountUpdateOneWithoutRoleBindingInput {
@@ -1839,6 +1447,11 @@ export interface ServiceAccountUpdateOneWithoutRoleBindingInput {
   connect?: Maybe<ServiceAccountWhereUniqueInput>;
 }
 
+export interface LocalCredentialUpdateManyMutationInput {
+  password?: Maybe<String>;
+  resetToken?: Maybe<String>;
+}
+
 export interface ServiceAccountUpdateWithoutRoleBindingDataInput {
   apiKey?: Maybe<String>;
   label?: Maybe<String>;
@@ -1847,9 +1460,22 @@ export interface ServiceAccountUpdateWithoutRoleBindingDataInput {
   lastUsedAt?: Maybe<DateTimeInput>;
 }
 
+export type WorkspaceWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+}>;
+
 export interface ServiceAccountUpsertWithoutRoleBindingInput {
   update: ServiceAccountUpdateWithoutRoleBindingDataInput;
   create: ServiceAccountCreateWithoutRoleBindingInput;
+}
+
+export interface UserUpdateOneWithoutLocalCredentialInput {
+  create?: Maybe<UserCreateWithoutLocalCredentialInput>;
+  update?: Maybe<UserUpdateWithoutLocalCredentialDataInput>;
+  upsert?: Maybe<UserUpsertWithoutLocalCredentialInput>;
+  delete?: Maybe<Boolean>;
+  disconnect?: Maybe<Boolean>;
+  connect?: Maybe<UserWhereUniqueInput>;
 }
 
 export interface WorkspaceUpdateOneWithoutRoleBindingsInput {
@@ -1861,6 +1487,17 @@ export interface WorkspaceUpdateOneWithoutRoleBindingsInput {
   connect?: Maybe<WorkspaceWhereUniqueInput>;
 }
 
+export interface UserCreateWithoutLocalCredentialInput {
+  id?: Maybe<ID_Input>;
+  username?: Maybe<String>;
+  status?: Maybe<String>;
+  fullName?: Maybe<String>;
+  avatarUrl?: Maybe<String>;
+  emails?: Maybe<EmailCreateManyWithoutUserInput>;
+  roleBindings?: Maybe<RoleBindingCreateManyWithoutUserInput>;
+  oauthCredentials?: Maybe<OAuthCredentialCreateManyWithoutUserInput>;
+}
+
 export interface WorkspaceUpdateWithoutRoleBindingsDataInput {
   active?: Maybe<Boolean>;
   deployments?: Maybe<DeploymentUpdateManyWithoutWorkspaceInput>;
@@ -1869,33 +1506,127 @@ export interface WorkspaceUpdateWithoutRoleBindingsDataInput {
   label?: Maybe<String>;
 }
 
-export interface DeploymentUpdateManyWithoutWorkspaceInput {
+export interface DeploymentCreateInput {
+  id?: Maybe<ID_Input>;
+  config?: Maybe<Json>;
+  description?: Maybe<String>;
+  label?: Maybe<String>;
+  registryPassword?: Maybe<String>;
+  elasticsearchPassword?: Maybe<String>;
+  releaseName?: Maybe<String>;
+  version?: Maybe<String>;
+  extraAu?: Maybe<Int>;
+  airflowVersion?: Maybe<String>;
+  alertEmails?: Maybe<DeploymentCreatealertEmailsInput>;
+  roleBindings?: Maybe<RoleBindingCreateManyWithoutDeploymentInput>;
+  workspace?: Maybe<WorkspaceCreateOneWithoutDeploymentsInput>;
+}
+
+export interface ServiceAccountWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  apiKey?: Maybe<String>;
+  apiKey_not?: Maybe<String>;
+  apiKey_in?: Maybe<String[] | String>;
+  apiKey_not_in?: Maybe<String[] | String>;
+  apiKey_lt?: Maybe<String>;
+  apiKey_lte?: Maybe<String>;
+  apiKey_gt?: Maybe<String>;
+  apiKey_gte?: Maybe<String>;
+  apiKey_contains?: Maybe<String>;
+  apiKey_not_contains?: Maybe<String>;
+  apiKey_starts_with?: Maybe<String>;
+  apiKey_not_starts_with?: Maybe<String>;
+  apiKey_ends_with?: Maybe<String>;
+  apiKey_not_ends_with?: Maybe<String>;
+  label?: Maybe<String>;
+  label_not?: Maybe<String>;
+  label_in?: Maybe<String[] | String>;
+  label_not_in?: Maybe<String[] | String>;
+  label_lt?: Maybe<String>;
+  label_lte?: Maybe<String>;
+  label_gt?: Maybe<String>;
+  label_gte?: Maybe<String>;
+  label_contains?: Maybe<String>;
+  label_not_contains?: Maybe<String>;
+  label_starts_with?: Maybe<String>;
+  label_not_starts_with?: Maybe<String>;
+  label_ends_with?: Maybe<String>;
+  label_not_ends_with?: Maybe<String>;
+  category?: Maybe<String>;
+  category_not?: Maybe<String>;
+  category_in?: Maybe<String[] | String>;
+  category_not_in?: Maybe<String[] | String>;
+  category_lt?: Maybe<String>;
+  category_lte?: Maybe<String>;
+  category_gt?: Maybe<String>;
+  category_gte?: Maybe<String>;
+  category_contains?: Maybe<String>;
+  category_not_contains?: Maybe<String>;
+  category_starts_with?: Maybe<String>;
+  category_not_starts_with?: Maybe<String>;
+  category_ends_with?: Maybe<String>;
+  category_not_ends_with?: Maybe<String>;
+  active?: Maybe<Boolean>;
+  active_not?: Maybe<Boolean>;
+  roleBinding?: Maybe<RoleBindingWhereInput>;
+  lastUsedAt?: Maybe<DateTimeInput>;
+  lastUsedAt_not?: Maybe<DateTimeInput>;
+  lastUsedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  lastUsedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  lastUsedAt_lt?: Maybe<DateTimeInput>;
+  lastUsedAt_lte?: Maybe<DateTimeInput>;
+  lastUsedAt_gt?: Maybe<DateTimeInput>;
+  lastUsedAt_gte?: Maybe<DateTimeInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<ServiceAccountWhereInput[] | ServiceAccountWhereInput>;
+  OR?: Maybe<ServiceAccountWhereInput[] | ServiceAccountWhereInput>;
+  NOT?: Maybe<ServiceAccountWhereInput[] | ServiceAccountWhereInput>;
+}
+
+export interface RoleBindingCreateManyWithoutDeploymentInput {
   create?: Maybe<
-    | DeploymentCreateWithoutWorkspaceInput[]
-    | DeploymentCreateWithoutWorkspaceInput
+    | RoleBindingCreateWithoutDeploymentInput[]
+    | RoleBindingCreateWithoutDeploymentInput
   >;
-  delete?: Maybe<DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput>;
-  connect?: Maybe<DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput>;
-  set?: Maybe<DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput>;
-  disconnect?: Maybe<DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput>;
-  update?: Maybe<
-    | DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput[]
-    | DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput
-  >;
-  upsert?: Maybe<
-    | DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput[]
-    | DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput
-  >;
-  deleteMany?: Maybe<DeploymentScalarWhereInput[] | DeploymentScalarWhereInput>;
-  updateMany?: Maybe<
-    | DeploymentUpdateManyWithWhereNestedInput[]
-    | DeploymentUpdateManyWithWhereNestedInput
-  >;
+  connect?: Maybe<RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput>;
 }
 
 export interface DeploymentUpdateWithWhereUniqueWithoutWorkspaceInput {
   where: DeploymentWhereUniqueInput;
   data: DeploymentUpdateWithoutWorkspaceDataInput;
+}
+
+export interface UserCreateOneWithoutRoleBindingsInput {
+  create?: Maybe<UserCreateWithoutRoleBindingsInput>;
+  connect?: Maybe<UserWhereUniqueInput>;
 }
 
 export interface DeploymentUpdateWithoutWorkspaceDataInput {
@@ -1912,10 +1643,20 @@ export interface DeploymentUpdateWithoutWorkspaceDataInput {
   roleBindings?: Maybe<RoleBindingUpdateManyWithoutDeploymentInput>;
 }
 
+export interface EmailCreateManyWithoutUserInput {
+  create?: Maybe<EmailCreateWithoutUserInput[] | EmailCreateWithoutUserInput>;
+  connect?: Maybe<EmailWhereUniqueInput[] | EmailWhereUniqueInput>;
+}
+
 export interface DeploymentUpsertWithWhereUniqueWithoutWorkspaceInput {
   where: DeploymentWhereUniqueInput;
   update: DeploymentUpdateWithoutWorkspaceDataInput;
   create: DeploymentCreateWithoutWorkspaceInput;
+}
+
+export interface LocalCredentialCreateOneWithoutUserInput {
+  create?: Maybe<LocalCredentialCreateWithoutUserInput>;
+  connect?: Maybe<LocalCredentialWhereUniqueInput>;
 }
 
 export interface DeploymentScalarWhereInput {
@@ -2060,9 +1801,24 @@ export interface DeploymentScalarWhereInput {
   NOT?: Maybe<DeploymentScalarWhereInput[] | DeploymentScalarWhereInput>;
 }
 
+export interface OAuthCredentialCreateManyWithoutUserInput {
+  create?: Maybe<
+    | OAuthCredentialCreateWithoutUserInput[]
+    | OAuthCredentialCreateWithoutUserInput
+  >;
+  connect?: Maybe<
+    OAuthCredentialWhereUniqueInput[] | OAuthCredentialWhereUniqueInput
+  >;
+}
+
 export interface DeploymentUpdateManyWithWhereNestedInput {
   where: DeploymentScalarWhereInput;
   data: DeploymentUpdateManyDataInput;
+}
+
+export interface ServiceAccountCreateOneWithoutRoleBindingInput {
+  create?: Maybe<ServiceAccountCreateWithoutRoleBindingInput>;
+  connect?: Maybe<ServiceAccountWhereUniqueInput>;
 }
 
 export interface DeploymentUpdateManyDataInput {
@@ -2076,6 +1832,11 @@ export interface DeploymentUpdateManyDataInput {
   extraAu?: Maybe<Int>;
   airflowVersion?: Maybe<String>;
   alertEmails?: Maybe<DeploymentUpdatealertEmailsInput>;
+}
+
+export interface WorkspaceCreateOneWithoutRoleBindingsInput {
+  create?: Maybe<WorkspaceCreateWithoutRoleBindingsInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput>;
 }
 
 export interface InviteTokenUpdateManyWithoutWorkspaceInput {
@@ -2106,9 +1867,25 @@ export interface InviteTokenUpdateManyWithoutWorkspaceInput {
   >;
 }
 
+export interface DeploymentCreateManyWithoutWorkspaceInput {
+  create?: Maybe<
+    | DeploymentCreateWithoutWorkspaceInput[]
+    | DeploymentCreateWithoutWorkspaceInput
+  >;
+  connect?: Maybe<DeploymentWhereUniqueInput[] | DeploymentWhereUniqueInput>;
+}
+
 export interface InviteTokenUpdateWithWhereUniqueWithoutWorkspaceInput {
   where: InviteTokenWhereUniqueInput;
   data: InviteTokenUpdateWithoutWorkspaceDataInput;
+}
+
+export interface InviteTokenCreateManyWithoutWorkspaceInput {
+  create?: Maybe<
+    | InviteTokenCreateWithoutWorkspaceInput[]
+    | InviteTokenCreateWithoutWorkspaceInput
+  >;
+  connect?: Maybe<InviteTokenWhereUniqueInput[] | InviteTokenWhereUniqueInput>;
 }
 
 export interface InviteTokenUpdateWithoutWorkspaceDataInput {
@@ -2117,10 +1894,23 @@ export interface InviteTokenUpdateWithoutWorkspaceDataInput {
   role?: Maybe<Role>;
 }
 
+export interface WorkspaceCreateOneWithoutDeploymentsInput {
+  create?: Maybe<WorkspaceCreateWithoutDeploymentsInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput>;
+}
+
 export interface InviteTokenUpsertWithWhereUniqueWithoutWorkspaceInput {
   where: InviteTokenWhereUniqueInput;
   update: InviteTokenUpdateWithoutWorkspaceDataInput;
   create: InviteTokenCreateWithoutWorkspaceInput;
+}
+
+export interface RoleBindingCreateManyWithoutWorkspaceInput {
+  create?: Maybe<
+    | RoleBindingCreateWithoutWorkspaceInput[]
+    | RoleBindingCreateWithoutWorkspaceInput
+  >;
+  connect?: Maybe<RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput>;
 }
 
 export interface InviteTokenScalarWhereInput {
@@ -2191,9 +1981,83 @@ export interface InviteTokenScalarWhereInput {
   NOT?: Maybe<InviteTokenScalarWhereInput[] | InviteTokenScalarWhereInput>;
 }
 
+export interface DeploymentCreateOneWithoutRoleBindingsInput {
+  create?: Maybe<DeploymentCreateWithoutRoleBindingsInput>;
+  connect?: Maybe<DeploymentWhereUniqueInput>;
+}
+
 export interface InviteTokenUpdateManyWithWhereNestedInput {
   where: InviteTokenScalarWhereInput;
   data: InviteTokenUpdateManyDataInput;
+}
+
+export interface InviteTokenWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  email?: Maybe<String>;
+  email_not?: Maybe<String>;
+  email_in?: Maybe<String[] | String>;
+  email_not_in?: Maybe<String[] | String>;
+  email_lt?: Maybe<String>;
+  email_lte?: Maybe<String>;
+  email_gt?: Maybe<String>;
+  email_gte?: Maybe<String>;
+  email_contains?: Maybe<String>;
+  email_not_contains?: Maybe<String>;
+  email_starts_with?: Maybe<String>;
+  email_not_starts_with?: Maybe<String>;
+  email_ends_with?: Maybe<String>;
+  email_not_ends_with?: Maybe<String>;
+  token?: Maybe<String>;
+  token_not?: Maybe<String>;
+  token_in?: Maybe<String[] | String>;
+  token_not_in?: Maybe<String[] | String>;
+  token_lt?: Maybe<String>;
+  token_lte?: Maybe<String>;
+  token_gt?: Maybe<String>;
+  token_gte?: Maybe<String>;
+  token_contains?: Maybe<String>;
+  token_not_contains?: Maybe<String>;
+  token_starts_with?: Maybe<String>;
+  token_not_starts_with?: Maybe<String>;
+  token_ends_with?: Maybe<String>;
+  token_not_ends_with?: Maybe<String>;
+  workspace?: Maybe<WorkspaceWhereInput>;
+  role?: Maybe<Role>;
+  role_not?: Maybe<Role>;
+  role_in?: Maybe<Role[] | Role>;
+  role_not_in?: Maybe<Role[] | Role>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<InviteTokenWhereInput[] | InviteTokenWhereInput>;
+  OR?: Maybe<InviteTokenWhereInput[] | InviteTokenWhereInput>;
+  NOT?: Maybe<InviteTokenWhereInput[] | InviteTokenWhereInput>;
 }
 
 export interface InviteTokenUpdateManyDataInput {
@@ -2202,15 +2066,186 @@ export interface InviteTokenUpdateManyDataInput {
   role?: Maybe<Role>;
 }
 
+export interface LocalCredentialWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  user?: Maybe<UserWhereInput>;
+  password?: Maybe<String>;
+  password_not?: Maybe<String>;
+  password_in?: Maybe<String[] | String>;
+  password_not_in?: Maybe<String[] | String>;
+  password_lt?: Maybe<String>;
+  password_lte?: Maybe<String>;
+  password_gt?: Maybe<String>;
+  password_gte?: Maybe<String>;
+  password_contains?: Maybe<String>;
+  password_not_contains?: Maybe<String>;
+  password_starts_with?: Maybe<String>;
+  password_not_starts_with?: Maybe<String>;
+  password_ends_with?: Maybe<String>;
+  password_not_ends_with?: Maybe<String>;
+  resetToken?: Maybe<String>;
+  resetToken_not?: Maybe<String>;
+  resetToken_in?: Maybe<String[] | String>;
+  resetToken_not_in?: Maybe<String[] | String>;
+  resetToken_lt?: Maybe<String>;
+  resetToken_lte?: Maybe<String>;
+  resetToken_gt?: Maybe<String>;
+  resetToken_gte?: Maybe<String>;
+  resetToken_contains?: Maybe<String>;
+  resetToken_not_contains?: Maybe<String>;
+  resetToken_starts_with?: Maybe<String>;
+  resetToken_not_starts_with?: Maybe<String>;
+  resetToken_ends_with?: Maybe<String>;
+  resetToken_not_ends_with?: Maybe<String>;
+  AND?: Maybe<LocalCredentialWhereInput[] | LocalCredentialWhereInput>;
+  OR?: Maybe<LocalCredentialWhereInput[] | LocalCredentialWhereInput>;
+  NOT?: Maybe<LocalCredentialWhereInput[] | LocalCredentialWhereInput>;
+}
+
 export interface WorkspaceUpsertWithoutRoleBindingsInput {
   update: WorkspaceUpdateWithoutRoleBindingsDataInput;
   create: WorkspaceCreateWithoutRoleBindingsInput;
+}
+
+export interface LocalCredentialSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<LocalCredentialWhereInput>;
+  AND?: Maybe<
+    | LocalCredentialSubscriptionWhereInput[]
+    | LocalCredentialSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    | LocalCredentialSubscriptionWhereInput[]
+    | LocalCredentialSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    | LocalCredentialSubscriptionWhereInput[]
+    | LocalCredentialSubscriptionWhereInput
+  >;
 }
 
 export interface RoleBindingUpsertWithWhereUniqueWithoutDeploymentInput {
   where: RoleBindingWhereUniqueInput;
   update: RoleBindingUpdateWithoutDeploymentDataInput;
   create: RoleBindingCreateWithoutDeploymentInput;
+}
+
+export interface UserWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  username?: Maybe<String>;
+  username_not?: Maybe<String>;
+  username_in?: Maybe<String[] | String>;
+  username_not_in?: Maybe<String[] | String>;
+  username_lt?: Maybe<String>;
+  username_lte?: Maybe<String>;
+  username_gt?: Maybe<String>;
+  username_gte?: Maybe<String>;
+  username_contains?: Maybe<String>;
+  username_not_contains?: Maybe<String>;
+  username_starts_with?: Maybe<String>;
+  username_not_starts_with?: Maybe<String>;
+  username_ends_with?: Maybe<String>;
+  username_not_ends_with?: Maybe<String>;
+  status?: Maybe<String>;
+  status_not?: Maybe<String>;
+  status_in?: Maybe<String[] | String>;
+  status_not_in?: Maybe<String[] | String>;
+  status_lt?: Maybe<String>;
+  status_lte?: Maybe<String>;
+  status_gt?: Maybe<String>;
+  status_gte?: Maybe<String>;
+  status_contains?: Maybe<String>;
+  status_not_contains?: Maybe<String>;
+  status_starts_with?: Maybe<String>;
+  status_not_starts_with?: Maybe<String>;
+  status_ends_with?: Maybe<String>;
+  status_not_ends_with?: Maybe<String>;
+  fullName?: Maybe<String>;
+  fullName_not?: Maybe<String>;
+  fullName_in?: Maybe<String[] | String>;
+  fullName_not_in?: Maybe<String[] | String>;
+  fullName_lt?: Maybe<String>;
+  fullName_lte?: Maybe<String>;
+  fullName_gt?: Maybe<String>;
+  fullName_gte?: Maybe<String>;
+  fullName_contains?: Maybe<String>;
+  fullName_not_contains?: Maybe<String>;
+  fullName_starts_with?: Maybe<String>;
+  fullName_not_starts_with?: Maybe<String>;
+  fullName_ends_with?: Maybe<String>;
+  fullName_not_ends_with?: Maybe<String>;
+  avatarUrl?: Maybe<String>;
+  avatarUrl_not?: Maybe<String>;
+  avatarUrl_in?: Maybe<String[] | String>;
+  avatarUrl_not_in?: Maybe<String[] | String>;
+  avatarUrl_lt?: Maybe<String>;
+  avatarUrl_lte?: Maybe<String>;
+  avatarUrl_gt?: Maybe<String>;
+  avatarUrl_gte?: Maybe<String>;
+  avatarUrl_contains?: Maybe<String>;
+  avatarUrl_not_contains?: Maybe<String>;
+  avatarUrl_starts_with?: Maybe<String>;
+  avatarUrl_not_starts_with?: Maybe<String>;
+  avatarUrl_ends_with?: Maybe<String>;
+  avatarUrl_not_ends_with?: Maybe<String>;
+  emails_every?: Maybe<EmailWhereInput>;
+  emails_some?: Maybe<EmailWhereInput>;
+  emails_none?: Maybe<EmailWhereInput>;
+  roleBindings_every?: Maybe<RoleBindingWhereInput>;
+  roleBindings_some?: Maybe<RoleBindingWhereInput>;
+  roleBindings_none?: Maybe<RoleBindingWhereInput>;
+  localCredential?: Maybe<LocalCredentialWhereInput>;
+  oauthCredentials_every?: Maybe<OAuthCredentialWhereInput>;
+  oauthCredentials_some?: Maybe<OAuthCredentialWhereInput>;
+  oauthCredentials_none?: Maybe<OAuthCredentialWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<UserWhereInput[] | UserWhereInput>;
+  OR?: Maybe<UserWhereInput[] | UserWhereInput>;
+  NOT?: Maybe<UserWhereInput[] | UserWhereInput>;
 }
 
 export interface RoleBindingScalarWhereInput {
@@ -2237,13 +2272,42 @@ export interface RoleBindingScalarWhereInput {
   NOT?: Maybe<RoleBindingScalarWhereInput[] | RoleBindingScalarWhereInput>;
 }
 
+export interface WorkspaceCreateInput {
+  id?: Maybe<ID_Input>;
+  active?: Maybe<Boolean>;
+  deployments?: Maybe<DeploymentCreateManyWithoutWorkspaceInput>;
+  description?: Maybe<String>;
+  invites?: Maybe<InviteTokenCreateManyWithoutWorkspaceInput>;
+  label?: Maybe<String>;
+  roleBindings?: Maybe<RoleBindingCreateManyWithoutWorkspaceInput>;
+}
+
 export interface RoleBindingUpdateManyWithWhereNestedInput {
   where: RoleBindingScalarWhereInput;
   data: RoleBindingUpdateManyDataInput;
 }
 
+export interface UserCreateInput {
+  id?: Maybe<ID_Input>;
+  username?: Maybe<String>;
+  status?: Maybe<String>;
+  fullName?: Maybe<String>;
+  avatarUrl?: Maybe<String>;
+  emails?: Maybe<EmailCreateManyWithoutUserInput>;
+  roleBindings?: Maybe<RoleBindingCreateManyWithoutUserInput>;
+  localCredential?: Maybe<LocalCredentialCreateOneWithoutUserInput>;
+  oauthCredentials?: Maybe<OAuthCredentialCreateManyWithoutUserInput>;
+}
+
 export interface RoleBindingUpdateManyDataInput {
   role?: Maybe<Role>;
+}
+
+export interface RoleBindingUpdateWithoutServiceAccountDataInput {
+  role?: Maybe<Role>;
+  user?: Maybe<UserUpdateOneWithoutRoleBindingsInput>;
+  workspace?: Maybe<WorkspaceUpdateOneWithoutRoleBindingsInput>;
+  deployment?: Maybe<DeploymentUpdateOneWithoutRoleBindingsInput>;
 }
 
 export interface WorkspaceUpdateOneWithoutDeploymentsInput {
@@ -2255,12 +2319,31 @@ export interface WorkspaceUpdateOneWithoutDeploymentsInput {
   connect?: Maybe<WorkspaceWhereUniqueInput>;
 }
 
+export interface ServiceAccountUpdateInput {
+  apiKey?: Maybe<String>;
+  label?: Maybe<String>;
+  category?: Maybe<String>;
+  active?: Maybe<Boolean>;
+  roleBinding?: Maybe<RoleBindingUpdateOneWithoutServiceAccountInput>;
+  lastUsedAt?: Maybe<DateTimeInput>;
+}
+
 export interface WorkspaceUpdateWithoutDeploymentsDataInput {
   active?: Maybe<Boolean>;
   description?: Maybe<String>;
   invites?: Maybe<InviteTokenUpdateManyWithoutWorkspaceInput>;
   label?: Maybe<String>;
   roleBindings?: Maybe<RoleBindingUpdateManyWithoutWorkspaceInput>;
+}
+
+export interface ServiceAccountCreateInput {
+  id?: Maybe<ID_Input>;
+  apiKey?: Maybe<String>;
+  label?: Maybe<String>;
+  category?: Maybe<String>;
+  active?: Maybe<Boolean>;
+  roleBinding?: Maybe<RoleBindingCreateOneWithoutServiceAccountInput>;
+  lastUsedAt?: Maybe<DateTimeInput>;
 }
 
 export interface RoleBindingUpdateManyWithoutWorkspaceInput {
@@ -2291,9 +2374,28 @@ export interface RoleBindingUpdateManyWithoutWorkspaceInput {
   >;
 }
 
+export interface RoleBindingCreateInput {
+  id?: Maybe<ID_Input>;
+  role?: Maybe<Role>;
+  user?: Maybe<UserCreateOneWithoutRoleBindingsInput>;
+  serviceAccount?: Maybe<ServiceAccountCreateOneWithoutRoleBindingInput>;
+  workspace?: Maybe<WorkspaceCreateOneWithoutRoleBindingsInput>;
+  deployment?: Maybe<DeploymentCreateOneWithoutRoleBindingsInput>;
+}
+
 export interface RoleBindingUpdateWithWhereUniqueWithoutWorkspaceInput {
   where: RoleBindingWhereUniqueInput;
   data: RoleBindingUpdateWithoutWorkspaceDataInput;
+}
+
+export interface UserUpdateWithoutOauthCredentialsDataInput {
+  username?: Maybe<String>;
+  status?: Maybe<String>;
+  fullName?: Maybe<String>;
+  avatarUrl?: Maybe<String>;
+  emails?: Maybe<EmailUpdateManyWithoutUserInput>;
+  roleBindings?: Maybe<RoleBindingUpdateManyWithoutUserInput>;
+  localCredential?: Maybe<LocalCredentialUpdateOneWithoutUserInput>;
 }
 
 export interface RoleBindingUpdateWithoutWorkspaceDataInput {
@@ -2303,6 +2405,11 @@ export interface RoleBindingUpdateWithoutWorkspaceDataInput {
   deployment?: Maybe<DeploymentUpdateOneWithoutRoleBindingsInput>;
 }
 
+export type UserWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  username?: Maybe<String>;
+}>;
+
 export interface DeploymentUpdateOneWithoutRoleBindingsInput {
   create?: Maybe<DeploymentCreateWithoutRoleBindingsInput>;
   update?: Maybe<DeploymentUpdateWithoutRoleBindingsDataInput>;
@@ -2310,6 +2417,11 @@ export interface DeploymentUpdateOneWithoutRoleBindingsInput {
   delete?: Maybe<Boolean>;
   disconnect?: Maybe<Boolean>;
   connect?: Maybe<DeploymentWhereUniqueInput>;
+}
+
+export interface UserUpsertWithoutLocalCredentialInput {
+  update: UserUpdateWithoutLocalCredentialDataInput;
+  create: UserCreateWithoutLocalCredentialInput;
 }
 
 export interface DeploymentUpdateWithoutRoleBindingsDataInput {
@@ -2326,9 +2438,19 @@ export interface DeploymentUpdateWithoutRoleBindingsDataInput {
   workspace?: Maybe<WorkspaceUpdateOneWithoutDeploymentsInput>;
 }
 
+export interface LocalCredentialUpdateInput {
+  user?: Maybe<UserUpdateOneWithoutLocalCredentialInput>;
+  password?: Maybe<String>;
+  resetToken?: Maybe<String>;
+}
+
 export interface DeploymentUpsertWithoutRoleBindingsInput {
   update: DeploymentUpdateWithoutRoleBindingsDataInput;
   create: DeploymentCreateWithoutRoleBindingsInput;
+}
+
+export interface DeploymentCreatealertEmailsInput {
+  set?: Maybe<String[] | String>;
 }
 
 export interface RoleBindingUpsertWithWhereUniqueWithoutWorkspaceInput {
@@ -2337,9 +2459,26 @@ export interface RoleBindingUpsertWithWhereUniqueWithoutWorkspaceInput {
   create: RoleBindingCreateWithoutWorkspaceInput;
 }
 
+export interface UserCreateWithoutRoleBindingsInput {
+  id?: Maybe<ID_Input>;
+  username?: Maybe<String>;
+  status?: Maybe<String>;
+  fullName?: Maybe<String>;
+  avatarUrl?: Maybe<String>;
+  emails?: Maybe<EmailCreateManyWithoutUserInput>;
+  localCredential?: Maybe<LocalCredentialCreateOneWithoutUserInput>;
+  oauthCredentials?: Maybe<OAuthCredentialCreateManyWithoutUserInput>;
+}
+
 export interface WorkspaceUpsertWithoutDeploymentsInput {
   update: WorkspaceUpdateWithoutDeploymentsDataInput;
   create: WorkspaceCreateWithoutDeploymentsInput;
+}
+
+export interface LocalCredentialCreateWithoutUserInput {
+  id?: Maybe<ID_Input>;
+  password?: Maybe<String>;
+  resetToken?: Maybe<String>;
 }
 
 export interface DeploymentUpdateManyMutationInput {
@@ -2355,6 +2494,52 @@ export interface DeploymentUpdateManyMutationInput {
   alertEmails?: Maybe<DeploymentUpdatealertEmailsInput>;
 }
 
+export interface ServiceAccountCreateWithoutRoleBindingInput {
+  id?: Maybe<ID_Input>;
+  apiKey?: Maybe<String>;
+  label?: Maybe<String>;
+  category?: Maybe<String>;
+  active?: Maybe<Boolean>;
+  lastUsedAt?: Maybe<DateTimeInput>;
+}
+
+export interface LocalCredentialCreateInput {
+  id?: Maybe<ID_Input>;
+  user?: Maybe<UserCreateOneWithoutLocalCredentialInput>;
+  password?: Maybe<String>;
+  resetToken?: Maybe<String>;
+}
+
+export interface DeploymentCreateWithoutWorkspaceInput {
+  id?: Maybe<ID_Input>;
+  config?: Maybe<Json>;
+  description?: Maybe<String>;
+  label?: Maybe<String>;
+  registryPassword?: Maybe<String>;
+  elasticsearchPassword?: Maybe<String>;
+  releaseName?: Maybe<String>;
+  version?: Maybe<String>;
+  extraAu?: Maybe<Int>;
+  airflowVersion?: Maybe<String>;
+  alertEmails?: Maybe<DeploymentCreatealertEmailsInput>;
+  roleBindings?: Maybe<RoleBindingCreateManyWithoutDeploymentInput>;
+}
+
+export interface InviteTokenUpdateManyMutationInput {
+  email?: Maybe<String>;
+  token?: Maybe<String>;
+  role?: Maybe<Role>;
+}
+
+export interface WorkspaceCreateWithoutDeploymentsInput {
+  id?: Maybe<ID_Input>;
+  active?: Maybe<Boolean>;
+  description?: Maybe<String>;
+  invites?: Maybe<InviteTokenCreateManyWithoutWorkspaceInput>;
+  label?: Maybe<String>;
+  roleBindings?: Maybe<RoleBindingCreateManyWithoutWorkspaceInput>;
+}
+
 export interface EmailCreateInput {
   id?: Maybe<ID_Input>;
   address?: Maybe<String>;
@@ -2364,9 +2549,101 @@ export interface EmailCreateInput {
   verified?: Maybe<Boolean>;
 }
 
+export interface WorkspaceWhereInput {
+  id?: Maybe<ID_Input>;
+  id_not?: Maybe<ID_Input>;
+  id_in?: Maybe<ID_Input[] | ID_Input>;
+  id_not_in?: Maybe<ID_Input[] | ID_Input>;
+  id_lt?: Maybe<ID_Input>;
+  id_lte?: Maybe<ID_Input>;
+  id_gt?: Maybe<ID_Input>;
+  id_gte?: Maybe<ID_Input>;
+  id_contains?: Maybe<ID_Input>;
+  id_not_contains?: Maybe<ID_Input>;
+  id_starts_with?: Maybe<ID_Input>;
+  id_not_starts_with?: Maybe<ID_Input>;
+  id_ends_with?: Maybe<ID_Input>;
+  id_not_ends_with?: Maybe<ID_Input>;
+  active?: Maybe<Boolean>;
+  active_not?: Maybe<Boolean>;
+  deployments_every?: Maybe<DeploymentWhereInput>;
+  deployments_some?: Maybe<DeploymentWhereInput>;
+  deployments_none?: Maybe<DeploymentWhereInput>;
+  description?: Maybe<String>;
+  description_not?: Maybe<String>;
+  description_in?: Maybe<String[] | String>;
+  description_not_in?: Maybe<String[] | String>;
+  description_lt?: Maybe<String>;
+  description_lte?: Maybe<String>;
+  description_gt?: Maybe<String>;
+  description_gte?: Maybe<String>;
+  description_contains?: Maybe<String>;
+  description_not_contains?: Maybe<String>;
+  description_starts_with?: Maybe<String>;
+  description_not_starts_with?: Maybe<String>;
+  description_ends_with?: Maybe<String>;
+  description_not_ends_with?: Maybe<String>;
+  invites_every?: Maybe<InviteTokenWhereInput>;
+  invites_some?: Maybe<InviteTokenWhereInput>;
+  invites_none?: Maybe<InviteTokenWhereInput>;
+  label?: Maybe<String>;
+  label_not?: Maybe<String>;
+  label_in?: Maybe<String[] | String>;
+  label_not_in?: Maybe<String[] | String>;
+  label_lt?: Maybe<String>;
+  label_lte?: Maybe<String>;
+  label_gt?: Maybe<String>;
+  label_gte?: Maybe<String>;
+  label_contains?: Maybe<String>;
+  label_not_contains?: Maybe<String>;
+  label_starts_with?: Maybe<String>;
+  label_not_starts_with?: Maybe<String>;
+  label_ends_with?: Maybe<String>;
+  label_not_ends_with?: Maybe<String>;
+  roleBindings_every?: Maybe<RoleBindingWhereInput>;
+  roleBindings_some?: Maybe<RoleBindingWhereInput>;
+  roleBindings_none?: Maybe<RoleBindingWhereInput>;
+  createdAt?: Maybe<DateTimeInput>;
+  createdAt_not?: Maybe<DateTimeInput>;
+  createdAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  createdAt_lt?: Maybe<DateTimeInput>;
+  createdAt_lte?: Maybe<DateTimeInput>;
+  createdAt_gt?: Maybe<DateTimeInput>;
+  createdAt_gte?: Maybe<DateTimeInput>;
+  updatedAt?: Maybe<DateTimeInput>;
+  updatedAt_not?: Maybe<DateTimeInput>;
+  updatedAt_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_not_in?: Maybe<DateTimeInput[] | DateTimeInput>;
+  updatedAt_lt?: Maybe<DateTimeInput>;
+  updatedAt_lte?: Maybe<DateTimeInput>;
+  updatedAt_gt?: Maybe<DateTimeInput>;
+  updatedAt_gte?: Maybe<DateTimeInput>;
+  AND?: Maybe<WorkspaceWhereInput[] | WorkspaceWhereInput>;
+  OR?: Maybe<WorkspaceWhereInput[] | WorkspaceWhereInput>;
+  NOT?: Maybe<WorkspaceWhereInput[] | WorkspaceWhereInput>;
+}
+
 export interface UserCreateOneWithoutEmailsInput {
   create?: Maybe<UserCreateWithoutEmailsInput>;
   connect?: Maybe<UserWhereUniqueInput>;
+}
+
+export interface RoleBindingSubscriptionWhereInput {
+  mutation_in?: Maybe<MutationType[] | MutationType>;
+  updatedFields_contains?: Maybe<String>;
+  updatedFields_contains_every?: Maybe<String[] | String>;
+  updatedFields_contains_some?: Maybe<String[] | String>;
+  node?: Maybe<RoleBindingWhereInput>;
+  AND?: Maybe<
+    RoleBindingSubscriptionWhereInput[] | RoleBindingSubscriptionWhereInput
+  >;
+  OR?: Maybe<
+    RoleBindingSubscriptionWhereInput[] | RoleBindingSubscriptionWhereInput
+  >;
+  NOT?: Maybe<
+    RoleBindingSubscriptionWhereInput[] | RoleBindingSubscriptionWhereInput
+  >;
 }
 
 export interface UserCreateWithoutEmailsInput {
@@ -2380,12 +2657,23 @@ export interface UserCreateWithoutEmailsInput {
   oauthCredentials?: Maybe<OAuthCredentialCreateManyWithoutUserInput>;
 }
 
+export interface WorkspaceUpdateManyMutationInput {
+  active?: Maybe<Boolean>;
+  description?: Maybe<String>;
+  label?: Maybe<String>;
+}
+
 export interface RoleBindingCreateManyWithoutUserInput {
   create?: Maybe<
     RoleBindingCreateWithoutUserInput[] | RoleBindingCreateWithoutUserInput
   >;
   connect?: Maybe<RoleBindingWhereUniqueInput[] | RoleBindingWhereUniqueInput>;
 }
+
+export type InviteTokenWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  token?: Maybe<String>;
+}>;
 
 export interface RoleBindingCreateWithoutUserInput {
   id?: Maybe<ID_Input>;
@@ -2395,12 +2683,22 @@ export interface RoleBindingCreateWithoutUserInput {
   deployment?: Maybe<DeploymentCreateOneWithoutRoleBindingsInput>;
 }
 
+export interface RoleBindingCreateOneWithoutServiceAccountInput {
+  create?: Maybe<RoleBindingCreateWithoutServiceAccountInput>;
+  connect?: Maybe<RoleBindingWhereUniqueInput>;
+}
+
 export interface EmailUpdateInput {
   address?: Maybe<String>;
   primary?: Maybe<Boolean>;
   token?: Maybe<String>;
   user?: Maybe<UserUpdateOneWithoutEmailsInput>;
   verified?: Maybe<Boolean>;
+}
+
+export interface UserUpsertWithoutOauthCredentialsInput {
+  update: UserUpdateWithoutOauthCredentialsDataInput;
+  create: UserCreateWithoutOauthCredentialsInput;
 }
 
 export interface UserUpdateOneWithoutEmailsInput {
@@ -2412,6 +2710,14 @@ export interface UserUpdateOneWithoutEmailsInput {
   connect?: Maybe<UserWhereUniqueInput>;
 }
 
+export interface OAuthCredentialCreateInput {
+  id?: Maybe<ID_Input>;
+  expiresAt?: Maybe<DateTimeInput>;
+  oauthProvider: String;
+  oauthUserId: String;
+  user?: Maybe<UserCreateOneWithoutOauthCredentialsInput>;
+}
+
 export interface UserUpdateWithoutEmailsDataInput {
   username?: Maybe<String>;
   status?: Maybe<String>;
@@ -2420,6 +2726,14 @@ export interface UserUpdateWithoutEmailsDataInput {
   roleBindings?: Maybe<RoleBindingUpdateManyWithoutUserInput>;
   localCredential?: Maybe<LocalCredentialUpdateOneWithoutUserInput>;
   oauthCredentials?: Maybe<OAuthCredentialUpdateManyWithoutUserInput>;
+}
+
+export interface EmailCreateWithoutUserInput {
+  id?: Maybe<ID_Input>;
+  address?: Maybe<String>;
+  primary?: Maybe<Boolean>;
+  token?: Maybe<String>;
+  verified?: Maybe<Boolean>;
 }
 
 export interface RoleBindingUpdateManyWithoutUserInput {
@@ -2449,9 +2763,26 @@ export interface RoleBindingUpdateManyWithoutUserInput {
   >;
 }
 
+export interface WorkspaceCreateWithoutRoleBindingsInput {
+  id?: Maybe<ID_Input>;
+  active?: Maybe<Boolean>;
+  deployments?: Maybe<DeploymentCreateManyWithoutWorkspaceInput>;
+  description?: Maybe<String>;
+  invites?: Maybe<InviteTokenCreateManyWithoutWorkspaceInput>;
+  label?: Maybe<String>;
+}
+
 export interface RoleBindingUpdateWithWhereUniqueWithoutUserInput {
   where: RoleBindingWhereUniqueInput;
   data: RoleBindingUpdateWithoutUserDataInput;
+}
+
+export interface RoleBindingCreateWithoutWorkspaceInput {
+  id?: Maybe<ID_Input>;
+  role?: Maybe<Role>;
+  user?: Maybe<UserCreateOneWithoutRoleBindingsInput>;
+  serviceAccount?: Maybe<ServiceAccountCreateOneWithoutRoleBindingInput>;
+  deployment?: Maybe<DeploymentCreateOneWithoutRoleBindingsInput>;
 }
 
 export interface RoleBindingUpdateWithoutUserDataInput {
@@ -2459,352 +2790,6 @@ export interface RoleBindingUpdateWithoutUserDataInput {
   serviceAccount?: Maybe<ServiceAccountUpdateOneWithoutRoleBindingInput>;
   workspace?: Maybe<WorkspaceUpdateOneWithoutRoleBindingsInput>;
   deployment?: Maybe<DeploymentUpdateOneWithoutRoleBindingsInput>;
-}
-
-export interface RoleBindingUpsertWithWhereUniqueWithoutUserInput {
-  where: RoleBindingWhereUniqueInput;
-  update: RoleBindingUpdateWithoutUserDataInput;
-  create: RoleBindingCreateWithoutUserInput;
-}
-
-export interface UserUpsertWithoutEmailsInput {
-  update: UserUpdateWithoutEmailsDataInput;
-  create: UserCreateWithoutEmailsInput;
-}
-
-export interface EmailUpdateManyMutationInput {
-  address?: Maybe<String>;
-  primary?: Maybe<Boolean>;
-  token?: Maybe<String>;
-  verified?: Maybe<Boolean>;
-}
-
-export interface InviteTokenCreateInput {
-  id?: Maybe<ID_Input>;
-  email: String;
-  token: String;
-  workspace: WorkspaceCreateOneWithoutInvitesInput;
-  role?: Maybe<Role>;
-}
-
-export interface WorkspaceCreateOneWithoutInvitesInput {
-  create?: Maybe<WorkspaceCreateWithoutInvitesInput>;
-  connect?: Maybe<WorkspaceWhereUniqueInput>;
-}
-
-export interface WorkspaceCreateWithoutInvitesInput {
-  id?: Maybe<ID_Input>;
-  active?: Maybe<Boolean>;
-  deployments?: Maybe<DeploymentCreateManyWithoutWorkspaceInput>;
-  description?: Maybe<String>;
-  label?: Maybe<String>;
-  roleBindings?: Maybe<RoleBindingCreateManyWithoutWorkspaceInput>;
-}
-
-export interface InviteTokenUpdateInput {
-  email?: Maybe<String>;
-  token?: Maybe<String>;
-  workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutInvitesInput>;
-  role?: Maybe<Role>;
-}
-
-export interface WorkspaceUpdateOneRequiredWithoutInvitesInput {
-  create?: Maybe<WorkspaceCreateWithoutInvitesInput>;
-  update?: Maybe<WorkspaceUpdateWithoutInvitesDataInput>;
-  upsert?: Maybe<WorkspaceUpsertWithoutInvitesInput>;
-  connect?: Maybe<WorkspaceWhereUniqueInput>;
-}
-
-export interface WorkspaceUpdateWithoutInvitesDataInput {
-  active?: Maybe<Boolean>;
-  deployments?: Maybe<DeploymentUpdateManyWithoutWorkspaceInput>;
-  description?: Maybe<String>;
-  label?: Maybe<String>;
-  roleBindings?: Maybe<RoleBindingUpdateManyWithoutWorkspaceInput>;
-}
-
-export interface WorkspaceUpsertWithoutInvitesInput {
-  update: WorkspaceUpdateWithoutInvitesDataInput;
-  create: WorkspaceCreateWithoutInvitesInput;
-}
-
-export interface InviteTokenUpdateManyMutationInput {
-  email?: Maybe<String>;
-  token?: Maybe<String>;
-  role?: Maybe<Role>;
-}
-
-export interface LocalCredentialCreateInput {
-  id?: Maybe<ID_Input>;
-  user?: Maybe<UserCreateOneWithoutLocalCredentialInput>;
-  password?: Maybe<String>;
-  resetToken?: Maybe<String>;
-}
-
-export interface UserCreateOneWithoutLocalCredentialInput {
-  create?: Maybe<UserCreateWithoutLocalCredentialInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface UserCreateWithoutLocalCredentialInput {
-  id?: Maybe<ID_Input>;
-  username?: Maybe<String>;
-  status?: Maybe<String>;
-  fullName?: Maybe<String>;
-  avatarUrl?: Maybe<String>;
-  emails?: Maybe<EmailCreateManyWithoutUserInput>;
-  roleBindings?: Maybe<RoleBindingCreateManyWithoutUserInput>;
-  oauthCredentials?: Maybe<OAuthCredentialCreateManyWithoutUserInput>;
-}
-
-export interface LocalCredentialUpdateInput {
-  user?: Maybe<UserUpdateOneWithoutLocalCredentialInput>;
-  password?: Maybe<String>;
-  resetToken?: Maybe<String>;
-}
-
-export interface UserUpdateOneWithoutLocalCredentialInput {
-  create?: Maybe<UserCreateWithoutLocalCredentialInput>;
-  update?: Maybe<UserUpdateWithoutLocalCredentialDataInput>;
-  upsert?: Maybe<UserUpsertWithoutLocalCredentialInput>;
-  delete?: Maybe<Boolean>;
-  disconnect?: Maybe<Boolean>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface UserUpdateWithoutLocalCredentialDataInput {
-  username?: Maybe<String>;
-  status?: Maybe<String>;
-  fullName?: Maybe<String>;
-  avatarUrl?: Maybe<String>;
-  emails?: Maybe<EmailUpdateManyWithoutUserInput>;
-  roleBindings?: Maybe<RoleBindingUpdateManyWithoutUserInput>;
-  oauthCredentials?: Maybe<OAuthCredentialUpdateManyWithoutUserInput>;
-}
-
-export interface UserUpsertWithoutLocalCredentialInput {
-  update: UserUpdateWithoutLocalCredentialDataInput;
-  create: UserCreateWithoutLocalCredentialInput;
-}
-
-export interface LocalCredentialUpdateManyMutationInput {
-  password?: Maybe<String>;
-  resetToken?: Maybe<String>;
-}
-
-export interface OAuthCredentialCreateInput {
-  id?: Maybe<ID_Input>;
-  expiresAt?: Maybe<DateTimeInput>;
-  oauthProvider: String;
-  oauthUserId: String;
-  user?: Maybe<UserCreateOneWithoutOauthCredentialsInput>;
-}
-
-export interface UserCreateOneWithoutOauthCredentialsInput {
-  create?: Maybe<UserCreateWithoutOauthCredentialsInput>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface UserCreateWithoutOauthCredentialsInput {
-  id?: Maybe<ID_Input>;
-  username?: Maybe<String>;
-  status?: Maybe<String>;
-  fullName?: Maybe<String>;
-  avatarUrl?: Maybe<String>;
-  emails?: Maybe<EmailCreateManyWithoutUserInput>;
-  roleBindings?: Maybe<RoleBindingCreateManyWithoutUserInput>;
-  localCredential?: Maybe<LocalCredentialCreateOneWithoutUserInput>;
-}
-
-export interface OAuthCredentialUpdateInput {
-  expiresAt?: Maybe<DateTimeInput>;
-  oauthProvider?: Maybe<String>;
-  oauthUserId?: Maybe<String>;
-  user?: Maybe<UserUpdateOneWithoutOauthCredentialsInput>;
-}
-
-export interface UserUpdateOneWithoutOauthCredentialsInput {
-  create?: Maybe<UserCreateWithoutOauthCredentialsInput>;
-  update?: Maybe<UserUpdateWithoutOauthCredentialsDataInput>;
-  upsert?: Maybe<UserUpsertWithoutOauthCredentialsInput>;
-  delete?: Maybe<Boolean>;
-  disconnect?: Maybe<Boolean>;
-  connect?: Maybe<UserWhereUniqueInput>;
-}
-
-export interface UserUpdateWithoutOauthCredentialsDataInput {
-  username?: Maybe<String>;
-  status?: Maybe<String>;
-  fullName?: Maybe<String>;
-  avatarUrl?: Maybe<String>;
-  emails?: Maybe<EmailUpdateManyWithoutUserInput>;
-  roleBindings?: Maybe<RoleBindingUpdateManyWithoutUserInput>;
-  localCredential?: Maybe<LocalCredentialUpdateOneWithoutUserInput>;
-}
-
-export interface UserUpsertWithoutOauthCredentialsInput {
-  update: UserUpdateWithoutOauthCredentialsDataInput;
-  create: UserCreateWithoutOauthCredentialsInput;
-}
-
-export interface OAuthCredentialUpdateManyMutationInput {
-  expiresAt?: Maybe<DateTimeInput>;
-  oauthProvider?: Maybe<String>;
-  oauthUserId?: Maybe<String>;
-}
-
-export interface RoleBindingCreateInput {
-  id?: Maybe<ID_Input>;
-  role?: Maybe<Role>;
-  user?: Maybe<UserCreateOneWithoutRoleBindingsInput>;
-  serviceAccount?: Maybe<ServiceAccountCreateOneWithoutRoleBindingInput>;
-  workspace?: Maybe<WorkspaceCreateOneWithoutRoleBindingsInput>;
-  deployment?: Maybe<DeploymentCreateOneWithoutRoleBindingsInput>;
-}
-
-export interface RoleBindingUpdateInput {
-  role?: Maybe<Role>;
-  user?: Maybe<UserUpdateOneWithoutRoleBindingsInput>;
-  serviceAccount?: Maybe<ServiceAccountUpdateOneWithoutRoleBindingInput>;
-  workspace?: Maybe<WorkspaceUpdateOneWithoutRoleBindingsInput>;
-  deployment?: Maybe<DeploymentUpdateOneWithoutRoleBindingsInput>;
-}
-
-export interface RoleBindingUpdateManyMutationInput {
-  role?: Maybe<Role>;
-}
-
-export interface ServiceAccountCreateInput {
-  id?: Maybe<ID_Input>;
-  apiKey?: Maybe<String>;
-  label?: Maybe<String>;
-  category?: Maybe<String>;
-  active?: Maybe<Boolean>;
-  roleBinding?: Maybe<RoleBindingCreateOneWithoutServiceAccountInput>;
-  lastUsedAt?: Maybe<DateTimeInput>;
-}
-
-export interface RoleBindingCreateOneWithoutServiceAccountInput {
-  create?: Maybe<RoleBindingCreateWithoutServiceAccountInput>;
-  connect?: Maybe<RoleBindingWhereUniqueInput>;
-}
-
-export interface RoleBindingCreateWithoutServiceAccountInput {
-  id?: Maybe<ID_Input>;
-  role?: Maybe<Role>;
-  user?: Maybe<UserCreateOneWithoutRoleBindingsInput>;
-  workspace?: Maybe<WorkspaceCreateOneWithoutRoleBindingsInput>;
-  deployment?: Maybe<DeploymentCreateOneWithoutRoleBindingsInput>;
-}
-
-export interface ServiceAccountUpdateInput {
-  apiKey?: Maybe<String>;
-  label?: Maybe<String>;
-  category?: Maybe<String>;
-  active?: Maybe<Boolean>;
-  roleBinding?: Maybe<RoleBindingUpdateOneWithoutServiceAccountInput>;
-  lastUsedAt?: Maybe<DateTimeInput>;
-}
-
-export interface RoleBindingUpdateOneWithoutServiceAccountInput {
-  create?: Maybe<RoleBindingCreateWithoutServiceAccountInput>;
-  update?: Maybe<RoleBindingUpdateWithoutServiceAccountDataInput>;
-  upsert?: Maybe<RoleBindingUpsertWithoutServiceAccountInput>;
-  delete?: Maybe<Boolean>;
-  disconnect?: Maybe<Boolean>;
-  connect?: Maybe<RoleBindingWhereUniqueInput>;
-}
-
-export interface RoleBindingUpdateWithoutServiceAccountDataInput {
-  role?: Maybe<Role>;
-  user?: Maybe<UserUpdateOneWithoutRoleBindingsInput>;
-  workspace?: Maybe<WorkspaceUpdateOneWithoutRoleBindingsInput>;
-  deployment?: Maybe<DeploymentUpdateOneWithoutRoleBindingsInput>;
-}
-
-export interface RoleBindingUpsertWithoutServiceAccountInput {
-  update: RoleBindingUpdateWithoutServiceAccountDataInput;
-  create: RoleBindingCreateWithoutServiceAccountInput;
-}
-
-export interface ServiceAccountUpdateManyMutationInput {
-  apiKey?: Maybe<String>;
-  label?: Maybe<String>;
-  category?: Maybe<String>;
-  active?: Maybe<Boolean>;
-  lastUsedAt?: Maybe<DateTimeInput>;
-}
-
-export interface UserCreateInput {
-  id?: Maybe<ID_Input>;
-  username?: Maybe<String>;
-  status?: Maybe<String>;
-  fullName?: Maybe<String>;
-  avatarUrl?: Maybe<String>;
-  emails?: Maybe<EmailCreateManyWithoutUserInput>;
-  roleBindings?: Maybe<RoleBindingCreateManyWithoutUserInput>;
-  localCredential?: Maybe<LocalCredentialCreateOneWithoutUserInput>;
-  oauthCredentials?: Maybe<OAuthCredentialCreateManyWithoutUserInput>;
-}
-
-export interface UserUpdateInput {
-  username?: Maybe<String>;
-  status?: Maybe<String>;
-  fullName?: Maybe<String>;
-  avatarUrl?: Maybe<String>;
-  emails?: Maybe<EmailUpdateManyWithoutUserInput>;
-  roleBindings?: Maybe<RoleBindingUpdateManyWithoutUserInput>;
-  localCredential?: Maybe<LocalCredentialUpdateOneWithoutUserInput>;
-  oauthCredentials?: Maybe<OAuthCredentialUpdateManyWithoutUserInput>;
-}
-
-export interface UserUpdateManyMutationInput {
-  username?: Maybe<String>;
-  status?: Maybe<String>;
-  fullName?: Maybe<String>;
-  avatarUrl?: Maybe<String>;
-}
-
-export interface WorkspaceCreateInput {
-  id?: Maybe<ID_Input>;
-  active?: Maybe<Boolean>;
-  deployments?: Maybe<DeploymentCreateManyWithoutWorkspaceInput>;
-  description?: Maybe<String>;
-  invites?: Maybe<InviteTokenCreateManyWithoutWorkspaceInput>;
-  label?: Maybe<String>;
-  roleBindings?: Maybe<RoleBindingCreateManyWithoutWorkspaceInput>;
-}
-
-export interface WorkspaceUpdateInput {
-  active?: Maybe<Boolean>;
-  deployments?: Maybe<DeploymentUpdateManyWithoutWorkspaceInput>;
-  description?: Maybe<String>;
-  invites?: Maybe<InviteTokenUpdateManyWithoutWorkspaceInput>;
-  label?: Maybe<String>;
-  roleBindings?: Maybe<RoleBindingUpdateManyWithoutWorkspaceInput>;
-}
-
-export interface WorkspaceUpdateManyMutationInput {
-  active?: Maybe<Boolean>;
-  description?: Maybe<String>;
-  label?: Maybe<String>;
-}
-
-export interface DeploymentSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<DeploymentWhereInput>;
-  AND?: Maybe<
-    DeploymentSubscriptionWhereInput[] | DeploymentSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    DeploymentSubscriptionWhereInput[] | DeploymentSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    DeploymentSubscriptionWhereInput[] | DeploymentSubscriptionWhereInput
-  >;
 }
 
 export interface EmailSubscriptionWhereInput {
@@ -2818,109 +2803,107 @@ export interface EmailSubscriptionWhereInput {
   NOT?: Maybe<EmailSubscriptionWhereInput[] | EmailSubscriptionWhereInput>;
 }
 
-export interface InviteTokenSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<InviteTokenWhereInput>;
-  AND?: Maybe<
-    InviteTokenSubscriptionWhereInput[] | InviteTokenSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    InviteTokenSubscriptionWhereInput[] | InviteTokenSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    InviteTokenSubscriptionWhereInput[] | InviteTokenSubscriptionWhereInput
-  >;
+export interface RoleBindingUpsertWithWhereUniqueWithoutUserInput {
+  where: RoleBindingWhereUniqueInput;
+  update: RoleBindingUpdateWithoutUserDataInput;
+  create: RoleBindingCreateWithoutUserInput;
 }
 
-export interface LocalCredentialSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<LocalCredentialWhereInput>;
-  AND?: Maybe<
-    | LocalCredentialSubscriptionWhereInput[]
-    | LocalCredentialSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    | LocalCredentialSubscriptionWhereInput[]
-    | LocalCredentialSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    | LocalCredentialSubscriptionWhereInput[]
-    | LocalCredentialSubscriptionWhereInput
-  >;
+export type LocalCredentialWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  resetToken?: Maybe<String>;
+}>;
+
+export interface UserUpsertWithoutEmailsInput {
+  update: UserUpdateWithoutEmailsDataInput;
+  create: UserCreateWithoutEmailsInput;
 }
 
-export interface OAuthCredentialSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<OAuthCredentialWhereInput>;
-  AND?: Maybe<
-    | OAuthCredentialSubscriptionWhereInput[]
-    | OAuthCredentialSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    | OAuthCredentialSubscriptionWhereInput[]
-    | OAuthCredentialSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    | OAuthCredentialSubscriptionWhereInput[]
-    | OAuthCredentialSubscriptionWhereInput
-  >;
+export interface OAuthCredentialUpdateInput {
+  expiresAt?: Maybe<DateTimeInput>;
+  oauthProvider?: Maybe<String>;
+  oauthUserId?: Maybe<String>;
+  user?: Maybe<UserUpdateOneWithoutOauthCredentialsInput>;
 }
 
-export interface RoleBindingSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<RoleBindingWhereInput>;
-  AND?: Maybe<
-    RoleBindingSubscriptionWhereInput[] | RoleBindingSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    RoleBindingSubscriptionWhereInput[] | RoleBindingSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    RoleBindingSubscriptionWhereInput[] | RoleBindingSubscriptionWhereInput
-  >;
+export interface EmailUpdateManyMutationInput {
+  address?: Maybe<String>;
+  primary?: Maybe<Boolean>;
+  token?: Maybe<String>;
+  verified?: Maybe<Boolean>;
 }
 
-export interface ServiceAccountSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<ServiceAccountWhereInput>;
-  AND?: Maybe<
-    | ServiceAccountSubscriptionWhereInput[]
-    | ServiceAccountSubscriptionWhereInput
-  >;
-  OR?: Maybe<
-    | ServiceAccountSubscriptionWhereInput[]
-    | ServiceAccountSubscriptionWhereInput
-  >;
-  NOT?: Maybe<
-    | ServiceAccountSubscriptionWhereInput[]
-    | ServiceAccountSubscriptionWhereInput
-  >;
+export interface RoleBindingCreateWithoutDeploymentInput {
+  id?: Maybe<ID_Input>;
+  role?: Maybe<Role>;
+  user?: Maybe<UserCreateOneWithoutRoleBindingsInput>;
+  serviceAccount?: Maybe<ServiceAccountCreateOneWithoutRoleBindingInput>;
+  workspace?: Maybe<WorkspaceCreateOneWithoutRoleBindingsInput>;
 }
 
-export interface UserSubscriptionWhereInput {
-  mutation_in?: Maybe<MutationType[] | MutationType>;
-  updatedFields_contains?: Maybe<String>;
-  updatedFields_contains_every?: Maybe<String[] | String>;
-  updatedFields_contains_some?: Maybe<String[] | String>;
-  node?: Maybe<UserWhereInput>;
-  AND?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  OR?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
-  NOT?: Maybe<UserSubscriptionWhereInput[] | UserSubscriptionWhereInput>;
+export interface InviteTokenCreateInput {
+  id?: Maybe<ID_Input>;
+  email: String;
+  token: String;
+  workspace: WorkspaceCreateOneWithoutInvitesInput;
+  role?: Maybe<Role>;
+}
+
+export interface InviteTokenCreateWithoutWorkspaceInput {
+  id?: Maybe<ID_Input>;
+  email: String;
+  token: String;
+  role?: Maybe<Role>;
+}
+
+export interface WorkspaceCreateOneWithoutInvitesInput {
+  create?: Maybe<WorkspaceCreateWithoutInvitesInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput>;
+}
+
+export type EmailWhereUniqueInput = AtLeastOne<{
+  id: Maybe<ID_Input>;
+  address?: Maybe<String>;
+  token?: Maybe<String>;
+}>;
+
+export interface WorkspaceUpdateWithoutInvitesDataInput {
+  active?: Maybe<Boolean>;
+  deployments?: Maybe<DeploymentUpdateManyWithoutWorkspaceInput>;
+  description?: Maybe<String>;
+  label?: Maybe<String>;
+  roleBindings?: Maybe<RoleBindingUpdateManyWithoutWorkspaceInput>;
+}
+
+export interface WorkspaceUpdateOneRequiredWithoutInvitesInput {
+  create?: Maybe<WorkspaceCreateWithoutInvitesInput>;
+  update?: Maybe<WorkspaceUpdateWithoutInvitesDataInput>;
+  upsert?: Maybe<WorkspaceUpsertWithoutInvitesInput>;
+  connect?: Maybe<WorkspaceWhereUniqueInput>;
+}
+
+export interface InviteTokenUpdateInput {
+  email?: Maybe<String>;
+  token?: Maybe<String>;
+  workspace?: Maybe<WorkspaceUpdateOneRequiredWithoutInvitesInput>;
+  role?: Maybe<Role>;
+}
+
+export interface WorkspaceCreateWithoutInvitesInput {
+  id?: Maybe<ID_Input>;
+  active?: Maybe<Boolean>;
+  deployments?: Maybe<DeploymentCreateManyWithoutWorkspaceInput>;
+  description?: Maybe<String>;
+  label?: Maybe<String>;
+  roleBindings?: Maybe<RoleBindingCreateManyWithoutWorkspaceInput>;
+}
+
+export interface RoleBindingUpdateInput {
+  role?: Maybe<Role>;
+  user?: Maybe<UserUpdateOneWithoutRoleBindingsInput>;
+  serviceAccount?: Maybe<ServiceAccountUpdateOneWithoutRoleBindingInput>;
+  workspace?: Maybe<WorkspaceUpdateOneWithoutRoleBindingsInput>;
+  deployment?: Maybe<DeploymentUpdateOneWithoutRoleBindingsInput>;
 }
 
 export interface WorkspaceSubscriptionWhereInput {
@@ -2940,11 +2923,449 @@ export interface WorkspaceSubscriptionWhereInput {
   >;
 }
 
+export interface OAuthCredentialCreateWithoutUserInput {
+  id?: Maybe<ID_Input>;
+  expiresAt?: Maybe<DateTimeInput>;
+  oauthProvider: String;
+  oauthUserId: String;
+}
+
+export interface UserUpdateWithoutLocalCredentialDataInput {
+  username?: Maybe<String>;
+  status?: Maybe<String>;
+  fullName?: Maybe<String>;
+  avatarUrl?: Maybe<String>;
+  emails?: Maybe<EmailUpdateManyWithoutUserInput>;
+  roleBindings?: Maybe<RoleBindingUpdateManyWithoutUserInput>;
+  oauthCredentials?: Maybe<OAuthCredentialUpdateManyWithoutUserInput>;
+}
+
 export interface NodeNode {
   id: ID_Output;
 }
 
-export interface Deployment {
+export interface WorkspacePreviousValues {
+  id: ID_Output;
+  active?: Boolean;
+  description?: String;
+  label?: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface WorkspacePreviousValuesPromise
+  extends Promise<WorkspacePreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  active: () => Promise<Boolean>;
+  description: () => Promise<String>;
+  label: () => Promise<String>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface WorkspacePreviousValuesSubscription
+  extends Promise<AsyncIterator<WorkspacePreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  active: () => Promise<AsyncIterator<Boolean>>;
+  description: () => Promise<AsyncIterator<String>>;
+  label: () => Promise<AsyncIterator<String>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface EmailEdge {
+  node: Email;
+  cursor: String;
+}
+
+export interface EmailEdgePromise extends Promise<EmailEdge>, Fragmentable {
+  node: <T = EmailPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface EmailEdgeSubscription
+  extends Promise<AsyncIterator<EmailEdge>>,
+    Fragmentable {
+  node: <T = EmailSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface ServiceAccountPreviousValues {
+  id: ID_Output;
+  apiKey?: String;
+  label?: String;
+  category?: String;
+  active?: Boolean;
+  lastUsedAt?: DateTimeOutput;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface ServiceAccountPreviousValuesPromise
+  extends Promise<ServiceAccountPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  apiKey: () => Promise<String>;
+  label: () => Promise<String>;
+  category: () => Promise<String>;
+  active: () => Promise<Boolean>;
+  lastUsedAt: () => Promise<DateTimeOutput>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface ServiceAccountPreviousValuesSubscription
+  extends Promise<AsyncIterator<ServiceAccountPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  apiKey: () => Promise<AsyncIterator<String>>;
+  label: () => Promise<AsyncIterator<String>>;
+  category: () => Promise<AsyncIterator<String>>;
+  active: () => Promise<AsyncIterator<Boolean>>;
+  lastUsedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface EmailConnection {
+  pageInfo: PageInfo;
+  edges: EmailEdge[];
+}
+
+export interface EmailConnectionPromise
+  extends Promise<EmailConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<EmailEdge>>() => T;
+  aggregate: <T = AggregateEmailPromise>() => T;
+}
+
+export interface EmailConnectionSubscription
+  extends Promise<AsyncIterator<EmailConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<EmailEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateEmailSubscription>() => T;
+}
+
+export interface DeploymentEdge {
+  node: Deployment;
+  cursor: String;
+}
+
+export interface DeploymentEdgePromise
+  extends Promise<DeploymentEdge>,
+    Fragmentable {
+  node: <T = DeploymentPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface DeploymentEdgeSubscription
+  extends Promise<AsyncIterator<DeploymentEdge>>,
+    Fragmentable {
+  node: <T = DeploymentSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateDeployment {
+  count: Int;
+}
+
+export interface AggregateDeploymentPromise
+  extends Promise<AggregateDeployment>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateDeploymentSubscription
+  extends Promise<AsyncIterator<AggregateDeployment>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface AggregateWorkspace {
+  count: Int;
+}
+
+export interface AggregateWorkspacePromise
+  extends Promise<AggregateWorkspace>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateWorkspaceSubscription
+  extends Promise<AsyncIterator<AggregateWorkspace>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface BatchPayload {
+  count: Long;
+}
+
+export interface BatchPayloadPromise
+  extends Promise<BatchPayload>,
+    Fragmentable {
+  count: () => Promise<Long>;
+}
+
+export interface BatchPayloadSubscription
+  extends Promise<AsyncIterator<BatchPayload>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Long>>;
+}
+
+export interface WorkspaceConnection {
+  pageInfo: PageInfo;
+  edges: WorkspaceEdge[];
+}
+
+export interface WorkspaceConnectionPromise
+  extends Promise<WorkspaceConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<WorkspaceEdge>>() => T;
+  aggregate: <T = AggregateWorkspacePromise>() => T;
+}
+
+export interface WorkspaceConnectionSubscription
+  extends Promise<AsyncIterator<WorkspaceConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<WorkspaceEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateWorkspaceSubscription>() => T;
+}
+
+export interface PageInfo {
+  hasNextPage: Boolean;
+  hasPreviousPage: Boolean;
+  startCursor?: String;
+  endCursor?: String;
+}
+
+export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
+  hasNextPage: () => Promise<Boolean>;
+  hasPreviousPage: () => Promise<Boolean>;
+  startCursor: () => Promise<String>;
+  endCursor: () => Promise<String>;
+}
+
+export interface PageInfoSubscription
+  extends Promise<AsyncIterator<PageInfo>>,
+    Fragmentable {
+  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
+  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
+  startCursor: () => Promise<AsyncIterator<String>>;
+  endCursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface AggregateUser {
+  count: Int;
+}
+
+export interface AggregateUserPromise
+  extends Promise<AggregateUser>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateUserSubscription
+  extends Promise<AsyncIterator<AggregateUser>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface DeploymentConnection {
+  pageInfo: PageInfo;
+  edges: DeploymentEdge[];
+}
+
+export interface DeploymentConnectionPromise
+  extends Promise<DeploymentConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<DeploymentEdge>>() => T;
+  aggregate: <T = AggregateDeploymentPromise>() => T;
+}
+
+export interface DeploymentConnectionSubscription
+  extends Promise<AsyncIterator<DeploymentConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<DeploymentEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateDeploymentSubscription>() => T;
+}
+
+export interface UserConnection {
+  pageInfo: PageInfo;
+  edges: UserEdge[];
+}
+
+export interface UserConnectionPromise
+  extends Promise<UserConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<UserEdge>>() => T;
+  aggregate: <T = AggregateUserPromise>() => T;
+}
+
+export interface UserConnectionSubscription
+  extends Promise<AsyncIterator<UserConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateUserSubscription>() => T;
+}
+
+export interface InviteToken {
+  id: ID_Output;
+  email: String;
+  token: String;
+  role?: Role;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface InviteTokenPromise extends Promise<InviteToken>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  email: () => Promise<String>;
+  token: () => Promise<String>;
+  workspace: <T = WorkspacePromise>() => T;
+  role: () => Promise<Role>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface InviteTokenSubscription
+  extends Promise<AsyncIterator<InviteToken>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  email: () => Promise<AsyncIterator<String>>;
+  token: () => Promise<AsyncIterator<String>>;
+  workspace: <T = WorkspaceSubscription>() => T;
+  role: () => Promise<AsyncIterator<Role>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface InviteTokenNullablePromise
+  extends Promise<InviteToken | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  email: () => Promise<String>;
+  token: () => Promise<String>;
+  workspace: <T = WorkspacePromise>() => T;
+  role: () => Promise<Role>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface AggregateServiceAccount {
+  count: Int;
+}
+
+export interface AggregateServiceAccountPromise
+  extends Promise<AggregateServiceAccount>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateServiceAccountSubscription
+  extends Promise<AsyncIterator<AggregateServiceAccount>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface UserSubscriptionPayload {
+  mutation: MutationType;
+  node: User;
+  updatedFields: String[];
+  previousValues: UserPreviousValues;
+}
+
+export interface UserSubscriptionPayloadPromise
+  extends Promise<UserSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = UserPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = UserPreviousValuesPromise>() => T;
+}
+
+export interface UserSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = UserSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = UserPreviousValuesSubscription>() => T;
+}
+
+export interface ServiceAccountConnection {
+  pageInfo: PageInfo;
+  edges: ServiceAccountEdge[];
+}
+
+export interface ServiceAccountConnectionPromise
+  extends Promise<ServiceAccountConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<ServiceAccountEdge>>() => T;
+  aggregate: <T = AggregateServiceAccountPromise>() => T;
+}
+
+export interface ServiceAccountConnectionSubscription
+  extends Promise<AsyncIterator<ServiceAccountConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<ServiceAccountEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateServiceAccountSubscription>() => T;
+}
+
+export interface DeploymentSubscriptionPayload {
+  mutation: MutationType;
+  node: Deployment;
+  updatedFields: String[];
+  previousValues: DeploymentPreviousValues;
+}
+
+export interface DeploymentSubscriptionPayloadPromise
+  extends Promise<DeploymentSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = DeploymentPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = DeploymentPreviousValuesPromise>() => T;
+}
+
+export interface DeploymentSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<DeploymentSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = DeploymentSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = DeploymentPreviousValuesSubscription>() => T;
+}
+
+export interface AggregateRoleBinding {
+  count: Int;
+}
+
+export interface AggregateRoleBindingPromise
+  extends Promise<AggregateRoleBinding>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateRoleBindingSubscription
+  extends Promise<AsyncIterator<AggregateRoleBinding>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface DeploymentPreviousValues {
   id: ID_Output;
   config?: Json;
   description?: String;
@@ -2960,7 +3381,9 @@ export interface Deployment {
   updatedAt: DateTimeOutput;
 }
 
-export interface DeploymentPromise extends Promise<Deployment>, Fragmentable {
+export interface DeploymentPreviousValuesPromise
+  extends Promise<DeploymentPreviousValues>,
+    Fragmentable {
   id: () => Promise<ID_Output>;
   config: () => Promise<Json>;
   description: () => Promise<String>;
@@ -2972,22 +3395,12 @@ export interface DeploymentPromise extends Promise<Deployment>, Fragmentable {
   extraAu: () => Promise<Int>;
   airflowVersion: () => Promise<String>;
   alertEmails: () => Promise<String[]>;
-  roleBindings: <T = FragmentableArray<RoleBinding>>(args?: {
-    where?: RoleBindingWhereInput;
-    orderBy?: RoleBindingOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  workspace: <T = WorkspacePromise>() => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface DeploymentSubscription
-  extends Promise<AsyncIterator<Deployment>>,
+export interface DeploymentPreviousValuesSubscription
+  extends Promise<AsyncIterator<DeploymentPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
   config: () => Promise<AsyncIterator<Json>>;
@@ -3000,34 +3413,63 @@ export interface DeploymentSubscription
   extraAu: () => Promise<AsyncIterator<Int>>;
   airflowVersion: () => Promise<AsyncIterator<String>>;
   alertEmails: () => Promise<AsyncIterator<String[]>>;
-  roleBindings: <T = Promise<AsyncIterator<RoleBindingSubscription>>>(args?: {
-    where?: RoleBindingWhereInput;
-    orderBy?: RoleBindingOrderByInput;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface RoleBindingConnection {
+  pageInfo: PageInfo;
+  edges: RoleBindingEdge[];
+}
+
+export interface RoleBindingConnectionPromise
+  extends Promise<RoleBindingConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<RoleBindingEdge>>() => T;
+  aggregate: <T = AggregateRoleBindingPromise>() => T;
+}
+
+export interface RoleBindingConnectionSubscription
+  extends Promise<AsyncIterator<RoleBindingConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<RoleBindingEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateRoleBindingSubscription>() => T;
+}
+
+export interface Workspace {
+  id: ID_Output;
+  active?: Boolean;
+  description?: String;
+  label?: String;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface WorkspacePromise extends Promise<Workspace>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  active: () => Promise<Boolean>;
+  deployments: <T = FragmentableArray<Deployment>>(args?: {
+    where?: DeploymentWhereInput;
+    orderBy?: DeploymentOrderByInput;
     skip?: Int;
     after?: String;
     before?: String;
     first?: Int;
     last?: Int;
   }) => T;
-  workspace: <T = WorkspaceSubscription>() => T;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface DeploymentNullablePromise
-  extends Promise<Deployment | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  config: () => Promise<Json>;
   description: () => Promise<String>;
+  invites: <T = FragmentableArray<InviteToken>>(args?: {
+    where?: InviteTokenWhereInput;
+    orderBy?: InviteTokenOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
   label: () => Promise<String>;
-  registryPassword: () => Promise<String>;
-  elasticsearchPassword: () => Promise<String>;
-  releaseName: () => Promise<String>;
-  version: () => Promise<String>;
-  extraAu: () => Promise<Int>;
-  airflowVersion: () => Promise<String>;
-  alertEmails: () => Promise<String[]>;
   roleBindings: <T = FragmentableArray<RoleBinding>>(args?: {
     where?: RoleBindingWhereInput;
     orderBy?: RoleBindingOrderByInput;
@@ -3037,45 +3479,495 @@ export interface DeploymentNullablePromise
     first?: Int;
     last?: Int;
   }) => T;
-  workspace: <T = WorkspacePromise>() => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface RoleBinding {
-  id: ID_Output;
-  role?: Role;
-}
-
-export interface RoleBindingPromise extends Promise<RoleBinding>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  role: () => Promise<Role>;
-  user: <T = UserPromise>() => T;
-  serviceAccount: <T = ServiceAccountPromise>() => T;
-  workspace: <T = WorkspacePromise>() => T;
-  deployment: <T = DeploymentPromise>() => T;
-}
-
-export interface RoleBindingSubscription
-  extends Promise<AsyncIterator<RoleBinding>>,
+export interface WorkspaceSubscription
+  extends Promise<AsyncIterator<Workspace>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  role: () => Promise<AsyncIterator<Role>>;
-  user: <T = UserSubscription>() => T;
-  serviceAccount: <T = ServiceAccountSubscription>() => T;
-  workspace: <T = WorkspaceSubscription>() => T;
-  deployment: <T = DeploymentSubscription>() => T;
+  active: () => Promise<AsyncIterator<Boolean>>;
+  deployments: <T = Promise<AsyncIterator<DeploymentSubscription>>>(args?: {
+    where?: DeploymentWhereInput;
+    orderBy?: DeploymentOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  description: () => Promise<AsyncIterator<String>>;
+  invites: <T = Promise<AsyncIterator<InviteTokenSubscription>>>(args?: {
+    where?: InviteTokenWhereInput;
+    orderBy?: InviteTokenOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  label: () => Promise<AsyncIterator<String>>;
+  roleBindings: <T = Promise<AsyncIterator<RoleBindingSubscription>>>(args?: {
+    where?: RoleBindingWhereInput;
+    orderBy?: RoleBindingOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface RoleBindingNullablePromise
-  extends Promise<RoleBinding | null>,
+export interface WorkspaceNullablePromise
+  extends Promise<Workspace | null>,
     Fragmentable {
   id: () => Promise<ID_Output>;
+  active: () => Promise<Boolean>;
+  deployments: <T = FragmentableArray<Deployment>>(args?: {
+    where?: DeploymentWhereInput;
+    orderBy?: DeploymentOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  description: () => Promise<String>;
+  invites: <T = FragmentableArray<InviteToken>>(args?: {
+    where?: InviteTokenWhereInput;
+    orderBy?: InviteTokenOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  label: () => Promise<String>;
+  roleBindings: <T = FragmentableArray<RoleBinding>>(args?: {
+    where?: RoleBindingWhereInput;
+    orderBy?: RoleBindingOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface OAuthCredentialEdge {
+  node: OAuthCredential;
+  cursor: String;
+}
+
+export interface OAuthCredentialEdgePromise
+  extends Promise<OAuthCredentialEdge>,
+    Fragmentable {
+  node: <T = OAuthCredentialPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface OAuthCredentialEdgeSubscription
+  extends Promise<AsyncIterator<OAuthCredentialEdge>>,
+    Fragmentable {
+  node: <T = OAuthCredentialSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface EmailSubscriptionPayload {
+  mutation: MutationType;
+  node: Email;
+  updatedFields: String[];
+  previousValues: EmailPreviousValues;
+}
+
+export interface EmailSubscriptionPayloadPromise
+  extends Promise<EmailSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = EmailPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = EmailPreviousValuesPromise>() => T;
+}
+
+export interface EmailSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<EmailSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = EmailSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = EmailPreviousValuesSubscription>() => T;
+}
+
+export interface AggregateLocalCredential {
+  count: Int;
+}
+
+export interface AggregateLocalCredentialPromise
+  extends Promise<AggregateLocalCredential>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateLocalCredentialSubscription
+  extends Promise<AsyncIterator<AggregateLocalCredential>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface EmailPreviousValues {
+  id: ID_Output;
+  address?: String;
+  primary?: Boolean;
+  token?: String;
+  verified?: Boolean;
+}
+
+export interface EmailPreviousValuesPromise
+  extends Promise<EmailPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  address: () => Promise<String>;
+  primary: () => Promise<Boolean>;
+  token: () => Promise<String>;
+  verified: () => Promise<Boolean>;
+}
+
+export interface EmailPreviousValuesSubscription
+  extends Promise<AsyncIterator<EmailPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  address: () => Promise<AsyncIterator<String>>;
+  primary: () => Promise<AsyncIterator<Boolean>>;
+  token: () => Promise<AsyncIterator<String>>;
+  verified: () => Promise<AsyncIterator<Boolean>>;
+}
+
+export interface LocalCredentialConnection {
+  pageInfo: PageInfo;
+  edges: LocalCredentialEdge[];
+}
+
+export interface LocalCredentialConnectionPromise
+  extends Promise<LocalCredentialConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<LocalCredentialEdge>>() => T;
+  aggregate: <T = AggregateLocalCredentialPromise>() => T;
+}
+
+export interface LocalCredentialConnectionSubscription
+  extends Promise<AsyncIterator<LocalCredentialConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<LocalCredentialEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateLocalCredentialSubscription>() => T;
+}
+
+export interface ServiceAccount {
+  id: ID_Output;
+  apiKey?: String;
+  label?: String;
+  category?: String;
+  active?: Boolean;
+  lastUsedAt?: DateTimeOutput;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface ServiceAccountPromise
+  extends Promise<ServiceAccount>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  apiKey: () => Promise<String>;
+  label: () => Promise<String>;
+  category: () => Promise<String>;
+  active: () => Promise<Boolean>;
+  roleBinding: <T = RoleBindingPromise>() => T;
+  lastUsedAt: () => Promise<DateTimeOutput>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface ServiceAccountSubscription
+  extends Promise<AsyncIterator<ServiceAccount>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  apiKey: () => Promise<AsyncIterator<String>>;
+  label: () => Promise<AsyncIterator<String>>;
+  category: () => Promise<AsyncIterator<String>>;
+  active: () => Promise<AsyncIterator<Boolean>>;
+  roleBinding: <T = RoleBindingSubscription>() => T;
+  lastUsedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface ServiceAccountNullablePromise
+  extends Promise<ServiceAccount | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  apiKey: () => Promise<String>;
+  label: () => Promise<String>;
+  category: () => Promise<String>;
+  active: () => Promise<Boolean>;
+  roleBinding: <T = RoleBindingPromise>() => T;
+  lastUsedAt: () => Promise<DateTimeOutput>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface InviteTokenEdge {
+  node: InviteToken;
+  cursor: String;
+}
+
+export interface InviteTokenEdgePromise
+  extends Promise<InviteTokenEdge>,
+    Fragmentable {
+  node: <T = InviteTokenPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface InviteTokenEdgeSubscription
+  extends Promise<AsyncIterator<InviteTokenEdge>>,
+    Fragmentable {
+  node: <T = InviteTokenSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface InviteTokenSubscriptionPayload {
+  mutation: MutationType;
+  node: InviteToken;
+  updatedFields: String[];
+  previousValues: InviteTokenPreviousValues;
+}
+
+export interface InviteTokenSubscriptionPayloadPromise
+  extends Promise<InviteTokenSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = InviteTokenPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = InviteTokenPreviousValuesPromise>() => T;
+}
+
+export interface InviteTokenSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<InviteTokenSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = InviteTokenSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = InviteTokenPreviousValuesSubscription>() => T;
+}
+
+export interface AggregateEmail {
+  count: Int;
+}
+
+export interface AggregateEmailPromise
+  extends Promise<AggregateEmail>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateEmailSubscription
+  extends Promise<AsyncIterator<AggregateEmail>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface InviteTokenPreviousValues {
+  id: ID_Output;
+  email: String;
+  token: String;
+  role?: Role;
+  createdAt: DateTimeOutput;
+  updatedAt: DateTimeOutput;
+}
+
+export interface InviteTokenPreviousValuesPromise
+  extends Promise<InviteTokenPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  email: () => Promise<String>;
+  token: () => Promise<String>;
   role: () => Promise<Role>;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
+
+export interface InviteTokenPreviousValuesSubscription
+  extends Promise<AsyncIterator<InviteTokenPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  email: () => Promise<AsyncIterator<String>>;
+  token: () => Promise<AsyncIterator<String>>;
+  role: () => Promise<AsyncIterator<Role>>;
+  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+}
+
+export interface WorkspaceEdge {
+  node: Workspace;
+  cursor: String;
+}
+
+export interface WorkspaceEdgePromise
+  extends Promise<WorkspaceEdge>,
+    Fragmentable {
+  node: <T = WorkspacePromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface WorkspaceEdgeSubscription
+  extends Promise<AsyncIterator<WorkspaceEdge>>,
+    Fragmentable {
+  node: <T = WorkspaceSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface OAuthCredential {
+  id: ID_Output;
+  expiresAt?: DateTimeOutput;
+  oauthProvider: String;
+  oauthUserId: String;
+}
+
+export interface OAuthCredentialPromise
+  extends Promise<OAuthCredential>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  expiresAt: () => Promise<DateTimeOutput>;
+  oauthProvider: () => Promise<String>;
+  oauthUserId: () => Promise<String>;
   user: <T = UserPromise>() => T;
-  serviceAccount: <T = ServiceAccountPromise>() => T;
-  workspace: <T = WorkspacePromise>() => T;
-  deployment: <T = DeploymentPromise>() => T;
+}
+
+export interface OAuthCredentialSubscription
+  extends Promise<AsyncIterator<OAuthCredential>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  expiresAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  oauthProvider: () => Promise<AsyncIterator<String>>;
+  oauthUserId: () => Promise<AsyncIterator<String>>;
+  user: <T = UserSubscription>() => T;
+}
+
+export interface OAuthCredentialNullablePromise
+  extends Promise<OAuthCredential | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  expiresAt: () => Promise<DateTimeOutput>;
+  oauthProvider: () => Promise<String>;
+  oauthUserId: () => Promise<String>;
+  user: <T = UserPromise>() => T;
+}
+
+export interface UserEdge {
+  node: User;
+  cursor: String;
+}
+
+export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
+  node: <T = UserPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface UserEdgeSubscription
+  extends Promise<AsyncIterator<UserEdge>>,
+    Fragmentable {
+  node: <T = UserSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface LocalCredentialSubscriptionPayload {
+  mutation: MutationType;
+  node: LocalCredential;
+  updatedFields: String[];
+  previousValues: LocalCredentialPreviousValues;
+}
+
+export interface LocalCredentialSubscriptionPayloadPromise
+  extends Promise<LocalCredentialSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = LocalCredentialPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = LocalCredentialPreviousValuesPromise>() => T;
+}
+
+export interface LocalCredentialSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<LocalCredentialSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = LocalCredentialSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = LocalCredentialPreviousValuesSubscription>() => T;
+}
+
+export interface ServiceAccountEdge {
+  node: ServiceAccount;
+  cursor: String;
+}
+
+export interface ServiceAccountEdgePromise
+  extends Promise<ServiceAccountEdge>,
+    Fragmentable {
+  node: <T = ServiceAccountPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface ServiceAccountEdgeSubscription
+  extends Promise<AsyncIterator<ServiceAccountEdge>>,
+    Fragmentable {
+  node: <T = ServiceAccountSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
+}
+
+export interface LocalCredentialPreviousValues {
+  id: ID_Output;
+  password?: String;
+  resetToken?: String;
+}
+
+export interface LocalCredentialPreviousValuesPromise
+  extends Promise<LocalCredentialPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  password: () => Promise<String>;
+  resetToken: () => Promise<String>;
+}
+
+export interface LocalCredentialPreviousValuesSubscription
+  extends Promise<AsyncIterator<LocalCredentialPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  password: () => Promise<AsyncIterator<String>>;
+  resetToken: () => Promise<AsyncIterator<String>>;
+}
+
+export interface RoleBindingEdge {
+  node: RoleBinding;
+  cursor: String;
+}
+
+export interface RoleBindingEdgePromise
+  extends Promise<RoleBindingEdge>,
+    Fragmentable {
+  node: <T = RoleBindingPromise>() => T;
+  cursor: () => Promise<String>;
+}
+
+export interface RoleBindingEdgeSubscription
+  extends Promise<AsyncIterator<RoleBindingEdge>>,
+    Fragmentable {
+  node: <T = RoleBindingSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
 }
 
 export interface User {
@@ -3208,6 +4100,228 @@ export interface UserNullablePromise
   updatedAt: () => Promise<DateTimeOutput>;
 }
 
+export interface OAuthCredentialConnection {
+  pageInfo: PageInfo;
+  edges: OAuthCredentialEdge[];
+}
+
+export interface OAuthCredentialConnectionPromise
+  extends Promise<OAuthCredentialConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<OAuthCredentialEdge>>() => T;
+  aggregate: <T = AggregateOAuthCredentialPromise>() => T;
+}
+
+export interface OAuthCredentialConnectionSubscription
+  extends Promise<AsyncIterator<OAuthCredentialConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<OAuthCredentialEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateOAuthCredentialSubscription>() => T;
+}
+
+export interface OAuthCredentialSubscriptionPayload {
+  mutation: MutationType;
+  node: OAuthCredential;
+  updatedFields: String[];
+  previousValues: OAuthCredentialPreviousValues;
+}
+
+export interface OAuthCredentialSubscriptionPayloadPromise
+  extends Promise<OAuthCredentialSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = OAuthCredentialPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = OAuthCredentialPreviousValuesPromise>() => T;
+}
+
+export interface OAuthCredentialSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<OAuthCredentialSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = OAuthCredentialSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = OAuthCredentialPreviousValuesSubscription>() => T;
+}
+
+export interface AggregateInviteToken {
+  count: Int;
+}
+
+export interface AggregateInviteTokenPromise
+  extends Promise<AggregateInviteToken>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateInviteTokenSubscription
+  extends Promise<AsyncIterator<AggregateInviteToken>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface OAuthCredentialPreviousValues {
+  id: ID_Output;
+  expiresAt?: DateTimeOutput;
+  oauthProvider: String;
+  oauthUserId: String;
+}
+
+export interface OAuthCredentialPreviousValuesPromise
+  extends Promise<OAuthCredentialPreviousValues>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  expiresAt: () => Promise<DateTimeOutput>;
+  oauthProvider: () => Promise<String>;
+  oauthUserId: () => Promise<String>;
+}
+
+export interface OAuthCredentialPreviousValuesSubscription
+  extends Promise<AsyncIterator<OAuthCredentialPreviousValues>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  expiresAt: () => Promise<AsyncIterator<DateTimeOutput>>;
+  oauthProvider: () => Promise<AsyncIterator<String>>;
+  oauthUserId: () => Promise<AsyncIterator<String>>;
+}
+
+export interface WorkspaceSubscriptionPayload {
+  mutation: MutationType;
+  node: Workspace;
+  updatedFields: String[];
+  previousValues: WorkspacePreviousValues;
+}
+
+export interface WorkspaceSubscriptionPayloadPromise
+  extends Promise<WorkspaceSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = WorkspacePromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = WorkspacePreviousValuesPromise>() => T;
+}
+
+export interface WorkspaceSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<WorkspaceSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = WorkspaceSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = WorkspacePreviousValuesSubscription>() => T;
+}
+
+export interface LocalCredential {
+  id: ID_Output;
+  password?: String;
+  resetToken?: String;
+}
+
+export interface LocalCredentialPromise
+  extends Promise<LocalCredential>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  user: <T = UserPromise>() => T;
+  password: () => Promise<String>;
+  resetToken: () => Promise<String>;
+}
+
+export interface LocalCredentialSubscription
+  extends Promise<AsyncIterator<LocalCredential>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  user: <T = UserSubscription>() => T;
+  password: () => Promise<AsyncIterator<String>>;
+  resetToken: () => Promise<AsyncIterator<String>>;
+}
+
+export interface LocalCredentialNullablePromise
+  extends Promise<LocalCredential | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  user: <T = UserPromise>() => T;
+  password: () => Promise<String>;
+  resetToken: () => Promise<String>;
+}
+
+export interface RoleBinding {
+  id: ID_Output;
+  role?: Role;
+}
+
+export interface RoleBindingPromise extends Promise<RoleBinding>, Fragmentable {
+  id: () => Promise<ID_Output>;
+  role: () => Promise<Role>;
+  user: <T = UserPromise>() => T;
+  serviceAccount: <T = ServiceAccountPromise>() => T;
+  workspace: <T = WorkspacePromise>() => T;
+  deployment: <T = DeploymentPromise>() => T;
+}
+
+export interface RoleBindingSubscription
+  extends Promise<AsyncIterator<RoleBinding>>,
+    Fragmentable {
+  id: () => Promise<AsyncIterator<ID_Output>>;
+  role: () => Promise<AsyncIterator<Role>>;
+  user: <T = UserSubscription>() => T;
+  serviceAccount: <T = ServiceAccountSubscription>() => T;
+  workspace: <T = WorkspaceSubscription>() => T;
+  deployment: <T = DeploymentSubscription>() => T;
+}
+
+export interface RoleBindingNullablePromise
+  extends Promise<RoleBinding | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  role: () => Promise<Role>;
+  user: <T = UserPromise>() => T;
+  serviceAccount: <T = ServiceAccountPromise>() => T;
+  workspace: <T = WorkspacePromise>() => T;
+  deployment: <T = DeploymentPromise>() => T;
+}
+
+export interface AggregateOAuthCredential {
+  count: Int;
+}
+
+export interface AggregateOAuthCredentialPromise
+  extends Promise<AggregateOAuthCredential>,
+    Fragmentable {
+  count: () => Promise<Int>;
+}
+
+export interface AggregateOAuthCredentialSubscription
+  extends Promise<AsyncIterator<AggregateOAuthCredential>>,
+    Fragmentable {
+  count: () => Promise<AsyncIterator<Int>>;
+}
+
+export interface ServiceAccountSubscriptionPayload {
+  mutation: MutationType;
+  node: ServiceAccount;
+  updatedFields: String[];
+  previousValues: ServiceAccountPreviousValues;
+}
+
+export interface ServiceAccountSubscriptionPayloadPromise
+  extends Promise<ServiceAccountSubscriptionPayload>,
+    Fragmentable {
+  mutation: () => Promise<MutationType>;
+  node: <T = ServiceAccountPromise>() => T;
+  updatedFields: () => Promise<String[]>;
+  previousValues: <T = ServiceAccountPreviousValuesPromise>() => T;
+}
+
+export interface ServiceAccountSubscriptionPayloadSubscription
+  extends Promise<AsyncIterator<ServiceAccountSubscriptionPayload>>,
+    Fragmentable {
+  mutation: () => Promise<AsyncIterator<MutationType>>;
+  node: <T = ServiceAccountSubscription>() => T;
+  updatedFields: () => Promise<AsyncIterator<String[]>>;
+  previousValues: <T = ServiceAccountPreviousValuesSubscription>() => T;
+}
+
 export interface Email {
   id: ID_Output;
   address?: String;
@@ -3247,1113 +4361,23 @@ export interface EmailNullablePromise
   verified: () => Promise<Boolean>;
 }
 
-export interface LocalCredential {
+export interface RoleBindingPreviousValues {
   id: ID_Output;
-  password?: String;
-  resetToken?: String;
-}
-
-export interface LocalCredentialPromise
-  extends Promise<LocalCredential>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  user: <T = UserPromise>() => T;
-  password: () => Promise<String>;
-  resetToken: () => Promise<String>;
-}
-
-export interface LocalCredentialSubscription
-  extends Promise<AsyncIterator<LocalCredential>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  user: <T = UserSubscription>() => T;
-  password: () => Promise<AsyncIterator<String>>;
-  resetToken: () => Promise<AsyncIterator<String>>;
-}
-
-export interface LocalCredentialNullablePromise
-  extends Promise<LocalCredential | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  user: <T = UserPromise>() => T;
-  password: () => Promise<String>;
-  resetToken: () => Promise<String>;
-}
-
-export interface OAuthCredential {
-  id: ID_Output;
-  expiresAt?: DateTimeOutput;
-  oauthProvider: String;
-  oauthUserId: String;
-}
-
-export interface OAuthCredentialPromise
-  extends Promise<OAuthCredential>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  expiresAt: () => Promise<DateTimeOutput>;
-  oauthProvider: () => Promise<String>;
-  oauthUserId: () => Promise<String>;
-  user: <T = UserPromise>() => T;
-}
-
-export interface OAuthCredentialSubscription
-  extends Promise<AsyncIterator<OAuthCredential>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  expiresAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  oauthProvider: () => Promise<AsyncIterator<String>>;
-  oauthUserId: () => Promise<AsyncIterator<String>>;
-  user: <T = UserSubscription>() => T;
-}
-
-export interface OAuthCredentialNullablePromise
-  extends Promise<OAuthCredential | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  expiresAt: () => Promise<DateTimeOutput>;
-  oauthProvider: () => Promise<String>;
-  oauthUserId: () => Promise<String>;
-  user: <T = UserPromise>() => T;
-}
-
-export interface ServiceAccount {
-  id: ID_Output;
-  apiKey?: String;
-  label?: String;
-  category?: String;
-  active?: Boolean;
-  lastUsedAt?: DateTimeOutput;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-}
-
-export interface ServiceAccountPromise
-  extends Promise<ServiceAccount>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  apiKey: () => Promise<String>;
-  label: () => Promise<String>;
-  category: () => Promise<String>;
-  active: () => Promise<Boolean>;
-  roleBinding: <T = RoleBindingPromise>() => T;
-  lastUsedAt: () => Promise<DateTimeOutput>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface ServiceAccountSubscription
-  extends Promise<AsyncIterator<ServiceAccount>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  apiKey: () => Promise<AsyncIterator<String>>;
-  label: () => Promise<AsyncIterator<String>>;
-  category: () => Promise<AsyncIterator<String>>;
-  active: () => Promise<AsyncIterator<Boolean>>;
-  roleBinding: <T = RoleBindingSubscription>() => T;
-  lastUsedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface ServiceAccountNullablePromise
-  extends Promise<ServiceAccount | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  apiKey: () => Promise<String>;
-  label: () => Promise<String>;
-  category: () => Promise<String>;
-  active: () => Promise<Boolean>;
-  roleBinding: <T = RoleBindingPromise>() => T;
-  lastUsedAt: () => Promise<DateTimeOutput>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface Workspace {
-  id: ID_Output;
-  active?: Boolean;
-  description?: String;
-  label?: String;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-}
-
-export interface WorkspacePromise extends Promise<Workspace>, Fragmentable {
-  id: () => Promise<ID_Output>;
-  active: () => Promise<Boolean>;
-  deployments: <T = FragmentableArray<Deployment>>(args?: {
-    where?: DeploymentWhereInput;
-    orderBy?: DeploymentOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  description: () => Promise<String>;
-  invites: <T = FragmentableArray<InviteToken>>(args?: {
-    where?: InviteTokenWhereInput;
-    orderBy?: InviteTokenOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  label: () => Promise<String>;
-  roleBindings: <T = FragmentableArray<RoleBinding>>(args?: {
-    where?: RoleBindingWhereInput;
-    orderBy?: RoleBindingOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface WorkspaceSubscription
-  extends Promise<AsyncIterator<Workspace>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  active: () => Promise<AsyncIterator<Boolean>>;
-  deployments: <T = Promise<AsyncIterator<DeploymentSubscription>>>(args?: {
-    where?: DeploymentWhereInput;
-    orderBy?: DeploymentOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  description: () => Promise<AsyncIterator<String>>;
-  invites: <T = Promise<AsyncIterator<InviteTokenSubscription>>>(args?: {
-    where?: InviteTokenWhereInput;
-    orderBy?: InviteTokenOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  label: () => Promise<AsyncIterator<String>>;
-  roleBindings: <T = Promise<AsyncIterator<RoleBindingSubscription>>>(args?: {
-    where?: RoleBindingWhereInput;
-    orderBy?: RoleBindingOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface WorkspaceNullablePromise
-  extends Promise<Workspace | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  active: () => Promise<Boolean>;
-  deployments: <T = FragmentableArray<Deployment>>(args?: {
-    where?: DeploymentWhereInput;
-    orderBy?: DeploymentOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  description: () => Promise<String>;
-  invites: <T = FragmentableArray<InviteToken>>(args?: {
-    where?: InviteTokenWhereInput;
-    orderBy?: InviteTokenOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  label: () => Promise<String>;
-  roleBindings: <T = FragmentableArray<RoleBinding>>(args?: {
-    where?: RoleBindingWhereInput;
-    orderBy?: RoleBindingOrderByInput;
-    skip?: Int;
-    after?: String;
-    before?: String;
-    first?: Int;
-    last?: Int;
-  }) => T;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface InviteToken {
-  id: ID_Output;
-  email: String;
-  token: String;
   role?: Role;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
 }
 
-export interface InviteTokenPromise extends Promise<InviteToken>, Fragmentable {
+export interface RoleBindingPreviousValuesPromise
+  extends Promise<RoleBindingPreviousValues>,
+    Fragmentable {
   id: () => Promise<ID_Output>;
-  email: () => Promise<String>;
-  token: () => Promise<String>;
-  workspace: <T = WorkspacePromise>() => T;
   role: () => Promise<Role>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface InviteTokenSubscription
-  extends Promise<AsyncIterator<InviteToken>>,
+export interface RoleBindingPreviousValuesSubscription
+  extends Promise<AsyncIterator<RoleBindingPreviousValues>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  email: () => Promise<AsyncIterator<String>>;
-  token: () => Promise<AsyncIterator<String>>;
-  workspace: <T = WorkspaceSubscription>() => T;
   role: () => Promise<AsyncIterator<Role>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface InviteTokenNullablePromise
-  extends Promise<InviteToken | null>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  email: () => Promise<String>;
-  token: () => Promise<String>;
-  workspace: <T = WorkspacePromise>() => T;
-  role: () => Promise<Role>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface DeploymentConnection {
-  pageInfo: PageInfo;
-  edges: DeploymentEdge[];
-}
-
-export interface DeploymentConnectionPromise
-  extends Promise<DeploymentConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<DeploymentEdge>>() => T;
-  aggregate: <T = AggregateDeploymentPromise>() => T;
-}
-
-export interface DeploymentConnectionSubscription
-  extends Promise<AsyncIterator<DeploymentConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<DeploymentEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateDeploymentSubscription>() => T;
-}
-
-export interface PageInfo {
-  hasNextPage: Boolean;
-  hasPreviousPage: Boolean;
-  startCursor?: String;
-  endCursor?: String;
-}
-
-export interface PageInfoPromise extends Promise<PageInfo>, Fragmentable {
-  hasNextPage: () => Promise<Boolean>;
-  hasPreviousPage: () => Promise<Boolean>;
-  startCursor: () => Promise<String>;
-  endCursor: () => Promise<String>;
-}
-
-export interface PageInfoSubscription
-  extends Promise<AsyncIterator<PageInfo>>,
-    Fragmentable {
-  hasNextPage: () => Promise<AsyncIterator<Boolean>>;
-  hasPreviousPage: () => Promise<AsyncIterator<Boolean>>;
-  startCursor: () => Promise<AsyncIterator<String>>;
-  endCursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface DeploymentEdge {
-  node: Deployment;
-  cursor: String;
-}
-
-export interface DeploymentEdgePromise
-  extends Promise<DeploymentEdge>,
-    Fragmentable {
-  node: <T = DeploymentPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface DeploymentEdgeSubscription
-  extends Promise<AsyncIterator<DeploymentEdge>>,
-    Fragmentable {
-  node: <T = DeploymentSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateDeployment {
-  count: Int;
-}
-
-export interface AggregateDeploymentPromise
-  extends Promise<AggregateDeployment>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateDeploymentSubscription
-  extends Promise<AsyncIterator<AggregateDeployment>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface EmailConnection {
-  pageInfo: PageInfo;
-  edges: EmailEdge[];
-}
-
-export interface EmailConnectionPromise
-  extends Promise<EmailConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<EmailEdge>>() => T;
-  aggregate: <T = AggregateEmailPromise>() => T;
-}
-
-export interface EmailConnectionSubscription
-  extends Promise<AsyncIterator<EmailConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<EmailEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateEmailSubscription>() => T;
-}
-
-export interface EmailEdge {
-  node: Email;
-  cursor: String;
-}
-
-export interface EmailEdgePromise extends Promise<EmailEdge>, Fragmentable {
-  node: <T = EmailPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface EmailEdgeSubscription
-  extends Promise<AsyncIterator<EmailEdge>>,
-    Fragmentable {
-  node: <T = EmailSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateEmail {
-  count: Int;
-}
-
-export interface AggregateEmailPromise
-  extends Promise<AggregateEmail>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateEmailSubscription
-  extends Promise<AsyncIterator<AggregateEmail>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface InviteTokenConnection {
-  pageInfo: PageInfo;
-  edges: InviteTokenEdge[];
-}
-
-export interface InviteTokenConnectionPromise
-  extends Promise<InviteTokenConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<InviteTokenEdge>>() => T;
-  aggregate: <T = AggregateInviteTokenPromise>() => T;
-}
-
-export interface InviteTokenConnectionSubscription
-  extends Promise<AsyncIterator<InviteTokenConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<InviteTokenEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateInviteTokenSubscription>() => T;
-}
-
-export interface InviteTokenEdge {
-  node: InviteToken;
-  cursor: String;
-}
-
-export interface InviteTokenEdgePromise
-  extends Promise<InviteTokenEdge>,
-    Fragmentable {
-  node: <T = InviteTokenPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface InviteTokenEdgeSubscription
-  extends Promise<AsyncIterator<InviteTokenEdge>>,
-    Fragmentable {
-  node: <T = InviteTokenSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateInviteToken {
-  count: Int;
-}
-
-export interface AggregateInviteTokenPromise
-  extends Promise<AggregateInviteToken>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateInviteTokenSubscription
-  extends Promise<AsyncIterator<AggregateInviteToken>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface LocalCredentialConnection {
-  pageInfo: PageInfo;
-  edges: LocalCredentialEdge[];
-}
-
-export interface LocalCredentialConnectionPromise
-  extends Promise<LocalCredentialConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<LocalCredentialEdge>>() => T;
-  aggregate: <T = AggregateLocalCredentialPromise>() => T;
-}
-
-export interface LocalCredentialConnectionSubscription
-  extends Promise<AsyncIterator<LocalCredentialConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<LocalCredentialEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateLocalCredentialSubscription>() => T;
-}
-
-export interface LocalCredentialEdge {
-  node: LocalCredential;
-  cursor: String;
-}
-
-export interface LocalCredentialEdgePromise
-  extends Promise<LocalCredentialEdge>,
-    Fragmentable {
-  node: <T = LocalCredentialPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface LocalCredentialEdgeSubscription
-  extends Promise<AsyncIterator<LocalCredentialEdge>>,
-    Fragmentable {
-  node: <T = LocalCredentialSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateLocalCredential {
-  count: Int;
-}
-
-export interface AggregateLocalCredentialPromise
-  extends Promise<AggregateLocalCredential>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateLocalCredentialSubscription
-  extends Promise<AsyncIterator<AggregateLocalCredential>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface OAuthCredentialConnection {
-  pageInfo: PageInfo;
-  edges: OAuthCredentialEdge[];
-}
-
-export interface OAuthCredentialConnectionPromise
-  extends Promise<OAuthCredentialConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<OAuthCredentialEdge>>() => T;
-  aggregate: <T = AggregateOAuthCredentialPromise>() => T;
-}
-
-export interface OAuthCredentialConnectionSubscription
-  extends Promise<AsyncIterator<OAuthCredentialConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<OAuthCredentialEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateOAuthCredentialSubscription>() => T;
-}
-
-export interface OAuthCredentialEdge {
-  node: OAuthCredential;
-  cursor: String;
-}
-
-export interface OAuthCredentialEdgePromise
-  extends Promise<OAuthCredentialEdge>,
-    Fragmentable {
-  node: <T = OAuthCredentialPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface OAuthCredentialEdgeSubscription
-  extends Promise<AsyncIterator<OAuthCredentialEdge>>,
-    Fragmentable {
-  node: <T = OAuthCredentialSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateOAuthCredential {
-  count: Int;
-}
-
-export interface AggregateOAuthCredentialPromise
-  extends Promise<AggregateOAuthCredential>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateOAuthCredentialSubscription
-  extends Promise<AsyncIterator<AggregateOAuthCredential>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface RoleBindingConnection {
-  pageInfo: PageInfo;
-  edges: RoleBindingEdge[];
-}
-
-export interface RoleBindingConnectionPromise
-  extends Promise<RoleBindingConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<RoleBindingEdge>>() => T;
-  aggregate: <T = AggregateRoleBindingPromise>() => T;
-}
-
-export interface RoleBindingConnectionSubscription
-  extends Promise<AsyncIterator<RoleBindingConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<RoleBindingEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateRoleBindingSubscription>() => T;
-}
-
-export interface RoleBindingEdge {
-  node: RoleBinding;
-  cursor: String;
-}
-
-export interface RoleBindingEdgePromise
-  extends Promise<RoleBindingEdge>,
-    Fragmentable {
-  node: <T = RoleBindingPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface RoleBindingEdgeSubscription
-  extends Promise<AsyncIterator<RoleBindingEdge>>,
-    Fragmentable {
-  node: <T = RoleBindingSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateRoleBinding {
-  count: Int;
-}
-
-export interface AggregateRoleBindingPromise
-  extends Promise<AggregateRoleBinding>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateRoleBindingSubscription
-  extends Promise<AsyncIterator<AggregateRoleBinding>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface ServiceAccountConnection {
-  pageInfo: PageInfo;
-  edges: ServiceAccountEdge[];
-}
-
-export interface ServiceAccountConnectionPromise
-  extends Promise<ServiceAccountConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<ServiceAccountEdge>>() => T;
-  aggregate: <T = AggregateServiceAccountPromise>() => T;
-}
-
-export interface ServiceAccountConnectionSubscription
-  extends Promise<AsyncIterator<ServiceAccountConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<ServiceAccountEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateServiceAccountSubscription>() => T;
-}
-
-export interface ServiceAccountEdge {
-  node: ServiceAccount;
-  cursor: String;
-}
-
-export interface ServiceAccountEdgePromise
-  extends Promise<ServiceAccountEdge>,
-    Fragmentable {
-  node: <T = ServiceAccountPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface ServiceAccountEdgeSubscription
-  extends Promise<AsyncIterator<ServiceAccountEdge>>,
-    Fragmentable {
-  node: <T = ServiceAccountSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateServiceAccount {
-  count: Int;
-}
-
-export interface AggregateServiceAccountPromise
-  extends Promise<AggregateServiceAccount>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateServiceAccountSubscription
-  extends Promise<AsyncIterator<AggregateServiceAccount>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface UserConnection {
-  pageInfo: PageInfo;
-  edges: UserEdge[];
-}
-
-export interface UserConnectionPromise
-  extends Promise<UserConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<UserEdge>>() => T;
-  aggregate: <T = AggregateUserPromise>() => T;
-}
-
-export interface UserConnectionSubscription
-  extends Promise<AsyncIterator<UserConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<UserEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateUserSubscription>() => T;
-}
-
-export interface UserEdge {
-  node: User;
-  cursor: String;
-}
-
-export interface UserEdgePromise extends Promise<UserEdge>, Fragmentable {
-  node: <T = UserPromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface UserEdgeSubscription
-  extends Promise<AsyncIterator<UserEdge>>,
-    Fragmentable {
-  node: <T = UserSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateUser {
-  count: Int;
-}
-
-export interface AggregateUserPromise
-  extends Promise<AggregateUser>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateUserSubscription
-  extends Promise<AsyncIterator<AggregateUser>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface WorkspaceConnection {
-  pageInfo: PageInfo;
-  edges: WorkspaceEdge[];
-}
-
-export interface WorkspaceConnectionPromise
-  extends Promise<WorkspaceConnection>,
-    Fragmentable {
-  pageInfo: <T = PageInfoPromise>() => T;
-  edges: <T = FragmentableArray<WorkspaceEdge>>() => T;
-  aggregate: <T = AggregateWorkspacePromise>() => T;
-}
-
-export interface WorkspaceConnectionSubscription
-  extends Promise<AsyncIterator<WorkspaceConnection>>,
-    Fragmentable {
-  pageInfo: <T = PageInfoSubscription>() => T;
-  edges: <T = Promise<AsyncIterator<WorkspaceEdgeSubscription>>>() => T;
-  aggregate: <T = AggregateWorkspaceSubscription>() => T;
-}
-
-export interface WorkspaceEdge {
-  node: Workspace;
-  cursor: String;
-}
-
-export interface WorkspaceEdgePromise
-  extends Promise<WorkspaceEdge>,
-    Fragmentable {
-  node: <T = WorkspacePromise>() => T;
-  cursor: () => Promise<String>;
-}
-
-export interface WorkspaceEdgeSubscription
-  extends Promise<AsyncIterator<WorkspaceEdge>>,
-    Fragmentable {
-  node: <T = WorkspaceSubscription>() => T;
-  cursor: () => Promise<AsyncIterator<String>>;
-}
-
-export interface AggregateWorkspace {
-  count: Int;
-}
-
-export interface AggregateWorkspacePromise
-  extends Promise<AggregateWorkspace>,
-    Fragmentable {
-  count: () => Promise<Int>;
-}
-
-export interface AggregateWorkspaceSubscription
-  extends Promise<AsyncIterator<AggregateWorkspace>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Int>>;
-}
-
-export interface BatchPayload {
-  count: Long;
-}
-
-export interface BatchPayloadPromise
-  extends Promise<BatchPayload>,
-    Fragmentable {
-  count: () => Promise<Long>;
-}
-
-export interface BatchPayloadSubscription
-  extends Promise<AsyncIterator<BatchPayload>>,
-    Fragmentable {
-  count: () => Promise<AsyncIterator<Long>>;
-}
-
-export interface DeploymentSubscriptionPayload {
-  mutation: MutationType;
-  node: Deployment;
-  updatedFields: String[];
-  previousValues: DeploymentPreviousValues;
-}
-
-export interface DeploymentSubscriptionPayloadPromise
-  extends Promise<DeploymentSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = DeploymentPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = DeploymentPreviousValuesPromise>() => T;
-}
-
-export interface DeploymentSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<DeploymentSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = DeploymentSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = DeploymentPreviousValuesSubscription>() => T;
-}
-
-export interface DeploymentPreviousValues {
-  id: ID_Output;
-  config?: Json;
-  description?: String;
-  label?: String;
-  registryPassword?: String;
-  elasticsearchPassword?: String;
-  releaseName?: String;
-  version?: String;
-  extraAu?: Int;
-  airflowVersion?: String;
-  alertEmails: String[];
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-}
-
-export interface DeploymentPreviousValuesPromise
-  extends Promise<DeploymentPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  config: () => Promise<Json>;
-  description: () => Promise<String>;
-  label: () => Promise<String>;
-  registryPassword: () => Promise<String>;
-  elasticsearchPassword: () => Promise<String>;
-  releaseName: () => Promise<String>;
-  version: () => Promise<String>;
-  extraAu: () => Promise<Int>;
-  airflowVersion: () => Promise<String>;
-  alertEmails: () => Promise<String[]>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface DeploymentPreviousValuesSubscription
-  extends Promise<AsyncIterator<DeploymentPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  config: () => Promise<AsyncIterator<Json>>;
-  description: () => Promise<AsyncIterator<String>>;
-  label: () => Promise<AsyncIterator<String>>;
-  registryPassword: () => Promise<AsyncIterator<String>>;
-  elasticsearchPassword: () => Promise<AsyncIterator<String>>;
-  releaseName: () => Promise<AsyncIterator<String>>;
-  version: () => Promise<AsyncIterator<String>>;
-  extraAu: () => Promise<AsyncIterator<Int>>;
-  airflowVersion: () => Promise<AsyncIterator<String>>;
-  alertEmails: () => Promise<AsyncIterator<String[]>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface EmailSubscriptionPayload {
-  mutation: MutationType;
-  node: Email;
-  updatedFields: String[];
-  previousValues: EmailPreviousValues;
-}
-
-export interface EmailSubscriptionPayloadPromise
-  extends Promise<EmailSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = EmailPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = EmailPreviousValuesPromise>() => T;
-}
-
-export interface EmailSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<EmailSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = EmailSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = EmailPreviousValuesSubscription>() => T;
-}
-
-export interface EmailPreviousValues {
-  id: ID_Output;
-  address?: String;
-  primary?: Boolean;
-  token?: String;
-  verified?: Boolean;
-}
-
-export interface EmailPreviousValuesPromise
-  extends Promise<EmailPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  address: () => Promise<String>;
-  primary: () => Promise<Boolean>;
-  token: () => Promise<String>;
-  verified: () => Promise<Boolean>;
-}
-
-export interface EmailPreviousValuesSubscription
-  extends Promise<AsyncIterator<EmailPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  address: () => Promise<AsyncIterator<String>>;
-  primary: () => Promise<AsyncIterator<Boolean>>;
-  token: () => Promise<AsyncIterator<String>>;
-  verified: () => Promise<AsyncIterator<Boolean>>;
-}
-
-export interface InviteTokenSubscriptionPayload {
-  mutation: MutationType;
-  node: InviteToken;
-  updatedFields: String[];
-  previousValues: InviteTokenPreviousValues;
-}
-
-export interface InviteTokenSubscriptionPayloadPromise
-  extends Promise<InviteTokenSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = InviteTokenPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = InviteTokenPreviousValuesPromise>() => T;
-}
-
-export interface InviteTokenSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<InviteTokenSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = InviteTokenSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = InviteTokenPreviousValuesSubscription>() => T;
-}
-
-export interface InviteTokenPreviousValues {
-  id: ID_Output;
-  email: String;
-  token: String;
-  role?: Role;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-}
-
-export interface InviteTokenPreviousValuesPromise
-  extends Promise<InviteTokenPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  email: () => Promise<String>;
-  token: () => Promise<String>;
-  role: () => Promise<Role>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface InviteTokenPreviousValuesSubscription
-  extends Promise<AsyncIterator<InviteTokenPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  email: () => Promise<AsyncIterator<String>>;
-  token: () => Promise<AsyncIterator<String>>;
-  role: () => Promise<AsyncIterator<Role>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface LocalCredentialSubscriptionPayload {
-  mutation: MutationType;
-  node: LocalCredential;
-  updatedFields: String[];
-  previousValues: LocalCredentialPreviousValues;
-}
-
-export interface LocalCredentialSubscriptionPayloadPromise
-  extends Promise<LocalCredentialSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = LocalCredentialPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = LocalCredentialPreviousValuesPromise>() => T;
-}
-
-export interface LocalCredentialSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<LocalCredentialSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = LocalCredentialSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = LocalCredentialPreviousValuesSubscription>() => T;
-}
-
-export interface LocalCredentialPreviousValues {
-  id: ID_Output;
-  password?: String;
-  resetToken?: String;
-}
-
-export interface LocalCredentialPreviousValuesPromise
-  extends Promise<LocalCredentialPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  password: () => Promise<String>;
-  resetToken: () => Promise<String>;
-}
-
-export interface LocalCredentialPreviousValuesSubscription
-  extends Promise<AsyncIterator<LocalCredentialPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  password: () => Promise<AsyncIterator<String>>;
-  resetToken: () => Promise<AsyncIterator<String>>;
-}
-
-export interface OAuthCredentialSubscriptionPayload {
-  mutation: MutationType;
-  node: OAuthCredential;
-  updatedFields: String[];
-  previousValues: OAuthCredentialPreviousValues;
-}
-
-export interface OAuthCredentialSubscriptionPayloadPromise
-  extends Promise<OAuthCredentialSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = OAuthCredentialPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = OAuthCredentialPreviousValuesPromise>() => T;
-}
-
-export interface OAuthCredentialSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<OAuthCredentialSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = OAuthCredentialSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = OAuthCredentialPreviousValuesSubscription>() => T;
-}
-
-export interface OAuthCredentialPreviousValues {
-  id: ID_Output;
-  expiresAt?: DateTimeOutput;
-  oauthProvider: String;
-  oauthUserId: String;
-}
-
-export interface OAuthCredentialPreviousValuesPromise
-  extends Promise<OAuthCredentialPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  expiresAt: () => Promise<DateTimeOutput>;
-  oauthProvider: () => Promise<String>;
-  oauthUserId: () => Promise<String>;
-}
-
-export interface OAuthCredentialPreviousValuesSubscription
-  extends Promise<AsyncIterator<OAuthCredentialPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  expiresAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  oauthProvider: () => Promise<AsyncIterator<String>>;
-  oauthUserId: () => Promise<AsyncIterator<String>>;
 }
 
 export interface RoleBindingSubscriptionPayload {
@@ -4381,110 +4405,23 @@ export interface RoleBindingSubscriptionPayloadSubscription
   previousValues: <T = RoleBindingPreviousValuesSubscription>() => T;
 }
 
-export interface RoleBindingPreviousValues {
-  id: ID_Output;
-  role?: Role;
+export interface LocalCredentialEdge {
+  node: LocalCredential;
+  cursor: String;
 }
 
-export interface RoleBindingPreviousValuesPromise
-  extends Promise<RoleBindingPreviousValues>,
+export interface LocalCredentialEdgePromise
+  extends Promise<LocalCredentialEdge>,
     Fragmentable {
-  id: () => Promise<ID_Output>;
-  role: () => Promise<Role>;
+  node: <T = LocalCredentialPromise>() => T;
+  cursor: () => Promise<String>;
 }
 
-export interface RoleBindingPreviousValuesSubscription
-  extends Promise<AsyncIterator<RoleBindingPreviousValues>>,
+export interface LocalCredentialEdgeSubscription
+  extends Promise<AsyncIterator<LocalCredentialEdge>>,
     Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  role: () => Promise<AsyncIterator<Role>>;
-}
-
-export interface ServiceAccountSubscriptionPayload {
-  mutation: MutationType;
-  node: ServiceAccount;
-  updatedFields: String[];
-  previousValues: ServiceAccountPreviousValues;
-}
-
-export interface ServiceAccountSubscriptionPayloadPromise
-  extends Promise<ServiceAccountSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = ServiceAccountPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = ServiceAccountPreviousValuesPromise>() => T;
-}
-
-export interface ServiceAccountSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<ServiceAccountSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = ServiceAccountSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = ServiceAccountPreviousValuesSubscription>() => T;
-}
-
-export interface ServiceAccountPreviousValues {
-  id: ID_Output;
-  apiKey?: String;
-  label?: String;
-  category?: String;
-  active?: Boolean;
-  lastUsedAt?: DateTimeOutput;
-  createdAt: DateTimeOutput;
-  updatedAt: DateTimeOutput;
-}
-
-export interface ServiceAccountPreviousValuesPromise
-  extends Promise<ServiceAccountPreviousValues>,
-    Fragmentable {
-  id: () => Promise<ID_Output>;
-  apiKey: () => Promise<String>;
-  label: () => Promise<String>;
-  category: () => Promise<String>;
-  active: () => Promise<Boolean>;
-  lastUsedAt: () => Promise<DateTimeOutput>;
-  createdAt: () => Promise<DateTimeOutput>;
-  updatedAt: () => Promise<DateTimeOutput>;
-}
-
-export interface ServiceAccountPreviousValuesSubscription
-  extends Promise<AsyncIterator<ServiceAccountPreviousValues>>,
-    Fragmentable {
-  id: () => Promise<AsyncIterator<ID_Output>>;
-  apiKey: () => Promise<AsyncIterator<String>>;
-  label: () => Promise<AsyncIterator<String>>;
-  category: () => Promise<AsyncIterator<String>>;
-  active: () => Promise<AsyncIterator<Boolean>>;
-  lastUsedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-  updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
-}
-
-export interface UserSubscriptionPayload {
-  mutation: MutationType;
-  node: User;
-  updatedFields: String[];
-  previousValues: UserPreviousValues;
-}
-
-export interface UserSubscriptionPayloadPromise
-  extends Promise<UserSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = UserPromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = UserPreviousValuesPromise>() => T;
-}
-
-export interface UserSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<UserSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = UserSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = UserPreviousValuesSubscription>() => T;
+  node: <T = LocalCredentialSubscription>() => T;
+  cursor: () => Promise<AsyncIterator<String>>;
 }
 
 export interface UserPreviousValues {
@@ -4521,84 +4458,124 @@ export interface UserPreviousValuesSubscription
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-export interface WorkspaceSubscriptionPayload {
-  mutation: MutationType;
-  node: Workspace;
-  updatedFields: String[];
-  previousValues: WorkspacePreviousValues;
-}
-
-export interface WorkspaceSubscriptionPayloadPromise
-  extends Promise<WorkspaceSubscriptionPayload>,
-    Fragmentable {
-  mutation: () => Promise<MutationType>;
-  node: <T = WorkspacePromise>() => T;
-  updatedFields: () => Promise<String[]>;
-  previousValues: <T = WorkspacePreviousValuesPromise>() => T;
-}
-
-export interface WorkspaceSubscriptionPayloadSubscription
-  extends Promise<AsyncIterator<WorkspaceSubscriptionPayload>>,
-    Fragmentable {
-  mutation: () => Promise<AsyncIterator<MutationType>>;
-  node: <T = WorkspaceSubscription>() => T;
-  updatedFields: () => Promise<AsyncIterator<String[]>>;
-  previousValues: <T = WorkspacePreviousValuesSubscription>() => T;
-}
-
-export interface WorkspacePreviousValues {
+export interface Deployment {
   id: ID_Output;
-  active?: Boolean;
+  config?: Json;
   description?: String;
   label?: String;
+  registryPassword?: String;
+  elasticsearchPassword?: String;
+  releaseName?: String;
+  version?: String;
+  extraAu?: Int;
+  airflowVersion?: String;
+  alertEmails: String[];
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
 
-export interface WorkspacePreviousValuesPromise
-  extends Promise<WorkspacePreviousValues>,
-    Fragmentable {
+export interface DeploymentPromise extends Promise<Deployment>, Fragmentable {
   id: () => Promise<ID_Output>;
-  active: () => Promise<Boolean>;
+  config: () => Promise<Json>;
   description: () => Promise<String>;
   label: () => Promise<String>;
+  registryPassword: () => Promise<String>;
+  elasticsearchPassword: () => Promise<String>;
+  releaseName: () => Promise<String>;
+  version: () => Promise<String>;
+  extraAu: () => Promise<Int>;
+  airflowVersion: () => Promise<String>;
+  alertEmails: () => Promise<String[]>;
+  roleBindings: <T = FragmentableArray<RoleBinding>>(args?: {
+    where?: RoleBindingWhereInput;
+    orderBy?: RoleBindingOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  workspace: <T = WorkspacePromise>() => T;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
 
-export interface WorkspacePreviousValuesSubscription
-  extends Promise<AsyncIterator<WorkspacePreviousValues>>,
+export interface DeploymentSubscription
+  extends Promise<AsyncIterator<Deployment>>,
     Fragmentable {
   id: () => Promise<AsyncIterator<ID_Output>>;
-  active: () => Promise<AsyncIterator<Boolean>>;
+  config: () => Promise<AsyncIterator<Json>>;
   description: () => Promise<AsyncIterator<String>>;
   label: () => Promise<AsyncIterator<String>>;
+  registryPassword: () => Promise<AsyncIterator<String>>;
+  elasticsearchPassword: () => Promise<AsyncIterator<String>>;
+  releaseName: () => Promise<AsyncIterator<String>>;
+  version: () => Promise<AsyncIterator<String>>;
+  extraAu: () => Promise<AsyncIterator<Int>>;
+  airflowVersion: () => Promise<AsyncIterator<String>>;
+  alertEmails: () => Promise<AsyncIterator<String[]>>;
+  roleBindings: <T = Promise<AsyncIterator<RoleBindingSubscription>>>(args?: {
+    where?: RoleBindingWhereInput;
+    orderBy?: RoleBindingOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  workspace: <T = WorkspaceSubscription>() => T;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }
 
-/*
-The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
-*/
-export type ID_Input = string | number;
-export type ID_Output = string;
+export interface DeploymentNullablePromise
+  extends Promise<Deployment | null>,
+    Fragmentable {
+  id: () => Promise<ID_Output>;
+  config: () => Promise<Json>;
+  description: () => Promise<String>;
+  label: () => Promise<String>;
+  registryPassword: () => Promise<String>;
+  elasticsearchPassword: () => Promise<String>;
+  releaseName: () => Promise<String>;
+  version: () => Promise<String>;
+  extraAu: () => Promise<Int>;
+  airflowVersion: () => Promise<String>;
+  alertEmails: () => Promise<String[]>;
+  roleBindings: <T = FragmentableArray<RoleBinding>>(args?: {
+    where?: RoleBindingWhereInput;
+    orderBy?: RoleBindingOrderByInput;
+    skip?: Int;
+    after?: String;
+    before?: String;
+    first?: Int;
+    last?: Int;
+  }) => T;
+  workspace: <T = WorkspacePromise>() => T;
+  createdAt: () => Promise<DateTimeOutput>;
+  updatedAt: () => Promise<DateTimeOutput>;
+}
 
-/*
-The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
-*/
-export type String = string;
+export interface InviteTokenConnection {
+  pageInfo: PageInfo;
+  edges: InviteTokenEdge[];
+}
 
-export type Json = any;
+export interface InviteTokenConnectionPromise
+  extends Promise<InviteTokenConnection>,
+    Fragmentable {
+  pageInfo: <T = PageInfoPromise>() => T;
+  edges: <T = FragmentableArray<InviteTokenEdge>>() => T;
+  aggregate: <T = AggregateInviteTokenPromise>() => T;
+}
 
-/*
-The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
-*/
-export type Int = number;
-
-/*
-The `Boolean` scalar type represents `true` or `false`.
-*/
-export type Boolean = boolean;
+export interface InviteTokenConnectionSubscription
+  extends Promise<AsyncIterator<InviteTokenConnection>>,
+    Fragmentable {
+  pageInfo: <T = PageInfoSubscription>() => T;
+  edges: <T = Promise<AsyncIterator<InviteTokenEdgeSubscription>>>() => T;
+  aggregate: <T = AggregateInviteTokenSubscription>() => T;
+}
 
 /*
 DateTime scalar input type, allowing Date
@@ -4611,6 +4588,29 @@ DateTime scalar output type, which is always a string
 export type DateTimeOutput = string;
 
 export type Long = string;
+
+/*
+The `ID` scalar type represents a unique identifier, often used to refetch an object or as key for a cache. The ID type appears in a JSON response as a String; however, it is not intended to be human-readable. When expected as an input type, any string (such as `"4"`) or integer (such as `4`) input value will be accepted as an ID.
+*/
+export type ID_Input = string | number;
+export type ID_Output = string;
+
+export type Json = any;
+
+/*
+The `Int` scalar type represents non-fractional signed whole numeric values. Int can represent values between -(2^31) and 2^31 - 1. 
+*/
+export type Int = number;
+
+/*
+The `String` scalar type represents textual data, represented as UTF-8 character sequences. The String type is most often used by GraphQL to represent free-form human-readable text.
+*/
+export type String = string;
+
+/*
+The `Boolean` scalar type represents `true` or `false`.
+*/
+export type Boolean = boolean;
 
 /**
  * Model Metadata

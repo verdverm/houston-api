@@ -117,7 +117,9 @@ type Workspace {
   createdAt: DateTime!
   updatedAt: DateTime!
   roleBindings: [RoleBinding!]
+  workspaceCapabilities: WorkspaceCapabilities
 }
+
 
 type DeploymentConfig {
   defaults: JSON
@@ -128,6 +130,10 @@ type DeploymentConfig {
   latestVersion: String
   singleNamespace: Boolean!
   loggingEnabled: Boolean!
+}
+
+type WorkspaceCapabilities {
+  updateIAM: Boolean
 }
 
 type AstroUnit {

@@ -188,10 +188,13 @@ roles:
       - workspace.serviceAccounts.create
       - workspace.serviceAccounts.delete
       - workspace.iam.update
+      - workspace.invites.get
 
   - id: WORKSPACE_VIEWER
     name: Workspace Viewer
-    permissions: []
+    permissions:
+      - workspace.deployments.list
+      - workspace.invites.get
 
   #
   # Deployment
