@@ -9,7 +9,6 @@ import config from "config";
 import {
   ENTITY_DEPLOYMENT,
   ENTITY_WORKSPACE,
-  DEPLOYMENT_ADMIN,
   DEPLOYMENT_EDITOR,
   WORKSPACE_EDITOR
 } from "constants";
