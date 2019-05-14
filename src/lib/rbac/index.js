@@ -1,5 +1,6 @@
 import userFragment from "./user-fragment";
 import serviceAccountFragment from "./service-account-fragment";
+import deploymentFragment from "./deployment-fragment";
 import { decodeJWT } from "jwt";
 import { PermissionError } from "errors";
 import { prisma } from "generated/client";
@@ -10,7 +11,6 @@ import {
   ENTITY_WORKSPACE,
   DEPLOYMENT_ADMIN,
   DEPLOYMENT_EDITOR,
-  WORKSPACE_ADMIN,
   WORKSPACE_EDITOR
 } from "constants";
 
@@ -138,7 +138,7 @@ export async function getAuthUser(authorization) {
 
   // If we do have a service account, set it as the user on the context.
   if (isServiceAcct) {
-    return await addDeploymentRoleBindings(
+    return addDeploymentRoleBindings(
       getServiceAccountWithRoleBindings(authorization)
     );
   }
@@ -148,8 +148,9 @@ export async function getAuthUser(authorization) {
 
   // If we have a userId, set the user on the session,
   // otherwise return nothing.
-  if (uuid)
-    return await addDeploymentRoleBindings(getUserWithRoleBindings(uuid));
+  if (uuid) {
+    return addDeploymentRoleBindings(getUserWithRoleBindings(uuid));
+  }
 }
 
 /*
@@ -166,28 +167,45 @@ async function addDeploymentRoleBindings(promise) {
   const user = await promise;
   if (!user) return;
 
-  // Get the list of workspace ids where user is admin.
-  const workspaceIds = map(
-    filter(user.roleBindings, rb => rb.role === WORKSPACE_ADMIN),
-    "workspace.id"
+  // Get list of roleBindings for all workspaces the user belongs to.
+  const workspaceRoleBindings = filter(user.roleBindings, rb =>
+    rb.role.startsWith(ENTITY_WORKSPACE)
   );
+
+  // Pull out the workspace ids.
+  const workspaceIds = map(workspaceRoleBindings, "workspace.id");
 
   // Get the deployments that are under any of our workspaces.
   const deployments = await prisma
     .deployments({
       where: { workspace: { id_in: workspaceIds } }
     })
-    .id();
+    .$fragment(deploymentFragment);
 
   // Generate fake rolebindings for deployment level admin.
-  const roleBindings = map(deployments, deployment => ({
-    role: DEPLOYMENT_ADMIN,
-    workspace: null,
-    deployment: { id: deployment.id }
-  }));
+  const deploymentRoleBindings = map(deployments, deployment => {
+    // Get the roleBinding for the workspace this deployment belongs to.
+    const rb = find(
+      workspaceRoleBindings,
+      rb => rb.workspace.id === deployment.workspace.id
+    );
+
+    // Replace the WORKSPACE_* role with DEPLOYMENT_*.
+    const role = rb.role.replace(ENTITY_WORKSPACE, ENTITY_DEPLOYMENT);
+
+    // Return the new DEPLOYMENT_* roleBinding.
+    return {
+      role,
+      workspace: null,
+      deployment: { id: deployment.id }
+    };
+  });
+
+  // Combine with existing real roleBindings.
+  const roleBindings = [...user.roleBindings, ...deploymentRoleBindings];
 
   // Return a modified user, spreading existing rolebindings, with new fake ones.
-  return { ...user, roleBindings: [...user.roleBindings, ...roleBindings] };
+  return { ...user, roleBindings };
 }
 
 // /* If the passed argument is a string, lookup the user by id.

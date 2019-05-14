@@ -83,16 +83,18 @@ export default async function createDeployment(parent, args, ctx, info) {
   );
 
   // Create the role binding for the user.
-  await ctx.db.mutation.createRoleBinding(
-    {
-      data: {
-        role: DEPLOYMENT_ADMIN,
-        user: { connect: { id: ctx.user.id } },
-        deployment: { connect: { id: deployment.id } }
-      }
-    },
-    `{ id }`
-  );
+  // XXX: This was commented out temporarily while we are
+  // synthetically generating DEPLOYMENT_* RoleBindings.
+  // await ctx.db.mutation.createRoleBinding(
+  //   {
+  //     data: {
+  //       role: DEPLOYMENT_ADMIN,
+  //       user: { connect: { id: ctx.user.id } },
+  //       deployment: { connect: { id: deployment.id } }
+  //     }
+  //   },
+  //   `{ id }`
+  // );
 
   // Create the database for this deployment.
   const {
