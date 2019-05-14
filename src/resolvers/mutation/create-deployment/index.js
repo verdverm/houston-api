@@ -17,7 +17,7 @@ import config from "config";
 import bcrypt from "bcryptjs";
 import { get } from "lodash";
 import crypto from "crypto";
-import { DEPLOYMENT_ADMIN, DEPLOYMENT_AIRFLOW } from "constants";
+import { DEPLOYMENT_AIRFLOW } from "constants";
 
 /*
  * Create a deployment.
