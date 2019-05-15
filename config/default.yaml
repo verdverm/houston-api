@@ -221,12 +221,14 @@ roles:
       - deployment.airflow.view
       - deployment.serviceAccounts.create
       - deployment.serviceAccounts.delete
+      - deployment.logs.get
 
   - id: DEPLOYMENT_VIEWER
     name: Deployment Viewer
     permissions:
       - deployment.config.get
       - deployment.airflow.view
+      - deployment.logs.get
 
 #
 # Airflow Deployment Configurations
