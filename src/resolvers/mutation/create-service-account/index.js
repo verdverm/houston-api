@@ -20,7 +20,7 @@ export default async function createServiceAccount(parent, args, ctx, info) {
   // Make sure we have permission to do this.
   checkPermission(
     ctx.user,
-    `${entityType}.deployments.list`,
+    `${entityType}.serviceAccounts.create`,
     entityType,
     entityUuid
   );
