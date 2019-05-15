@@ -13,6 +13,7 @@ import forgotPassword from "./forgot-password";
 import resendConfirmation from "./resend-confirmation";
 import resetPassword from "./reset-password";
 import updateDeployment from "./update-deployment";
+import updateServiceAccount from "./update-service-account";
 import updateUser from "./update-user";
 import updateWorkspace from "./update-workspace";
 import upgradeDeployment from "./upgrade-deployment";
@@ -36,6 +37,7 @@ export default {
   resendConfirmation,
   resetPassword,
   updateDeployment,
+  updateServiceAccount,
   updateUser,
   updateWorkspace,
   upgradeDeployment,

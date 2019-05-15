@@ -379,6 +379,11 @@ type Mutation {
     entityUuid: Uuid
   ): ServiceAccount @auth
 
+  updateServiceAccount(
+    serviceAccountUuid: Uuid!
+    payload: JSON!
+  ): ServiceAccount @auth
+
   deleteServiceAccount(
     serviceAccountUuid: Uuid!
   ): ServiceAccount @auth

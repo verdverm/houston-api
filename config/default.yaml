@@ -175,6 +175,7 @@ roles:
       - workspace.deployments.list
       - workspace.deployments.create
       - workspace.serviceAccounts.create
+      - workspace.serviceAccounts.update
       - workspace.serviceAccounts.delete
       - workspace.iam.update
 
@@ -186,6 +187,7 @@ roles:
       - workspace.deployments.list
       - workspace.deployments.create
       - workspace.serviceAccounts.create
+      - workspace.serviceAccounts.update
       - workspace.serviceAccounts.delete
 
   - id: WORKSPACE_VIEWER
@@ -208,6 +210,7 @@ roles:
       - deployment.airflow.user
       - deployment.airflow.view
       - deployment.serviceAccounts.create
+      - deployment.serviceAccounts.update
       - deployment.serviceAccounts.delete
       - deployment.logs.get
 
@@ -220,6 +223,7 @@ roles:
       - deployment.airflow.user
       - deployment.airflow.view
       - deployment.serviceAccounts.create
+      - deployment.serviceAccounts.update
       - deployment.serviceAccounts.delete
       - deployment.logs.get
 
