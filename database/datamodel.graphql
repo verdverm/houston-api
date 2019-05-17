@@ -18,7 +18,7 @@ type User {
   avatarUrl: String
   emails: [Email!]!
   roleBindings: [RoleBinding!]! @relation(name: "RoleBindingToUser", onDelete: CASCADE)
-  localCredential: LocalCredential @relation(name: "LocalCredentialToUser", onDelete: CASCADE, link: TABLE)
+  localCredential: LocalCredential @relation(name: "LocalCredentialToUser", onDelete: CASCADE, link: INLINE)
   oauthCredentials: [OAuthCredential!]! @relation(name: "OAuthCredentialToUser", onDelete: CASCADE)
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
@@ -32,7 +32,7 @@ type RoleBinding {
   id: ID! @id
   role: Role
   user: User @relation(name: "RoleBindingToUser")
-  serviceAccount: ServiceAccount @relation(name: "RoleBindingToServiceAccount", link: TABLE)
+  serviceAccount: ServiceAccount @relation(name: "RoleBindingToServiceAccount", link: INLINE)
   workspace: Workspace @relation(name: "RoleBindingToWorkspace")
   deployment: Deployment @relation(name: "DeploymentRoleBindings")
 }
