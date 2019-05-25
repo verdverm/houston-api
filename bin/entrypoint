@@ -5,6 +5,12 @@ set -e
 HOST=$(echo "${PRISMA__ENDPOINT}" | awk -F// '{print $2}' | awk -F: '{print $1}')
 PORT=$(echo "${PRISMA__ENDPOINT}" | awk -F: '{print $3}' | awk -F/ '{print $1}')
 
+# In production, we mount the registry TLS certificate
+# into /usr/local/share/ca-certificates. This completes
+# the certificate installation so we can trust the registry.
+echo "Running update-ca-certificates"
+update-ca-certificates
+
 echo "Waiting for host: ${HOST} ${PORT}"
 while ! nc -w 1 -z "${HOST}" "${PORT}"; do
     sleep 0.001
