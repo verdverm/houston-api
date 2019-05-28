@@ -114,6 +114,11 @@ auth:
   github:
     enabled: false
 
+  okta:
+    enabled: false
+    clientId: ~
+    baseDomain: ~
+
 jwt:
   # Development only: Passphrase to sign JWTs used to authenticate our GraphQL
   # API.

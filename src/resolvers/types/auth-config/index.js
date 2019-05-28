@@ -87,6 +87,16 @@ export function githubOAuthUrl(parent) {
   return providers.auth0.authUrl(parent, oauthRedirectUrl(), "github");
 }
 
+export function oktaEnabled() {
+  return config.get("auth.okta.enabled");
+}
+
+export function oktaOAuthUrl(parent) {
+  return config.get("auth.okta.enabled")
+    ? providers.okta.authUrl(parent, oauthRedirectUrl())
+    : null;
+}
+
 export default {
   publicSignup,
   initialSignup,
@@ -96,5 +106,7 @@ export default {
   auth0Enabled,
   auth0OAuthUrl,
   githubEnabled,
-  githubOAuthUrl
+  githubOAuthUrl,
+  oktaEnabled,
+  oktaOAuthUrl
 };

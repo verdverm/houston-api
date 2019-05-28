@@ -56,9 +56,11 @@ type AuthConfig {
   googleEnabled: Boolean
   githubEnabled: Boolean
   auth0Enabled: Boolean
+  oktaEnabled: Boolean
   googleOAuthUrl: String
   githubOAuthUrl: String
   auth0OAuthUrl: String
+  oktaOAuthUrl: String
 }
 
 type Invite {

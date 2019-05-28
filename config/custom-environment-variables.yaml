@@ -76,6 +76,12 @@ auth:
     enabled:
       __name: "AUTH__GITHUB__ENABLED"
       __format: "json"
+  okta:
+    enabled:
+      __name: "AUTH__OKTA__ENABLED"
+      __format: "json"
+    clientId: "AUTH__OKTA__CLIENT__ID"
+    baseDomain: "AUTH__OKTA__BASE__DOMAIN"
 
 jwt:
   passphrase: "JWT__PASSPHRASE"
