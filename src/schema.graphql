@@ -116,12 +116,12 @@ type Workspace {
   users: [User]
   groups: [Group]
   deploymentCount: Int
-  createdAt: DateTime!
-  updatedAt: DateTime!
+  stripeCustomerId: String
   roleBindings: [RoleBinding!]
   workspaceCapabilities: WorkspaceCapabilities
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
-
 
 type DeploymentConfig {
   defaults: JSON
@@ -135,7 +135,8 @@ type DeploymentConfig {
 }
 
 type WorkspaceCapabilities {
-  updateIAM: Boolean
+  canUpdateBilling: Boolean
+  canUpdateIAM: Boolean
 }
 
 type AstroUnit {
@@ -205,6 +206,16 @@ type DeploymentLog {
   message: String
 }
 
+type Card {
+  name: String
+  expMonth: Int!
+  expYear: Int!
+  last4: String!
+  brand: String
+  billingEmail: String
+  company: String
+}
+
 #
 # Queries
 #
@@ -260,6 +271,11 @@ type Query {
     timestamp: DateTime
     search: String
   ): [DeploymentLog] @auth(permission: "deployment.logs.get")
+  
+  card(
+    workspaceUuid: Uuid!
+    stripeCustomerId: String!
+  ): Card @auth(permission: "workspace.billing.update")
 }
 
 #
@@ -394,6 +410,20 @@ type Mutation {
     userId: ID!
     role: Role!
   ): RoleBinding @auth(permission: "system.iam.update")
+
+  addCard(
+    workspaceUuid: Uuid!
+    billingEmail: String!
+    company: String
+    token: String!
+  ): Card @auth(permission: "workspace.billing.update")
+
+  updateCard(
+    workspaceUuid: Uuid!
+    billingEmail: String!
+    company: String
+    token: String!
+  ): Card @auth(permission: "workspace.billing.update")
 }
 
 #

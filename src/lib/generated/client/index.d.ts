@@ -577,6 +577,8 @@ export type WorkspaceOrderByInput =
   | "description_DESC"
   | "label_ASC"
   | "label_DESC"
+  | "stripeCustomerId_ASC"
+  | "stripeCustomerId_DESC"
   | "createdAt_ASC"
   | "createdAt_DESC"
   | "updatedAt_ASC"
@@ -1504,6 +1506,7 @@ export interface WorkspaceUpdateWithoutRoleBindingsDataInput {
   description?: Maybe<String>;
   invites?: Maybe<InviteTokenUpdateManyWithoutWorkspaceInput>;
   label?: Maybe<String>;
+  stripeCustomerId?: Maybe<String>;
 }
 
 export interface DeploymentCreateInput {
@@ -2334,6 +2337,17 @@ export interface WorkspaceUpdateWithoutDeploymentsDataInput {
   invites?: Maybe<InviteTokenUpdateManyWithoutWorkspaceInput>;
   label?: Maybe<String>;
   roleBindings?: Maybe<RoleBindingUpdateManyWithoutWorkspaceInput>;
+  stripeCustomerId?: Maybe<String>;
+}
+
+export interface ServiceAccountCreateInput {
+  id?: Maybe<ID_Input>;
+  apiKey?: Maybe<String>;
+  label?: Maybe<String>;
+  category?: Maybe<String>;
+  active?: Maybe<Boolean>;
+  roleBinding?: Maybe<RoleBindingCreateOneWithoutServiceAccountInput>;
+  lastUsedAt?: Maybe<DateTimeInput>;
 }
 
 export interface ServiceAccountCreateInput {
@@ -2873,6 +2887,7 @@ export interface WorkspaceUpdateWithoutInvitesDataInput {
   description?: Maybe<String>;
   label?: Maybe<String>;
   roleBindings?: Maybe<RoleBindingUpdateManyWithoutWorkspaceInput>;
+  stripeCustomerId?: Maybe<String>;
 }
 
 export interface WorkspaceUpdateOneRequiredWithoutInvitesInput {
@@ -3443,6 +3458,7 @@ export interface Workspace {
   active?: Boolean;
   description?: String;
   label?: String;
+  stripeCustomerId?: String;
   createdAt: DateTimeOutput;
   updatedAt: DateTimeOutput;
 }
@@ -3479,6 +3495,7 @@ export interface WorkspacePromise extends Promise<Workspace>, Fragmentable {
     first?: Int;
     last?: Int;
   }) => T;
+  stripeCustomerId: () => Promise<String>;
   createdAt: () => Promise<DateTimeOutput>;
   updatedAt: () => Promise<DateTimeOutput>;
 }
@@ -3517,6 +3534,7 @@ export interface WorkspaceSubscription
     first?: Int;
     last?: Int;
   }) => T;
+  stripeCustomerId: () => Promise<AsyncIterator<String>>;
   createdAt: () => Promise<AsyncIterator<DateTimeOutput>>;
   updatedAt: () => Promise<AsyncIterator<DateTimeOutput>>;
 }

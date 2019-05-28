@@ -1,3 +1,4 @@
+import addCard from "./add-card";
 import confirmEmail from "./confirm-email";
 import createDeployment from "./create-deployment";
 import createServiceAccount from "./create-service-account";
@@ -12,6 +13,7 @@ import deleteWorkspace from "./delete-workspace";
 import forgotPassword from "./forgot-password";
 import resendConfirmation from "./resend-confirmation";
 import resetPassword from "./reset-password";
+import updateCard from "./update-card";
 import updateDeployment from "./update-deployment";
 import updateServiceAccount from "./update-service-account";
 import updateUser from "./update-user";
@@ -22,6 +24,7 @@ import workspaceRemoveUser from "./workspace-remove-user";
 import workspaceUpdateUserRole from "./workspace-update-user-role";
 
 export default {
+  addCard,
   confirmEmail,
   createDeployment,
   createServiceAccount,
@@ -36,6 +39,7 @@ export default {
   forgotPassword,
   resendConfirmation,
   resetPassword,
+  updateCard,
   updateDeployment,
   updateServiceAccount,
   updateUser,

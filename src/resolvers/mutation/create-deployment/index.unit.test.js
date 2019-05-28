@@ -1,4 +1,4 @@
-import { DuplicateDeploymentLabelError } from "errors";
+import { DuplicateDeploymentLabelError, DeploymentPaymentError } from "errors";
 import resolvers from "resolvers";
 import * as validate from "deployments/validate";
 import casual from "casual";
@@ -70,6 +70,7 @@ describe("createDeployment", () => {
       deploymentId,
       createDeployment,
       createRoleBinding,
+      workspace,
       commander,
       vars,
       db;
@@ -102,9 +103,12 @@ describe("createDeployment", () => {
         id: casual.uuid
       });
 
+      workspace = jest.fn().mockReturnValue({ stripeCustomerId: casual.uuid });
+
       // Construct db object for context.
       db = {
-        mutation: { createDeployment, createRoleBinding }
+        mutation: { createDeployment, createRoleBinding },
+        query: { workspace }
       };
 
       // Create mock commander client.
@@ -181,6 +185,9 @@ describe("createDeployment", () => {
 
   test("request fails if deployment with same label exists", async () => {
     const createDeployment = jest.fn();
+    const workspace = jest
+      .fn()
+      .mockReturnValue({ stripeCustomerId: casual.uuid });
 
     // Set up our spy.
     jest
@@ -189,7 +196,8 @@ describe("createDeployment", () => {
 
     // Construct db object for context.
     const db = {
-      mutation: { createDeployment }
+      mutation: { createDeployment },
+      query: { workspace }
     };
 
     // Vars for the gql mutation.
@@ -205,6 +213,39 @@ describe("createDeployment", () => {
     expect(res.errors.length).toBe(1);
     expect(res.errors[0].message).toEqual(
       expect.stringMatching(/^Workspace already has a deployment named/)
+    );
+    expect(createDeployment).toHaveBeenCalledTimes(0);
+  });
+  test("request fails if payment info has not been submitted", async () => {
+    const createDeployment = jest.fn();
+    const workspace = jest.fn().mockReturnValue({ stripeCustomerId: null });
+
+    // Set up our spy.
+    jest
+      .spyOn(validate, "default")
+      .mockImplementation(() => throw new DeploymentPaymentError());
+
+    // Construct db object for context.
+    const db = {
+      mutation: { createDeployment },
+      query: { workspace }
+    };
+
+    // Vars for the gql mutation.
+    const vars = {
+      workspaceUuid: casual.uuid,
+      type: DEPLOYMENT_AIRFLOW,
+      label: casual.word
+    };
+
+    // Run the graphql mutation.
+    const res = await graphql(schema, mutation, null, { db }, vars);
+
+    expect(res.errors.length).toBe(1);
+    expect(res.errors[0].message).toEqual(
+      expect.stringMatching(
+        /^You must add a valid payment method to your workspace before you can create a deployment/
+      )
     );
     expect(createDeployment).toHaveBeenCalledTimes(0);
   });

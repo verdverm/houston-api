@@ -12,6 +12,7 @@ import {
   generateDefaultDeploymentConfig
 } from "deployments/config";
 import validate from "deployments/validate";
+import { DeploymentPaymentError } from "errors";
 import { addFragmentToInfo } from "graphql-binding";
 import config from "config";
 import bcrypt from "bcryptjs";
@@ -31,6 +32,19 @@ export default async function createDeployment(parent, args, ctx, info) {
     releaseVersion: platformReleaseVersion,
     releaseName: platformReleaseName
   } = config.get("helm");
+
+  // Throw an error if stripe is enabled (Cloud only) and a stripeCustomerId does not exist in the Workspace table
+  const workspace = await ctx.db.query.workspace(
+    {
+      where: { id: args.workspaceUuid }
+    },
+    `{ stripeCustomerId }`
+  );
+  const stripeEnabled = config.get("stripe.enabled");
+
+  if (workspace.stripeCustomerId == null && stripeEnabled == true) {
+    throw new DeploymentPaymentError();
+  }
 
   // Grab the default airflow version.
   const defaultAirflowVersion = config.get("deployments.defaultAirflowVersion");

@@ -61,6 +61,12 @@ export class EmailNotConfirmedError extends ApolloError {
   }
 }
 
+export class DeploymentPaymentError extends Error {
+  message =
+    this.message ||
+    "You must add a valid payment method to your workspace before you can create a deployment";
+}
+
 export class DuplicateDeploymentLabelError extends UserInputError {
   constructor(deploymentName) {
     super(`Workspace already has a deployment named ${deploymentName}`);

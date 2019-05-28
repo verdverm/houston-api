@@ -1,5 +1,6 @@
 import fragment from "./fragment";
 import { hasPermission } from "rbac";
+import config from "config";
 import { addFragmentToInfo } from "graphql-binding";
 import { size } from "lodash";
 
@@ -33,14 +34,26 @@ export function deploymentCount(parent) {
 }
 
 export function workspaceCapabilities(parent, args, ctx) {
-  const updateIAM = hasPermission(
+  // Check to see if user has permission to view and update billing
+  const billingAllowed = hasPermission(
+    ctx.user,
+    "workspace.billing.update",
+    ENTITY_WORKSPACE.toLowerCase(),
+    parent.id
+  );
+  // Get stripeEnabled bool directly from config
+  const stripeEnabled = config.get("stripe.enabled");
+  // Return the flag that will tell us whether or not we should show Billing in the UI
+  const canUpdateBilling = billingAllowed && stripeEnabled;
+
+  const canUpdateIAM = hasPermission(
     ctx.user,
     "workspace.iam.update",
     ENTITY_WORKSPACE.toLowerCase(),
     parent.id
   );
 
-  return { updateIAM };
+  return { canUpdateIAM, canUpdateBilling };
 }
 
 export default {

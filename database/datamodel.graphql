@@ -97,6 +97,7 @@ type Workspace {
   invites: [InviteToken!]!
   label: String
   roleBindings: [RoleBinding!]! @relation(name: "RoleBindingToWorkspace", onDelete: CASCADE)
+  stripeCustomerId: String
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
 }

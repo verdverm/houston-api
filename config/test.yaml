@@ -56,3 +56,7 @@ jwt:
 deployments:
   database:
     enabled: false
+
+# Stripe configuration.
+stripe:
+  enabled: true

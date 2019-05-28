@@ -2563,6 +2563,7 @@ type Workspace {
   invites(where: InviteTokenWhereInput, orderBy: InviteTokenOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [InviteToken!]
   label: String
   roleBindings(where: RoleBindingWhereInput, orderBy: RoleBindingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [RoleBinding!]
+  stripeCustomerId: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -2581,6 +2582,7 @@ input WorkspaceCreateInput {
   invites: InviteTokenCreateManyWithoutWorkspaceInput
   label: String
   roleBindings: RoleBindingCreateManyWithoutWorkspaceInput
+  stripeCustomerId: String
 }
 
 input WorkspaceCreateOneWithoutDeploymentsInput {
@@ -2605,6 +2607,7 @@ input WorkspaceCreateWithoutDeploymentsInput {
   invites: InviteTokenCreateManyWithoutWorkspaceInput
   label: String
   roleBindings: RoleBindingCreateManyWithoutWorkspaceInput
+  stripeCustomerId: String
 }
 
 input WorkspaceCreateWithoutInvitesInput {
@@ -2614,6 +2617,7 @@ input WorkspaceCreateWithoutInvitesInput {
   description: String
   label: String
   roleBindings: RoleBindingCreateManyWithoutWorkspaceInput
+  stripeCustomerId: String
 }
 
 input WorkspaceCreateWithoutRoleBindingsInput {
@@ -2623,6 +2627,7 @@ input WorkspaceCreateWithoutRoleBindingsInput {
   description: String
   invites: InviteTokenCreateManyWithoutWorkspaceInput
   label: String
+  stripeCustomerId: String
 }
 
 type WorkspaceEdge {
@@ -2639,6 +2644,8 @@ enum WorkspaceOrderByInput {
   description_DESC
   label_ASC
   label_DESC
+  stripeCustomerId_ASC
+  stripeCustomerId_DESC
   createdAt_ASC
   createdAt_DESC
   updatedAt_ASC
@@ -2650,6 +2657,7 @@ type WorkspacePreviousValues {
   active: Boolean
   description: String
   label: String
+  stripeCustomerId: String
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -2679,12 +2687,14 @@ input WorkspaceUpdateInput {
   invites: InviteTokenUpdateManyWithoutWorkspaceInput
   label: String
   roleBindings: RoleBindingUpdateManyWithoutWorkspaceInput
+  stripeCustomerId: String
 }
 
 input WorkspaceUpdateManyMutationInput {
   active: Boolean
   description: String
   label: String
+  stripeCustomerId: String
 }
 
 input WorkspaceUpdateOneRequiredWithoutInvitesInput {
@@ -2718,6 +2728,7 @@ input WorkspaceUpdateWithoutDeploymentsDataInput {
   invites: InviteTokenUpdateManyWithoutWorkspaceInput
   label: String
   roleBindings: RoleBindingUpdateManyWithoutWorkspaceInput
+  stripeCustomerId: String
 }
 
 input WorkspaceUpdateWithoutInvitesDataInput {
@@ -2726,6 +2737,7 @@ input WorkspaceUpdateWithoutInvitesDataInput {
   description: String
   label: String
   roleBindings: RoleBindingUpdateManyWithoutWorkspaceInput
+  stripeCustomerId: String
 }
 
 input WorkspaceUpdateWithoutRoleBindingsDataInput {
@@ -2734,6 +2746,7 @@ input WorkspaceUpdateWithoutRoleBindingsDataInput {
   description: String
   invites: InviteTokenUpdateManyWithoutWorkspaceInput
   label: String
+  stripeCustomerId: String
 }
 
 input WorkspaceUpsertWithoutDeploymentsInput {
@@ -2805,6 +2818,20 @@ input WorkspaceWhereInput {
   roleBindings_every: RoleBindingWhereInput
   roleBindings_some: RoleBindingWhereInput
   roleBindings_none: RoleBindingWhereInput
+  stripeCustomerId: String
+  stripeCustomerId_not: String
+  stripeCustomerId_in: [String!]
+  stripeCustomerId_not_in: [String!]
+  stripeCustomerId_lt: String
+  stripeCustomerId_lte: String
+  stripeCustomerId_gt: String
+  stripeCustomerId_gte: String
+  stripeCustomerId_contains: String
+  stripeCustomerId_not_contains: String
+  stripeCustomerId_starts_with: String
+  stripeCustomerId_not_starts_with: String
+  stripeCustomerId_ends_with: String
+  stripeCustomerId_not_ends_with: String
   createdAt: DateTime
   createdAt_not: DateTime
   createdAt_in: [DateTime!]

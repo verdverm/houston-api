@@ -38,6 +38,12 @@ email:
   reply: "EMAIL__REPLY"
   smtpUrl: "EMAIL__SMTP_URL"
 
+stripe:
+  enabled:
+    __name: "STRIPE_ENABLED"
+    __format: "json"
+  secretKey: "STRIPE_SECRET_KEY"
+
 repository: "REPOSITORY"
 
 helm:

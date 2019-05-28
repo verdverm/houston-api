@@ -53,6 +53,11 @@ email:
   # The SMTP server URL.
   smtpUrl: ~
 
+# Stripe configuration.
+stripe:
+  enabled: false
+  secretKey: ~
+
 # Orbit configuration.
 orbit:
   subdomain: app
@@ -183,6 +188,7 @@ roles:
       - workspace.serviceAccounts.update
       - workspace.serviceAccounts.delete
       - workspace.iam.update
+      - workspace.billing.update
 
   - id: WORKSPACE_EDITOR
     name: Workspace Editor
