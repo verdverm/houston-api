@@ -112,6 +112,9 @@ export class DuplicateRoleBindingError extends UserInputError {
   message = this.message || "A duplicate role binding already exists";
 }
 
-export class DuplicateEmailError extends Error {
-  message = this.message || "Email already in use";
+export class DuplicateEmailError extends ApolloError {
+  name = "DuplicateEmailError";
+  constructor() {
+    super("Email address in use", "DUPLICATE_EMAIL");
+  }
 }
