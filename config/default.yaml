@@ -399,3 +399,6 @@ deployments:
     # the KubernetesPodOperator and KubernetesExecutor. This is what signals to apply the
     # required RoleBindings.
     allowPodLaunching: true
+    nodeSelector: {}
+    affinity: {}
+    tolerations: []
