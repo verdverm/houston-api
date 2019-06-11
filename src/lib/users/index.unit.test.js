@@ -11,7 +11,6 @@ import casual from "casual";
 import {
   USER_STATUS_PENDING,
   USER_STATUS_ACTIVE,
-  WORKSPACE_ADMIN,
   WORKSPACE_EDITOR
 } from "constants";
 
@@ -123,11 +122,9 @@ describe("userExports.createUser", () => {
       expect(createData).toHaveProperty("emails.create.verified", true);
       expect(createData).toHaveProperty("roleBindings.create");
       const roleBindings = createData.roleBindings.create;
-      expect(roleBindings).toHaveLength(2);
-      expect(roleBindings[0]).toHaveProperty("workspace.create");
-      expect(roleBindings[0]).toHaveProperty("role", WORKSPACE_ADMIN);
-      expect(roleBindings[1]).toHaveProperty("workspace.connect.id", workspace);
-      expect(roleBindings[1]).toHaveProperty("role", WORKSPACE_EDITOR);
+      expect(roleBindings).toHaveLength(1);
+      expect(roleBindings[0]).toHaveProperty("workspace.connect.id", workspace);
+      expect(roleBindings[0]).toHaveProperty("role", WORKSPACE_EDITOR);
 
       mockValidateInvite.mockRestore();
     });

@@ -40,9 +40,9 @@ email:
 
 stripe:
   enabled:
-    __name: "STRIPE_ENABLED"
+    __name: "STRIPE__ENABLED"
     __format: "json"
-  secretKey: "STRIPE_SECRET_KEY"
+  secretKey: "STRIPE__SECRET_KEY"
 
 repository: "REPOSITORY"
 
@@ -86,8 +86,8 @@ auth:
     enabled:
       __name: "AUTH__OKTA__ENABLED"
       __format: "json"
-    clientId: "AUTH__OKTA__CLIENT__ID"
-    baseDomain: "AUTH__OKTA__BASE__DOMAIN"
+    clientId: "AUTH__OKTA__CLIENT_ID"
+    baseDomain: "AUTH__OKTA__BASE_DOMAIN"
 
 jwt:
   passphrase: "JWT__PASSPHRASE"

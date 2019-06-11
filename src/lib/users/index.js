@@ -57,7 +57,7 @@ export async function createUser(opts) {
   const emailToken = status == USER_STATUS_ACTIVE ? null : shortid.generate();
 
   // Generate the role bindings.
-  const roleBindings = exports.generateRoleBindings(first, inviteToken, opts);
+  const roleBindings = exports.generateRoleBindings(first, inviteToken);
 
   // Create our base mutation.
   const mutation = {
@@ -112,20 +112,8 @@ export async function isFirst() {
  * @param {Boolean} first If this is the first user.
  * @param {Object} inviteToken An invite token.
  */
-export function generateRoleBindings(first, inviteToken, opts) {
-  // Add the default rolebinding to the user's personal workspace.
-  const roleBindings = [
-    {
-      role: WORKSPACE_ADMIN,
-      workspace: {
-        create: {
-          active: true,
-          label: defaultWorkspaceLabel(opts),
-          description: defaultWorkspaceDescription(opts)
-        }
-      }
-    }
-  ];
+export function generateRoleBindings(first, inviteToken) {
+  const roleBindings = [];
 
   // If we have an invite token, add user to the originating workspace.
   if (inviteToken && inviteToken.workspace) {
