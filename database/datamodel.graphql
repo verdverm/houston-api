@@ -35,6 +35,8 @@ type RoleBinding {
   serviceAccount: ServiceAccount @relation(name: "RoleBindingToServiceAccount", link: INLINE)
   workspace: Workspace @relation(name: "RoleBindingToWorkspace")
   deployment: Deployment @relation(name: "DeploymentRoleBindings")
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type Email {
@@ -44,6 +46,8 @@ type Email {
   token: String @unique
   user: User
   verified: Boolean
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type LocalCredential {
@@ -51,6 +55,8 @@ type LocalCredential {
   user: User @relation(name: "LocalCredentialToUser")
   password: String
   resetToken: String @unique
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type OAuthCredential {
@@ -59,6 +65,8 @@ type OAuthCredential {
   oauthProvider: String!
   oauthUserId: String!
   user: User @relation(name: "OAuthCredentialToUser")
+  createdAt: DateTime! @createdAt
+  updatedAt: DateTime! @updatedAt
 }
 
 type InviteToken {
