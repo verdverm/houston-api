@@ -103,6 +103,11 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   roleBindings: [RoleBinding!]
+  userCapabilities: UserCapabilities
+}
+
+type UserCapabilities {
+  isTrialing: Boolean,
 }
 
 type Workspace {
