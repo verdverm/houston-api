@@ -22,8 +22,15 @@ logging:
 database:
   # Knex migrations
   migrations:
+    # Table to store migrations
     tableName: migrations
-    schemaName: houston$default
+    # Schema for migrations.
+    # prisma deploy fails if this table exists in the same schema
+    # as prisma tables.
+    schemaName: public
+    # Disable wrapping migrations with transaction
+    # Currently disabling to allow better cooperation with prisma.
+    disableTransactions: true
 
   # Knex connection
   connection:

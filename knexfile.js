@@ -1,3 +1,4 @@
+import "dotenv/config";
 import config from "config";
 
 // Grab database configuration.
@@ -16,6 +17,7 @@ module.exports = {
   migrations: {
     directory: __dirname + "/src/migrations",
     tableName: migrations.tableName,
-    schemaName: migrations.schemaName
+    schemaName: migrations.schemaName,
+    disableTransactions: migrations.disableTransactions
   }
 };
