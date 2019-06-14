@@ -10,6 +10,15 @@ prisma:
     __name: "PRISMA__DEBUG"
     __format: "json"
 
+database:
+  migrations:
+    tableName: "DATABASE__MIGRATIONS__TABLE_NAME"
+    schemaName: "DATABASE__MIGRATIONS__SCHEMA_NAME"
+    disableTransactions:
+      __name: "DATABASE__MIGRATIONS__DISABLE_TRANSACTIONS"
+      __format: "json"
+  connection: "DATABASE__CONNECTION"
+
 commander:
   enabled:
     __name: "COMMANDER__ENABLED"
