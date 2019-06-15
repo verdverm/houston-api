@@ -69,23 +69,28 @@ const ops = [
  * the foreign keys, rather than the default join tables.
  */
 export async function up(knex) {
-  // Bail early if the schema does not exists yet (fresh install).
-  const schemaExists = await knex.schema.withSchema(schema).hasTable("User");
-  if (!schemaExists) {
-    return log.debug("Skipping fix_relationships migration");
-  }
-  log.debug("Running fix_relationships migration");
+  let data = [];
 
-  // Collect all the records from the old join tables (A,B mappings).
-  const data = await Promise.all(
-    ops.map(op => {
-      log.debug(`Getting records for ${op.src}`);
-      return knex
-        .withSchema(schema)
-        .select("*")
-        .from(op.src);
-    })
-  );
+  // Create knex transaction
+  await knex.transaction(async function(trx) {
+    // Bail early if the schema does not exists yet (fresh install).
+    const schemaExists = await trx.schema.withSchema(schema).hasTable("User");
+    if (!schemaExists) {
+      return log.debug("Skipping fix_relationships migration");
+    }
+    log.debug("Running fix_relationships migration");
+
+    // Collect all the records from the old join tables (A,B mappings).
+    data = await Promise.all(
+      ops.map(op => {
+        log.debug(`Getting records for ${op.src}`);
+        return trx
+          .withSchema(schema)
+          .select("*")
+          .from(op.src);
+      })
+    );
+  });
 
   // Append the data records to the matching table/column structure defined above.
   data.forEach((data, i) => (ops[i].data = data));
@@ -95,21 +100,23 @@ export async function up(knex) {
   log.debug("Running prisma-deploy");
   execSync("node_modules/.bin/prisma deploy --force", { stdio: "inherit" });
 
-  // Now that the schema is updated, go through and re-map in the foreign key ids.
-  await Promise.all(
-    flatMap(
-      ops.map(op => {
-        log.debug(`Updating new columns in ${op.dest}`);
-        return op.data.map(d => {
-          return knex
-            .withSchema(schema)
-            .table(op.dest)
-            .where({ id: op.reverse ? d.B : d.A })
-            .update({ [op.col]: op.reverse ? d.A : d.B });
-        });
-      })
-    )
-  );
+  await knex.transaction(async function(trx) {
+    // Now that the schema is updated, go through and re-map in the foreign key ids.
+    await Promise.all(
+      flatMap(
+        ops.map(op => {
+          log.debug(`Updating new columns in ${op.dest}`);
+          return op.data.map(d => {
+            return trx
+              .withSchema(schema)
+              .table(op.dest)
+              .where({ id: op.reverse ? d.B : d.A })
+              .update({ [op.col]: op.reverse ? d.A : d.B });
+          });
+        })
+      )
+    );
+  });
 }
 
 export async function down() {}
