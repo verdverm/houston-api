@@ -22,7 +22,7 @@ type User {
   oauthCredentials: [OAuthCredential!]! @relation(name: "OAuthCredentialToUser", onDelete: CASCADE)
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
-  isTrialing: Boolean
+  trialEndsAt: DateTime
 }
 
 # Ideally this type uses a union type once prisma supports it.
