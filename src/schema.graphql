@@ -216,6 +216,11 @@ type Card {
   company: String
 }
 
+type Metric {
+  label: String
+  result: JSON
+}
+
 #
 # Queries
 #
@@ -271,7 +276,7 @@ type Query {
     timestamp: DateTime
     search: String
   ): [DeploymentLog] @auth(permission: "deployment.logs.get")
-  
+
   card(
     workspaceUuid: Uuid!
     stripeCustomerId: String!
@@ -435,4 +440,10 @@ type Subscription {
     timestamp: DateTime
     search: String
   ): DeploymentLog @auth(permission: "deployment.logs.get")
+
+  metrics(
+    deploymentUuid: Uuid!
+    since: Int,
+    step: Int,
+  ): [Metric] @auth(permission: "deployment.metrics.get")
 }

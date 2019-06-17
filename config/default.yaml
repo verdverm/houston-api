@@ -70,7 +70,6 @@ orbit:
   subdomain: app
   port: 5000
 
-
 # Elasticsearch configuration for Houston to pull logs.
 # This is passed striaght to the es client.
 elasticsearch:
@@ -84,6 +83,15 @@ elasticsearch:
 
   # If in NODE_ENV is development and this is enabled, generate sample log records.
   mockInDevelopment: true
+
+  # Interval that data is grabbed and sent
+  pollInterval: 1000
+
+# Prometheus Metrics configuration
+prometheus:
+  host: localhost
+  port: 9090
+  pollInterval: 15000
 
 # Charts live here.
 # This is where the airflow chart is installed from.
@@ -231,6 +239,7 @@ roles:
       - deployment.serviceAccounts.update
       - deployment.serviceAccounts.delete
       - deployment.logs.get
+      - deployment.metrics.get
 
   - id: DEPLOYMENT_EDITOR
     name: Deployment Editor
@@ -244,6 +253,7 @@ roles:
       - deployment.serviceAccounts.update
       - deployment.serviceAccounts.delete
       - deployment.logs.get
+      - deployment.metrics.get
 
   - id: DEPLOYMENT_VIEWER
     name: Deployment Viewer
@@ -251,6 +261,7 @@ roles:
       - deployment.config.get
       - deployment.airflow.view
       - deployment.logs.get
+      - deployment.metrics.get
 
 #
 # Airflow Deployment Configurations

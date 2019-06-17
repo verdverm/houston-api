@@ -2,6 +2,7 @@ import log from "logger";
 import createPoller from "pubsub/poller";
 import { formatLogDocument, search } from "deployments/logs";
 import { get } from "lodash";
+import config from "config";
 import moment from "moment";
 
 export async function subscribe(parent, args, { db, pubsub }) {
@@ -14,7 +15,11 @@ export async function subscribe(parent, args, { db, pubsub }) {
 
   const component = args.component;
   const searchPhrase = get(args, "search");
-  const interval = get(args, "interval", 1000);
+  const interval = get(
+    args,
+    "interval",
+    config.get("elasticsearch.pollInterval")
+  );
 
   // This variable gets reset to the timestamp of the latest record
   // that was previously published to the client. It will then be used
