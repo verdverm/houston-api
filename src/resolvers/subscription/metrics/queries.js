@@ -167,6 +167,17 @@ export default function queries(deployment, since, step) {
       )
     },
     {
+      name: "taskStatus",
+      query: query(
+        `sort_desc(max by (container, pod, reason) (
+          max by (container, pod) (
+          sort_desc(kube_pod_container_status_waiting{release=~"${deployment}"} and on(pod,namespace) kube_pod_labels{label_dag_id!=""})  )
+          or max by (container, reason) (    
+          sort_desc(kube_pod_container_status_waiting_reason{release=~"${deployment}"}==1 and on(pod,namespace) kube_pod_labels{label_dag_id!=""}) )
+          or max by (container, reason) (sort_desc(kube_pod_container_status_terminated_reason{release=~"${deployment}"}==1 and on(pod,namespace) kube_pod_labels{label_dag_id!=""}) )))`
+      )
+    },
+    {
       name: "runningTasks",
       query: rangeQuery(
         `rate(airflow_executor_running_tasks{deployment=~"${deployment}"}${duration}) * 100`
