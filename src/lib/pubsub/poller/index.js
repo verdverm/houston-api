@@ -26,7 +26,10 @@ export default function createPoller(
   // Wrap the publish function on the pubsub object, pre-populating the topic.
   const publish = bind(curry(pubsub.publish, 2)(topic), pubsub);
 
-  // Set up a timer to call the passed function. This is the poller.
+  // Call the function once to get initial dataset.
+  func(publish);
+
+  // Then set up a timer to call the passed function. This is the poller.
   const poll = setInterval(partial(func, publish), interval);
 
   // If we are passed a timeout, kill subscription after that interval has passed.
