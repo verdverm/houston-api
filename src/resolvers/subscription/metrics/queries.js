@@ -10,6 +10,9 @@ export default function queries(deployment, since, step) {
   // UNIX current time timestamp
   const now = moment().unix();
 
+  // Formatted step
+  const fstep = `[${step}s]`;
+
   // UNIX start timestamp
   const start = moment()
     .subtract(since, "minutes")
@@ -172,7 +175,7 @@ export default function queries(deployment, since, step) {
         `sort_desc(max by (container, pod, reason) (
           max by (container, pod) (
           sort_desc(kube_pod_container_status_waiting{release=~"${deployment}"} and on(pod,namespace) kube_pod_labels{label_dag_id!=""})  )
-          or max by (container, reason) (    
+          or max by (container, reason) (
           sort_desc(kube_pod_container_status_waiting_reason{release=~"${deployment}"}==1 and on(pod,namespace) kube_pod_labels{label_dag_id!=""}) )
           or max by (container, reason) (sort_desc(kube_pod_container_status_terminated_reason{release=~"${deployment}"}==1 and on(pod,namespace) kube_pod_labels{label_dag_id!=""}) )))`
       )
@@ -180,25 +183,25 @@ export default function queries(deployment, since, step) {
     {
       name: "runningTasks",
       query: rangeQuery(
-        `rate(airflow_executor_running_tasks{deployment=~"${deployment}"}${duration}) * 100`
+        `airflow_executor_running_tasks{deployment=~"${deployment}"}`
       )
     },
     {
       name: "queuedTasks",
       query: rangeQuery(
-        `rate(airflow_executor_queued_tasks{deployment=~"${deployment}"}${duration}) * 100`
+        `airflow_executor_queued_tasks{deployment=~"${deployment}"}`
       )
     },
     {
       name: "failedTasks",
       query: rangeQuery(
-        `rate(airflow_ti_failures{deployment=~"${deployment}"}${duration}) * 100`
+        `idelta(airflow_ti_failures{deployment=~"${deployment}"}${fstep})`
       )
     },
     {
       name: "successfulTasks",
       query: rangeQuery(
-        `rate(airflow_ti_successes{deployment=~"${deployment}"}${duration}) * 100`
+        `idelta(airflow_ti_successes{deployment=~"${deployment}"}${fstep})`
       )
     }
   ];
