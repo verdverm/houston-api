@@ -49,6 +49,13 @@ Sometimes it's useful to manually take over the role of commander, in order to t
 
 Create a new deployment via the UI or CLI, then grab the values that Houston logs out. You can then use these values to pass to a `helm install` manually. Ex: `helm install -f values.yaml -n <release-name> --namespace <namespace>`.
 
+## Connecting locally to a production Prometheus
+
+* Fetch credentials for the running cluster (i.e. `gcloud container clusters get-credentials ${CLUSTER_NAME} --zone ${ZONE} --project ${PROJECT}`)
+* Switch to namespace (i.e. `kubens ${NAMESPACE}`), You may need to `brew install kubectx`.
+* Port forward to a production Prometheus (i.e. `kubectl port-forward svc/${SERVICE_NAME} 9090:9090`)
+* Hard code to read from a production Airflow deployment's metrics stream, uncomment/change 25 of `/src/resolvers/subscription/metrics/index.js`
+
 ## Useful Commands
 
 * `npm start` starts the develpment server. Restarts automatically with nodemon.
