@@ -22,7 +22,7 @@ export async function subscribe(parent, args, { db, pubsub }) {
   );
 
   // To test on localhost uncomment this line
-  releaseName = "dynamical-revolution-1971";
+  // releaseName = "dynamical-revolution-1971";
 
   // Poll interval
   const interval = config.get("prometheus.pollInterval");
