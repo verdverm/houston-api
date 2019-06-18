@@ -26,8 +26,8 @@ export default function queries(deployment, since, step) {
     {
       name: "deploymentStatus",
       query: query(
-        `sum by (release) (kube_pod_container_status_running{release=~"${deployment}"}) -
-         count by (release) (kube_pod_container_status_running{release=~"${deployment}"})`
+        `sum by (release) (kube_pod_container_status_running{release=~"${deployment}"} and on(pod,namespace) kube_pod_labels{label_dag_id=""}) -
+         count by (release) (kube_pod_container_status_running{release=~"${deployment}"} and on(pod,namespace) kube_pod_labels{label_dag_id=""})`
       )
     },
     {
