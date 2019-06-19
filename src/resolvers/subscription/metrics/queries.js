@@ -8,13 +8,20 @@ const duration = `[3m]`;
 
 export default function queries(deployment, since, step) {
   // UNIX current time timestamp
-  const now = moment().unix() - moment().unix() % step;
+  const now = moment().unix() - (moment().unix() % step);
 
   // Formatted step
-  const fstep = `[${Math.max(step,60)}s]`;
+  const fstep = `[${Math.max(step, 60)}s]`;
 
   // UNIX start timestamp
-  const start = moment().subtract(since, "minutes").unix() - moment().subtract(since, "minutes").unix() % step;
+  const start =
+    moment()
+      .subtract(since, "minutes")
+      .unix() -
+    (moment()
+      .subtract(since, "minutes")
+      .unix() %
+      step);
 
   // Query builders (Prom uses different endpoints for different metrics)
   const query = ql => `query?query=${encodeURI(ql)}&time=${now}`;
