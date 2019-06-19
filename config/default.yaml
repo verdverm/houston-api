@@ -91,7 +91,7 @@ elasticsearch:
 prometheus:
   host: localhost
   port: 9090
-  pollInterval: 10000
+  pollInterval: 5000
 
 # Charts live here.
 # This is where the airflow chart is installed from.
