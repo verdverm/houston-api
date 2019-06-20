@@ -429,7 +429,7 @@ type Mutation {
   extendTrial(
     workspaceUuid: Uuid!
     trialEndsAt: DateTime!
-  ): workspace @auth(permission: "system.workspace.trial")
+  ): Workspace @auth(permission: "system.workspace.trial")
 }
 
 
