@@ -67,8 +67,8 @@ stripe:
 
 # Set the length of a Cloud Trial
 trial:
-  # Cloud trial is 2 weeks in milliseconds
-  length: 12096e5
+  # Cloud trial length in days
+  length: 14
 
 # Orbit configuration.
 orbit:
