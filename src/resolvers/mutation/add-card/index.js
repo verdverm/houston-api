@@ -1,4 +1,5 @@
 import { createStripeCustomer } from "stripe";
+import moment from "moment";
 
 /*
  * Add payment information to a workspace. Create a customer for the user and a subscription for the Workspace in Stripe.
@@ -20,7 +21,8 @@ export default async function addCard(parent, args, ctx) {
 
   await ctx.db.mutation.updateWorkspace({
     data: {
-      stripeCustomerId: stripeCustomerId
+      stripeCustomerId: stripeCustomerId,
+      trialEndsAt: moment().format() //Changes trialEndAt timestamp to be now
     },
     where: {
       id: args.workspaceUuid
