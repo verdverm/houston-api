@@ -53,7 +53,14 @@ export function workspaceCapabilities(parent, args, ctx) {
     parent.id
   );
 
-  return { canUpdateIAM, canUpdateBilling };
+  const { endDate } = ctx.db.query.workspace(
+    { where: { id: args.workspaceUuid } },
+    `{ trialEndsAt }`
+  );
+
+  const isTrialing = Date.now() < endDate ? true : false;
+
+  return { canUpdateIAM, canUpdateBilling, isTrialing };
 }
 
 export default {

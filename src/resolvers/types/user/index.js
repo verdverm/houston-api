@@ -10,20 +10,4 @@ export function profile({ avatarUrl }) {
   return profile;
 }
 
-export async function userCapabilities(parent, args, ctx) {
-  const trialStartDate = await ctx.db.query.user(
-    {
-      where: { id: args.userId }
-    },
-    `{ createdAt }`
-  );
-
-  const trialEndDate = new Date(trialStartDate + 12096e5);
-  console.log(trialStartDate);
-  console.log(trialEndDate);
-  const isTrialing = Date.now() < trialEndDate ? true : false;
-
-  return isTrialing;
-}
-
-export default { profile, userCapabilities };
+export default { profile };

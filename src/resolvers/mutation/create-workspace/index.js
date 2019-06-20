@@ -1,5 +1,6 @@
 import fragment from "./fragment";
 import { addFragmentToInfo } from "graphql-binding";
+import config from "config";
 import { WORKSPACE_ADMIN } from "constants";
 
 /*
@@ -10,6 +11,8 @@ import { WORKSPACE_ADMIN } from "constants";
  * @return {AuthToken} The workspace.
  */
 export default async function createWorkspace(parent, args, ctx, info) {
+  const trialDuration = config.get(trial.length);
+  const trialEndsAt = Date.now() + trialDuration;
   return ctx.db.mutation.createWorkspace(
     {
       data: {
@@ -25,7 +28,8 @@ export default async function createWorkspace(parent, args, ctx, info) {
               }
             }
           }
-        }
+        },
+        trialEndsAt
       }
     },
     addFragmentToInfo(info, fragment)

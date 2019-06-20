@@ -103,11 +103,6 @@ type User {
   createdAt: DateTime!
   updatedAt: DateTime!
   roleBindings: [RoleBinding!]
-  userCapabilities: UserCapabilities
-}
-
-type UserCapabilities {
-  isTrialing: Boolean,
 }
 
 type Workspace {
@@ -142,6 +137,7 @@ type DeploymentConfig {
 type WorkspaceCapabilities {
   canUpdateBilling: Boolean
   canUpdateIAM: Boolean
+  isTrialing: Boolean
 }
 
 type AstroUnit {

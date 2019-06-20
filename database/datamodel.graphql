@@ -22,7 +22,6 @@ type User {
   oauthCredentials: [OAuthCredential!]! @relation(name: "OAuthCredentialToUser", onDelete: CASCADE)
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
-  trialEndsAt: DateTime
 }
 
 # Ideally this type uses a union type once prisma supports it.
@@ -109,6 +108,7 @@ type Workspace {
   stripeCustomerId: String
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
+  trialEndsAt: DateTime
 }
 
 type Deployment {
