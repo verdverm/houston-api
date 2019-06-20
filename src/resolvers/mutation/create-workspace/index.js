@@ -11,7 +11,7 @@ import { WORKSPACE_ADMIN } from "constants";
  * @return {AuthToken} The workspace.
  */
 export default async function createWorkspace(parent, args, ctx, info) {
-  const trialDuration = config.get(trial.length);
+  const trialDuration = config.get("trial.length");
   const trialEndsAt = Date.now() + trialDuration;
   return ctx.db.mutation.createWorkspace(
     {

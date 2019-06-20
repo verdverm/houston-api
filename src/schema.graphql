@@ -425,7 +425,13 @@ type Mutation {
     company: String
     token: String!
   ): Card @auth(permission: "workspace.billing.update")
+
+  extendTrial(
+    workspaceUuid: Uuid!
+    trialEndsAt: DateTime!
+  ): workspace @auth(permission: "system.workspace.trial")
 }
+
 
 #
 # Subscriptions

@@ -173,6 +173,7 @@ roles:
     permissions:
       - system.monitoring.view
       - system.iam.update
+      - system.workspace.trial
 
   - id: SYSTEM_EDITOR
     name: System Editor
