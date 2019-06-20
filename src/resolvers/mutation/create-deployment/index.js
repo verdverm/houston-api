@@ -12,11 +12,12 @@ import {
   generateDefaultDeploymentConfig
 } from "deployments/config";
 import validate from "deployments/validate";
-import { DeploymentPaymentError } from "errors";
+import { DeploymentPaymentError, TrialError } from "errors";
 import { addFragmentToInfo } from "graphql-binding";
+import moment from "moment";
 import config from "config";
 import bcrypt from "bcryptjs";
-import { get } from "lodash";
+import { get, size } from "lodash";
 import crypto from "crypto";
 import { DEPLOYMENT_AIRFLOW } from "constants";
 
@@ -38,12 +39,20 @@ export default async function createDeployment(parent, args, ctx, info) {
     {
       where: { id: args.workspaceUuid }
     },
-    `{ stripeCustomerId }`
+    `{ stripeCustomerId, trialEndsAt, deployments }`
   );
   const stripeEnabled = config.get("stripe.enabled");
 
   if (workspace.stripeCustomerId == null && stripeEnabled == true) {
     throw new DeploymentPaymentError();
+  }
+
+  if (
+    moment(workspace.trialEndsAt).isAfter(
+      moment() == false && size(workspace.deployments >= 1)
+    )
+  ) {
+    throw new TrialError();
   }
 
   // Grab the default airflow version.

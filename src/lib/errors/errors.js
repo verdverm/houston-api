@@ -67,6 +67,12 @@ export class DeploymentPaymentError extends Error {
     "You must add a valid payment method to your workspace before you can create a deployment";
 }
 
+export class TrialError extends Error {
+  message =
+    this.message ||
+    "You can only create one deployment in your free trial. Add a payment method to your workspace to create more.";
+}
+
 export class DuplicateDeploymentLabelError extends UserInputError {
   constructor(deploymentName) {
     super(`Workspace already has a deployment named ${deploymentName}`);
