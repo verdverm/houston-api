@@ -84,8 +84,11 @@ export class MissingArgumentError extends UserInputError {
   }
 }
 
-export class UserInviteExistsError extends UserInputError {
-  message = this.message || "User already invited to workspace";
+export class UserInviteExistsError extends ApolloError {
+  name = "UserInviteExistsError";
+  constructor() {
+    super("User already invited", "USER_ALREADY_INVITED");
+  }
 }
 
 export class JWTValidationError extends AuthenticationError {

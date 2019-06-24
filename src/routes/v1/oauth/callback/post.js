@@ -49,7 +49,6 @@ export default async function(req, res) {
   const userId = user
     ? user.id
     : await _createUser({
-        username: email,
         fullName,
         email,
         inviteToken: state.inviteToken,

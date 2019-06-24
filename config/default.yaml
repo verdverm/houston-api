@@ -176,12 +176,14 @@ roles:
     permissions:
       - system.monitoring.view
       - system.iam.update
+      - system.user.invite
 
   - id: SYSTEM_EDITOR
     name: System Editor
     permissions:
       - system.monitoring.view
       - system.iam.update
+      - system.user.invite
 
   - id: SYSTEM_VIEWER
     name: System Viewer

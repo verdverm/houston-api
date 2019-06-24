@@ -11,9 +11,6 @@ import bcrypt from "bcryptjs";
  * @return {AuthToken} The auth token.
  */
 export default async function createUser(parent, args, ctx) {
-  // Username can fall back to email.
-  const username = args.username || args.email;
-
   // Full name is sent in on profile and can fall back to empty string.
   const fullName = get(args, "profile.fullName");
 
@@ -25,8 +22,8 @@ export default async function createUser(parent, args, ctx) {
   try {
     // Create the user and nested relations.
     const userId = await _createUser({
-      username,
       fullName,
+      username: args.username,
       email: args.email,
       inviteToken: args.inviteToken
     });

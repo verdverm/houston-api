@@ -11,6 +11,7 @@ import deleteInviteToken from "./delete-invite-token";
 import deleteServiceAccount from "./delete-service-account";
 import deleteWorkspace from "./delete-workspace";
 import forgotPassword from "./forgot-password";
+import inviteUser from "./invite-user";
 import resendConfirmation from "./resend-confirmation";
 import resetPassword from "./reset-password";
 import updateCard from "./update-card";
@@ -37,6 +38,7 @@ export default {
   deleteServiceAccount,
   deleteWorkspace,
   forgotPassword,
+  inviteUser,
   resendConfirmation,
   resetPassword,
   updateCard,

@@ -415,6 +415,13 @@ type Mutation {
     role: Role!
   ): RoleBinding @auth(permission: "system.iam.update")
 
+  # Invite a user to create an account in this system. Useful when signups are
+  # disabled on the platform. To invite a user (new or existing) to a workspace
+  # use the workspaceAddUser mutation.
+  inviteUser(
+    email: String!
+  ): Boolean @auth(permission: "system.user.invite")
+
   addCard(
     workspaceUuid: Uuid!
     billingEmail: String!

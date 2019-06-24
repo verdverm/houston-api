@@ -20,13 +20,8 @@ import {
  */
 export async function createUser(opts) {
   // Pull out some options.
-  const {
-    username,
-    fullName,
-    email,
-    inviteToken: rawInviteToken,
-    active
-  } = opts;
+  const { fullName, email, inviteToken: rawInviteToken, active } = opts;
+  const username = opts.username || email;
   const inviteToken = await exports.validateInviteToken(rawInviteToken, email);
 
   // Grab some configuration.
