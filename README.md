@@ -10,7 +10,7 @@ re-implementation.
 
 ## Database
 
-Houston leverages [Prisma](https://www.prisma.io/docs/) as [GraphQL](https://graphql.org) backend on top of Postgres. The Prisma service sits between Houston and Postgres and exposes a secure CRUD API on top of the [datamodel](https://github.com/astronomer/houston-api-2/blob/master/database/datamodel.graphql) defined in this project.
+Houston leverages [Prisma](https://www.prisma.io/docs/) as a [GraphQL](https://graphql.org) backend on top of Postgres. The Prisma service sits between Houston and Postgres and exposes a secure CRUD API on top of the [datamodel](https://github.com/astronomer/houston-api-2/blob/master/database/datamodel.graphql) defined in this project.
 
 ## Configuration
 
@@ -25,6 +25,17 @@ All source code is nested under `src`. This directory contains:
 * [`routes`](https://github.com/astronomer/houston-api-2/tree/master/src/routes) contains all RESTful route definitions.
 * [`index.js`](https://github.com/astronomer/houston-api-2/blob/master/src/index.js) is the entrypoint for the application.
 * [`schema.graphl`](https://github.com/astronomer/houston-api-2/blob/master/src/schema.graphql) contains the entire application schema.
+
+## Schema
+In general, Queries and Mutations should be granular enough, such that they can be protected using the `@auth` directive. There may be cases where a user can list a group of resources, but maybe not read or update the details of that resource. For instance maybe a user can _list_ deployments, but they can not _get_ or _update_ those deployments. In this case, we would want to support a `deployments` query, as well as a singular `deployment` query that returns a single instance of a `Deployment`. Each query could then require a different permission.
+
+
+### Naming Conventions
+* Queries and Subscriptions should have the form `scopeObject`, like `workspaceUsers` or `workspaceDeployments`. Sometimes we'll have a query _and_ subscription that are used together, like we do for the deployment logs. In these cases, the query and subscription should have the same name.
+* Mutations should have the form `scopeObjectVerb`, like `workspaceUserInvite` or `workspaceDeploymentCreate`.
+
+## Scopes
+Houston uses the concept of scopes as part of its RBAC system, which is tied to the application schema. There are currently three scopes - `System`, `Workspace` and `Deployment`. These are the bondaries that a `RoleBinding` will apply to. `System` is used to denote operations that apply at the Astronomer Platform layer and generally have global implications. The `Workspace` scope groups users and deployments together. In cloud mode, this is usually a company or organization. In enterprise mode, this is usually a team within a company or organization. The `Deployment` scope denotes operations that affect a single `Deployment`, which is always nested under a `Workspace`.
 
 ## Authentication
 
