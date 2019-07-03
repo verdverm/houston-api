@@ -71,13 +71,19 @@ const ops = [
 export async function up(knex) {
   let data = [];
 
-  // Create knex transaction
+  // Create knex transaction.
   await knex.transaction(async function(trx) {
-    // Bail early if the schema does not exists yet (fresh install).
-    const schemaExists = await trx.schema.withSchema(schema).hasTable("User");
-    if (!schemaExists) {
-      return log.debug("Skipping fix_relationships migration");
+    // Check if we have the old tables..
+    const oldSchemaExists = await trx.schema
+      .withSchema(schema)
+      .hasTable(ops[0].src);
+
+    // Return early if we don't have the old tables.
+    // This will skip the migration for fresh installs or any 0.9.x installs.
+    if (!oldSchemaExists) {
+      return log.debug("Skipping fix_relationships data migration");
     }
+
     log.debug("Running fix_relationships migration");
 
     // Collect all the records from the old join tables (A,B mappings).
