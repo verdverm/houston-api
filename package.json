@@ -39,7 +39,7 @@
     "graphql-import": "^0.7.1",
     "graphql-tools": "^4.0.3",
     "graphql-type-json": "^0.2.1",
-    "grpc": "^1.17.0",
+    "grpc": "^1.22.0",
     "grpc-caller": "^0.11.0",
     "haikunator": "^2.0.0",
     "handlebars": "^4.1.2",
