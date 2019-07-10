@@ -14,7 +14,7 @@
     "migrate": "npm run knex-migrate && npm run prisma-deploy",
     "knex": "babel-node node_modules/.bin/knex",
     "knex-migrate": "npm run knex migrate:latest",
-    "prisma-deploy": "prisma deploy"
+    "prisma-deploy": "prisma deploy --force"
   },
   "author": "Astronomer",
   "license": "Astronomer Enterprise License",
