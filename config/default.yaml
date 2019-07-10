@@ -65,6 +65,11 @@ stripe:
   enabled: false
   secretKey: ~
 
+# Set the length of a Cloud Trial
+trial:
+  # Cloud trial length in days
+  length: 14
+
 # Orbit configuration.
 orbit:
   subdomain: app
@@ -176,6 +181,8 @@ roles:
     permissions:
       - system.monitoring.view
       - system.iam.update
+      - system.workspace.suspend
+      - system.workspace.extendTrial
       - system.user.invite
 
   - id: SYSTEM_EDITOR
@@ -183,7 +190,6 @@ roles:
     permissions:
       - system.monitoring.view
       - system.iam.update
-      - system.user.invite
 
   - id: SYSTEM_VIEWER
     name: System Viewer

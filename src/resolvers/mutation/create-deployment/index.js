@@ -1,4 +1,4 @@
-import fragment from "./fragment";
+import { deploymentFragment, workspaceFragment } from "./fragment";
 import {
   generateReleaseName,
   generateNamespace,
@@ -12,11 +12,11 @@ import {
   generateDefaultDeploymentConfig
 } from "deployments/config";
 import validate from "deployments/validate";
-import { DeploymentPaymentError } from "errors";
+import { WorkspaceSuspendedError, TrialError } from "errors";
 import { addFragmentToInfo } from "graphql-binding";
 import config from "config";
 import bcrypt from "bcryptjs";
-import { get } from "lodash";
+import { get, size } from "lodash";
 import crypto from "crypto";
 import { DEPLOYMENT_AIRFLOW } from "constants";
 
@@ -33,17 +33,21 @@ export default async function createDeployment(parent, args, ctx, info) {
     releaseName: platformReleaseName
   } = config.get("helm");
 
+  const where = { id: args.workspaceUuid };
   // Throw an error if stripe is enabled (Cloud only) and a stripeCustomerId does not exist in the Workspace table
-  const workspace = await ctx.db.query.workspace(
-    {
-      where: { id: args.workspaceUuid }
-    },
-    `{ stripeCustomerId }`
-  );
+  const workspace = await ctx.db.query.workspace({ where }, workspaceFragment);
+
   const stripeEnabled = config.get("stripe.enabled");
 
-  if (workspace.stripeCustomerId == null && stripeEnabled == true) {
-    throw new DeploymentPaymentError();
+  if (
+    workspace.stripeCustomerId == null &&
+    stripeEnabled == true &&
+    size(workspace.deployments) > 0
+  ) {
+    throw new TrialError();
+  }
+  if (workspace.isSuspended == true && stripeEnabled == true) {
+    throw new WorkspaceSuspendedError();
   }
 
   // Grab the default airflow version.
@@ -93,7 +97,7 @@ export default async function createDeployment(parent, args, ctx, info) {
   // Run the mutation.
   const deployment = await ctx.db.mutation.createDeployment(
     mutation,
-    addFragmentToInfo(info, fragment)
+    addFragmentToInfo(info, deploymentFragment)
   );
 
   // Create the role binding for the user.

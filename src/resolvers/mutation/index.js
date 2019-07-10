@@ -10,10 +10,12 @@ import deleteDeployment from "./delete-deployment";
 import deleteInviteToken from "./delete-invite-token";
 import deleteServiceAccount from "./delete-service-account";
 import deleteWorkspace from "./delete-workspace";
+import extendWorkspaceTrial from "./extend-trial";
 import forgotPassword from "./forgot-password";
 import inviteUser from "./invite-user";
 import resendConfirmation from "./resend-confirmation";
 import resetPassword from "./reset-password";
+import suspendWorkspace from "./suspend-workspace";
 import updateCard from "./update-card";
 import updateDeployment from "./update-deployment";
 import updateServiceAccount from "./update-service-account";
@@ -38,9 +40,11 @@ export default {
   deleteServiceAccount,
   deleteWorkspace,
   forgotPassword,
+  extendWorkspaceTrial,
   inviteUser,
   resendConfirmation,
   resetPassword,
+  suspendWorkspace,
   updateCard,
   updateDeployment,
   updateServiceAccount,

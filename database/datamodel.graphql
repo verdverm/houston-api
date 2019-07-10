@@ -98,7 +98,6 @@ type ServiceAccount {
 
 type Workspace {
   id: ID! @id
-  active: Boolean
   deployments: [Deployment!]!
   description: String
   invites: [InviteToken!]!
@@ -107,6 +106,8 @@ type Workspace {
   stripeCustomerId: String
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
+  isSuspended: Boolean
+  trialEndsAt: DateTime
 }
 
 type Deployment {

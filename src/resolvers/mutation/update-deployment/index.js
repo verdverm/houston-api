@@ -10,6 +10,8 @@ import {
   generateEnvironmentSecretName,
   generateNamespace
 } from "deployments/naming";
+import { TrialError } from "errors";
+import config from "config";
 import { addFragmentToInfo } from "graphql-binding";
 import { get, merge, pick } from "lodash";
 import { DEPLOYMENT_AIRFLOW } from "constants";
@@ -28,6 +30,18 @@ export default async function updateDeployment(parent, args, ctx, info) {
     `{ releaseName, workspace { id } }`
   );
 
+  // Block config changes if the user is in a trial
+
+  const workspace = await ctx.db.query.workspace(
+    {
+      where: { id: deployment.workspace.id }
+    },
+    `{ stripeCustomerId, isSuspended }`
+  );
+  const stripeEnabled = config.get("stripe.enabled");
+  if (workspace.stripeCustomerId == null && stripeEnabled == true) {
+    throw new TrialError();
+  }
   // This should be directly defined in the schema, rather than nested
   // under payload as JSON. This is only here until we can migrate the
   // schema of this mutation. Orbit should also not send non-updatable

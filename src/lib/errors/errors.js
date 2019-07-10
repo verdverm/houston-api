@@ -61,10 +61,16 @@ export class EmailNotConfirmedError extends ApolloError {
   }
 }
 
-export class DeploymentPaymentError extends Error {
+export class WorkspaceSuspendedError extends Error {
   message =
     this.message ||
-    "You must add a valid payment method to your workspace before you can create a deployment";
+    "Workspace is suspended. This is likely an issue with payment.";
+}
+
+export class TrialError extends Error {
+  message =
+    this.message ||
+    "Workspace is in trial mode. Please add a valid payment method to your workspace to unlock all features.";
 }
 
 export class DuplicateDeploymentLabelError extends UserInputError {

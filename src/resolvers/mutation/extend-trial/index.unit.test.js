@@ -12,13 +12,13 @@ const schema = makeExecutableSchema({
 
 // Define our mutation
 const mutation = `
-  mutation updateWorkspace(
+  mutation extendWorkspaceTrial(
     $workspaceUuid: Uuid!
-    $payload: JSON!
+    $extraDays: Int!
   ) {
-    updateWorkspace(
+    extendWorkspaceTrial(
       workspaceUuid: $workspaceUuid,
-      payload: $payload,
+      extraDays: $extraDays,
     ) {
       id
       description
@@ -27,20 +27,23 @@ const mutation = `
   }
 `;
 
-describe("updateWorkspace", () => {
+describe("extendWorkspaceTrial", () => {
   test("typical request is successful", async () => {
     // Mock up some functions.
+    const extraDays = Math.floor(Math.random());
     const updateWorkspace = jest.fn();
+    const workspace = jest.fn().mockReturnValue({ trialEndsAt: casual.date });
 
     // Construct db object for context.
     const db = {
+      query: { workspace },
       mutation: { updateWorkspace }
     };
 
     // Vars for the gql mutation.
     const vars = {
       workspaceUuid: casual.uuid,
-      payload: { label: casual.word, description: casual.word }
+      extraDays
     };
 
     // Run the graphql mutation.

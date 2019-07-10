@@ -1,4 +1,4 @@
-import { DuplicateDeploymentLabelError, DeploymentPaymentError } from "errors";
+import { DuplicateDeploymentLabelError, TrialError } from "errors";
 import resolvers from "resolvers";
 import * as validate from "deployments/validate";
 import casual from "casual";
@@ -223,7 +223,7 @@ describe("createDeployment", () => {
     // Set up our spy.
     jest
       .spyOn(validate, "default")
-      .mockImplementation(() => throw new DeploymentPaymentError());
+      .mockImplementation(() => throw new TrialError());
 
     // Construct db object for context.
     const db = {
@@ -243,9 +243,7 @@ describe("createDeployment", () => {
 
     expect(res.errors.length).toBe(1);
     expect(res.errors[0].message).toEqual(
-      expect.stringMatching(
-        /^You must add a valid payment method to your workspace before you can create a deployment/
-      )
+      expect.stringMatching(/^Workspace is in trial mode/)
     );
     expect(createDeployment).toHaveBeenCalledTimes(0);
   });

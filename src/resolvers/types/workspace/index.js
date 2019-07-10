@@ -1,8 +1,9 @@
-import fragment from "./fragment";
+import { userFragment, workspaceFragment } from "./fragment";
 import { hasPermission } from "rbac";
 import config from "config";
 import { addFragmentToInfo } from "graphql-binding";
 import { size } from "lodash";
+import moment from "moment";
 
 import { ENTITY_WORKSPACE } from "constants";
 
@@ -15,7 +16,7 @@ export function users(parent, args, ctx, info) {
         }
       }
     },
-    info ? addFragmentToInfo(info, fragment) : info
+    info ? addFragmentToInfo(info, userFragment) : info
   );
 }
 
@@ -33,20 +34,17 @@ export function deploymentCount(parent) {
   return size(parent.deployments);
 }
 
-export function workspaceCapabilities(parent, args, ctx) {
+export async function workspaceCapabilities(parent, args, ctx) {
   // Check to see if user has permission to view and update billing
-  const billingAllowed = hasPermission(
+  const canUpdateBilling = await hasPermission(
     ctx.user,
     "workspace.billing.update",
     ENTITY_WORKSPACE.toLowerCase(),
     parent.id
   );
-  // Get stripeEnabled bool directly from config
-  const stripeEnabled = config.get("stripe.enabled");
-  // Return the flag that will tell us whether or not we should show Billing in the UI
-  const canUpdateBilling = billingAllowed && stripeEnabled;
 
-  const canUpdateIAM = hasPermission(
+  // Check to see if user has permission to update roles
+  const canUpdateIAM = await hasPermission(
     ctx.user,
     "workspace.iam.update",
     ENTITY_WORKSPACE.toLowerCase(),
@@ -56,10 +54,37 @@ export function workspaceCapabilities(parent, args, ctx) {
   return { canUpdateIAM, canUpdateBilling };
 }
 
+// Check the config to see if stripe is enabled (Cloud mode)
+export function billingEnabled() {
+  const billingEnabled = config.get("stripe.enabled");
+  return billingEnabled;
+}
+
+// Function to determine if the user should be blocked from viewing their workspace
+export async function paywallEnabled(parent, args, ctx) {
+  // Check for hard override of trial paywall logic and throw paywall
+  const workspace = await ctx.db.query.workspace(
+    { where: { id: parent.id } },
+    workspaceFragment
+  );
+
+  const now = new Date();
+
+  const isTrialing = moment(workspace.trialEndsAt).isAfter(now);
+
+  const paywallEnabled = workspace.isSuspended
+    ? true
+    : !isTrialing && workspace.stripeCustomerId == null;
+
+  return paywallEnabled;
+}
+
 export default {
   users,
   groups,
   invites,
   deploymentCount,
-  workspaceCapabilities
+  workspaceCapabilities,
+  billingEnabled,
+  paywallEnabled
 };

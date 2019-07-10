@@ -81,6 +81,10 @@ describe("updateDeployment", () => {
       ]
     });
 
+    const workspace = jest
+      .fn()
+      .mockReturnValue({ stripeCustomerId: casual.uuid, isSuspended: false });
+
     // Mock up some db functions.
     const updateDeployment = jest.fn().mockReturnValue({
       id,
@@ -91,7 +95,7 @@ describe("updateDeployment", () => {
     });
 
     const db = {
-      query: { deployment },
+      query: { deployment, workspace },
       mutation: { updateDeployment }
     };
 

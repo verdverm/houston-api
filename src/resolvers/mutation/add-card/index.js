@@ -8,23 +8,28 @@ import { createStripeCustomer } from "stripe";
  * @return {Card} The card information for the customer added.
  */
 export default async function addCard(parent, args, ctx) {
+  const { company, billingEmail, token, workspaceUuid } = args;
   const response = await createStripeCustomer(
-    args.company,
-    args.billingEmail,
-    args.token,
-    args.workspaceUuid
+    company,
+    billingEmail,
+    token,
+    workspaceUuid
   );
   const stripeCustomerId = response.id || {};
 
   const cardInfo = response.sources.data[0] || {};
 
+  const data = {
+    stripeCustomerId,
+    isSuspended: false,
+    trialEndsAt: new Date()
+  };
+
+  const where = { id: workspaceUuid };
+
   await ctx.db.mutation.updateWorkspace({
-    data: {
-      stripeCustomerId: stripeCustomerId
-    },
-    where: {
-      id: args.workspaceUuid
-    }
+    data,
+    where
   });
 
   const card = {

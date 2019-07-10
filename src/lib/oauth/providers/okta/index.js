@@ -9,6 +9,7 @@ import querystring from "querystring";
 
 // Grab the configuration.
 const cfg = config.get("auth.okta");
+
 /*
  * Generate the authentication url for Okta.
  * @return {String} The authentication url.
@@ -16,7 +17,7 @@ const cfg = config.get("auth.okta");
 export function authUrl(state, redirectUrl, integration = "self") {
   const params = {
     client_id: cfg.clientId,
-    response_type: "code id_token token",
+    response_type: "id_token token",
     scope: "openid profile email",
     redirect_uri: redirectUrl,
     nonce: shortid.generate(),

@@ -14,7 +14,6 @@ export function createStripeCustomer(
   if (!enabled) {
     return log.info("Stripe disabled, payment method cannot be added.");
   }
-
   return stripe.customers.create({
     email: billingEmail,
     source: token,

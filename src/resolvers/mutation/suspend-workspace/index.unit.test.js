@@ -12,13 +12,13 @@ const schema = makeExecutableSchema({
 
 // Define our mutation
 const mutation = `
-  mutation updateWorkspace(
+  mutation suspendWorkspace(
     $workspaceUuid: Uuid!
-    $payload: JSON!
+    $isSuspended: Boolean!
   ) {
-    updateWorkspace(
+    suspendWorkspace(
       workspaceUuid: $workspaceUuid,
-      payload: $payload,
+      isSuspended: $isSuspended,
     ) {
       id
       description
@@ -27,7 +27,7 @@ const mutation = `
   }
 `;
 
-describe("updateWorkspace", () => {
+describe("suspendWorkspace", () => {
   test("typical request is successful", async () => {
     // Mock up some functions.
     const updateWorkspace = jest.fn();
@@ -40,7 +40,7 @@ describe("updateWorkspace", () => {
     // Vars for the gql mutation.
     const vars = {
       workspaceUuid: casual.uuid,
-      payload: { label: casual.word, description: casual.word }
+      isSuspended: false
     };
 
     // Run the graphql mutation.
