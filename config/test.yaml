@@ -45,6 +45,7 @@ auth:
 
     # Direct oauth integration to google.
     google:
+      displayName: Google
       enabled: true
       clientId: ~
       discoveryUrl: "https://accounts.google.com/"
