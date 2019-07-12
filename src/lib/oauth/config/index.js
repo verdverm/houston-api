@@ -78,9 +78,9 @@ export async function getClient(name) {
   let issuer;
   if (name == "google" && !providerCfg.google.clientId) {
     // If we haven't been provided a google clientId use the auth0-to-google bridge.
-    issuer = await _getIssuer("auth0", "google-oauth2");
+    issuer = await _getIssuer("auth0", "google-oauth2", name);
   } else if (name == "github") {
-    issuer = await _getIssuer("auth0", "github");
+    issuer = await _getIssuer("auth0", "github", name);
   }
 
   if (!issuer) issuer = await _getIssuer(name);
@@ -92,20 +92,25 @@ export async function getClient(name) {
   return client;
 }
 
-async function _getIssuer(name, integration = "self") {
-  const issuer = await Issuer.discover(providerCfg[name].discoveryUrl);
+async function _getIssuer(key, integration = "self", providerName = undefined) {
+  const issuer = await Issuer.discover(providerCfg[key].discoveryUrl);
 
-  issuer.metadata.name = name;
+  issuer.metadata.name = key;
   issuer.metadata.authUrlParams = merge(
     {},
     DEFAULT_CLIENT_ARGS,
-    get(providerCfg[name], "authUrlParams")
+    get(providerCfg[key], "authUrlParams")
   );
 
-  return subclassClient(issuer, providerCfg[name].clientId, integration);
+  return subclassClient(
+    issuer,
+    providerCfg[key].clientId,
+    integration,
+    providerName
+  );
 }
 
-function subclassClient(issuer, clientId, integration) {
+function subclassClient(issuer, clientId, integration, providerName) {
   // The Issuer has a "hard-coded" client class that we can't easily change the
   // behaviour of as it isn't exported except via the `Client` property of an
   // Issuer instance.
@@ -122,7 +127,11 @@ function subclassClient(issuer, clientId, integration) {
         state: JSON.stringify(
           merge(
             {
-              provider: this.issuer.metadata.name,
+              // Sometimes we want to pretend to be another provider when
+              // handling the post request, For example Google via Auth0, the
+              // issuer name is "auth0", but the name we want to pass to
+              // getClient is "google"
+              provider: providerName || this.issuer.metadata.name,
               integration,
               origin: oauthUrl()
             },
