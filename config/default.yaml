@@ -113,31 +113,39 @@ auth:
   local:
     enabled: true
 
-  # Auth0 integration configuration.
-  auth0:
-    # This "enabled" flag is currently a little misleading.
-    # The enabled flag refers only to showing the native
-    # Auth0 button in the UI. The rest of the settings here
-    # could potentially be used as to auth with Google/Github/etc
-    # if those integrations are enabled, but do not have connection
-    # information.
-    enabled: false
-    clientId: ~
-    baseDomain: ~
+  openidConnect:
+    # Auth0 integration configuration.
+    auth0:
+      # This "enabled" flag is currently a little misleading.
+      # The enabled flag refers only to showing the native
+      # Auth0 button in the UI. The rest of the settings here
+      # could potentially be used as to auth with Google/Github/etc
+      # if those integrations are enabled, but do not have connection
+      # information.
+      enabled: false
+      clientId: ~
+      discoveryUrl: https://astronomerio.auth0.com
+      authUrlParams:
+        audience: "astronomer-ee"
 
-  # Google oauth configuration.
-  google:
-    enabled: false
-    clientId: ~
+
+    # Google oauth configuration.
+    google:
+      enabled: false
+      # If blank we will go via Auth0
+      clientId: ~
+      discoveryUrl: https://accounts.google.com
+
+    okta:
+      enabled: false
+      clientId: ~
+      discoveryUrl: ~
 
   # Github oauth configuration.
   github:
     enabled: false
 
-  okta:
-    enabled: false
-    clientId: ~
-    baseDomain: ~
+
 
 jwt:
   # Development only: Passphrase to sign JWTs used to authenticate our GraphQL

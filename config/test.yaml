@@ -28,17 +28,26 @@ auth:
   local:
     enabled: true
 
-  # Auth0 integration configuration.
-  auth0:
-    enabled: true
-    clientId: ~
-    baseDomain: ~
-    externalLogin: ~
+  openidConnect:
+    # Auth0 integration configuration.
+    auth0:
+      # This "enabled" flag is currently a little misleading.
+      # The enabled flag refers only to showing the native
+      # Auth0 button in the UI. The rest of the settings here
+      # could potentially be used as to auth with Google/Github/etc
+      # if those integrations are enabled, but do not have connection
+      # information.
+      enabled: true
+      clientId: ~
+      discoveryUrl: https://astronomerio.auth0.com
+      authUrlParams:
+        audience: "astronomer-ee"
 
-  # Direct oauth integration to google.
-  google:
-    enabled: true
-    clientId: ~
+    # Direct oauth integration to google.
+    google:
+      enabled: true
+      clientId: ~
+      discoveryUrl: "https://accounts.google.com/"
 
   # Direct oauth integration to github (WIP).
   github:

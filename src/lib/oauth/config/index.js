@@ -1,8 +1,18 @@
-import providers from "../providers";
 import { InvalidAuthenticationProviderError } from "errors";
 import { version, houston } from "utilities";
+import { Issuer, Registry } from "openid-client";
 import config from "config";
-import { get, has } from "lodash";
+import shortid from "shortid";
+import { has, merge, get } from "lodash";
+
+export const providerCfg = config.get("auth.openidConnect");
+export const ClientCache = new Map();
+
+export const DEFAULT_CLIENT_ARGS = {
+  scope: "openid profile email",
+  response_type: "token id_token",
+  response_mode: "fragment"
+};
 
 /*
  * Return full oauth url.
@@ -18,8 +28,8 @@ export function oauthUrl() {
  */
 export function oauthRedirectUrl() {
   const isProd = process.env.NODE_ENV === "production";
-  const { baseDomain: auth0Domain } = config.get("auth.auth0");
-  const defaultAuth0 = auth0Domain === "astronomerio.auth0.com";
+  const { discoveryUrl: auth0Url } = providerCfg.auth0;
+  const defaultAuth0 = auth0Url === "https://astronomerio.auth0.com";
 
   // If we're in prod with the default auth0 domain configured,
   // return the shared redirect url. This is for the shared
@@ -42,7 +52,7 @@ export function oauthRedirectUrl() {
  * @return {Boolean} Module enabled.
  */
 export function providerEnabled(name) {
-  return has(providers, name);
+  return has(providerCfg, name) && providerCfg[name].enabled;
 }
 
 /*
@@ -50,7 +60,76 @@ export function providerEnabled(name) {
  * @param {String} The provider name.
  * @return {Object} The provider module.
  */
-export function getProvider(name) {
-  if (providerEnabled(name)) return get(providers, name);
-  else throw new InvalidAuthenticationProviderError();
+export async function getClient(name) {
+  if (ClientCache.has(name)) {
+    return ClientCache.get(name);
+  }
+
+  if (!providerEnabled(name)) throw new InvalidAuthenticationProviderError();
+
+  let issuer;
+  if (name == "google" && !providerCfg.google.clientId) {
+    // If we haven't been provided a google clientId use the auth0-to-google bridge.
+    issuer = await _getIssuer("auth0", "google-oauth2");
+  } else if (name == "github") {
+    issuer = await _getIssuer("auth0", "github");
+  }
+
+  if (!issuer) issuer = await _getIssuer(name);
+
+  const client = new issuer.Client();
+  ClientCache.set(name, client);
+  return client;
+}
+
+async function _getIssuer(name, integration = "self") {
+  const issuer = await Issuer.discover(providerCfg[name].discoveryUrl);
+
+  issuer.metadata.name = name;
+  issuer.metadata.authUrlParams = merge(
+    {},
+    DEFAULT_CLIENT_ARGS,
+    get(providerCfg[name], "authUrlParams")
+  );
+
+  return subclassClient(issuer, providerCfg[name].clientId, integration);
+}
+
+function subclassClient(issuer, clientId, integration) {
+  // The Issuer has a "hard-coded" client class that we can't easily change the
+  // behaviour of as it isn't exported except via the `Client` property of an
+  // Issuer instance.
+  const Client = issuer.Client;
+  class AstroClient extends Client {
+    constructor(meta = {}) {
+      super(merge(meta, { client_id: clientId }));
+    }
+
+    authUrl(state) {
+      const params = merge({}, this.issuer.metadata.authUrlParams, {
+        redirect_uri: oauthRedirectUrl(),
+        nonce: shortid.generate(),
+        state: JSON.stringify(
+          merge(
+            {
+              provider: this.issuer.metadata.name,
+              integration,
+              origin: oauthUrl()
+            },
+            state
+          )
+        )
+      });
+
+      if (this.issuer.metadata.name == "auth0" && integration != "self") {
+        params.connection = integration;
+      }
+      return this.authorizationUrl(params);
+    }
+  }
+
+  const newIssuer = Object.create(issuer);
+  Object.defineProperty(newIssuer, "Client", { value: AstroClient });
+  Registry.set(newIssuer.issuer, newIssuer);
+  return newIssuer;
 }

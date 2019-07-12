@@ -11,7 +11,17 @@ router.use(
   express.urlencoded({ extended: false })
 );
 
+function catchAsyncError(asyncFn) {
+  return async (req, res, next) => {
+    try {
+      return await asyncFn(req, res, next);
+    } catch (err) {
+      next(err);
+    }
+  };
+}
+
 // Setup the POST route.
-router.post("/", post);
+router.post("/", catchAsyncError(post));
 
 export default router;
