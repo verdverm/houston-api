@@ -136,6 +136,7 @@ auth:
 
     # Google oauth configuration.
     google:
+      displayName: Google
       enabled: false
       # If blank we will go via Auth0
       clientId: ~
@@ -146,7 +147,7 @@ auth:
       clientId: ~
       discoveryUrl: ~
 
-  # Github oauth configuration.
+  # Github via auth0
   github:
     enabled: false
 

@@ -3,7 +3,7 @@ import { version, houston } from "utilities";
 import { Issuer, Registry } from "openid-client";
 import config from "config";
 import shortid from "shortid";
-import { has, merge, get } from "lodash";
+import { has, merge, get, upperFirst } from "lodash";
 
 export const providerCfg = config.get("auth.openidConnect");
 export const ClientCache = new Map();
@@ -56,6 +56,14 @@ export function providerEnabled(name) {
 }
 
 /*
+ * List the names of the enabled providers
+ * @return {Boolean} Module enabled.
+ */
+export function enabledProviders() {
+  return Object.keys(providerCfg).filter(name => providerCfg[name].enabled);
+}
+
+/*
  * Return oauth module based on provider string
  * @param {String} The provider name.
  * @return {Object} The provider module.
@@ -78,6 +86,8 @@ export async function getClient(name) {
   if (!issuer) issuer = await _getIssuer(name);
 
   const client = new issuer.Client();
+  client.metadata.displayName =
+    providerCfg[name].displayName || upperFirst(name);
   ClientCache.set(name, client);
   return client;
 }
@@ -133,3 +143,14 @@ function subclassClient(issuer, clientId, integration) {
   Registry.set(newIssuer.issuer, newIssuer);
   return newIssuer;
 }
+
+function synthesiseConfig() {
+  // Make github look like an OIDC auth provider, even though it isn't. It is
+  // handled in getClient to go via Auth0
+  providerCfg["github"] = {
+    enabled: config.get("auth.github.enabled"),
+    displayName: "GitHub"
+  };
+}
+
+synthesiseConfig();
