@@ -76,27 +76,37 @@ auth:
     enabled:
       __name: "AUTH__LOCAL__ENABLED"
       __format: "json"
-  auth0:
-    enabled:
-      __name: "AUTH__AUTH0__ENABLED"
-      __format: "json"
-    clientId: "AUTH__AUTH0__CLIENT_ID"
-    baseDomain: "AUTH__AUTH0__BASE_DOMAIN"
-  google:
-    enabled:
-      __name: "AUTH__GOOGLE__ENABLED"
-      __format: "json"
-    clientId: "AUTH__GOOGLE__CLIENT_ID"
+
+  openidConnect:
+    # A single JSON string of all the OIDC providers to use. If this env var is
+    # set then the convinence settings below will be ignored.
+    __name: "AUTH__OPENID_CONNECT_PROVIDERS"
+    __format: "json"
+    auth0:
+      enabled:
+        __name: "AUTH__OPENID_CONNECT__AUTH0__ENABLED"
+        __format: "json"
+      clientId: "AUTH__OPENID_CONNECT__AUTH0__CLIENT_ID"
+      discoveryUrl: "AUTH__OPENID_CONNECT__AUTH0__DISCOVERY_URL"
+
+    google:
+      enabled:
+        __name: "AUTH__OPENID_CONNECT__GOOGLE__ENABLED"
+        __format: "json"
+      clientId: "AUTH__OPENID_CONNECT__GOOGLE__CLIENT_ID"
+      discoveryUrl: "AUTH__OPENID_CONNECT__GOOGLE__DISCOVERY_URL"
+
+    okta:
+      enabled:
+        __name: "AUTH__OPENID_CONNECT__OKTA__ENABLED"
+        __format: "json"
+      clientId: "AUTH__OPENID_CONNECT__OKTA__CLIENT_ID"
+      discoveryUrl: "AUTH__OPENID_CONNECT__OKTA__DISCOVERY_URL"
+
   github:
     enabled:
       __name: "AUTH__GITHUB__ENABLED"
       __format: "json"
-  okta:
-    enabled:
-      __name: "AUTH__OKTA__ENABLED"
-      __format: "json"
-    clientId: "AUTH__OKTA__CLIENT_ID"
-    baseDomain: "AUTH__OKTA__BASE_DOMAIN"
 
 jwt:
   passphrase: "JWT__PASSPHRASE"

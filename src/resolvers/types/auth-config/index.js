@@ -1,5 +1,4 @@
-import { oauthRedirectUrl } from "oauth/config";
-import providers from "oauth/providers";
+import { providerEnabled, getClient } from "oauth/config";
 import { prisma } from "generated/client";
 import config from "config";
 
@@ -37,19 +36,16 @@ export function localEnabled() {
  * @return {Boolean} Google auth enabled.
  */
 export function googleEnabled() {
-  return config.get("auth.google.enabled");
+  return providerEnabled("google");
 }
 
 /*
  * Return a string for google OAuth url.
  * @return {Boolean} Google OAuth url.
  */
-export function googleOAuthUrl(parent) {
-  const auth = config.get("auth");
-  return auth.google.enabled
-    ? auth.google.clientId
-      ? providers.google.authUrl(parent, oauthRedirectUrl())
-      : providers.auth0.authUrl(parent, oauthRedirectUrl(), "google-oauth2")
+export async function googleOAuthUrl(parent) {
+  return providerEnabled("google")
+    ? (await getClient("google")).authUrl(parent)
     : null;
 }
 
@@ -58,16 +54,16 @@ export function googleOAuthUrl(parent) {
  * @return {Boolean} Auth0 auth enabled.
  */
 export function auth0Enabled() {
-  return config.get("auth.auth0.enabled");
+  return providerEnabled("auth0");
 }
 
 /*
  * Return a string for Auth0 OAuth url.
  * @return {Boolean} Auth0 OAuth url.
  */
-export function auth0OAuthUrl(parent) {
-  return config.get("auth.auth0.enabled")
-    ? providers.auth0.authUrl(parent, oauthRedirectUrl())
+export async function auth0OAuthUrl(parent) {
+  return providerEnabled("auth0")
+    ? (await getClient("auth0")).authUrl(parent)
     : null;
 }
 
@@ -83,17 +79,17 @@ export function githubEnabled() {
  * Return a string for Github OAuth url.
  * @return {Boolean} Github OAuth url.
  */
-export function githubOAuthUrl(parent) {
-  return providers.auth0.authUrl(parent, oauthRedirectUrl(), "github");
+export async function githubOAuthUrl(parent) {
+  return (await getClient("auth0")).authUrl(parent, "github");
 }
 
 export function oktaEnabled() {
-  return config.get("auth.okta.enabled");
+  return providerEnabled("okta");
 }
 
-export function oktaOAuthUrl(parent) {
-  return config.get("auth.okta.enabled")
-    ? providers.okta.authUrl(parent, oauthRedirectUrl())
+export async function oktaOAuthUrl(parent) {
+  return providerEnabled("okta")
+    ? (await getClient("okta")).authUrl(parent)
     : null;
 }
 

@@ -1,42 +1,55 @@
 import fragment from "./fragment";
 import { createUser as _createUser } from "users";
-import { getProvider } from "oauth/config";
+import { getClient } from "oauth/config";
 import { orbit } from "utilities";
 import { prisma } from "generated/client";
 import { createAuthJWT, setJWTCookie } from "jwt";
-import { first } from "lodash";
-import querystring from "querystring";
+import { first, merge } from "lodash";
+import { URLSearchParams } from "url";
 
 /*
  * Handle oauth request.
  * @param {Object} req The request.
  * @param {Object} res The response.
  */
-export default async function(req, res) {
+export default async function(req, res, next) {
   // Grab params out of the request body.
-  const {
-    id_token: idToken,
-    expires_in: expiration,
-    state: rawState
-  } = req.body;
+  const { state: rawState } = req.body;
+
+  // TODO: Hanvle `error` in the response
 
   // Parse the state object.
   const state = JSON.parse(decodeURIComponent(rawState));
 
   // Get the provider module.
-  const provider = getProvider(state.provider);
+  const provider = await getClient(state.provider);
 
-  // Create a token.
-  const data = {
-    encodedJWT: idToken,
-    expires: provider.expires(expiration)
-  };
-
-  // Validate the token.
-  const jwt = await provider.validate(data);
+  const tokenSet = await provider.authorizationCallback(null, req.body, {
+    state: rawState,
+    // Don't validate the nonce. Not great, but we don't store the nonce in a
+    // session right now, so we can't validate this
+    nonce: null
+  });
 
   // Grab user data
-  const { providerUserId, email, fullName, avatarUrl } = provider.userData(jwt);
+  // Some IDPs don't return useful info, so fall back to the claims if we don't have it
+  const userData = merge(await provider.userinfo(tokenSet.access_token), {
+    email: tokenSet.claims.email || tokenSet.claims.preferred_username,
+    sub: tokenSet.claims.sub,
+    name: tokenSet.claims.name || tokenSet.claims.unique_name
+  });
+
+  const {
+    sub: providerUserId,
+    email,
+    name: fullName,
+    picture: avatarUrl
+  } = userData;
+
+  if (!email) {
+    // Somehow we got no email! Abort
+    return next("No email from userinfo!");
+  }
 
   // Search for user in our system using email address.
   const user = first(
@@ -82,11 +95,11 @@ export default async function(req, res) {
   state.extras = { ...state.extras, userId, email };
 
   // Build redirect query string.
-  const qs = querystring.stringify({
-    extras: JSON.stringify(state.extras),
-    strategy: state.provider,
-    token
-  });
+  const qs = new URLSearchParams([
+    ["extras", JSON.stringify(state.extras)],
+    ["strategy", state.provider],
+    ["token", token]
+  ]);
 
   // Respond with redirect to orbit.
   const url = `${orbit()}/${state.redirect}?${qs}`;
