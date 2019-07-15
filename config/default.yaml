@@ -119,6 +119,8 @@ auth:
     enabled: true
 
   openidConnect:
+    # Clock skew for slightly out-of-sync clocks
+    clockTolerance: 0
     # Auth0 integration configuration.
     auth0:
       # This "enabled" flag is currently a little misleading.
