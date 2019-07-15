@@ -89,6 +89,7 @@ export async function getClient(name) {
   client.metadata.displayName =
     providerCfg[name].displayName || upperFirst(name);
   ClientCache.set(name, client);
+  client.CLOCK_TOLERANCE = config.get("auth.openidConnect.clockTolerance");
   return client;
 }
 

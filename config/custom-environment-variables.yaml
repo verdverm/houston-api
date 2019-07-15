@@ -78,6 +78,9 @@ auth:
       __format: "json"
 
   openidConnect:
+    clockTolerance: 
+      __name: "AUTH__OPENID_CONNECT__CLOCK_TOLERANCE"
+      __format: "json"
     # A single JSON string of all the OIDC providers to use. If this env var is
     # set then the convinence settings below will be ignored.
     __name: "AUTH__OPENID_CONNECT_PROVIDERS"
