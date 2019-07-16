@@ -23,30 +23,6 @@ export function oauthUrl() {
 }
 
 /*
- * Return full oauth redirect url.
- * @return {String} The oauth redirect url.
- */
-export function oauthRedirectUrl() {
-  const isProd = process.env.NODE_ENV === "production";
-  const { discoveryUrl: auth0Url } = providerCfg.auth0;
-  const defaultAuth0 = auth0Url === "https://astronomerio.auth0.com";
-
-  // If we're in prod with the default auth0 domain configured,
-  // return the shared redirect url. This is for the shared
-  // auth0 account that is enabled by default. Auth0 requires a list
-  // of redirect urls that are authorized. When a user installs
-  // at a custom domain, the redirect won't work. To get around this,
-  // we host a well-known url to use by default.
-  if (isProd && defaultAuth0) {
-    return "https://redirect.astronomer.io";
-  }
-
-  // Otherwise return the redirect url of the installation. If a user, brings
-  // their own auth0 account, this will be used and will skip the shared url.
-  return `${houston()}/${version()}/oauth/redirect`;
-}
-
-/*
  * Return if an oauth module is enabled.
  * @param {String} The provider name.
  * @return {Boolean} Module enabled.
@@ -123,7 +99,7 @@ function subclassClient(issuer, clientId, integration, providerName) {
 
     authUrl(state) {
       const params = merge({}, this.issuer.metadata.authUrlParams, {
-        redirect_uri: oauthRedirectUrl(),
+        redirect_uri: this.oauthRedirectUrl(),
         nonce: shortid.generate(),
         state: JSON.stringify(
           merge(
@@ -145,6 +121,32 @@ function subclassClient(issuer, clientId, integration, providerName) {
         params.connection = integration;
       }
       return this.authorizationUrl(params);
+    }
+
+    /*
+     * Return full oauth redirect url.
+     * @return {String} The oauth redirect url.
+     */
+    oauthRedirectUrl() {
+      if (this.issuer.metadata.name == "auth0") {
+        const isProd = process.env.NODE_ENV === "production";
+        const { discoveryUrl: auth0Url } = providerCfg.auth0;
+        const defaultAuth0 = auth0Url === "https://astronomerio.auth0.com";
+
+        // If we're in prod with the default auth0 domain configured,
+        // return the shared redirect url. This is for the shared
+        // auth0 account that is enabled by default. Auth0 requires a list
+        // of redirect urls that are authorized. When a user installs
+        // at a custom domain, the redirect won't work. To get around this,
+        // we host a well-known url to use by default.
+        if (isProd && defaultAuth0) {
+          return "https://redirect.astronomer.io";
+        }
+      }
+
+      // Otherwise return the redirect url of the installation. If a user, brings
+      // their own auth0 account, this will be used and will skip the shared url.
+      return `${houston()}/${version()}/oauth/redirect`;
     }
   }
 
