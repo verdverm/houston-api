@@ -37,7 +37,7 @@ export async function providers(parent) {
       const client = await getClient(name);
       return {
         name: name,
-        url: client.authUrl(parent),
+        url: client.authorizationUrl({ state: Object.assign({}, parent) }),
         displayName: client.metadata.displayName
       };
     })

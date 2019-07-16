@@ -1,9 +1,9 @@
+import mixins from "../provider-mixins";
 import { InvalidAuthenticationProviderError } from "errors";
-import { version, houston } from "utilities";
 import { Issuer, Registry } from "openid-client";
 import config from "config";
-import shortid from "shortid";
 import { has, merge, get, upperFirst } from "lodash";
+import { mix } from "mixwith";
 
 export const providerCfg = config.get("auth.openidConnect");
 export const ClientCache = new Map();
@@ -13,14 +13,6 @@ export const DEFAULT_CLIENT_ARGS = {
   response_type: "token id_token",
   response_mode: "fragment"
 };
-
-/*
- * Return full oauth url.
- * @return {String} The oauth url.
- */
-export function oauthUrl() {
-  return `${houston()}/${version()}/oauth/callback`;
-}
 
 /*
  * Return if an oauth module is enabled.
@@ -52,16 +44,21 @@ export async function getClient(name) {
   if (!providerEnabled(name)) throw new InvalidAuthenticationProviderError();
 
   let issuer;
+  const clientMeta = {};
   if (name == "google" && !providerCfg.google.clientId) {
     // If we haven't been provided a google clientId use the auth0-to-google bridge.
-    issuer = await _getIssuer("auth0", "google-oauth2", name);
+    issuer = await _getIssuer("auth0");
+    clientMeta.integration = "google-oauth2";
+    clientMeta.providerName = "auth0";
   } else if (name == "github") {
-    issuer = await _getIssuer("auth0", "github", name);
+    issuer = await _getIssuer("auth0");
+    clientMeta.integration = "github";
+    clientMeta.providerName = "auth0";
   }
 
   if (!issuer) issuer = await _getIssuer(name);
 
-  const client = new issuer.Client();
+  const client = new issuer.Client(clientMeta);
   client.metadata.displayName =
     providerCfg[name].displayName || upperFirst(name);
   ClientCache.set(name, client);
@@ -69,7 +66,7 @@ export async function getClient(name) {
   return client;
 }
 
-async function _getIssuer(key, integration = "self", providerName = undefined) {
+async function _getIssuer(key) {
   const issuer = await Issuer.discover(providerCfg[key].discoveryUrl);
 
   issuer.metadata.name = key;
@@ -79,74 +76,26 @@ async function _getIssuer(key, integration = "self", providerName = undefined) {
     get(providerCfg[key], "authUrlParams")
   );
 
-  return subclassClient(
-    issuer,
-    providerCfg[key].clientId,
-    integration,
-    providerName
-  );
+  return subclassClient(issuer, providerCfg[key].clientId);
 }
 
-function subclassClient(issuer, clientId, integration, providerName) {
+function subclassClient(issuer, clientId) {
   // The Issuer has a "hard-coded" client class that we can't easily change the
   // behaviour of as it isn't exported except via the `Client` property of an
   // Issuer instance.
-  const Client = issuer.Client;
-  class AstroClient extends Client {
-    constructor(meta = {}) {
-      super(merge(meta, { client_id: clientId }));
-    }
 
-    authUrl(state) {
-      const params = merge({}, this.issuer.metadata.authUrlParams, {
-        redirect_uri: this.oauthRedirectUrl(),
-        nonce: shortid.generate(),
-        state: JSON.stringify(
-          merge(
-            {
-              // Sometimes we want to pretend to be another provider when
-              // handling the post request, For example Google via Auth0, the
-              // issuer name is "auth0", but the name we want to pass to
-              // getClient is "google"
-              provider: providerName || this.issuer.metadata.name,
-              integration,
-              origin: oauthUrl()
-            },
-            state
-          )
-        )
-      });
+  // Always mix in our base mixin
+  const clientMixins = [mixins.base];
 
-      if (this.issuer.metadata.name == "auth0" && integration != "self") {
-        params.connection = integration;
-      }
-      return this.authorizationUrl(params);
-    }
+  // And if there is a issuer specific mixin include that first.
+  if (mixins[issuer.metadata.name]) {
+    clientMixins.push(mixins[issuer.metadata.name]);
+  }
 
-    /*
-     * Return full oauth redirect url.
-     * @return {String} The oauth redirect url.
-     */
-    oauthRedirectUrl() {
-      if (this.issuer.metadata.name == "auth0") {
-        const isProd = process.env.NODE_ENV === "production";
-        const { discoveryUrl: auth0Url } = providerCfg.auth0;
-        const defaultAuth0 = auth0Url === "https://astronomerio.auth0.com";
-
-        // If we're in prod with the default auth0 domain configured,
-        // return the shared redirect url. This is for the shared
-        // auth0 account that is enabled by default. Auth0 requires a list
-        // of redirect urls that are authorized. When a user installs
-        // at a custom domain, the redirect won't work. To get around this,
-        // we host a well-known url to use by default.
-        if (isProd && defaultAuth0) {
-          return "https://redirect.astronomer.io";
-        }
-      }
-
-      // Otherwise return the redirect url of the installation. If a user, brings
-      // their own auth0 account, this will be used and will skip the shared url.
-      return `${houston()}/${version()}/oauth/redirect`;
+  class AstroClient extends mix(issuer.Client).with(...clientMixins) {
+    constructor(...args) {
+      super(...args);
+      this.client_id = clientId;
     }
   }
 

@@ -38,7 +38,7 @@ auth:
       # if those integrations are enabled, but do not have connection
       # information.
       enabled: true
-      clientId: ~
+      clientId: fake-auth0-client-id
       discoveryUrl: https://astronomerio.auth0.com
       authUrlParams:
         audience: "astronomer-ee"

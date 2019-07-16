@@ -1,20 +1,25 @@
-import { oauthUrl, getClient, providerCfg, ClientCache } from "./index";
-import { URLSearchParams } from "url";
+import { getClient, providerCfg, ClientCache } from "./index";
+import { URL } from "url";
 
 describe("oauth configuration", () => {
-  test("houston url is generated successfully", () => {
-    expect(oauthUrl()).toEqual(expect.stringMatching(/https?:\/\/houston./));
-  });
-
   test("provider is returned for valid provider string", async () => {
     await expect(getClient("google")).resolves.toBeTruthy();
     await expect(getClient("auth0")).resolves.toBeTruthy();
   });
 
   describe("auth0 provider", () => {
-    let client;
+    let client, authParams;
     beforeAll(async () => {
       client = await getClient("auth0");
+      authParams = new URL(client.authorizationUrl({})).searchParams;
+    });
+
+    test("should include client_id", () => {
+      expect(authParams.get("client_id")).toBe("fake-auth0-client-id");
+    });
+
+    test("should include audience", () => {
+      expect(authParams.get("audience")).toBe("astronomer-ee");
     });
 
     test("Uses global redirector for production", async () => {
@@ -54,8 +59,12 @@ describe("oauth configuration", () => {
   });
 
   describe("When google client_id is null", () => {
-    beforeAll(() => {
+    let client, authParams;
+    beforeAll(async () => {
       providerCfg.google.clientId = null;
+
+      client = await getClient("google");
+      authParams = new URL(client.authorizationUrl({})).searchParams;
     });
 
     afterAll(() => {
@@ -63,30 +72,27 @@ describe("oauth configuration", () => {
     });
 
     test("should use the Auth0 provider", async () => {
-      const client = await getClient("google");
       expect(client.issuer.metadata.name).toBe("auth0");
       expect(client.metadata.displayName).toBe("Google");
     });
 
     test("should include connection in URL", async () => {
-      const client = await getClient("google");
-      const params = new URLSearchParams(client.authUrl({}));
-
-      expect(params.get("connection")).toBe("google-oauth2");
+      expect(authParams.get("connection")).toBe("google-oauth2");
     });
 
-    test("should include right integration in state", async () => {
-      const client = await getClient("google");
-      const params = new URLSearchParams(client.authUrl({}));
-
-      const state = JSON.parse(params.get("state"));
-      expect(state.integration).toBe("google-oauth2");
+    test("should include provider in state", async () => {
+      const state = JSON.parse(authParams.get("state"));
+      expect(state.provider).toBe("google");
     });
   });
 
   describe("When github is enabled", () => {
-    beforeAll(() => {
+    let client, authParams;
+    beforeAll(async () => {
       providerCfg.github.enabled = true;
+
+      client = await getClient("github");
+      authParams = new URL(client.authorizationUrl({})).searchParams;
     });
 
     afterAll(() => {
@@ -94,32 +100,27 @@ describe("oauth configuration", () => {
     });
 
     test("should use the Auth0 provider", async () => {
-      const client = await getClient("github");
       expect(client.issuer.metadata.name).toBe("auth0");
       expect(client.metadata.displayName).toBe("GitHub");
     });
 
     test("should include connection in URL", async () => {
-      const client = await getClient("github");
-      const params = new URLSearchParams(client.authUrl({}));
-
-      expect(params.get("connection")).toBe("github");
+      expect(authParams.get("connection")).toBe("github");
     });
 
-    test("should include right integration in state", async () => {
-      const client = await getClient("github");
-      const params = new URLSearchParams(client.authUrl({}));
-
-      const state = JSON.parse(params.get("state"));
-      expect(state.integration).toBe("github");
+    test("should include provider in state", async () => {
+      const state = JSON.parse(authParams.get("state"));
+      expect(state.provider).toBe("github");
     });
   });
 
   describe("when google client_id is not", () => {
-    let client;
+    let client, authParams;
     beforeAll(async () => {
       providerCfg.google.clientId = "fake-client-id";
+
       client = await getClient("google");
+      authParams = new URL(client.authorizationUrl({})).searchParams;
     });
 
     afterAll(() => {
@@ -132,15 +133,22 @@ describe("oauth configuration", () => {
     });
 
     test("should not include connection in URL", async () => {
-      const params = new URLSearchParams(client.authUrl({}));
+      expect(authParams.get("connection")).toBeNull();
+    });
 
-      expect(params.get("connection")).toBeNull();
+    test("should include client_id", () => {
+      expect(authParams.get("client_id")).toBe("fake-client-id");
     });
 
     test("should use local redirector", async () => {
       expect(client.oauthRedirectUrl()).toEqual(
         expect.stringMatching(/https?:\/\/houston./)
       );
+    });
+
+    test("should include provider in state", async () => {
+      const state = JSON.parse(authParams.get("state"));
+      expect(state.provider).toBe("google");
     });
   });
 
