@@ -28,6 +28,15 @@ enum EntityType {
   SYSTEM
 }
 
+enum MetricType {
+  DEPLOYMENT_STATUS
+  DEPLOYMENT_TASKS
+  DEPLOYMENT_DATABASE
+  DEPLOYMENT_SCHEDULER
+  DEPLOYMENT_QUOTAS
+  DEPLOYMENT_USAGE
+}
+
 #
 # Types
 #
@@ -107,6 +116,7 @@ type User {
 type Workspace {
   id: ID!
   uuid: Uuid @alias(field: "id")
+  active: Boolean
   description: String
   invites: [Invite!]!
   properties: JSON
@@ -460,7 +470,8 @@ type Subscription {
 
   metrics(
     deploymentUuid: Uuid!
-    since: Int,
-    step: Int,
+    metricType: [MetricType]
+    since: Int
+    step: Int
   ): [Metric] @auth(permission: "deployment.metrics.get")
 }

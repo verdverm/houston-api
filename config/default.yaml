@@ -94,6 +94,8 @@ elasticsearch:
 
 # Prometheus Metrics configuration
 prometheus:
+  # Sample data - false for no querying prometheus, true for querying prometheus.
+  enabled: false
   host: localhost
   port: 9090
   pollInterval: 5000

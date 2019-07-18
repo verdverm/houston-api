@@ -1,8 +1,12 @@
 import queries from "./queries";
+import sampleData from "./sample.json";
 import log from "logger";
 import createPoller from "pubsub/poller";
 import config from "config";
 import request from "request-promise-native";
+
+// Use sample data if prom is not enabled
+const useSample = !config.get("prometheus.enabled");
 
 // Build the Prometheus request URL
 export function buildURI(query) {
@@ -21,36 +25,43 @@ export async function subscribe(parent, args, { db, pubsub }) {
     `{ releaseName }`
   );
 
-  // To test on localhost uncomment this line
-  // releaseName = "dynamical-revolution-1971";
-
   // Poll interval
   const interval = config.get("prometheus.pollInterval");
 
   // Return a wrapped asyncIterator, killing the subscription after 20 minutes.
   return createPoller(
     async publish => {
-      // Get promises for all the metric endpoints
-      const getQueries = queries(releaseName, args.since, args.step);
-      const promises = getQueries.map(async ql => {
-        const response = await request({
-          method: "GET",
-          json: true,
-          uri: buildURI(ql.query)
-        }).catch(err => log.debug(err));
+      if (useSample) {
+        publish({ metrics: [...sampleData] });
+        log.info(`${sampleData.length} sample metrics for sent.`);
+      } else {
+        const getQueries = queries(releaseName, args.since, args.step);
+        const data = [];
+        Object.keys(getQueries).forEach(async k => {
+          if (args.metricType.indexOf(k) > -1) {
+            const promises = getQueries[k].map(async ql => {
+              const response = await request({
+                method: "GET",
+                json: true,
+                uri: buildURI(ql.query)
+              }).catch(err => log.debug(err));
 
-        return {
-          label: ql.name,
-          result: response.data ? response.data.result : [],
-          uri: buildURI(ql.query)
-        };
-      });
+              return {
+                label: ql.name,
+                result: response.data ? response.data.result : [],
+                uri: buildURI(ql.query)
+              };
+            });
+            log.info(`Getting ${k} metrics.`);
+            data.push(...promises);
+          }
+        });
 
-      // Capture all the promise results
-      const results = await Promise.all(promises);
-
-      publish({ metrics: results });
-      log.info(`${promises.length} metrics for ${releaseName} sent.`);
+        // Capture all the promise results
+        const results = await Promise.all(data);
+        publish({ metrics: results });
+        log.info(`${data.length} metrics for ${releaseName} sent.`);
+      }
     },
     pubsub,
     interval,
