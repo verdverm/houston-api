@@ -22,6 +22,12 @@ const serverConfig = config.get("webserver");
 const helmConfig = config.get("helm");
 const prismaConfig = config.get("prisma");
 
+// Enable global proxy support for got, axios, and request libs. set
+// GLOBAL_AGENT_HTTPS_PROXY, GLOBAL_AGENT_HTTP_PROXY, or GLOBAL_AGENT_NO_PROXY
+// environment variables to control. It does not look at HTTP_PROXY or
+// http_proxy etc variables.
+import "global-agent/bootstrap";
+
 // Create express server.
 const app = express();
 app.use(cookieParser(), authenticateRequest());
