@@ -1,5 +1,5 @@
 import fragment from "./fragment";
-import { checkPermission, serviceAccountRoleMappings } from "rbac";
+import { checkPermission } from "rbac";
 import { addFragmentToInfo } from "graphql-binding";
 import crypto from "crypto";
 
@@ -14,7 +14,13 @@ import crypto from "crypto";
  */
 export default async function createServiceAccount(parent, args, ctx, info) {
   // Pull out some variables.
-  const { label, category, entityType: upperEntityType, entityUuid } = args;
+  const {
+    label,
+    category,
+    entityType: upperEntityType,
+    entityUuid,
+    role
+  } = args;
   const entityType = upperEntityType.toLowerCase();
 
   // Make sure we have permission to do this.
@@ -34,7 +40,7 @@ export default async function createServiceAccount(parent, args, ctx, info) {
       active: true,
       roleBinding: {
         create: {
-          role: serviceAccountRoleMappings[upperEntityType],
+          role,
           [entityType]: {
             connect: { id: entityUuid }
           }

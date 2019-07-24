@@ -409,6 +409,7 @@ type Mutation {
     category: String
     entityType: EntityType!
     entityUuid: Uuid
+    role: Role!
   ): ServiceAccount @auth
 
   updateServiceAccount(
