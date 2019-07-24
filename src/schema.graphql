@@ -5,7 +5,8 @@
 #
 # Implements authorization rules.
 directive @auth(
-  permission: String
+  permissions: [String]
+  op: Operator = AND
 ) on OBJECT | FIELD_DEFINITION
 
 # Wraps fields to alias a synthetic field to an underlying actual field
@@ -35,6 +36,12 @@ enum MetricType {
   DEPLOYMENT_SCHEDULER
   DEPLOYMENT_QUOTAS
   DEPLOYMENT_USAGE
+}
+  
+
+enum Operator {
+  AND
+  OR
 }
 
 #
@@ -278,19 +285,19 @@ type Query {
   invites(
     workspaceUuid: Uuid
     email: String
-  ): [Invite] @auth(permission: "workspace.invites.get")
+  ): [Invite] @auth(permissions:["workspace.invites.get"])
 
   logs(
     deploymentUuid: Uuid!
     component: String
     timestamp: DateTime
     search: String
-  ): [DeploymentLog] @auth(permission: "deployment.logs.get")
+  ): [DeploymentLog] @auth(permissions: ["deployment.logs.get"])
 
   card(
     workspaceUuid: Uuid!
     stripeCustomerId: String!
-  ): Card @auth(permission: "workspace.billing.update")
+  ): Card @auth(permissions: ["workspace.billing.update"])
 }
 
 #
@@ -341,7 +348,7 @@ type Mutation {
     config: JSON
     env: JSON
     properties: JSON
-  ): Deployment @auth(permission: "workspace.deployments.create")
+  ): Deployment @auth(permissions:["workspace.deployments.create"])
 
   updateDeployment(
     deploymentUuid: Uuid!
@@ -349,15 +356,15 @@ type Mutation {
     config: JSON
     env: JSON
     sync: Boolean
-  ): Deployment @auth(permission: "deployment.config.update")
+  ): Deployment @auth(permissions: ["deployment.config.update"])
 
   deleteDeployment(
     deploymentUuid: Uuid!
-  ): Deployment @auth(permission: "deployment.config.delete")
+  ): Deployment @auth(permissions: ["deployment.config.delete","system.deployment.delete"] op: OR)
 
   deleteWorkspace(
     workspaceUuid: Uuid
-  ): Workspace @auth(permission: "workspace.config.delete")
+  ): Workspace @auth(permissions: ["workspace.config.delete"])
 
   updateUser(
     userId: Uuid,
@@ -374,18 +381,18 @@ type Mutation {
     email: String!
     # For backwards compatibility specify the previous behaviour as default value
     role: Role! = WORKSPACE_VIEWER
-  ): Workspace @auth(permission: "workspace.iam.update")
+  ): Workspace @auth(permissions: ["workspace.iam.update"])
 
   workspaceUpdateUserRole(
     workspaceUuid: Uuid!
     email: String!
     role: Role!
-  ): Role @auth(permission: "workspace.iam.update")
+  ): Role @auth(permissions: ["workspace.iam.update"])
 
   workspaceRemoveUser(
     workspaceUuid: Uuid!
     userUuid: Uuid!
-  ): Workspace @auth(permission: "workspace.iam.update")
+  ): Workspace @auth(permissions: ["workspace.iam.update"])
 
   deleteInviteToken(
     inviteUuid: Uuid
@@ -394,12 +401,12 @@ type Mutation {
   updateWorkspace(
     workspaceUuid: Uuid!
     payload: JSON!
-  ): Workspace @auth(permission: "workspace.config.update")
+  ): Workspace @auth(permissions: ["workspace.config.update"])
 
   upgradeDeployment(
     deploymentUuid: Uuid!
     version: String!
-  ): Deployment @auth(permission: "deployment.config.update")
+  ): Deployment @auth(permissions: ["deployment.config.update"])
 
   # ServiceAccount mutations are handled differently at the moment to maintain
   # backward compatibility with CLI / UI. We should refactor to
@@ -424,38 +431,38 @@ type Mutation {
   createSystemRoleBinding(
     userId: ID!
     role: Role!
-  ): RoleBinding @auth(permission: "system.iam.update")
+  ): RoleBinding @auth(permissions: ["system.iam.update"])
 
   # Invite a user to create an account in this system. Useful when signups are
   # disabled on the platform. To invite a user (new or existing) to a workspace
   # use the workspaceAddUser mutation.
   inviteUser(
     email: String!
-  ): Boolean @auth(permission: "system.user.invite")
+  ): Boolean @auth(permissions: ["system.user.invite"])
 
   addCard(
     workspaceUuid: Uuid!
     billingEmail: String!
     company: String
     token: String!
-  ): Card @auth(permission: "workspace.billing.update")
+  ): Card @auth(permissions: ["workspace.billing.update"])
 
   updateCard(
     workspaceUuid: Uuid!
     billingEmail: String!
     company: String
     token: String!
-  ): Card @auth(permission: "workspace.billing.update")
+  ): Card @auth(permissions: ["workspace.billing.update"])
 
   suspendWorkspace(
     workspaceUuid: Uuid!
     isSuspended: Boolean!
-  ): Workspace @auth(permission: "system.workspace.suspend")
+  ): Workspace @auth(permissions: ["system.workspace.suspend"])
 
   extendWorkspaceTrial(
     workspaceUuid: Uuid!
     extraDays: Int!
-  ): Workspace @auth(permission: "system.workspace.extendTrial")
+  ): Workspace @auth(permissions: ["system.workspace.extendTrial"])
 }
 
 #
@@ -467,12 +474,12 @@ type Subscription {
     component: String
     timestamp: DateTime
     search: String
-  ): DeploymentLog @auth(permission: "deployment.logs.get")
+  ): DeploymentLog @auth(permissions: ["deployment.logs.get"])
 
   metrics(
     deploymentUuid: Uuid!
     metricType: [MetricType]
     since: Int
     step: Int
-  ): [Metric] @auth(permission: "deployment.metrics.get")
+  ): [Metric] @auth(permissions: ["deployment.metrics.get"])
 }

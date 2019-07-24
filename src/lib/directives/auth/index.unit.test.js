@@ -6,24 +6,34 @@ import { makeExecutableSchema, SchemaDirectiveVisitor } from "graphql-tools";
 // A minimal schema for testing against
 const typeDefs = `
 directive @auth(
-  permission: String,
+  permissions: [String],
+  op: Operator = AND
 ) on OBJECT | FIELD_DEFINITION
+
+enum Operator {
+  AND
+  OR
+}
 
 type User {
   id: ID!
 }
 type Query {
   self: User! @auth
-  adminOnly: User! @auth(permission: "system.fake.permission")
+  adminOnly: User! @auth(permissions: ["system.fake.permission"] op: AND)
   anon: User!
 
   describeWorkspace(
     workspaceUuid: ID!
-  ): Boolean @auth(permission: "workspace.fake.permission")
+  ): Boolean @auth(permissions: ["workspace.fake.permission"] op: AND)
 
   describeDeployment(
     deploymentUuid: ID!
-  ): Boolean @auth(permission: "deployment.fake.permission")
+  ): Boolean @auth(permissions: ["deployment.fake.permission"] op: AND)
+
+  describeSecretThing: Boolean @auth(permissions: ["secret.fake.permission", "secret.fake.permission2"] op: AND)
+
+  describeSecretThing2: Boolean @auth(permissions: ["secret.fake.permission", "secret.fake.permission2"] op: OR)
 }
 `;
 
@@ -39,16 +49,18 @@ const resolvers = {
       return { id: 1 };
     },
     describeDeployment: () => true,
-    describeWorkspace: () => true
+    describeWorkspace: () => true,
+    describeSecretThing: () => true,
+    describeSecretThing2: () => true
   }
 };
 
-const mockCheckPerms = jest.fn();
+const mockHasPerms = jest.fn(() => true);
 
-// A Test class that uses a mock checkPermissions to ease testing
+// A Test class that uses a mock hasPermissions to ease testing
 class TestingAuthDirective extends AuthDirective {
   constructor({ ...args }) {
-    args.checkPermission = mockCheckPerms;
+    args.hasPermission = mockHasPerms;
     super(args);
   }
 }
@@ -125,7 +137,7 @@ describe("@auth directive", () => {
     });
   });
 
-  describe("on query requring specific permission", () => {
+  describe("on query requiring specific permission", () => {
     const query = `
       query {
         adminOnly {
@@ -146,7 +158,7 @@ describe("@auth directive", () => {
 
       expect(errors).toBeUndefined();
       expect(data).toHaveProperty("adminOnly.id", "1");
-      expect(mockCheckPerms).toHaveBeenCalledWith(
+      expect(mockHasPerms).toHaveBeenCalledWith(
         { roleBinding: [{ role: "admin" }] },
         "system.fake.permission",
         null,
@@ -155,14 +167,14 @@ describe("@auth directive", () => {
     });
 
     test("should not be allowed as regular user", async () => {
-      mockCheckPerms.mockImplementationOnce(() => throw new PermissionError());
+      mockHasPerms.mockImplementationOnce(() => throw new PermissionError());
 
       const { data, errors } = await runQuery(query, { auth: true });
 
       expect(errors).toHaveLength(1);
       expect(errors[0]).toHaveProperty("extensions.code", "FORBIDDEN");
       expect(data).toBeNull();
-      expect(mockCheckPerms).toHaveBeenCalledWith(
+      expect(mockHasPerms).toHaveBeenCalledWith(
         expect.anything(),
         "system.fake.permission",
         null,
@@ -182,7 +194,7 @@ describe("@auth directive", () => {
       let vars = { id: "d-2" };
       const { errors } = await runQuery(query, { auth: true }, vars);
       expect(errors).toBeUndefined();
-      expect(mockCheckPerms).toHaveBeenCalledWith(
+      expect(mockHasPerms).toHaveBeenCalledWith(
         expect.anything(),
         "deployment.fake.permission",
         "deployment",
@@ -191,7 +203,7 @@ describe("@auth directive", () => {
     });
   });
 
-  describe("on query requring workspace-specific permission", () => {
+  describe("on query requiring workspace-specific permission", () => {
     const query = `
       query describeWorkspace($id: ID!) {
         describeWorkspace(workspaceUuid: $id)
@@ -202,12 +214,43 @@ describe("@auth directive", () => {
       let vars = { id: "w-2" };
       const { errors } = await runQuery(query, { auth: true }, vars);
       expect(errors).toBeUndefined();
-      expect(mockCheckPerms).toHaveBeenCalledWith(
+      expect(mockHasPerms).toHaveBeenCalledWith(
         expect.anything(),
         "workspace.fake.permission",
         "workspace",
         vars.id
       );
+    });
+  });
+
+  describe("on resolver checking permission operator", () => {
+    const query = `
+      query describeSecretThing {
+        describeSecretThing
+      }
+    `;
+
+    const query2 = `
+    query describeSecretThing2 {
+      describeSecretThing2
+    }
+  `;
+
+    test("should call hasPermission twice with AND operator", async () => {
+      const { errors } = await runQuery(query, {
+        user: { roleBinding: [{ role: "admin" }] }
+      });
+      expect(errors).toBeUndefined();
+      expect(mockHasPerms).toHaveBeenCalledTimes(2);
+    });
+
+    test("should call hasPermission once with OR operator if fails on first permission", async () => {
+      mockHasPerms.mockImplementationOnce(() => throw new PermissionError());
+      const { errors } = await runQuery(query2, {
+        user: { roleBinding: [{ role: "admin" }] }
+      });
+      expect(errors).toHaveLength(1);
+      expect(mockHasPerms).toHaveBeenCalledTimes(1);
     });
   });
 });

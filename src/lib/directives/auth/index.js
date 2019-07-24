@@ -2,6 +2,7 @@ import { PermissionError } from "errors";
 import * as rbac from "rbac";
 import { SchemaDirectiveVisitor } from "graphql-tools";
 import { defaultFieldResolver } from "graphql";
+import { every, some } from "lodash";
 import { ENTITY_WORKSPACE, ENTITY_DEPLOYMENT } from "constants";
 
 /*
@@ -9,12 +10,12 @@ import { ENTITY_WORKSPACE, ENTITY_DEPLOYMENT } from "constants";
  * Originally derived from https://www.apollographql.com/docs/graphql-tools/schema-directives.html#Enforcing-access-permissions
  */
 export default class AuthDirective extends SchemaDirectiveVisitor {
-  constructor({ checkPermission = rbac.checkPermission, ...args }) {
-    // Inject the checkPermissions function in to the intstnace. The GraphQL
+  constructor({ hasPermission = rbac.hasPermission, ...args }) {
+    // Inject the hasPermission function in to the instance. The GraphQL
     // api doesn't let us set this argument, but it is useful for us is tests
     super(args);
 
-    this.checkPermission = checkPermission;
+    this.hasPermission = hasPermission;
   }
   visitObject() {}
 
@@ -22,8 +23,8 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
   // also receive a details object that provides information about
   // the parent and grandparent types.
   visitFieldDefinition(field, parent) {
-    if (this.args.permission) {
-      field._requiredPermission = this.args.permission;
+    if (this.args.permissions) {
+      field._requiredPermission = this.args.permissions;
     }
     this.ensureFieldWrapped(field, parent.objectType);
   }
@@ -45,11 +46,10 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
       // Throw error if there is no token.
       if (!ctx.user) throw new PermissionError();
 
-      const permission = field._requiredPermission;
-
+      const permissions = field._requiredPermission;
       // If this instance of the directive is specifying a permission,
       // check it. Otherwise, skip this part.
-      if (permission) {
+      if (permissions) {
         // Check for standard scope defining variables.
         const { workspaceUuid, deploymentUuid } = args[1];
 
@@ -67,10 +67,12 @@ export default class AuthDirective extends SchemaDirectiveVisitor {
           ? deploymentUuid
           : null;
 
-        // Check permission, throw if not authorized.
-        this.checkPermission(ctx.user, permission, entityType, entityId);
+        const fn = this.args.op === "AND" ? every : some;
+        const check = permission =>
+          this.hasPermission(ctx.user, permission, entityType, entityId);
+        const allowed = fn(permissions, check);
+        if (!allowed) throw new PermissionError();
       }
-
       // Execute the actual request.
       return resolve.apply(this, args);
     };

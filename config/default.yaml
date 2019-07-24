@@ -197,6 +197,7 @@ roles:
       - system.workspace.suspend
       - system.workspace.extendTrial
       - system.user.invite
+      - system.deployment.delete
 
   - id: SYSTEM_EDITOR
     name: System Editor
