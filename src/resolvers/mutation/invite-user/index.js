@@ -4,7 +4,8 @@ import { sendEmail } from "emails";
 import shortid from "shortid";
 
 export default async function inviteUser(parent, args, ctx) {
-  const { email } = args;
+  let { email } = args;
+  email = email.toLowerCase();
 
   // Check for user by incoming email arg.
   const emailRow = await ctx.db.query.email(

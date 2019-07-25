@@ -24,7 +24,7 @@ const gql = `
 
 describe("inviteUser", () => {
   // Vars for the gql mutation.
-  const vars = { email: casual.email };
+  const vars = { email: casual.email.toLowerCase() };
 
   const emailQuery = jest.fn().mockReturnValue(null);
   const inviteTokensConnection = jest

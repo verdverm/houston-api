@@ -20,7 +20,7 @@ export default async function workspaceAddUser(parent, args, ctx, info) {
 
   // Check for user by incoming email arg.
   const emailRow = await ctx.db.query.email(
-    { where: { address: email } },
+    { where: { address: email.toLowerCase() } },
     `{ user { id } }`
   );
 
@@ -42,7 +42,10 @@ export default async function workspaceAddUser(parent, args, ctx, info) {
     // Check if we have an invite for incoming email and user.
     const existingInvites = await ctx.db.query.inviteTokensConnection(
       {
-        where: { email, workspace: { id: workspaceUuid } }
+        where: {
+          email: email.toLowerCase(),
+          workspace: { id: workspaceUuid }
+        }
       },
       `{ aggregate { count } }`
     );
@@ -55,7 +58,7 @@ export default async function workspaceAddUser(parent, args, ctx, info) {
     const res = await ctx.db.mutation.createInviteToken(
       {
         data: {
-          email,
+          email: email.toLowerCase(),
           token,
           role,
           workspace: { connect: { id: workspaceUuid } }

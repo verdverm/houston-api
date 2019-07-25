@@ -24,7 +24,7 @@ export default async function createUser(parent, args, ctx) {
     const userId = await _createUser({
       fullName,
       username: args.username,
-      email: args.email,
+      email: args.email.toLowerCase(),
       inviteToken: args.inviteToken
     });
 

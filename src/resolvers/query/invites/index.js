@@ -6,7 +6,9 @@
  * @return {[]Invites} A list of invites.
  */
 export default async function invites(parent, args, ctx) {
-  const { workspaceUuid, email } = args;
+  let { workspaceUuid, email } = args;
+  email = email.toLowerCase();
+
   return ctx.db.query.inviteTokens({
     where: { workspace: { id: workspaceUuid }, email }
   });

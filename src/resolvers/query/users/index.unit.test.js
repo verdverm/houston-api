@@ -82,7 +82,7 @@ describe("usersQuery", () => {
   });
 
   test("query using email if supplied", () => {
-    const email = casual.email;
+    const email = casual.email.toLowerCase();
     const args = { email };
     const res = usersQuery(args);
     expect(res).toHaveProperty("where.emails_some.address", email);

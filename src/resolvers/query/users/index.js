@@ -33,7 +33,8 @@ export function usersQuery(args, ctx) {
   if (username) return { where: { username } };
 
   // If we have an email use it.
-  if (address) return { where: { emails_some: { address } } };
+  if (address)
+    return { where: { emails_some: { address: address.toLowerCase() } } };
 
   // Otherwise just return a query for the current user.
   return { where: { id: ctx.user.id } };
