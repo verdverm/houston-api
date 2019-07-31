@@ -22,6 +22,7 @@ import {
   DEPLOYMENT_PROPERTY_COMPONENT_VERSION,
   AIRFLOW_EXECUTOR_LOCAL,
   AIRFLOW_EXECUTOR_CELERY,
+  AIRFLOW_EXECUTOR_KUBERNETES,
   AIRFLOW_COMPONENT_SCHEDULER,
   AIRFLOW_COMPONENT_WORKERS,
   AIRFLOW_COMPONENT_PGBOUNCER,
@@ -187,7 +188,10 @@ export function constraints(deployment) {
   );
 
   // Grab extra au.
-  const extraAu = deployment.extraAu || 0;
+  const extraAu =
+    !deployment.extraAu && executor === AIRFLOW_EXECUTOR_KUBERNETES
+      ? executorConfig.defaultExtraAu
+      : deployment.extraAu || 0;
 
   // Calculate total extra capacity.
   const extra = {

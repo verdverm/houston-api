@@ -418,6 +418,7 @@ deployments:
         - webserver
         - statsd
         - pgbouncer
+      defaultExtraAu: 10
 
   # These are static configs that get merged directly into the values
   # passed to helm for each deployment.
