@@ -16,9 +16,13 @@ import { WorkspaceSuspendedError, TrialError } from "errors";
 import { addFragmentToInfo } from "graphql-binding";
 import config from "config";
 import bcrypt from "bcryptjs";
-import { get, size } from "lodash";
+import { get, find, size } from "lodash";
 import crypto from "crypto";
-import { DEPLOYMENT_AIRFLOW } from "constants";
+import {
+  DEPLOYMENT_AIRFLOW,
+  DEPLOYMENT_PROPERTY_EXTRA_AU,
+  AIRFLOW_EXECUTOR_CELERY
+} from "constants";
 
 /*
  * Create a deployment.
@@ -32,6 +36,11 @@ export default async function createDeployment(parent, args, ctx, info) {
     releaseVersion: platformReleaseVersion,
     releaseName: platformReleaseName
   } = config.get("helm");
+
+  // Get executor config
+  const { executors } = config.get("deployments");
+  const executor = get(args, "config.executor", AIRFLOW_EXECUTOR_CELERY);
+  const executorConfig = find(executors, ["name", executor]);
 
   const where = { id: args.workspaceUuid };
   // Throw an error if stripe is enabled (Cloud only) and a stripeCustomerId does not exist in the Workspace table
@@ -74,6 +83,12 @@ export default async function createDeployment(parent, args, ctx, info) {
   // Generate a random space-themed release name.
   const releaseName = generateReleaseName();
 
+  // Add default props if exists
+  const properties = {
+    [DEPLOYMENT_PROPERTY_EXTRA_AU]: executorConfig.defaultExtraAu || 0,
+    ...args.properties
+  };
+
   // Create the base mutation.
   const mutation = {
     data: {
@@ -85,7 +100,7 @@ export default async function createDeployment(parent, args, ctx, info) {
       releaseName,
       registryPassword: hashedRegistryPassword,
       elasticsearchPassword: hashedElasticsearchPassword,
-      ...mapPropertiesToDeployment(args.properties),
+      ...mapPropertiesToDeployment(properties),
       workspace: {
         connect: {
           id: args.workspaceUuid
