@@ -37,7 +37,7 @@ enum MetricType {
   DEPLOYMENT_QUOTAS
   DEPLOYMENT_USAGE
 }
-  
+
 
 enum Operator {
   AND
@@ -243,12 +243,6 @@ type Metric {
 # Queries
 #
 type Query {
-  users(
-    userUuid: Uuid
-    username: String
-    email: String
-  ): [User] @auth
-
   authConfig(
     redirect: String
     duration: Int
@@ -276,16 +270,34 @@ type Query {
     deploymentUuid: Uuid # Ignored, only here for backward compatibility.
     releaseName: String
   ): [Deployment] @auth # Permissions checked in resolver, due to limitations with current API design.
+
   serviceAccounts(
     serviceAccountUuid: Uuid
     entityType: EntityType!
     entityUuid: Uuid
   ): [ServiceAccount] @auth
 
-  invites(
-    workspaceUuid: Uuid
+  workspaceInvites(
+    workspaceUuid: Uuid!
     email: String
   ): [Invite] @auth(permissions:["workspace.invites.get"])
+
+  workspaceUsers(
+    workspaceUuid: Uuid!
+  ): [User] @auth(permissions: ["workspace.users.list"])
+
+  workspaceUser(
+    workspaceUuid: Uuid!
+    username: String!
+  ): User @auth(permissions: ["workspace.users.list"])
+
+  users(
+    userUuid: Uuid
+    username: String
+    email: String
+  ): [User] @auth(permissions: ["system.users.list"])
+
+  invites: [Invite] @auth(permissions:["system.users.list"])
 
   logs(
     deploymentUuid: Uuid!

@@ -27,8 +27,11 @@ export class InviteTokenEmailError extends ApolloError {
   }
 }
 
-export class ResourceNotFoundError extends UserInputError {
-  message = this.message || "The requested resource was not found";
+export class ResourceNotFoundError extends ApolloError {
+  name = "ResourceNotFoundError";
+  constructor() {
+    super("The requested resource was not found", "RESOURCE_NOT_FOUND");
+  }
 }
 
 export class CredentialsNotFoundError extends AuthenticationError {

@@ -197,7 +197,9 @@ roles:
       - system.workspace.suspend
       - system.workspace.extendTrial
       - system.user.invite
+      - system.invite.get
       - system.deployment.delete
+      - system.users.list
 
   - id: SYSTEM_EDITOR
     name: System Editor
@@ -225,6 +227,7 @@ roles:
       - workspace.serviceAccounts.update
       - workspace.serviceAccounts.delete
       - workspace.iam.update
+      - workspace.users.list
       - workspace.billing.update
 
   - id: WORKSPACE_EDITOR
@@ -232,6 +235,7 @@ roles:
     permissions:
       - workspace.config.update
       - workspace.invites.get
+      - workspace.users.list
       - workspace.deployments.list
       - workspace.deployments.create
       - workspace.serviceAccounts.create
@@ -243,6 +247,7 @@ roles:
     permissions:
       - workspace.deployments.list
       - workspace.invites.get
+      - workspace.users.list
 
   #
   # Deployment

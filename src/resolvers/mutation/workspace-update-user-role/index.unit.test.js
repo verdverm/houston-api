@@ -53,7 +53,10 @@ describe("workspaceUpdateUserRole", () => {
     // Run the graphql mutation.
     const res = await graphql(schema, query, null, ctx, vars);
     expect(res.errors).toHaveLength(1);
-    expect(res.errors[0]).toHaveProperty("extensions.code", "BAD_USER_INPUT");
+    expect(res.errors[0]).toHaveProperty(
+      "extensions.code",
+      "RESOURCE_NOT_FOUND"
+    );
     expect(updateRoleBinding).not.toHaveBeenCalled();
   });
 

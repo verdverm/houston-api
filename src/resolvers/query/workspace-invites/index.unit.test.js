@@ -1,4 +1,5 @@
 import resolvers from "resolvers";
+import casual from "casual";
 import { graphql } from "graphql";
 import { makeExecutableSchema } from "graphql-tools";
 import { importSchema } from "graphql-import";
@@ -11,11 +12,17 @@ const schema = makeExecutableSchema({
 
 // Define our mutation
 const query = `
-  query invites {
-    invites {
-      id: uuid
+  query workspaceInvites(
+    $workspaceUuid: Uuid!
+    $email: String
+  ) {
+    workspaceInvites(
+      workspaceUuid: $workspaceUuid
+      email: $email
+    ) {
+      id
       email
-      role
+      token
       createdAt
       updatedAt
     }
@@ -34,8 +41,13 @@ describe("invites", () => {
       }
     };
 
+    const vars = {
+      workspaceUuid: casual.uuid,
+      email: casual.email
+    };
+
     // Run the graphql mutation.
-    const res = await graphql(schema, query, null, { db });
+    const res = await graphql(schema, query, null, { db }, vars);
     expect(res.errors).toBeUndefined();
     expect(inviteTokens.mock.calls.length).toBe(1);
   });

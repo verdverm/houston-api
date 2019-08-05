@@ -1,4 +1,5 @@
 import resolvers from "resolvers";
+import casual from "casual";
 import { graphql } from "graphql";
 import { makeExecutableSchema } from "graphql-tools";
 import { importSchema } from "graphql-import";
@@ -11,32 +12,38 @@ const schema = makeExecutableSchema({
 
 // Define our mutation
 const query = `
-  query invites {
-    invites {
-      id: uuid
-      email
-      role
-      createdAt
-      updatedAt
+  query workspaceUsers(
+    $workspaceId: Uuid!
+  ) {
+    workspaceUsers(
+      workspaceUuid: $workspaceId,
+    ) {
+      id
+      emails {
+        address
+      }
+      fullName
+      username
     }
   }
 `;
 
-describe("invites", () => {
+describe("workspaceUsers", () => {
   test("typical request is successful", async () => {
     // Mock up some db functions.
-    const inviteTokens = jest.fn();
+    const users = jest.fn();
 
     // Construct db object for context.
-    const db = {
-      query: {
-        inviteTokens
-      }
+    const db = { query: { users } };
+
+    // Create vars.
+    const vars = {
+      workspaceId: casual.uuid
     };
 
     // Run the graphql mutation.
-    const res = await graphql(schema, query, null, { db });
+    const res = await graphql(schema, query, null, { db }, vars);
     expect(res.errors).toBeUndefined();
-    expect(inviteTokens.mock.calls.length).toBe(1);
+    expect(db.query.users.mock.calls).toHaveLength(1);
   });
 });
