@@ -10,6 +10,7 @@ import deleteDeployment from "./delete-deployment";
 import deleteInviteToken from "./delete-invite-token";
 import deleteServiceAccount from "./delete-service-account";
 import deleteWorkspace from "./delete-workspace";
+import deploymentAlertsUpdate from "./deployment-alerts-update";
 import extendWorkspaceTrial from "./extend-workspace-trial";
 import forgotPassword from "./forgot-password";
 import inviteUser from "./invite-user";
@@ -39,6 +40,7 @@ export default {
   deleteInviteToken,
   deleteServiceAccount,
   deleteWorkspace,
+  deploymentAlertsUpdate,
   forgotPassword,
   extendWorkspaceTrial,
   inviteUser,
