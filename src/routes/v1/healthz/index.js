@@ -1,7 +1,8 @@
 import get from "./get";
+import { catchAsyncError } from "errors";
 import express from "express";
 
 const router = new express.Router();
-router.get("/", get);
+router.get("/", catchAsyncError(get));
 
 export default router;
