@@ -205,8 +205,8 @@ type ServiceAccount {
   apiKey: String
   label: String
   category: String
-  entityType: String
-  entityUuid: Uuid
+  entityType: String!
+  entityUuid: Uuid!
   active: Boolean
   lastUsedAt: DateTime
   createdAt: DateTime!
