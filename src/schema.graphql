@@ -297,7 +297,9 @@ type Query {
     email: String
   ): [User] @auth(permissions: ["system.users.list"])
 
-  invites: [Invite] @auth(permissions:["system.users.list"])
+  invites(
+    email: String
+  ): [Invite] @auth(permissions:["system.users.list"])
 
   logs(
     deploymentUuid: Uuid!
