@@ -33,11 +33,11 @@ export function usersQuery(args) {
   if (username) return { where: { username_contains: username } };
 
   // If we have an email use it.
-  if (address)
+  if (address) {
     return {
       where: { emails_some: { address: address.toLowerCase() } }
     };
+  }
 
-  // Otherwise just return a query for the current user.
   return null;
 }
