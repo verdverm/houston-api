@@ -152,12 +152,11 @@ auth:
       discoveryUrl: ~
 
 
-  # Github via auth0
+  # Github via auth0.
   github:
     enabled: false
 
-
-
+# Houston JWT configuration.
 jwt:
   # Development only: Passphrase to sign JWTs used to authenticate our GraphQL
   # API.
