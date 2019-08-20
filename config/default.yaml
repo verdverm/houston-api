@@ -151,8 +151,7 @@ auth:
       clientId: ~
       discoveryUrl: ~
 
-
-  # Github via auth0.
+  # Github via auth0
   github:
     enabled: false
 
