@@ -375,6 +375,10 @@ type Mutation {
     payload: JSON!
   ): User @auth
 
+  removeUser(
+    userUuid: Uuid!
+  ): Workspace @auth(permissions: ["system.user.delete"])
+
   createWorkspace(
     label: String!
     description: String

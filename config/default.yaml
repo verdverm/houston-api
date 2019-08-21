@@ -196,6 +196,7 @@ roles:
       - system.workspace.suspend
       - system.workspace.extendTrial
       - system.user.invite
+      - system.user.delete
       - system.invite.get
       - system.deployment.delete
       - system.users.list
