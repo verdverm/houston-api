@@ -16,13 +16,16 @@ import { ENTITY_WORKSPACE } from "constants";
  */
 export default async function workspaceAddUser(parent, args, ctx, info) {
   // Pull out some args.
-  const { email, workspaceUuid, role } = args;
+  const { email, workspaceUuid } = args;
+  let { role } = args;
 
   // Check for user by incoming email arg.
   const emailRow = await ctx.db.query.email(
     { where: { address: email.toLowerCase() } },
     `{ user { id } }`
   );
+
+  if (!role) role = "WORKSPACE_VIEWER";
 
   if (!role.startsWith(`${ENTITY_WORKSPACE}_`))
     throw new UserInputError("invalid workspace role");
