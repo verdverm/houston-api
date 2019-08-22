@@ -377,7 +377,7 @@ type Mutation {
 
   removeUser(
     userUuid: Uuid!
-  ): Workspace @auth(permissions: ["system.user.delete"])
+  ): User @auth(permissions: ["system.user.delete"])
 
   createWorkspace(
     label: String!
