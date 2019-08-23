@@ -25,8 +25,6 @@ export default async function workspaceAddUser(parent, args, ctx, info) {
     `{ user { id } }`
   );
 
-  if (!role) role = "WORKSPACE_VIEWER";
-
   if (!role.startsWith(`${ENTITY_WORKSPACE}_`))
     throw new UserInputError("invalid workspace role");
 
