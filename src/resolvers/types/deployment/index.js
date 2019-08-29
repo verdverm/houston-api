@@ -1,3 +1,4 @@
+import log from "logger";
 import {
   generateNamespace,
   generateEnvironmentSecretName
@@ -98,9 +99,13 @@ export async function deployInfo(parent) {
     }
   ]);
 
+  // Grab some configuration.
+  const { namespace, releaseName: platformReleaseName } = config.get("helm");
+  const registryPort = config.get("registry.port");
+
   // Build the registry request URL.
-  const baseDomain = config.get("helm.baseDomain");
-  const uri = `https://registry.${baseDomain}/v2/${repo}/tags/list`;
+  const uri = `http://${platformReleaseName}-registry.${namespace}:${registryPort}/v2/${repo}/tags/list`;
+  log.debug(`Requesting docker tags for ${parent.releaseName} at ${uri}`);
 
   try {
     // Request a list of tags.
