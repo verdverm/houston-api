@@ -1,3 +1,4 @@
+import appConfig from "./app-config";
 import authConfig from "./auth-config";
 import card from "./card";
 import deploymentConfig from "./deployment-config";
@@ -13,6 +14,7 @@ import workspaces from "./workspaces";
 import users from "./users";
 
 export default {
+  appConfig,
   authConfig,
   card,
   deploymentConfig,

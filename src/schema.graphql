@@ -47,6 +47,11 @@ enum Operator {
 #
 # Types
 #
+type AppConfig {
+  version: String
+  baseDomain: String
+}
+
 type AuthUser {
   user: User
   token: Token
@@ -231,6 +236,8 @@ type Metric {
 # Queries
 #
 type Query {
+  appConfig: AppConfig @auth
+
   authConfig(
     redirect: String
     duration: Int
