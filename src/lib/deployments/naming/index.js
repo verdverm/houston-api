@@ -2,6 +2,7 @@ import adjectives from "./adjectives";
 import nouns from "./nouns";
 import config from "config";
 import Haikunator from "haikunator";
+import { objectToArrayOfKeyValue } from 'deployments/config'
 
 /*
  * Generate a release name using the adjectives and nouns in this package.
@@ -23,6 +24,20 @@ export function generateNamespace(releaseName) {
   return singleNamespace
     ? releaseNamespace
     : `${releaseNamespace}-${releaseName}`;
+}
+
+/*
+ * Return an empty array if single namespace mode,
+ * otherwise return the labels from the config file
+ * @return array of objects in the form {"key": ****, "value": ***}
+ */
+export function generateDeploymentLabels() {
+  const { singleNamespace } = config.get("helm");
+  const { namespaceLabels } = config.get("deployments");
+
+  return singleNamespace
+    ? []
+    : objectToArrayOfKeyValue(namespaceLabels);
 }
 
 /*

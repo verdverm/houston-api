@@ -298,6 +298,10 @@ roles:
 # Airflow Deployment Configurations
 #
 deployments:
+
+  # Labels specifed here are applied to Airflow deployment namespaces.
+  namespaceLabels: {}
+
   # Log out final helm values whenever they are generated, before deployment.
   logHelmValues: false
 

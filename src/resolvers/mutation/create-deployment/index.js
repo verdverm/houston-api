@@ -2,11 +2,12 @@ import { deploymentFragment, workspaceFragment } from "./fragment";
 import {
   generateReleaseName,
   generateNamespace,
+  generateDeploymentLabels,
   generateEnvironmentSecretName
 } from "deployments/naming";
 import { createDatabaseForDeployment } from "deployments/database";
 import {
-  envArrayToObject,
+  arrayOfKeyValueToObject,
   generateHelmValues,
   mapPropertiesToDeployment,
   generateDefaultDeploymentConfig
@@ -155,6 +156,7 @@ export default async function createDeployment(parent, args, ctx, info) {
       version: version
     },
     namespace: generateNamespace(releaseName),
+    namespaceLabels: generateDeploymentLabels(),
     rawConfig: JSON.stringify(generateHelmValues(deployment, values))
   });
 
@@ -169,7 +171,7 @@ export default async function createDeployment(parent, args, ctx, info) {
       namespace: generateNamespace(releaseName),
       secret: {
         name: generateEnvironmentSecretName(releaseName),
-        data: envArrayToObject(args.env)
+        data: arrayOfKeyValueToObject(args.env)
       }
     });
   }
