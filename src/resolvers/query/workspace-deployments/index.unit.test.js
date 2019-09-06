@@ -13,8 +13,12 @@ const schema = makeExecutableSchema({
 
 // Define our mutation
 const query = `
-  query deployments {
-    workspaceDeployments {
+  query deployments(
+    $workspaceUuid: Uuid!
+  ) {
+    workspaceDeployments(
+      workspaceUuid: $workspaceUuid
+    ) {
       id
       label
       description
@@ -54,8 +58,11 @@ describe("deployments", () => {
       }
     };
 
+    // Vars for the gql mutation.
+    const vars = { workspaceUuid: casual.uuid };
+
     // Run the graphql mutation.
-    const res = await graphql(schema, query, null, { db, user });
+    const res = await graphql(schema, query, null, { db, user }, vars);
     expect(res.errors).toBeUndefined();
     expect(deployments.mock.calls.length).toBe(1);
   });
