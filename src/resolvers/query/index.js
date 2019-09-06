@@ -7,9 +7,10 @@ import invites from "./invites";
 import logs from "./logs";
 import self from "./self";
 import serviceAccounts from "./service-accounts";
+import workspaceDeployments from "./workspace-deployments";
+import workspaceInvites from "./workspace-invites";
 import workspaceUser from "./workspace-user";
 import workspaceUsers from "./workspace-users";
-import workspaceInvites from "./workspace-invites";
 import workspaces from "./workspaces";
 import users from "./users";
 
@@ -23,6 +24,7 @@ export default {
   logs,
   self,
   serviceAccounts,
+  workspaceDeployments,
   workspaceInvites,
   workspaceUser,
   workspaceUsers,

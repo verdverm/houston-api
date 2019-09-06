@@ -256,11 +256,12 @@ type Query {
     version: String
   ): DeploymentConfig @auth
 
-  deployments(
+  deployments: [Deployment] @auth(permissions:["system.deployment.list"])
+
+  workspaceDeployments(
     workspaceUuid: Uuid
-    deploymentUuid: Uuid # Ignored, only here for backward compatibility.
     releaseName: String
-  ): [Deployment] @auth # Permissions checked in resolver, due to limitations with current API design.
+  ): [Deployment] @auth(permissions: ["workspace.deployments.list"])
 
   serviceAccounts(
     serviceAccountUuid: Uuid
@@ -361,17 +362,16 @@ type Mutation {
     config: JSON
     env: JSON
     sync: Boolean
-  ): Deployment @auth(permissions: ["deployment.config.update"])
-
+  ): Deployment @auth(permissions: ["deployment.config.update", "system.deployment.update"] op: OR)
 
   deploymentAlertsUpdate(
     deploymentUuid: Uuid!
     alertEmails: [String!]
-  ): Deployment @auth(permissions: ["deployment.config.update"])
+  ): Deployment @auth(permissions: ["deployment.config.update", "system.deployment.update"] op: OR)
 
   deleteDeployment(
     deploymentUuid: Uuid!
-  ): Deployment @auth(permissions: ["deployment.config.delete","system.deployment.delete"] op: OR)
+  ): Deployment @auth(permissions: ["deployment.config.delete", "system.deployment.delete"] op: OR)
 
   deleteWorkspace(
     workspaceUuid: Uuid
@@ -421,7 +421,7 @@ type Mutation {
   upgradeDeployment(
     deploymentUuid: Uuid!
     version: String!
-  ): Deployment @auth(permissions: ["deployment.config.update"])
+  ): Deployment @auth(permissions: ["deployment.config.update", "system.deployment.update"] op: OR)
 
   # ServiceAccount mutations are handled differently at the moment to maintain
   # backward compatibility with CLI / UI. We should refactor to
@@ -489,12 +489,12 @@ type Subscription {
     component: String
     timestamp: DateTime
     search: String
-  ): DeploymentLog @auth(permissions: ["deployment.logs.get"])
+  ): DeploymentLog @auth(permissions: ["deployment.logs.get", "system.deployment.logs"] op: OR)
 
   metrics(
     deploymentUuid: Uuid!
     metricType: [MetricType]
     since: Int
     step: Int
-  ): [Metric] @auth(permissions: ["deployment.metrics.get"])
+  ): [Metric] @auth(permissions: ["deployment.metrics.get", "system.deployment.metrics"] op: OR)
 }

@@ -50,9 +50,11 @@ export function hasPermission(user, permission, entityType, entityId) {
  * @param {Boolean} If the user has the system permission.
  */
 export function hasSystemPermission(user, permission) {
+  if (!user) return false;
   const permissions = flatten(
     user.roleBindings.map(binding => {
       const role = find(config.get("roles"), { id: binding.role });
+      if (!role) return false;
       return filter(role.permissions, p => p.startsWith("system"));
     })
   );
@@ -68,6 +70,18 @@ export function hasSystemPermission(user, permission) {
  */
 export function checkPermission(user, permission, entityType, entityId) {
   if (!hasPermission(user, permission, entityType, entityId)) {
+    throw new PermissionError();
+  }
+}
+
+/*
+ * Check if the user has the given permission for the entity.
+ * Throws if the user does not have permission.
+ * @param {Object} user The current user.
+ * @param {String} permission The required permission.
+ */
+export function checkSystemPermission(user, permission) {
+  if (!hasSystemPermission(user, permission)) {
     throw new PermissionError();
   }
 }
