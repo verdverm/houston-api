@@ -259,7 +259,7 @@ type Query {
   deployments: [Deployment] @auth(permissions:["system.deployment.list"])
 
   workspaceDeployments(
-    workspaceUuid: Uuid
+    workspaceUuid: Uuid!
     releaseName: String
   ): [Deployment] @auth(permissions: ["workspace.deployments.list"])
 
