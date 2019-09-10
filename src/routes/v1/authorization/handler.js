@@ -57,7 +57,7 @@ export function airflowJWT(user, roles, hostname) {
     aud: hostname,
     sub: user.id,
     roles: roles,
-    email: user.username,
+    email: user.username.toLowerCase(),
     full_name: user.fullName
   });
   return token;

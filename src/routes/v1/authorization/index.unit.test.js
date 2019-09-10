@@ -24,7 +24,7 @@ describe("airflowJWT", () => {
     const user = {
       id: casual.uuid,
       fullName: casual.name,
-      username: casual.email
+      username: casual.email.toLowerCase()
     };
 
     const host = casual.domain;
