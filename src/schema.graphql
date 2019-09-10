@@ -190,6 +190,11 @@ type Deployment {
   createdAt: DateTime!
   updatedAt: DateTime!
   roleBindings: [RoleBinding!]
+  deploymentCapabilities: DeploymentCapabilities
+}
+
+type DeploymentCapabilities {
+  canDeploy: Boolean
 }
 
 type ServiceAccount {

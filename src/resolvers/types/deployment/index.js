@@ -1,4 +1,5 @@
 import log from "logger";
+import { hasPermission } from "rbac";
 import {
   generateNamespace,
   generateEnvironmentSecretName
@@ -14,7 +15,11 @@ import { get } from "lodash";
 import config from "config";
 import request from "request-promise-native";
 import { NOT_FOUND } from "http-status-codes";
-import { AIRFLOW_EXECUTOR_CELERY, DEPLOYMENT_AIRFLOW } from "constants";
+import {
+  AIRFLOW_EXECUTOR_CELERY,
+  DEPLOYMENT_AIRFLOW,
+  ENTITY_DEPLOYMENT
+} from "constants";
 
 /*
  * Return a list of important urls for this deployment.
@@ -132,4 +137,31 @@ export async function deployInfo(parent) {
   }
 }
 
-export default { urls, env, type, properties, deployInfo };
+/*
+ * Return boolean flags indicating what the current user has access to
+ * on a particular deployment.
+ * @param {Object} parent The result of the parent resolver.
+ * @param {Object} args The graphql arguments.
+ * @param {Object} ctx The graphql context.
+ * @return {DeploymentCapabilities} Map of boolean capabilities.
+ */
+export function deploymentCapabilities(parent, args, ctx) {
+  // Check to see if user has permission to deploy
+  const canDeploy = hasPermission(
+    ctx.user,
+    "deployment.images.push",
+    ENTITY_DEPLOYMENT.toLowerCase(),
+    parent.id
+  );
+
+  return { canDeploy };
+}
+
+export default {
+  urls,
+  env,
+  type,
+  properties,
+  deployInfo,
+  deploymentCapabilities
+};

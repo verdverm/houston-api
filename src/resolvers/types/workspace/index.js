@@ -4,7 +4,6 @@ import config from "config";
 import { addFragmentToInfo } from "graphql-binding";
 import { size } from "lodash";
 import moment from "moment";
-
 import { ENTITY_WORKSPACE } from "constants";
 
 export function users(parent, args, ctx, info) {
@@ -30,9 +29,17 @@ export function deploymentCount(parent) {
   return size(parent.deployments);
 }
 
-export async function workspaceCapabilities(parent, args, ctx) {
+/*
+ * Return boolean flags indicating what the current user has access to
+ * on a particular workspace.
+ * @param {Object} parent The result of the parent resolver.
+ * @param {Object} args The graphql arguments.
+ * @param {Object} ctx The graphql context.
+ * @return {WorkspaceCapabilities} Map of boolean capabilities.
+ */
+export function workspaceCapabilities(parent, args, ctx) {
   // Check to see if user has permission to view and update billing
-  const canUpdateBilling = await hasPermission(
+  const canUpdateBilling = hasPermission(
     ctx.user,
     "workspace.billing.update",
     ENTITY_WORKSPACE.toLowerCase(),
@@ -40,7 +47,7 @@ export async function workspaceCapabilities(parent, args, ctx) {
   );
 
   // Check to see if user has permission to update roles
-  const canUpdateIAM = await hasPermission(
+  const canUpdateIAM = hasPermission(
     ctx.user,
     "workspace.iam.update",
     ENTITY_WORKSPACE.toLowerCase(),
