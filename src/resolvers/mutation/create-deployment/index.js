@@ -22,7 +22,7 @@ import crypto from "crypto";
 import {
   DEPLOYMENT_AIRFLOW,
   DEPLOYMENT_PROPERTY_EXTRA_AU,
-  AIRFLOW_EXECUTOR_CELERY
+  AIRFLOW_EXECUTOR_DEFAULT
 } from "constants";
 
 /*
@@ -40,7 +40,7 @@ export default async function createDeployment(parent, args, ctx, info) {
 
   // Get executor config
   const { executors } = config.get("deployments");
-  const executor = get(args, "config.executor", AIRFLOW_EXECUTOR_CELERY);
+  const executor = get(args, "config.executor", AIRFLOW_EXECUTOR_DEFAULT);
   const executorConfig = find(executors, ["name", executor]);
 
   const where = { id: args.workspaceUuid };
@@ -64,7 +64,7 @@ export default async function createDeployment(parent, args, ctx, info) {
   const defaultAirflowVersion = config.get("deployments.defaultAirflowVersion");
 
   // Validate deployment args.
-  await validate(args.workspaceUuid, args);
+  await validate(args);
 
   // Default deployment version to platform version.
   const version = get(args, "version", platformReleaseVersion);

@@ -11,6 +11,9 @@ export const AIRFLOW_EXECUTOR_LOCAL = "LocalExecutor";
 export const AIRFLOW_EXECUTOR_CELERY = "CeleryExecutor";
 export const AIRFLOW_EXECUTOR_KUBERNETES = "KubernetesExecutor";
 
+// Set the default executor
+export const AIRFLOW_EXECUTOR_DEFAULT = AIRFLOW_EXECUTOR_CELERY;
+
 export const AIRFLOW_COMPONENT_SCHEDULER = "scheduler";
 export const AIRFLOW_COMPONENT_WEBSERVER = "webserver";
 export const AIRFLOW_COMPONENT_STATSD = "statsd";

@@ -21,8 +21,8 @@ import {
   DEPLOYMENT_PROPERTY_ALERT_EMAILS,
   DEPLOYMENT_PROPERTY_COMPONENT_VERSION,
   AIRFLOW_EXECUTOR_LOCAL,
-  AIRFLOW_EXECUTOR_CELERY,
   AIRFLOW_EXECUTOR_KUBERNETES,
+  AIRFLOW_EXECUTOR_DEFAULT,
   AIRFLOW_COMPONENT_SCHEDULER,
   AIRFLOW_COMPONENT_WORKERS,
   AIRFLOW_COMPONENT_PGBOUNCER,
@@ -121,7 +121,7 @@ export function constraints(deployment) {
   const elasticsearchEnabled = config.get("elasticsearch.enabled");
 
   // Get the executor on this deployment.
-  const executor = get(deployment, "config.executor", AIRFLOW_EXECUTOR_CELERY);
+  const executor = get(deployment, "config.executor", AIRFLOW_EXECUTOR_DEFAULT);
 
   // Get the configuration for that executor.
   const executorConfig = find(executors, ["name", executor]);
@@ -432,7 +432,7 @@ export function generateNextTag(latest) {
  * @return {Object} The default config.
  */
 export function generateDefaultDeploymentConfig() {
-  return { executor: AIRFLOW_EXECUTOR_CELERY };
+  return { executor: AIRFLOW_EXECUTOR_DEFAULT };
 }
 
 /*
