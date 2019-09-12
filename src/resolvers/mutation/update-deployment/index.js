@@ -27,11 +27,10 @@ export default async function updateDeployment(parent, args, ctx, info) {
   // Get the deployment first.
   const deployment = await ctx.db.query.deployment(
     { where: { id: args.deploymentUuid } },
-    `{ releaseName, workspace { id } }`
+    `{ config, releaseName, workspace { id } }`
   );
 
   // Block config changes if the user is in a trial
-
   const workspace = await ctx.db.query.workspace(
     {
       where: { id: deployment.workspace.id }
@@ -62,7 +61,7 @@ export default async function updateDeployment(parent, args, ctx, info) {
   });
 
   // Validate our args.
-  await validate(deployment.workspace.id, mungedArgs, args.deploymentUuid);
+  await validate(mungedArgs, deployment);
 
   // Create the update statement.
   const where = { id: args.deploymentUuid };

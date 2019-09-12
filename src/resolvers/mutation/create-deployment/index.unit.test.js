@@ -7,7 +7,7 @@ import { graphql } from "graphql";
 import { makeExecutableSchema } from "graphql-tools";
 import { importSchema } from "graphql-import";
 import {
-  AIRFLOW_EXECUTOR_CELERY,
+  AIRFLOW_EXECUTOR_DEFAULT,
   DEPLOYMENT_AIRFLOW,
   DEPLOYMENT_PROPERTY_COMPONENT_VERSION,
   DEPLOYMENT_PROPERTY_EXTRA_AU
@@ -93,7 +93,7 @@ describe("createDeployment", () => {
           id: deploymentId,
           // Use the releaseName from the request
           releaseName: req.data.releaseName,
-          config: { executor: AIRFLOW_EXECUTOR_CELERY },
+          config: { executor: AIRFLOW_EXECUTOR_DEFAULT },
           createdAt: new Date(),
           updatedAt: new Date()
         };

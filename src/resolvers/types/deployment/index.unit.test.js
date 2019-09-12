@@ -1,11 +1,11 @@
 import { urls, env, properties } from "./index";
 import { generateReleaseName } from "deployments/naming";
-import { AIRFLOW_EXECUTOR_CELERY } from "constants";
+import { AIRFLOW_EXECUTOR_DEFAULT } from "constants";
 
 describe("Deployoment", () => {
   test("urls returns correct urls", () => {
     const releaseName = generateReleaseName();
-    const config = { executor: AIRFLOW_EXECUTOR_CELERY };
+    const config = { executor: AIRFLOW_EXECUTOR_DEFAULT };
     const parent = { config, releaseName };
     const theUrls = urls(parent);
 
