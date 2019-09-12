@@ -93,10 +93,10 @@ export default function queries(deployment, since, step) {
         query: query(
           `sort_desc(max by (container, pod, reason) (
             max by (container, pod) (
-            sort_desc(kube_pod_container_status_waiting{release=~"${deployment}"} and on(pod,namespace) kube_pod_labels{label_dag_id!=""})  )
+            sort_desc(kube_pod_container_status_waiting{component_name=~".*(${components}).*", release=~"${deployment}"} and on(pod,namespace) kube_pod_labels{label_dag_id!=""})  )
             or max by (container, reason) (
-            sort_desc(kube_pod_container_status_waiting_reason{release=~"${deployment}"}==1 and on(pod,namespace) kube_pod_labels{label_dag_id!=""}) )
-            or max by (container, reason) (sort_desc(kube_pod_container_status_terminated_reason{release=~"${deployment}"}==1 and on(pod,namespace) kube_pod_labels{label_dag_id!=""}) )))`
+            sort_desc(kube_pod_container_status_waiting_reason{component_name=~".*(${components}).*", release=~"${deployment}"}==1 and on(pod,namespace) kube_pod_labels{label_dag_id!=""}) )
+            or max by (container, reason) (sort_desc(kube_pod_container_status_terminated_reason{component_name=~".*(${components}).*", release=~"${deployment}"}==1 and on(pod,namespace) kube_pod_labels{label_dag_id!=""}) )))`
         )
       }
     ],
