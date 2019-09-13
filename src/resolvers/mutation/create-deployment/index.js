@@ -44,19 +44,23 @@ export default async function createDeployment(parent, args, ctx, info) {
   const executorConfig = find(executors, ["name", executor]);
 
   const where = { id: args.workspaceUuid };
-  // Throw an error if stripe is enabled (Cloud only) and a stripeCustomerId does not exist in the Workspace table
   const workspace = await ctx.db.query.workspace({ where }, workspaceFragment);
 
+  // Is stripe enabled for the system.
   const stripeEnabled = config.get("stripe.enabled");
 
+  // Throw an error if stripe is enabled (Cloud only) and a stripeCustomerId
+  // does not exist in the Workspace table
   if (
-    workspace.stripeCustomerId == null &&
-    stripeEnabled == true &&
+    !workspace.stripeCustomerId &&
+    stripeEnabled &&
     size(workspace.deployments) > 0
   ) {
     throw new TrialError();
   }
-  if (workspace.isSuspended == true && stripeEnabled == true) {
+
+  // Throw error if workspace is suspended.
+  if (workspace.isSuspended && stripeEnabled) {
     throw new WorkspaceSuspendedError();
   }
 
@@ -64,7 +68,7 @@ export default async function createDeployment(parent, args, ctx, info) {
   const defaultAirflowVersion = config.get("deployments.defaultAirflowVersion");
 
   // Validate deployment args.
-  await validate(args);
+  await validate(args.workspaceUuid, args);
 
   // Default deployment version to platform version.
   const version = get(args, "version", platformReleaseVersion);

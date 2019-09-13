@@ -11,13 +11,15 @@ import { AIRFLOW_EXECUTOR_DEFAULT } from "constants";
  * Validate deployment args. Throws if there is an issue.
  * @param {Object} args The graphql arguments.
  */
-export default async function validate(args, deployment = {}) {
+export default async function validate(workspaceId, args, deployment = {}) {
+  // Grab deployment id. This will be undefined when creating a new deployment
+  // and will be be populated for an update.
   const deploymentId = deployment.id;
-  const workspaceId = args.workspaceUuid;
 
   // Validate environment variables.
   validateEnvironment(args.env);
 
+  // Get list of valid executors in the system.
   const { executors } = config.get("deployments");
 
   // Get the executor on this deployment.
