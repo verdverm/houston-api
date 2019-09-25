@@ -117,9 +117,12 @@ export function constraints(deployment) {
   }
 
   // Get some config settings.
-  const { astroUnit, components, executors, sidecarAu } = config.get(
-    "deployments"
-  );
+  const {
+    astroUnit,
+    components,
+    executors,
+    sidecars: staticSidecarUnit
+  } = config.get("deployments");
   const elasticsearchEnabled = config.get("elasticsearch.enabled");
 
   // Get the executor on this deployment.
@@ -164,12 +167,12 @@ export function constraints(deployment) {
       // Get default sidecar resources to add, and just go ahead and
       // add it to the accumulator.
       const defaultSidecarResources = auToResources(
-        astroUnit,
-        sidecarAu,
+        staticSidecarUnit,
+        replicas,
         false
       );
-      acc.cpu += defaultSidecarResources.cpu * replicas;
-      acc.memory += defaultSidecarResources.memory * replicas;
+      acc.cpu += defaultSidecarResources.cpu;
+      acc.memory += defaultSidecarResources.memory;
 
       if (
         executor === AIRFLOW_EXECUTOR_LOCAL &&
