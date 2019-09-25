@@ -42,7 +42,7 @@ export default function queries(deployment, since, step) {
       {
         name: "schedulerHeartbeat",
         query: query(
-          `round(rate(airflow_scheduler_heartbeat{deployment=~"${deployment}", type="counter"}${duration}) / 0.08)`
+          `rate(airflow_scheduler_heartbeat{deployment=~"${deployment}", type="counter"}[1m])`
         )
       },
       {
