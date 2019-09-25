@@ -367,6 +367,10 @@ deployments:
   # This defines the maximum size a pod can be in astro units.
   maxPodAu: 35
 
+  # This defines any extra au to account for any sidecars that
+  # are appied to every deployment component. Ex: istio.
+  sidecarAu: 0
+
   # This defines all possible components for an airflow
   # deployment and the default AU to use for the kubernetes
   # resource requests, as well as its limits.
