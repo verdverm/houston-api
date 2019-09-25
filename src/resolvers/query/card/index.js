@@ -8,7 +8,6 @@ import { getStripeCard } from "stripe";
 export default async function card(parent, args) {
   const { stripeCustomerId } = args;
   const customerInfo = await getStripeCard(stripeCustomerId);
-
   const cardInfo = customerInfo.sources.data[0];
 
   return cardInfo
