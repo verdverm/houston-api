@@ -70,6 +70,12 @@ export class WorkspaceSuspendedError extends Error {
     "Workspace is suspended. This is likely an issue with payment.";
 }
 
+export class WorkspaceDeleteError extends Error {
+  message =
+    this.message ||
+    "You must first deprovision all deployments before you can delete your workspace.";
+}
+
 export class TrialError extends Error {
   message =
     this.message ||
