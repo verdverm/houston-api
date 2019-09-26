@@ -208,6 +208,7 @@ roles:
       - system.deployment.logs
       - system.deployment.metrics
       - system.users.list
+      - system.workspace.addCustomerId
 
   - id: SYSTEM_EDITOR
     name: System Editor

@@ -1,4 +1,5 @@
 import addCard from "./add-card";
+import addCustomerId from "./add-customer-id";
 import confirmEmail from "./confirm-email";
 import createDeployment from "./create-deployment";
 import createServiceAccount from "./create-service-account";
@@ -30,6 +31,7 @@ import workspaceUpdateUserRole from "./workspace-update-user-role";
 
 export default {
   addCard,
+  addCustomerId,
   confirmEmail,
   createDeployment,
   createServiceAccount,
