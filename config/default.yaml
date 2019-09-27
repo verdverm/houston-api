@@ -202,11 +202,11 @@ roles:
       - system.user.invite
       - system.user.delete
       - system.invite.get
-      - system.deployment.list
-      - system.deployment.update
-      - system.deployment.delete
-      - system.deployment.logs
-      - system.deployment.metrics
+      - system.deployments.list
+      - system.deployments.update
+      - system.deployments.delete
+      - system.deployments.logs
+      - system.deployments.metrics
       - system.users.list
       - system.workspace.addCustomerId
 
