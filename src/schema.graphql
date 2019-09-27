@@ -467,6 +467,11 @@ type Mutation {
     token: String!
   ): Card @auth(permissions: ["workspace.billing.update"])
 
+  addCustomerId(
+    workspaceUuid: Uuid!
+    stripeCustomerId: String!
+  ): Workspace @auth(permissions: ["system.workspace.addCustomerId"])
+
   updateCard(
     workspaceUuid: Uuid!
     billingEmail: String!
