@@ -203,13 +203,13 @@ export default function queries(deployment, since, step) {
       {
         name: "cpuUsage",
         query: rangeQuery(
-          `rate(container_cpu_user_seconds_total{component_name=~".*(${components}).*", deployment=~"${deployment}"}${duration}) * 100`
+          `label_replace(sum(rate(container_cpu_usage_seconds_total{deployment=~"${deployment}", pod_name!~".*-worker-.*",component_name != "POD",image!="", container_name!="istio-proxy"}${duration})) by (pod_name, container_name, component_name, namespace, short_name)/  sum(container_spec_cpu_quota{deployment=~"${deployment}", pod_name!~".*-worker-.*", component_name != "POD",image!="", container_name!="istio-proxy"}/container_spec_cpu_period{deployment=~"${deployment}", pod_name!~".*-worker-.*", component_name != "POD",image!="", container_name!="istio-proxy"}) by (pod_name, container_name, component_name, namespace, short_name)*100,  "short_name",  "$1",  "pod_name",  "^[[deployment]]-(.*)$")`
         )
       },
       {
         name: "memoryUsage",
         query: rangeQuery(
-          `container_memory_usage_bytes{component_name=~".*(${components}).*", deployment=~"${deployment}"}`
+          `container_memory_usage_bytes{deployment=~"${deployment}", pod_name!~".*-worker-.*",component_name != "POD",image!="", container_name!="istio-proxy"} * 100 / container_spec_memory_limit_bytes{deployment=~"${deployment}", pod_name!~".*-worker-.*",component_name != "POD",image!="", container_name!="istio-proxy"}`
         )
       },
       {
