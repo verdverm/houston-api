@@ -1,11 +1,12 @@
 import fragment from "./fragment";
+import { hasPermission } from "rbac";
 import { PermissionError, MissingArgumentError } from "errors";
 import { compact, includes } from "lodash";
 import { addFragmentToInfo } from "graphql-binding";
 
 /*
  * Get a list of service accounts.
- * This resolver has some abnormal behavior since it has to do
+ * XXX: This resolver has some abnormal behavior since it has to do
  * some extra checks that could not be handled by our auth directive.
  * @param {Object} parent The result of the parent resolver.
  * @param {Object} args The graphql arguments.
@@ -33,9 +34,12 @@ export default async function serviceAccounts(parent, args, ctx, info) {
   // Build query structure.
   const query = { where: { AND: [] } };
 
+  // Check if we have system-level access.
+  const hasSystemPerm = hasPermission(ctx.user, "system.serviceAccounts.list");
+
   // If we have service account id, add to filter, along with
   // a roleBinding filter to the ones the user has access to.
-  if (serviceAccountUuid) {
+  if (!hasSystemPerm && serviceAccountUuid) {
     query.where.AND.push({
       id: serviceAccountUuid,
       roleBinding: {
@@ -45,7 +49,7 @@ export default async function serviceAccounts(parent, args, ctx, info) {
   }
 
   // Throw an error if the entityUuid is not in the list of ids.
-  if (entityUuid && !includes(ids, entityUuid)) {
+  if (!hasSystemPerm && entityUuid && !includes(ids, entityUuid)) {
     throw new PermissionError();
   }
 
