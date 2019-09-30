@@ -209,6 +209,11 @@ roles:
       - system.deployments.metrics
       - system.users.list
       - system.workspace.addCustomerId
+      # XXX: Refactor serviceAccount permissions
+      - system.serviceAccounts.list
+      - system.serviceAccounts.create
+      - system.serviceAccounts.update
+      - system.serviceAccounts.delete
 
   - id: SYSTEM_EDITOR
     name: System Editor

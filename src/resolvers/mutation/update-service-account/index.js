@@ -1,4 +1,5 @@
-import { checkPermission } from "rbac";
+import { hasPermission } from "rbac";
+import { PermissionError } from "errors";
 import serviceAccountFragment from "rbac/service-account-fragment";
 import { addFragmentToInfo } from "graphql-binding";
 import { pick } from "lodash";
@@ -19,12 +20,19 @@ export default async function updateServiceAccount(parent, args, ctx, info) {
     upperEntityType != null ? upperEntityType.toLowerCase() : null;
 
   // Make sure we have permission to do this.
-  checkPermission(
+  const hasSystemPerm = hasPermission(
+    ctx.user,
+    "system.serviceAccounts.update"
+  );
+  const hasUserPerm = hasPermission(
     ctx.user,
     `${entityType}.serviceAccounts.update`,
     entityType,
     entityId
   );
+
+  // Throw if we don't have system or user access.
+  if (!hasSystemPerm && !hasUserPerm) throw new PermissionError();
 
   // The external facing schema is too loose as JSON.
   // For now, we just pluck out any props that are not in this list.
