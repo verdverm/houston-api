@@ -37,11 +37,16 @@ export default async function serviceAccounts(parent, args, ctx, info) {
   // Check if we have system-level access.
   const hasSystemPerm = hasPermission(ctx.user, "system.serviceAccounts.list");
 
-  // If we have service account id, add to filter, along with
-  // a roleBinding filter to the ones the user has access to.
-  if (!hasSystemPerm && serviceAccountUuid) {
+  // If we have service account id, add to filter.
+  if (serviceAccountUuid) {
     query.where.AND.push({
-      id: serviceAccountUuid,
+      id: serviceAccountUuid
+    });
+  }
+
+  // If we do not have system-level access, limit query to only ids user can access.
+  if (!hasSystemPerm) {
+    query.where.AND.push({
       roleBinding: {
         [entityType]: { id_in: ids }
       }
