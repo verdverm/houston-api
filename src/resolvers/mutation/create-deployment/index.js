@@ -160,7 +160,7 @@ export default async function createDeployment(parent, args, ctx, info) {
       version: version
     },
     namespace: generateNamespace(releaseName),
-    namespaceLabels: generateDeploymentLabels(),
+    namespaceLabels: generateDeploymentLabels(platform),
     rawConfig: JSON.stringify(generateHelmValues(deployment, values))
   });
 

@@ -29,13 +29,17 @@ export function generateNamespace(releaseName) {
 /*
  * Return an empty array if single namespace mode,
  * otherwise return the labels from the config file
+ * @param {Object} platform Platform information {"release", "workspace"}
  * @return array of objects in the form {"key": ****, "value": ***}
  */
-export function generateDeploymentLabels() {
+export function generateDeploymentLabels(platform = {}) {
   const { singleNamespace } = config.get("helm");
   const { namespaceLabels } = config.get("deployments");
 
-  return singleNamespace ? [] : objectToArrayOfKeyValue(namespaceLabels);
+  return {
+    ...(singleNamespace ? [] : objectToArrayOfKeyValue(namespaceLabels)),
+    ...platform
+  };
 }
 
 /*
