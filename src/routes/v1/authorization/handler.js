@@ -65,6 +65,8 @@ export function airflowJWT(user, roles, hostname) {
 
 export function mapLocalRolesToAirflow(user, deploymentId) {
   const entityType = ENTITY_DEPLOYMENT.toLowerCase();
+  if (hasPermission(user, "deployment.airflow.admin", entityType, deploymentId))
+    return ["Admin"];
   if (hasPermission(user, "deployment.airflow.op", entityType, deploymentId))
     return ["Op"];
   if (hasPermission(user, "deployment.airflow.user", entityType, deploymentId))

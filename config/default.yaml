@@ -273,7 +273,7 @@ roles:
       - deployment.config.update
       - deployment.config.delete
       - deployment.images.push
-      - deployment.airflow.op
+      - deployment.airflow.admin
       - deployment.airflow.user
       - deployment.airflow.view
       - deployment.serviceAccounts.create
