@@ -13,22 +13,31 @@ const schema = makeExecutableSchema({
 
 // Define our mutation
 const query = `
-  mutation deleteServiceAccount(
-    $serviceAccountUuid: Uuid!
+  query workspaceServiceAccounts(
+    $workspaceUuid: Uuid!
   ) {
-    deleteServiceAccount(
-      serviceAccountUuid: $serviceAccountUuid
+    workspaceServiceAccounts(
+      workspaceUuid: $workspaceUuid
     ) {
       id
+      label
+      apiKey
+      entityType
+      entityId: workspaceUuid
+      category
+      active
+      lastUsedAt
+      createdAt
+      updatedAt
     }
   }
 `;
 
-describe("deleteServiceAccount", () => {
+describe("workspaceServiceAccounts", () => {
   test("typical request is successful", async () => {
-    // Create mock user.
     const workspaceId = casual.uuid;
 
+    // Create mock user.
     const user = {
       id: casual.uuid,
       username: casual.email,
@@ -41,63 +50,48 @@ describe("deleteServiceAccount", () => {
     };
 
     // Mock up some db functions.
-    const serviceAccount = jest.fn().mockReturnValue({
-      id: casual.id,
-      roleBinding: { workspace: { id: workspaceId } }
-    });
-
-    const deleteServiceAccount = jest.fn();
+    const workspaceServiceAccounts = jest.fn();
 
     // Construct db object for context.
     const db = {
-      query: { serviceAccount },
-      mutation: { deleteServiceAccount }
+      query: { workspaceServiceAccounts }
     };
 
     const vars = {
-      serviceAccountUuid: casual.uuid
+      workspaceUuid: workspaceId
     };
 
     // Run the graphql mutation.
     const res = await graphql(schema, query, null, { db, user }, vars);
     expect(res.errors).toBeUndefined();
-    expect(serviceAccount.mock.calls).toHaveLength(1);
-    expect(deleteServiceAccount.mock.calls).toHaveLength(1);
+    expect(workspaceServiceAccounts.mock.calls.length).toBe(1);
   });
 
-  test("request throws if service account is not found", async () => {
-    // Create mock user.
-    const workspaceId = casual.uuid;
+  test("request fails if missing an argument", async () => {
+    // Run the graphql mutation.
+    const res = await graphql(schema, query, null, {}, {});
+    expect(res.errors).toHaveLength(1);
+  });
 
+  test("request fails if user does not have access to workspaceUuid", async () => {
+    // Create mock user.
     const user = {
       id: casual.uuid,
       username: casual.email,
       roleBindings: [
         {
           role: WORKSPACE_ADMIN,
-          workspace: { id: workspaceId }
+          workspace: { id: casual.uuid }
         }
       ]
     };
 
-    // Mock up some db functions.
-    const serviceAccount = jest.fn();
-    const deleteServiceAccount = jest.fn();
-
-    // Construct db object for context.
-    const db = {
-      query: { serviceAccount },
-      mutation: { deleteServiceAccount }
-    };
-
     const vars = {
-      serviceAccountUuid: casual.uuid
+      workspaceUuid: casual.uuid
     };
 
     // Run the graphql mutation.
-    const res = await graphql(schema, query, null, { db, user }, vars);
+    const res = await graphql(schema, query, null, { user }, vars);
     expect(res.errors).toHaveLength(1);
-    expect(serviceAccount.mock.calls).toHaveLength(1);
-    expect(deleteServiceAccount.mock.calls).toHaveLength(0);
   });
 });

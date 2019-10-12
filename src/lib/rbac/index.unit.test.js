@@ -20,7 +20,7 @@ describe("hasPermission", () => {
 
     const hasPerm = hasPermission(
       user,
-      "workspace.deployments.list",
+      "workspace.deployments.get",
       ENTITY_WORKSPACE.toLowerCase(),
       workspaceId
     );
@@ -34,7 +34,7 @@ describe("hasPermission", () => {
 
     const hasPerm = hasPermission(
       user,
-      "workspace.deployments.list",
+      "workspace.deployments.get",
       ENTITY_WORKSPACE.toLowerCase(),
       workspaceId
     );
@@ -52,7 +52,7 @@ describe("hasPermission", () => {
 
     const hasPerm = hasPermission(
       user,
-      "workspace.deployments.list",
+      "workspace.deployments.get",
       ENTITY_WORKSPACE.toLowerCase(),
       casual.uuid
     );
@@ -88,7 +88,7 @@ describe("hasSystemPermission", () => {
       roleBindings: [{ role: "SYSTEM_ADMIN" }]
     };
 
-    const hasPerm = hasSystemPermission(user, "system.monitoring.view");
+    const hasPerm = hasSystemPermission(user, "system.monitoring.get");
     expect(hasPerm).toBe(true);
   });
 
@@ -98,7 +98,7 @@ describe("hasSystemPermission", () => {
       roleBindings: [{ role: "WORKSPACE_ADMIN" }]
     };
 
-    const hasPerm = hasSystemPermission(user, "system.monitoring.view");
+    const hasPerm = hasSystemPermission(user, "system.monitoring.get");
     expect(hasPerm).toBe(false);
   });
 });
@@ -111,7 +111,7 @@ describe("checkPermission", () => {
     };
 
     expect(() => {
-      checkPermission(user, "system.monitoring.view");
+      checkPermission(user, "system.monitoring.get");
     }).toThrow();
   });
 });

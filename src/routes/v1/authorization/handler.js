@@ -21,7 +21,7 @@ export default async function(req, res) {
 
   // If we're accessing a monitoring service and we have permission, allow it.
   const monitoringSubdomain = /^(grafana|kibana)$/.test(subdomain);
-  if (monitoringSubdomain && hasPermission(user, "system.monitoring.view")) {
+  if (monitoringSubdomain && hasPermission(user, "system.monitoring.get")) {
     log.info(`Authorizing request to ${originalUrl}`);
     return res.sendStatus(200);
   }
@@ -71,7 +71,7 @@ export function mapLocalRolesToAirflow(user, deploymentId) {
     return ["Op"];
   if (hasPermission(user, "deployment.airflow.user", entityType, deploymentId))
     return ["User"];
-  if (hasPermission(user, "deployment.airflow.view", entityType, deploymentId))
+  if (hasPermission(user, "deployment.airflow.get", entityType, deploymentId))
     return ["Viewer"];
 
   return [];

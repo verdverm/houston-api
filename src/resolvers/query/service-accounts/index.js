@@ -6,8 +6,8 @@ import { addFragmentToInfo } from "graphql-binding";
 
 /*
  * Get a list of service accounts.
- * XXX: This resolver has some abnormal behavior since it has to do
- * some extra checks that could not be handled by our auth directive.
+ * XXX: Available for backwards compatibility - please use the scoped
+ * mutations and queries moving forward.
  * @param {Object} parent The result of the parent resolver.
  * @param {Object} args The graphql arguments.
  * @param {Object} ctx The graphql context.
@@ -35,7 +35,7 @@ export default async function serviceAccounts(parent, args, ctx, info) {
   const query = { where: { AND: [] } };
 
   // Check if we have system-level access.
-  const hasSystemPerm = hasPermission(ctx.user, "system.serviceAccounts.list");
+  const hasSystemPerm = hasPermission(ctx.user, "system.serviceAccounts.get");
 
   // If we have service account id, add to filter.
   if (serviceAccountUuid) {

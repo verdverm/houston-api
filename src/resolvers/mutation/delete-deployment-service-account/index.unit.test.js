@@ -13,18 +13,20 @@ const schema = makeExecutableSchema({
 
 // Define our mutation
 const query = `
-  mutation deleteServiceAccount(
+  mutation deleteDeploymentServiceAccount(
     $serviceAccountUuid: Uuid!
+    $deploymentUuid: Uuid!
   ) {
-    deleteServiceAccount(
+    deleteDeploymentServiceAccount(
       serviceAccountUuid: $serviceAccountUuid
+      deploymentUuid: $deploymentUuid
     ) {
       id
     }
   }
 `;
 
-describe("deleteServiceAccount", () => {
+describe("deleteDeploymentServiceAccount", () => {
   test("typical request is successful", async () => {
     // Create mock user.
     const workspaceId = casual.uuid;
@@ -46,23 +48,24 @@ describe("deleteServiceAccount", () => {
       roleBinding: { workspace: { id: workspaceId } }
     });
 
-    const deleteServiceAccount = jest.fn();
+    const deleteDeploymentServiceAccount = jest.fn();
 
     // Construct db object for context.
     const db = {
       query: { serviceAccount },
-      mutation: { deleteServiceAccount }
+      mutation: { deleteDeploymentServiceAccount }
     };
 
     const vars = {
-      serviceAccountUuid: casual.uuid
+      serviceAccountUuid: casual.uuid,
+      deploymentUuid: workspaceId
     };
 
     // Run the graphql mutation.
     const res = await graphql(schema, query, null, { db, user }, vars);
     expect(res.errors).toBeUndefined();
     expect(serviceAccount.mock.calls).toHaveLength(1);
-    expect(deleteServiceAccount.mock.calls).toHaveLength(1);
+    expect(deleteDeploymentServiceAccount.mock.calls).toHaveLength(1);
   });
 
   test("request throws if service account is not found", async () => {
@@ -82,22 +85,23 @@ describe("deleteServiceAccount", () => {
 
     // Mock up some db functions.
     const serviceAccount = jest.fn();
-    const deleteServiceAccount = jest.fn();
+    const deleteDeploymentServiceAccount = jest.fn();
 
     // Construct db object for context.
     const db = {
       query: { serviceAccount },
-      mutation: { deleteServiceAccount }
+      mutation: { deleteDeploymentServiceAccount }
     };
 
     const vars = {
-      serviceAccountUuid: casual.uuid
+      serviceAccountUuid: casual.uuid,
+      deploymentUuid: workspaceId
     };
 
     // Run the graphql mutation.
     const res = await graphql(schema, query, null, { db, user }, vars);
     expect(res.errors).toHaveLength(1);
     expect(serviceAccount.mock.calls).toHaveLength(1);
-    expect(deleteServiceAccount.mock.calls).toHaveLength(0);
+    expect(deleteDeploymentServiceAccount.mock.calls).toHaveLength(0);
   });
 });

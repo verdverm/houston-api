@@ -3,13 +3,18 @@ import { addFragmentToInfo } from "graphql-binding";
 import { pick } from "lodash";
 
 /*
- * Update a Service Account.
+ * Update a Workspace Service Account.
  * @param {Object} parent The result of the parent resolver.
  * @param {Object} args The graphql arguments.
  * @param {Object} ctx The graphql context.
  * @return {ServiceAccount} The updated ServiceAccount.
  */
-export default async function updateServiceAccount(parent, args, ctx, info) {
+export default async function updateWorkspaceServiceAccount(
+  parent,
+  args,
+  ctx,
+  info
+) {
   // The external facing schema is too loose as JSON.
   // For now, we just pluck out any props that are not in this list.
   const data = pick(args.payload, ["category", "label"]);
@@ -32,7 +37,7 @@ export default async function updateServiceAccount(parent, args, ctx, info) {
     }
   }
 
-  return ctx.db.mutation.updateServiceAccount(
+  return ctx.db.mutation.updateWorkspaceServiceAccount(
     { where, data },
     addFragmentToInfo(info, serviceAccountFragment)
   );

@@ -203,8 +203,10 @@ type ServiceAccount {
   apiKey: String
   label: String
   category: String
-  entityType: String!
-  entityUuid: Uuid!
+  entityType: String! @deprecated # backwards capability
+  entityUuid: Uuid @deprecated # backwards capability
+  workspaceUuid: Uuid @alias(field: "entityUuid")
+  deploymentUuid: Uuid @alias(field: "entityUuid")
   active: Boolean
   lastUsedAt: DateTime
   createdAt: DateTime!
@@ -261,18 +263,39 @@ type Query {
     version: String
   ): DeploymentConfig @auth
 
-  deployments: [Deployment] @auth(permissions:["system.deployments.list"])
+  deployments: [Deployment] @auth(permissions:["system.deployments.get"])
+
+  # New ServiceAccount (singlton) scoped query
+  deploymentServiceAccount(
+    serviceAccountUuid: Uuid!
+  ): ServiceAccount @auth(permissions: ["deployment.serviceAccounts.get", "system.serviceAccounts.get"], op: OR)
+
+  # New ServiceAccount (list) scoped query
+  deploymentServiceAccounts(
+    deploymentUuid: Uuid!
+  ): [ServiceAccount] @auth(permissions: ["deployment.serviceAccounts.get", "system.serviceAccounts.get"], op: OR)
 
   workspaceDeployments(
     workspaceUuid: Uuid!
     releaseName: String
-  ): [Deployment] @auth(permissions: ["workspace.deployments.list", "system.deployments.list"], op: OR)
+  ): [Deployment] @auth(permissions: ["workspace.deployments.get", "system.deployments.get"], op: OR)
 
+  # Legacy - backwards compatibility
   serviceAccounts(
     serviceAccountUuid: Uuid
     entityType: EntityType!
     entityUuid: Uuid
   ): [ServiceAccount] @auth
+
+  # New ServiceAccount (singleton) scoped query
+  workspaceServiceAccount(
+    serviceAccountUuid: Uuid!
+  ): ServiceAccount @auth(permissions: ["workspace.serviceAccounts.get", "system.serviceAccounts.get"], op: OR)
+
+  # New ServiceAccounts (list) scoped query
+  workspaceServiceAccounts(
+    workspaceUuid: Uuid!
+  ): [ServiceAccount] @auth(permissions: ["workspace.serviceAccounts.get", "system.serviceAccounts.get"], op: OR)
 
   workspaceInvites(
     workspaceUuid: Uuid!
@@ -281,22 +304,22 @@ type Query {
 
   workspaceUsers(
     workspaceUuid: Uuid!
-  ): [User] @auth(permissions: ["workspace.users.list"])
+  ): [User] @auth(permissions: ["workspace.users.get"])
 
   workspaceUser(
     workspaceUuid: Uuid!
     username: String!
-  ): User @auth(permissions: ["workspace.users.list"])
+  ): User @auth(permissions: ["workspace.users.get"])
 
   users(
     userUuid: Uuid
     username: String
     email: String
-  ): [User] @auth(permissions: ["system.users.list"])
+  ): [User] @auth(permissions: ["system.users.get"])
 
   invites(
     email: String
-  ): [Invite] @auth(permissions:["system.users.list"])
+  ): [Invite] @auth(permissions:["system.users.get"])
 
   logs(
     deploymentUuid: Uuid!
@@ -431,6 +454,7 @@ type Mutation {
   # ServiceAccount mutations are handled differently at the moment to maintain
   # backward compatibility with CLI / UI. We should refactor to
   # more explicit, scoped mutations.
+  # Legacy - backwards compatibility
   createServiceAccount(
     label: String!
     category: String
@@ -439,14 +463,54 @@ type Mutation {
     role: Role!
   ): ServiceAccount @auth
 
+  # New ServiceAccount scoped mutation
+  createDeploymentServiceAccount(
+    label: String!
+    category: String
+    deploymentUuid: Uuid!
+    role: Role!
+  ): ServiceAccount @auth(permissions: ["deployment.serviceAccounts.create", "system.serviceAccounts.create"], op: OR)
+
+  # New ServiceAccount scoped mutation
+  createWorkspaceServiceAccount(
+    label: String!
+    category: String
+    workspaceUuid: Uuid!
+    role: Role!
+  ): ServiceAccount @auth(permissions: ["workspace.serviceAccounts.create", "system.serviceAccounts.create"], op: OR)
+
+  # Legacy - backwards compatibility
   updateServiceAccount(
     serviceAccountUuid: Uuid!
     payload: JSON!
   ): ServiceAccount @auth
 
+  updateWorkspaceServiceAccount(
+    serviceAccountUuid: Uuid!
+    workspaceUuid: Uuid!
+    payload: JSON!
+  ): ServiceAccount @auth(permissions: ["workspace.serviceAccounts.update", "system.serviceAccounts.update"], op: OR)
+
+  updateDeploymentServiceAccount(
+    serviceAccountUuid: Uuid!
+    deploymentUuid: Uuid!
+    payload: JSON!
+  ): ServiceAccount @auth(permissions: ["deployment.serviceAccounts.update", "system.serviceAccounts.update"], op: OR)
+
+  # Legacy - backwards compatibility
   deleteServiceAccount(
     serviceAccountUuid: Uuid!
   ): ServiceAccount @auth
+
+  deleteWorkspaceServiceAccount(
+    serviceAccountUuid: Uuid!
+    workspaceUuid: Uuid!
+  ): ServiceAccount @auth(permissions: ["workspace.serviceAccounts.delete", "system.serviceAccounts.delete"], op: OR)
+
+  deleteDeploymentServiceAccount(
+    serviceAccountUuid: Uuid!
+    deploymentUuid: Uuid!
+  ): ServiceAccount @auth(permissions: ["deployment.serviceAccounts.delete", "system.serviceAccounts.delete"], op: OR)
 
   createSystemRoleBinding(
     userId: ID!

@@ -195,36 +195,38 @@ roles:
   - id: SYSTEM_ADMIN
     name: System Admin
     permissions:
-      - system.monitoring.view
-      - system.iam.update
-      - system.workspace.suspend
-      - system.workspace.extendTrial
-      - system.user.invite
-      - system.user.delete
-      - system.invite.get
-      - system.deployments.list
+      - system.deployments.get
       - system.deployments.update
       - system.deployments.delete
       - system.deployments.logs
       - system.deployments.metrics
-      - system.users.list
-      - system.workspace.addCustomerId
-      # XXX: Refactor serviceAccount permissions
-      - system.serviceAccounts.list
+      - system.iam.update
+      - system.invite.get
+      - system.monitoring.get
+      - system.serviceAccounts.get
       - system.serviceAccounts.create
       - system.serviceAccounts.update
       - system.serviceAccounts.delete
+      - system.users.get
+      - system.user.invite
+      - system.user.delete
+      - system.workspace.addCustomerId
+      - system.workspace.suspend
+      - system.workspace.extendTrial
 
   - id: SYSTEM_EDITOR
     name: System Editor
     permissions:
-      - system.monitoring.view
       - system.iam.update
+      - system.monitoring.get
+      - system.serviceAccounts.get
+      - system.serviceAccounts.update
 
   - id: SYSTEM_VIEWER
     name: System Viewer
     permissions:
-      - system.monitoring.view
+      - system.monitoring.get
+      - system.serviceAccounts.get
 
   #
   # Workspace
@@ -232,36 +234,39 @@ roles:
   - id: WORKSPACE_ADMIN
     name: Workspace Admin
     permissions:
+      - workspace.billing.update
       - workspace.config.update
       - workspace.config.delete
-      - workspace.invites.get
-      - workspace.deployments.list
+      - workspace.deployments.get
       - workspace.deployments.create
+      - workspace.iam.update
+      - workspace.invites.get
+      - workspace.serviceAccounts.get
       - workspace.serviceAccounts.create
       - workspace.serviceAccounts.update
       - workspace.serviceAccounts.delete
-      - workspace.iam.update
-      - workspace.users.list
-      - workspace.billing.update
+      - workspace.users.get
 
   - id: WORKSPACE_EDITOR
     name: Workspace Editor
     permissions:
       - workspace.config.update
       - workspace.invites.get
-      - workspace.users.list
-      - workspace.deployments.list
+      - workspace.deployments.get
       - workspace.deployments.create
+      - workspace.serviceAccounts.get
       - workspace.serviceAccounts.create
       - workspace.serviceAccounts.update
       - workspace.serviceAccounts.delete
+      - workspace.users.get
 
   - id: WORKSPACE_VIEWER
     name: Workspace Viewer
     permissions:
-      - workspace.deployments.list
+      - workspace.deployments.get
       - workspace.invites.get
-      - workspace.users.list
+      - workspace.serviceAccounts.get
+      - workspace.users.get
 
   #
   # Deployment
@@ -269,40 +274,43 @@ roles:
   - id: DEPLOYMENT_ADMIN
     name: Deployment Admin
     permissions:
+      - deployment.airflow.user
+      - deployment.airflow.get
       - deployment.config.get
       - deployment.config.update
       - deployment.config.delete
       - deployment.images.push
       - deployment.airflow.admin
-      - deployment.airflow.user
-      - deployment.airflow.view
+      - deployment.logs.get
+      - deployment.metrics.get
+      - deployment.serviceAccounts.get
       - deployment.serviceAccounts.create
       - deployment.serviceAccounts.update
       - deployment.serviceAccounts.delete
-      - deployment.logs.get
-      - deployment.metrics.get
 
   - id: DEPLOYMENT_EDITOR
     name: Deployment Editor
     permissions:
+      - deployment.airflow.user
+      - deployment.airflow.get
       - deployment.config.get
       - deployment.config.update
       - deployment.images.push
-      - deployment.airflow.user
-      - deployment.airflow.view
+      - deployment.logs.get
+      - deployment.metrics.get
+      - deployment.serviceAccounts.get
       - deployment.serviceAccounts.create
       - deployment.serviceAccounts.update
       - deployment.serviceAccounts.delete
-      - deployment.logs.get
-      - deployment.metrics.get
 
   - id: DEPLOYMENT_VIEWER
     name: Deployment Viewer
     permissions:
+      - deployment.airflow.get
       - deployment.config.get
-      - deployment.airflow.view
       - deployment.logs.get
       - deployment.metrics.get
+      - deployment.serviceAccounts.get
 
 #
 # Airflow Deployment Configurations

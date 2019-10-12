@@ -13,12 +13,14 @@ const schema = makeExecutableSchema({
 
 // Define our mutation
 const mutation = `
-  mutation updateServiceAccount(
+  mutation updateWorkspaceServiceAccount(
     $serviceAccountUuid: Uuid!
+    $workspaceUuid: Uuid!
     $payload: JSON!
   ) {
-    updateServiceAccount(
+    updateWorkspaceServiceAccount(
       serviceAccountUuid: $serviceAccountUuid
+      workspaceUuid: $workspaceUuid
       payload: $payload
     ) {
       id
@@ -35,7 +37,7 @@ const mutation = `
   }
 `;
 
-describe("updateServiceAccount", () => {
+describe("updateWorkspaceServiceAccount", () => {
   test("typical request is successful", async () => {
     const workspaceId = casual.uuid;
     const serviceAccountId = casual.uuid;
@@ -53,16 +55,17 @@ describe("updateServiceAccount", () => {
     };
 
     // Mock up some functions.
-    const updateServiceAccount = jest.fn();
+    const updateWorkspaceServiceAccount = jest.fn();
 
     // Construct db object for context.
     const db = {
-      mutation: { updateServiceAccount }
+      mutation: { updateWorkspaceServiceAccount }
     };
 
     // Vars for the gql mutation.
     const vars = {
       serviceAccountUuid: serviceAccountId,
+      workspaceUuid: workspaceId,
       payload: {
         label
       }
@@ -74,8 +77,8 @@ describe("updateServiceAccount", () => {
     // Run the graphql mutation.
     const res = await graphql(schema, mutation, null, { db, user }, vars);
     expect(res.errors).toBeUndefined();
-    expect(updateServiceAccount).toHaveBeenCalledTimes(1);
-    expect(updateServiceAccount).toHaveBeenCalledWith(
+    expect(updateWorkspaceServiceAccount).toHaveBeenCalledTimes(1);
+    expect(updateWorkspaceServiceAccount).toHaveBeenCalledWith(
       { where, data },
       expect.any(Object)
     );
@@ -99,16 +102,17 @@ describe("updateServiceAccount", () => {
     };
 
     // Mock up some functions.
-    const updateServiceAccount = jest.fn();
+    const updateWorkspaceServiceAccount = jest.fn();
 
     // Construct db object for context.
     const db = {
-      mutation: { updateServiceAccount }
+      mutation: { updateWorkspaceServiceAccount }
     };
 
     // Vars for the gql mutation.
     const vars = {
       serviceAccountUuid: serviceAccountId,
+      workspaceUuid: workspaceId,
       payload: {
         label,
         invalidField
@@ -121,8 +125,8 @@ describe("updateServiceAccount", () => {
     // Run the graphql mutation.
     const res = await graphql(schema, mutation, null, { db, user }, vars);
     expect(res.errors).toBeUndefined();
-    expect(updateServiceAccount).toHaveBeenCalledTimes(1);
-    expect(updateServiceAccount).toHaveBeenCalledWith(
+    expect(updateWorkspaceServiceAccount).toHaveBeenCalledTimes(1);
+    expect(updateWorkspaceServiceAccount).toHaveBeenCalledWith(
       { where, data },
       expect.any(Object)
     );
