@@ -27,7 +27,7 @@ export default async function workspaceServiceAccounts(
   };
 
   // Run final query
-  const serviceAccounts = await ctx.db.query.workspaceServiceAccounts(
+  const serviceAccounts = await ctx.db.query.serviceAccounts(
     query,
     addFragmentToInfo(info, fragment)
   );

@@ -37,7 +37,7 @@ export default async function updateWorkspaceServiceAccount(
     }
   }
 
-  return ctx.db.mutation.updateWorkspaceServiceAccount(
+  return ctx.db.mutation.updateServiceAccount(
     { where, data },
     addFragmentToInfo(info, serviceAccountFragment)
   );

@@ -56,11 +56,11 @@ describe("createDeploymentServiceAccount", () => {
     };
 
     // Create mock function.
-    const createDeploymentServiceAccount = jest.fn();
+    const createServiceAccount = jest.fn();
 
     // Construct db object for context.
     const db = {
-      mutation: { createDeploymentServiceAccount }
+      mutation: { createServiceAccount }
     };
 
     // Create variables.
@@ -75,6 +75,6 @@ describe("createDeploymentServiceAccount", () => {
     const res = await graphql(schema, mutation, null, { db, user }, vars);
 
     expect(res.errors).toBeUndefined();
-    expect(createDeploymentServiceAccount.mock.calls).toHaveLength(1);
+    expect(createServiceAccount.mock.calls).toHaveLength(1);
   });
 });

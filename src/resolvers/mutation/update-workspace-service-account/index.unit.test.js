@@ -55,11 +55,11 @@ describe("updateWorkspaceServiceAccount", () => {
     };
 
     // Mock up some functions.
-    const updateWorkspaceServiceAccount = jest.fn();
+    const updateServiceAccount = jest.fn();
 
     // Construct db object for context.
     const db = {
-      mutation: { updateWorkspaceServiceAccount }
+      mutation: { updateServiceAccount }
     };
 
     // Vars for the gql mutation.
@@ -77,8 +77,8 @@ describe("updateWorkspaceServiceAccount", () => {
     // Run the graphql mutation.
     const res = await graphql(schema, mutation, null, { db, user }, vars);
     expect(res.errors).toBeUndefined();
-    expect(updateWorkspaceServiceAccount).toHaveBeenCalledTimes(1);
-    expect(updateWorkspaceServiceAccount).toHaveBeenCalledWith(
+    expect(updateServiceAccount).toHaveBeenCalledTimes(1);
+    expect(updateServiceAccount).toHaveBeenCalledWith(
       { where, data },
       expect.any(Object)
     );
@@ -102,11 +102,11 @@ describe("updateWorkspaceServiceAccount", () => {
     };
 
     // Mock up some functions.
-    const updateWorkspaceServiceAccount = jest.fn();
+    const updateServiceAccount = jest.fn();
 
     // Construct db object for context.
     const db = {
-      mutation: { updateWorkspaceServiceAccount }
+      mutation: { updateServiceAccount }
     };
 
     // Vars for the gql mutation.
@@ -125,8 +125,8 @@ describe("updateWorkspaceServiceAccount", () => {
     // Run the graphql mutation.
     const res = await graphql(schema, mutation, null, { db, user }, vars);
     expect(res.errors).toBeUndefined();
-    expect(updateWorkspaceServiceAccount).toHaveBeenCalledTimes(1);
-    expect(updateWorkspaceServiceAccount).toHaveBeenCalledWith(
+    expect(updateServiceAccount).toHaveBeenCalledTimes(1);
+    expect(updateServiceAccount).toHaveBeenCalledWith(
       { where, data },
       expect.any(Object)
     );

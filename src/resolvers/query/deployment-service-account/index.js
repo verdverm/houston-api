@@ -21,7 +21,7 @@ export default async function deploymentServiceAccount(
   const query = { where: { id: serviceAccountUuid } };
 
   // Run final query
-  const serviceAccount = await ctx.db.query.deploymentServiceAccount(
+  const serviceAccount = await ctx.db.query.serviceAccount(
     query,
     addFragmentToInfo(info, fragment)
   );

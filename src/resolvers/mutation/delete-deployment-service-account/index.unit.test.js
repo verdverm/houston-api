@@ -48,12 +48,12 @@ describe("deleteDeploymentServiceAccount", () => {
       roleBinding: { workspace: { id: workspaceId } }
     });
 
-    const deleteDeploymentServiceAccount = jest.fn();
+    const deleteServiceAccount = jest.fn();
 
     // Construct db object for context.
     const db = {
       query: { serviceAccount },
-      mutation: { deleteDeploymentServiceAccount }
+      mutation: { deleteServiceAccount }
     };
 
     const vars = {
@@ -65,7 +65,7 @@ describe("deleteDeploymentServiceAccount", () => {
     const res = await graphql(schema, query, null, { db, user }, vars);
     expect(res.errors).toBeUndefined();
     expect(serviceAccount.mock.calls).toHaveLength(1);
-    expect(deleteDeploymentServiceAccount.mock.calls).toHaveLength(1);
+    expect(deleteServiceAccount.mock.calls).toHaveLength(1);
   });
 
   test("request throws if service account is not found", async () => {
@@ -85,12 +85,12 @@ describe("deleteDeploymentServiceAccount", () => {
 
     // Mock up some db functions.
     const serviceAccount = jest.fn();
-    const deleteDeploymentServiceAccount = jest.fn();
+    const deleteServiceAccount = jest.fn();
 
     // Construct db object for context.
     const db = {
       query: { serviceAccount },
-      mutation: { deleteDeploymentServiceAccount }
+      mutation: { deleteServiceAccount }
     };
 
     const vars = {
@@ -102,6 +102,6 @@ describe("deleteDeploymentServiceAccount", () => {
     const res = await graphql(schema, query, null, { db, user }, vars);
     expect(res.errors).toHaveLength(1);
     expect(serviceAccount.mock.calls).toHaveLength(1);
-    expect(deleteDeploymentServiceAccount.mock.calls).toHaveLength(0);
+    expect(deleteServiceAccount.mock.calls).toHaveLength(0);
   });
 });

@@ -39,13 +39,11 @@ describe("deploymentServiceAccount", () => {
     };
 
     // Mock up some db functions.
-    const deploymentServiceAccount = jest
-      .fn()
-      .mockReturnValue({ id: casual.uuid });
+    const serviceAccount = jest.fn().mockReturnValue({ id: casual.uuid });
 
     // Construct db object for context.
     const db = {
-      query: { deploymentServiceAccount }
+      query: { serviceAccount }
     };
 
     const vars = {
@@ -55,7 +53,7 @@ describe("deploymentServiceAccount", () => {
     // Run the graphql mutation.
     const res = await graphql(schema, query, null, { db, user }, vars);
     expect(res.errors).toBeUndefined();
-    expect(deploymentServiceAccount.mock.calls.length).toBe(1);
+    expect(serviceAccount.mock.calls.length).toBe(1);
   });
 
   test("request fails if missing an argument", async () => {

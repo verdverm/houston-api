@@ -37,7 +37,7 @@ export default async function createWorkspaceServiceAccount(
   };
 
   // Run the mutation.
-  return ctx.db.mutation.createWorkspaceServiceAccount(
+  return ctx.db.mutation.createServiceAccount(
     mutation,
     addFragmentToInfo(info, fragment)
   );

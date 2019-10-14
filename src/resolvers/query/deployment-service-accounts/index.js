@@ -27,7 +27,7 @@ export default async function deploymentServiceAccounts(
   };
 
   // Run final query
-  const serviceAccounts = await ctx.db.query.deploymentServiceAccounts(
+  const serviceAccounts = await ctx.db.query.serviceAccounts(
     query,
     addFragmentToInfo(info, fragment)
   );

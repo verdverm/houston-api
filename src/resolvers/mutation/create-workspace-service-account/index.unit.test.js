@@ -56,11 +56,11 @@ describe("createWorkspaceServiceAccount", () => {
     };
 
     // Create mock function.
-    const createWorkspaceServiceAccount = jest.fn();
+    const createServiceAccount = jest.fn();
 
     // Construct db object for context.
     const db = {
-      mutation: { createWorkspaceServiceAccount }
+      mutation: { createServiceAccount }
     };
 
     // Create variables.
@@ -75,6 +75,6 @@ describe("createWorkspaceServiceAccount", () => {
     const res = await graphql(schema, mutation, null, { db, user }, vars);
 
     expect(res.errors).toBeUndefined();
-    expect(createWorkspaceServiceAccount.mock.calls).toHaveLength(1);
+    expect(createServiceAccount.mock.calls).toHaveLength(1);
   });
 });

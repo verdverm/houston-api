@@ -48,11 +48,11 @@ describe("workspaceServiceAccount", () => {
     };
 
     // Mock up some db functions.
-    const workspaceServiceAccount = jest.fn();
+    const serviceAccount = jest.fn();
 
     // Construct db object for context.
     const db = {
-      query: { workspaceServiceAccount }
+      query: { serviceAccount }
     };
 
     const vars = {
@@ -62,7 +62,7 @@ describe("workspaceServiceAccount", () => {
     // Run the graphql mutation.
     const res = await graphql(schema, query, null, { db, user }, vars);
     expect(res.errors).toBeUndefined();
-    expect(workspaceServiceAccount).toHaveBeenCalledTimes(1);
+    expect(serviceAccount).toHaveBeenCalledTimes(1);
   });
 
   test("request fails if missing an argument", async () => {

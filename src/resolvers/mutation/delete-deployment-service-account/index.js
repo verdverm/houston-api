@@ -27,7 +27,7 @@ export default async function deleteDeploymentServiceAccount(
   if (!serviceAccount) throw new ResourceNotFoundError();
 
   // Delete the record from the database.
-  return ctx.db.mutation.deleteDeploymentServiceAccount(
+  return ctx.db.mutation.deleteServiceAccount(
     {
       where: { id: serviceAccountUuid }
     },

@@ -16,7 +16,7 @@ export default async function workspaceServiceAccount(parent, args, ctx, info) {
   const query = { where: { id: serviceAccountUuid } };
 
   // Run final query
-  const serviceAccount = await ctx.db.query.workspaceServiceAccount(
+  const serviceAccount = await ctx.db.query.serviceAccount(
     query,
     addFragmentToInfo(info, fragment)
   );
