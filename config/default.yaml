@@ -210,6 +210,7 @@ roles:
       - system.users.get
       - system.user.invite
       - system.user.delete
+      - system.user.verifyEmail
       - system.workspace.addCustomerId
       - system.workspace.suspend
       - system.workspace.extendTrial

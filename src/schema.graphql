@@ -552,6 +552,10 @@ type Mutation {
     workspaceUuid: Uuid!
     extraDays: Int!
   ): Workspace @auth(permissions: ["system.workspace.extendTrial"])
+
+  verifyEmail(
+    email: String!
+  ): Boolean @auth(permissions: ["system.user.verifyEmail"])
 }
 
 #

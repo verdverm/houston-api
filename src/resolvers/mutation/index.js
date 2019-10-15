@@ -31,6 +31,7 @@ import updateWorkspaceServiceAccount from "./update-workspace-service-account";
 import updateUser from "./update-user";
 import updateWorkspace from "./update-workspace";
 import upgradeDeployment from "./upgrade-deployment";
+import verifyEmail from "./verify-email";
 import workspaceAddUser from "./workspace-add-user";
 import workspaceRemoveUser from "./workspace-remove-user";
 import workspaceUpdateUserRole from "./workspace-update-user-role";
@@ -69,6 +70,7 @@ export default {
   updateUser,
   updateWorkspace,
   upgradeDeployment,
+  verifyEmail,
   workspaceAddUser,
   workspaceRemoveUser,
   workspaceUpdateUserRole
