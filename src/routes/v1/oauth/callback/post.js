@@ -104,7 +104,7 @@ export default async function(req, res, next) {
   ]);
 
   // Respond with redirect to orbit.
-  const url = `${orbit()}/${state.redirect}?${qs}`;
+  const url = `${orbit()}/${state.redirect || "oauth"}?${qs}`;
   const cleanUrl = url.replace(/([^:]\/)\/+/g, "$1");
   res.redirect(cleanUrl);
 }
