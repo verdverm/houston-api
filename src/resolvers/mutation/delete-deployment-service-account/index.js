@@ -1,4 +1,5 @@
 import { ResourceNotFoundError } from "errors";
+import { addFragmentToInfo } from "graphql-binding";
 
 /*
  * Delete a Deployment Service Account.
@@ -10,7 +11,8 @@ import { ResourceNotFoundError } from "errors";
 export default async function deleteDeploymentServiceAccount(
   parent,
   args,
-  ctx
+  ctx,
+  info
 ) {
   // Pull out some variables.
   const { serviceAccountUuid } = args;
@@ -31,6 +33,6 @@ export default async function deleteDeploymentServiceAccount(
     {
       where: { id: serviceAccountUuid }
     },
-    `{ id }`
+    addFragmentToInfo(info, `{ id }`)
   );
 }

@@ -1,4 +1,5 @@
 import { ResourceNotFoundError } from "errors";
+import { addFragmentToInfo } from "graphql-binding";
 
 /*
  * Delete a Workspace Service Account.
@@ -7,7 +8,12 @@ import { ResourceNotFoundError } from "errors";
  * @param {Object} ctx The graphql context.
  * @return {Invite} The deleted Invite.
  */
-export default async function deleteWorkspaceServiceAccount(parent, args, ctx) {
+export default async function deleteWorkspaceServiceAccount(
+  parent,
+  args,
+  ctx,
+  info
+) {
   // Pull out some variables.
   const { serviceAccountUuid } = args;
 
@@ -27,6 +33,6 @@ export default async function deleteWorkspaceServiceAccount(parent, args, ctx) {
     {
       where: { id: serviceAccountUuid }
     },
-    `{ id }`
+    addFragmentToInfo(info, `{ id }`)
   );
 }
