@@ -36,10 +36,12 @@ export function generateDeploymentLabels(platform = {}) {
   const { singleNamespace } = config.get("helm");
   const { namespaceLabels } = config.get("deployments");
 
-  return {
-    ...(singleNamespace ? [] : objectToArrayOfKeyValue(namespaceLabels)),
+  const objectOfKeys = {
+    ...(singleNamespace ? {} : namespaceLabels),
     ...platform
   };
+
+  return objectToArrayOfKeyValue(objectOfKeys);
 }
 
 /*
