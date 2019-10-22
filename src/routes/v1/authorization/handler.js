@@ -65,13 +65,25 @@ export function airflowJWT(user, roles, hostname) {
 
 export function mapLocalRolesToAirflow(user, deploymentId) {
   const entityType = ENTITY_DEPLOYMENT.toLowerCase();
-  if (hasPermission(user, "deployment.airflow.admin", entityType, deploymentId))
+  if (
+    hasPermission(user, "deployment.airflow.admin", entityType, deploymentId) ||
+    hasPermission(user, "system.airflow.admin")
+  )
     return ["Admin"];
-  if (hasPermission(user, "deployment.airflow.op", entityType, deploymentId))
+  if (
+    hasPermission(user, "deployment.airflow.op", entityType, deploymentId) ||
+    hasPermission(user, "system.airflow.op")
+  )
     return ["Op"];
-  if (hasPermission(user, "deployment.airflow.user", entityType, deploymentId))
+  if (
+    hasPermission(user, "deployment.airflow.user", entityType, deploymentId) ||
+    hasPermission(user, "system.airflow.user")
+  )
     return ["User"];
-  if (hasPermission(user, "deployment.airflow.get", entityType, deploymentId))
+  if (
+    hasPermission(user, "deployment.airflow.get", entityType, deploymentId) ||
+    hasPermission(user, "system.airflow.get")
+  )
     return ["Viewer"];
 
   return [];

@@ -214,6 +214,7 @@ roles:
       - system.workspace.addCustomerId
       - system.workspace.suspend
       - system.workspace.extendTrial
+      - system.airflow.admin
 
   - id: SYSTEM_EDITOR
     name: System Editor
@@ -222,12 +223,14 @@ roles:
       - system.monitoring.get
       - system.serviceAccounts.get
       - system.serviceAccounts.update
+      - system.airflow.user
 
   - id: SYSTEM_VIEWER
     name: System Viewer
     permissions:
       - system.monitoring.get
       - system.serviceAccounts.get
+      - system.airflow.get
 
   #
   # Workspace
