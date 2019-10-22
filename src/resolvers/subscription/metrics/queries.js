@@ -203,7 +203,7 @@ export default function queries(deployment, since, step) {
       {
         name: "cpuUsage",
         query: rangeQuery(
-          `label_replace(  sum(rate(container_cpu_usage_seconds_total{deployment=~"${deployment}",component_name != "POD",image!="", container_name!="istio-proxy"}[${duration}])) by (pod_name, container_name, component_name, namespace, short_name)/  sum(container_spec_cpu_quota{deployment=~"${deployment}", component_name != "POD",image!="", container_name!="istio-proxy"}/container_spec_cpu_period{deployment=~"${deployment}", component_name != "POD",image!="", container_name!="istio-proxy"}) by (pod_name, container_name, component_name, namespace, short_name)*100,  "short_name",  "$1",  "pod_name",  "^[[deployment]]-(.*)$")`
+          `label_replace(  sum(rate(container_cpu_usage_seconds_total{deployment=~"${deployment}", component_name != "POD",image!="", container_name!="istio-proxy"}${duration})) by (pod_name, container_name, component_name, namespace, short_name)/  sum(container_spec_cpu_quota{deployment=~"${deployment}",  component_name != "POD",image!="", container_name!="istio-proxy"}/container_spec_cpu_period{deployment=~"${deployment}",  component_name != "POD",image!="", container_name!="istio-proxy"}) by (pod_name, container_name, component_name, namespace, short_name)*100,  "short_name",  "$1",  "pod_name",  "^[[${deployment}]]-(.*)$")`
         )
       },
       {
