@@ -162,40 +162,40 @@ export default function queries(deployment, since, step) {
       {
         name: "maxPods",
         query: query(
-          `sum(kube_resourcequota{resource="pods", type="hard", release=~"${deployment}"})`
+          `sum(kube_resourcequota{resource="pods", type="hard", release=~"${deployment}", resourcequota=~"${deployment}-resource-quota"})`
         )
       },
       {
         name: "cpuMax",
         query: query(
-          `sum(kube_resourcequota{resource="limits.cpu", type="hard", release=~"${deployment}"})`
+          `sum(kube_resourcequota{resource="limits.cpu", type="hard", release=~"${deployment}", resourcequota=~"${deployment}-resource-quota"})`
         )
       },
       {
         name: "memoryMax",
         query: query(
-          `sum(kube_resourcequota{resource="limits.memory", type="hard", release=~"${deployment}"})`
+          `sum(kube_resourcequota{resource="limits.memory", type="hard", release=~"${deployment}", resourcequota=~"${deployment}-resource-quota"})`
         )
       },
       {
         name: "runningPods",
         query: query(
-          `sum(kube_resourcequota{resource="pods", type="used", release=~"${deployment}"}) /
-           sum(kube_resourcequota{resource="pods", type="hard", release=~"${deployment}"}) * 100`
+          `sum(kube_resourcequota{resource="pods", type="used", release=~"${deployment}", resourcequota=~"${deployment}-resource-quota"}) /
+           sum(kube_resourcequota{resource="pods", type="hard", release=~"${deployment}", resourcequota=~"${deployment}-resource-quota"}) * 100`
         )
       },
       {
         name: "reservedCPU",
         query: query(
-          `sum(kube_resourcequota{resource="limits.cpu", type="used", release=~"${deployment}"}) /
-           sum(kube_resourcequota{resource="limits.cpu", type="hard", release=~"${deployment}"}) * 100`
+          `sum(kube_resourcequota{resource="limits.cpu", type="used", release=~"${deployment}", resourcequota=~"${deployment}-resource-quota"}) /
+           sum(kube_resourcequota{resource="limits.cpu", type="hard", release=~"${deployment}", resourcequota=~"${deployment}-resource-quota"}) * 100`
         )
       },
       {
         name: "reservedMemory",
         query: query(
-          `sum(kube_resourcequota{resource="limits.memory", type="used", release=~"${deployment}"}) /
-           sum(kube_resourcequota{resource="limits.memory", type="hard", release=~"${deployment}"}) * 100`
+          `sum(kube_resourcequota{resource="limits.memory", type="used", release=~"${deployment}", resourcequota=~"${deployment}-resource-quota"}) /
+           sum(kube_resourcequota{resource="limits.memory", type="hard", release=~"${deployment}", resourcequota=~"${deployment}-resource-quota"}) * 100`
         )
       }
     ],
@@ -203,7 +203,7 @@ export default function queries(deployment, since, step) {
       {
         name: "cpuUsage",
         query: rangeQuery(
-          `label_replace(  sum(rate(container_cpu_usage_seconds_total{deployment=~"${deployment}", component_name != "POD",image!="", container_name!="istio-proxy"}${duration})) by (pod_name, container_name, component_name, namespace, short_name)/  sum(container_spec_cpu_quota{deployment=~"${deployment}",  component_name != "POD",image!="", container_name!="istio-proxy"}/container_spec_cpu_period{deployment=~"${deployment}",  component_name != "POD",image!="", container_name!="istio-proxy"}) by (pod_name, container_name, component_name, namespace, short_name)*100,  "short_name",  "$1",  "pod_name",  "^${deployment}-(.*)$")`
+          `label_replace(sum(rate(container_cpu_usage_seconds_total{deployment=~"${deployment}", component_name != "POD",image!="", container_name!="istio-proxy"}${duration})) by (pod_name, container_name, component_name, namespace, short_name)/  sum(container_spec_cpu_quota{deployment=~"${deployment}",  component_name != "POD",image!="", container_name!="istio-proxy"}/container_spec_cpu_period{deployment=~"${deployment}",  component_name != "POD",image!="", container_name!="istio-proxy"}) by (pod_name, container_name, component_name, namespace, short_name)*100,  "short_name",  "$1",  "pod_name",  "^${deployment}-(.*)$")`
         )
       },
       {
