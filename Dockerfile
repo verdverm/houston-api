@@ -2,7 +2,7 @@
 # Houston API
 # Source of truth for the Astronomer Platform
 
-FROM alpine:3.8
+FROM alpine:3.10
 MAINTAINER Astronomer <humans@astronomer.io>
 
 ARG BUILD_NUMBER=-1
