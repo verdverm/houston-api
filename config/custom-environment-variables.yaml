@@ -128,6 +128,9 @@ jwt:
     certPath: "JWT__REGISTRY__CERT_PATH"
     issuer: "JWT__REGISTRY__ISSUER"
     service: "JWT__REGISTRY__SERVICE"
+    baseImages:
+      __name: "JWT__REGISTRY__BASE_IMAGES"
+      __format: "json"
 
 publicSignups:
   __name: "PUBLIC_SIGNUPS"

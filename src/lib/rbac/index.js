@@ -219,3 +219,22 @@ async function addDeploymentRoleBindings(promise) {
 //   if (isString(user)) return getUserWithRoleBindings(user);
 //   return getUserWithRoleBindings(user.id);
 // }
+
+/* Return a list of deployment ids to which the user has the requested
+ * permission
+ * @param {Object} user The user object
+ * @return {Array} list of deploymentIds
+ */
+export function accesibleDeploymentsWithPermission(user, permission) {
+  if (!user) return [];
+
+  const entityType = ENTITY_DEPLOYMENT.toLowerCase();
+  const roles = config.get("roles");
+
+  return filter(user.roleBindings, binding => {
+    if (!binding[entityType]) return false;
+    const role = find(roles, { id: binding.role });
+    if (!role) return false;
+    return includes(role.permissions, permission);
+  }).map(binding => binding.deployment.id);
+}

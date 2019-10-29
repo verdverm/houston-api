@@ -84,4 +84,36 @@ describe("POST /registry-events", () => {
     expect(updateDeployment).toHaveBeenCalledTimes(0);
     expect(res.statusCode).toBe(200);
   });
+
+  test("skip if non-deployment event is sent", async () => {
+    // Set up our spies.
+    const deployment = jest.spyOn(prismaExports.prisma, "deployment");
+
+    const updateDeployment = jest.spyOn(
+      prismaExports.prisma,
+      "updateDeployment"
+    );
+
+    const res = await request(app)
+      .post("/")
+      .send({
+        events: [
+          {
+            id: casual.uuid,
+            action: "push",
+            target: {
+              repository: "base-images/airflow",
+              tag: "0.10.2-1.10.5"
+            },
+            request: {
+              host: casual.domain
+            }
+          }
+        ]
+      });
+
+    expect(deployment).toHaveBeenCalledTimes(0);
+    expect(updateDeployment).toHaveBeenCalledTimes(0);
+    expect(res.statusCode).toBe(200);
+  });
 });

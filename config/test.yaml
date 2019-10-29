@@ -61,6 +61,8 @@ jwt:
   # JWT / Cookie duration in milliseconds.
   authDuration: 86400000
   certPath: ./test-data/certs/
+  registry:
+    certPath: ./test-data/certs/
 
 # Deployment configuration.
 deployments:
