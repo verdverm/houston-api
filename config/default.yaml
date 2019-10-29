@@ -6,6 +6,10 @@ webserver:
   endpoint: "/v1"
   subscriptions: "/ws"
 
+# CORS Access
+cors:
+  allowedOrigins: []
+
 # Prisma configuration.
 prisma:
   endpoint: "http://localhost:4466/houston"
