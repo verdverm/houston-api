@@ -305,6 +305,7 @@ type Query {
   workspaceUsers(
     workspaceUuid: Uuid!
     email: String
+    fullName: String
   ): [User] @auth(permissions: ["workspace.users.get"])
 
   workspaceUser(
