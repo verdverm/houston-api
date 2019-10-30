@@ -2,10 +2,16 @@ import {
   hasPermission,
   hasSystemPermission,
   checkPermission,
-  isServiceAccount
+  isServiceAccount,
+  accesibleDeploymentsWithPermission
 } from "./index";
 import casual from "casual";
-import { ENTITY_WORKSPACE } from "constants";
+import {
+  DEPLOYMENT_ADMIN,
+  DEPLOYMENT_VIEWER,
+  ENTITY_WORKSPACE,
+  WORKSPACE_ADMIN
+} from "constants";
 
 describe("hasPermission", () => {
   test("permits user with matching entity id", () => {
@@ -134,5 +140,35 @@ describe("isServiceAccount", () => {
       "abcdefghijklmnopqrstuvwxyz012345.abcdefghijklmnopqrstuvwxyz012345.abcdefghijklmnopqrstuvwxyz012345";
     const isServiceAcct = isServiceAccount(header);
     expect(isServiceAcct).toBe(false);
+  });
+});
+
+describe("accesibleDeploymentsWithPermission", () => {
+  // For this test we want our user to have access to more than one
+  // namespace, some at push and some at pull.
+  const userObject = {
+    id: casual.uuid,
+    roleBindings: [
+      { role: DEPLOYMENT_ADMIN, deployment: { id: casual.uuid } },
+      { role: DEPLOYMENT_VIEWER, deployment: { id: casual.uuid } },
+      { role: WORKSPACE_ADMIN, workspace: { id: casual.uuid } },
+      { role: DEPLOYMENT_ADMIN, deployment: { id: casual.uuid } }
+    ]
+  };
+
+  test("No user has nothing accessible", () => {});
+  expect(accesibleDeploymentsWithPermission(null, "deployment.x")).toHaveLength(
+    0
+  );
+
+  test("respects permissions", () => {
+    const deployments = accesibleDeploymentsWithPermission(
+      userObject,
+      "deployment.images.push"
+    );
+    expect(deployments).toEqual([
+      userObject.roleBindings[0].deployment.id,
+      userObject.roleBindings[3].deployment.id
+    ]);
   });
 });

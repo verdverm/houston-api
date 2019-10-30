@@ -1,9 +1,16 @@
 import router from "./index";
-import * as prismaExports from "generated/client";
+import { prisma } from "generated/client";
 import casual from "casual";
 import request from "supertest";
 import express from "express";
 import { DOCKER_REGISTRY_CONTENT_TYPE } from "constants";
+
+jest.mock("generated/client", () => {
+  return {
+    __esModule: true,
+    prisma: jest.fn().mockName("MockPrisma")
+  };
+});
 
 // Create test application.
 const app = express().use(router);
@@ -14,19 +21,17 @@ describe("POST /registry-events", () => {
   });
 
   test("registry events are mapped to a deployment upgrade", async () => {
-    // Set up our spies.
-    const deployment = jest
-      .spyOn(prismaExports.prisma, "deployment")
-      .mockImplementation(() => {
-        return {
-          config() {
-            return {};
-          }
-        };
+    prisma.deployment = jest
+      .fn()
+      .mockName("deployment")
+      .mockReturnValue({
+        config() {
+          return {};
+        }
       });
-
-    const updateDeployment = jest
-      .spyOn(prismaExports.prisma, "updateDeployment")
+    prisma.updateDeployment = jest
+      .fn()
+      .mockName("updateDeployment")
       .mockReturnValue({});
 
     const res = await request(app)
@@ -48,20 +53,12 @@ describe("POST /registry-events", () => {
         ]
       });
 
-    expect(deployment).toHaveBeenCalledTimes(1);
-    expect(updateDeployment).toHaveBeenCalledTimes(1);
+    expect(prisma.deployment).toHaveBeenCalledTimes(1);
+    expect(prisma.updateDeployment).toHaveBeenCalledTimes(1);
     expect(res.statusCode).toBe(200);
   });
 
   test("skip if irrelevent event is sent", async () => {
-    // Set up our spies.
-    const deployment = jest.spyOn(prismaExports.prisma, "deployment");
-
-    const updateDeployment = jest.spyOn(
-      prismaExports.prisma,
-      "updateDeployment"
-    );
-
     const res = await request(app)
       .post("/")
       .send({
@@ -80,20 +77,13 @@ describe("POST /registry-events", () => {
         ]
       });
 
-    expect(deployment).toHaveBeenCalledTimes(0);
-    expect(updateDeployment).toHaveBeenCalledTimes(0);
+    expect(prisma.deployment).toHaveBeenCalledTimes(0);
+    expect(prisma.updateDeployment).toHaveBeenCalledTimes(0);
     expect(res.statusCode).toBe(200);
   });
 
   test("skip if non-deployment event is sent", async () => {
     // Set up our spies.
-    const deployment = jest.spyOn(prismaExports.prisma, "deployment");
-
-    const updateDeployment = jest.spyOn(
-      prismaExports.prisma,
-      "updateDeployment"
-    );
-
     const res = await request(app)
       .post("/")
       .send({
@@ -112,8 +102,8 @@ describe("POST /registry-events", () => {
         ]
       });
 
-    expect(deployment).toHaveBeenCalledTimes(0);
-    expect(updateDeployment).toHaveBeenCalledTimes(0);
+    expect(prisma.deployment).toHaveBeenCalledTimes(0);
+    expect(prisma.updateDeployment).toHaveBeenCalledTimes(0);
     expect(res.statusCode).toBe(200);
   });
 });
