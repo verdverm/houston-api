@@ -450,7 +450,7 @@ type Mutation {
   upgradeDeployment(
     deploymentUuid: Uuid!
     version: String!
-  ): Deployment @auth(permissions: ["deployment.config.update", "system.deployment.update"] op: OR)
+  ): Deployment @auth(permissions: ["deployment.config.update", "system.deployments.update"] op: OR)
 
   # ServiceAccount mutations are handled differently at the moment to maintain
   # backward compatibility with CLI / UI. We should refactor to
