@@ -9,7 +9,7 @@ import { addFragmentToInfo } from "graphql-binding";
  */
 export default async function workspaceUsers(parent, args, ctx, info) {
   // Build the users query.
-  const query = invitesQuery(args);
+  const query = usersQuery(args);
 
   return ctx.db.query.users(
     {
@@ -30,12 +30,15 @@ export default async function workspaceUsers(parent, args, ctx, info) {
  * @param {Object} ctx The graphql context.
  * @return {Object} The users query.
  */
-export function invitesQuery(args) {
+export function usersQuery(args) {
   // Pull out some args.
-  const { email } = args;
+  const { fullName, email } = args;
+
+  // If we have username, use it.
+  if (fullName) return { fullName_contains: fullName };
 
   // If we have an email use it.
-  if (email) return { username_contains: email.toLowerCase() };
+  if (email) return { emails_some: { address: email.toLowerCase() } };
 
   return null;
 }
