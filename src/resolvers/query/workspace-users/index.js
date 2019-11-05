@@ -10,18 +10,7 @@ import { addFragmentToInfo } from "graphql-binding";
 export default async function workspaceUsers(parent, args, ctx, info) {
   // Build the users query.
   const query = usersQuery(args);
-
-  return ctx.db.query.users(
-    {
-      where: {
-        roleBindings_some: {
-          workspace: { id: args.workspaceUuid }
-        },
-        ...query
-      }
-    },
-    addFragmentToInfo(info, userFragment)
-  );
+  return ctx.db.query.users(query, addFragmentToInfo(info, userFragment));
 }
 
 /*
@@ -32,13 +21,35 @@ export default async function workspaceUsers(parent, args, ctx, info) {
  */
 export function usersQuery(args) {
   // Pull out some args.
-  const { fullName, email } = args;
+  const { fullName, email, workspaceUuid } = args;
 
-  // If we have username, use it.
-  if (fullName) return { fullName_contains: fullName };
+  // Init query
+  let query = {
+    where: {
+      AND: [
+        {
+          roleBindings_some: {
+            workspace: { id: workspaceUuid }
+          }
+        }
+      ]
+    }
+  };
 
-  // If we have an email use it.
-  if (email) return { emails_some: { address: email.toLowerCase() } };
+  // Init OR array
+  let or = [];
 
-  return null;
+  // If fullName, use it.
+  if (fullName) or.push({ fullName_contains: fullName });
+
+  // If email, use it
+  if (email) {
+    or.push({ emails_some: { address: email.toLowerCase() } });
+    or.push({ username_contains: email.toLowerCase() });
+  }
+
+  // Add OR array to query (breaks query if empty)
+  if (or.length > 0) query.where.OR = or;
+
+  return query;
 }
