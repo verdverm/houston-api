@@ -121,7 +121,7 @@ export async function extractImageMetadata(ev) {
     json: true
   });
 
-  log.info(`Fectching manifest from ${ev.target.url}`);
+  log.info(`Fetching manifest from ${ev.target.url}`);
   const manifest = (await client.get(ev.target.url)).body;
 
   if (!manifest.config) {
@@ -138,5 +138,9 @@ export async function extractImageMetadata(ev) {
     headers: { Accept: manifest.config.mediaType }
   })).body;
 
-  return { labels: imageMetadata.config.Labels, env: imageMetadata.config.Env };
+  return {
+    labels: imageMetadata.config.Labels,
+    env: imageMetadata.config.Env,
+    digest: manifest.config.digest
+  };
 }

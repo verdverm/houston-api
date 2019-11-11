@@ -1,4 +1,3 @@
-import log from "logger";
 import { hasPermission } from "rbac";
 import {
   generateNamespace,
@@ -10,11 +9,8 @@ import {
   findLatestTag,
   generateNextTag
 } from "deployments/config";
-import { createDockerJWT } from "registry/jwt";
-import { get } from "lodash";
+import { get, map } from "lodash";
 import config from "config";
-import request from "request-promise-native";
-import { NOT_FOUND } from "http-status-codes";
 import {
   AIRFLOW_EXECUTOR_CELERY,
   DEPLOYMENT_AIRFLOW,
@@ -91,50 +87,17 @@ export function type() {
  * @param {Object} parent The result of the parent resolver.
  * @return {Object} The deployment info.
  */
-export async function deployInfo(parent) {
-  // Build the repo name.
-  const repo = `${parent.releaseName}/${DEPLOYMENT_AIRFLOW}`;
-
-  // Create a JWT for the registry request.
-  const dockerJWT = await createDockerJWT("houston", [
+export async function deployInfo(parent, args, ctx) {
+  const images = await ctx.db.query.dockerImages(
     {
-      type: "repository",
-      name: repo,
-      actions: ["push", "pull"]
-    }
-  ]);
-
-  // Grab some configuration.
-  const {
-    releaseNamespace: namespace,
-    releaseName: platformReleaseName
-  } = config.get("helm");
-  const registryPort = config.get("registry.port");
-
-  // Build the registry request URL.
-  const uri = `http://${platformReleaseName}-registry.${namespace}:${registryPort}/v2/${repo}/tags/list`;
-  log.debug(`Requesting docker tags for ${parent.releaseName} at ${uri}`);
-
-  try {
-    // Request a list of tags.
-    const repo = await request({
-      method: "GET",
-      uri,
-      json: true,
-      headers: { Authorization: `Bearer ${dockerJWT}` }
-    });
-
-    // Generate the response based on list.
-    const latest = findLatestTag(repo.tags);
-    const next = generateNextTag(latest);
-    return { latest, next };
-  } catch (err) {
-    // If we get a 404, that means nobody has pushed yet, so just return empty.
-    if (err.statusCode === NOT_FOUND) return {};
-
-    // Otherwise throw the actual error.
-    throw err;
-  }
+      where: { deployment: { id: parent.id }, tag_starts_with: "cli-" }
+    },
+    `{ tag }`
+  );
+  const tags = map(images, "tag");
+  const latest = findLatestTag(tags);
+  const next = generateNextTag(latest);
+  return { latest, next };
 }
 
 /*

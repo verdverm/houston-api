@@ -270,6 +270,8 @@ describe("extractImageMetadata", () => {
       .reply(200, configBlobResponse);
 
     await expect(postExports.extractImageMetadata(event)).resolves.toEqual({
+      digest:
+        "sha256:eb7dc89de609bc3b6e5af651bfb6c7879e33c6b3a9ab09cc0a0ec0c7d050a5b6",
       env: [
         "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
         "AIRFLOW_REPOSITORY=https://github.com/astronomer/airflow",

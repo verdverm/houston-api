@@ -1,4 +1,4 @@
-import { urls, env, properties } from "./index";
+import { urls, env, properties, deployInfo } from "./index";
 import { generateReleaseName } from "deployments/naming";
 import { AIRFLOW_EXECUTOR_DEFAULT } from "constants";
 
@@ -39,5 +39,37 @@ describe("Deployoment", () => {
     const parent = { extraAu: 50 };
     const ret = await properties(parent);
     expect(ret).toHaveProperty("extra_au", 50);
+  });
+
+  test("deployInfo return an latest and next tags based on dockerImages", async () => {
+    const parent = { id: "testId" };
+    const db = {
+      query: {
+        dockerImages: jest
+          .fn()
+          .mockReturnValue([{ tag: "cli-1" }, { tag: "cli-2" }]),
+        deployment: jest.fn()
+      }
+    };
+    const { latest, next } = await deployInfo(parent, {}, { db });
+    expect(latest).toEqual("cli-2");
+    expect(next).toEqual("cli-3");
+    expect(db.query.dockerImages.mock.calls).toHaveLength(1);
+    expect(db.query.deployment.mock.calls).toHaveLength(0);
+  });
+
+  test("deployInfo return an latest and next tags based on default value", async () => {
+    const parent = { id: "testId" };
+    const db = {
+      query: {
+        dockerImages: jest.fn().mockReturnValue([]),
+        deployment: jest.fn().mockReturnValue({})
+      }
+    };
+    const { latest, next } = await deployInfo(parent, {}, { db });
+    expect(latest).toBeUndefined();
+    expect(next).toEqual("cli-1");
+    expect(db.query.dockerImages.mock.calls).toHaveLength(1);
+    expect(db.query.deployment.mock.calls).toHaveLength(0);
   });
 });
