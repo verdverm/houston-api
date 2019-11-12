@@ -88,7 +88,6 @@ describe("createDeployment", () => {
 
       // Mock up some db functions.
       createDeployment = jest.fn(req => {
-        console.log("req.data.releaseName", req.data.releaseName);
         return {
           id: deploymentId,
           // Use the releaseName from the request

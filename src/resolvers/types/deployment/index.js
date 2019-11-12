@@ -96,8 +96,18 @@ export async function deployInfo(parent, args, ctx) {
   );
   const tags = map(images, "tag");
   const latest = findLatestTag(tags);
-  const next = generateNextTag(latest);
-  return { latest, next };
+  const nextCli = generateNextTag(latest);
+
+  const imagesCreated = await ctx.db.query.dockerImages(
+    {
+      where: { deployment: { id: parent.id } },
+      order: [["created", "DESC"]],
+      limit: 1
+    },
+    `{ tag }`
+  );
+  const current = map(imagesCreated, "tag")[0];
+  return { latest, nextCli, current };
 }
 
 /*

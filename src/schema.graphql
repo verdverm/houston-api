@@ -165,8 +165,10 @@ type DeploymentUrl {
 }
 
 type DeployInfo {
-  latest: String
-  next: String
+  current: String
+  nextCli: String
+  latest: String @deprecated
+  next: String @deprecated @alias(field: "nextCli")
 }
 
 # Deployment properties are only to support the legacy API.
