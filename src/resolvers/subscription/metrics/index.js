@@ -1,4 +1,5 @@
 import queries from "./queries";
+// eslint-disable-next-line import/extensions
 import sampleData from "./sample.json";
 import log from "logger";
 import createPoller from "pubsub/poller";
