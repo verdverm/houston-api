@@ -10,7 +10,7 @@ import { WorkspaceDeleteError } from "errors";
 export default async function deleteWorkspace(parent, args, ctx) {
   const deployments = ctx.db.query.deployments(
     {
-      where: { id: args.workspaceUuid }
+      where: { id: args.workspaceUuid, deletedAt: null }
     },
     `{ id }`
   );

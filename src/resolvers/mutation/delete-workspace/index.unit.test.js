@@ -54,6 +54,12 @@ describe("deleteWorkspace", () => {
     expect(deployments.mock.calls.length).toBe(1);
     expect(deleteWorkspace.mock.calls.length).toBe(1);
     expect(res.data.deleteWorkspace.id).toBe(id);
+    expect(deployments).toBeCalledWith(
+      {
+        where: { id, deletedAt: null }
+      },
+      expect.anything()
+    );
   });
 
   test("errors if deployments are present", async () => {
@@ -86,5 +92,11 @@ describe("deleteWorkspace", () => {
     expect(deployments.mock.calls.length).toBe(1);
     expect(deleteWorkspace.mock.calls.length).toBe(0);
     expect(res.data.deleteWorkspace).toBe(null);
+    expect(deployments).toBeCalledWith(
+      {
+        where: { id, deletedAt: null }
+      },
+      expect.anything()
+    );
   });
 });

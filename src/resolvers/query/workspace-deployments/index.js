@@ -51,6 +51,9 @@ export function deploymentsQuery(args, ctx) {
     query.where.AND.push({ id_in: compact(deploymentIds) });
   }
 
+  // Exclude soft-deleted deployments
+  query.where.AND.push({ deletedAt: null });
+
   // Return the final query.
   return query;
 }

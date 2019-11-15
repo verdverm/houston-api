@@ -214,7 +214,7 @@ describe("POST /registry", () => {
         "deployment.images.pull"
       );
       expect(prisma.deployments).toBeCalledWith({
-        where: { id_in: [deploymentId, otherId] }
+        where: { deletedAt: null, id_in: [deploymentId, otherId] }
       });
     });
 

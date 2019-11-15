@@ -179,7 +179,7 @@ async function addDeploymentRoleBindings(promise) {
   // Get the deployments that are under any of our workspaces.
   const deployments = await prisma
     .deployments({
-      where: { workspace: { id_in: workspaceIds } }
+      where: { workspace: { id_in: workspaceIds }, deletedAt: null }
     })
     .$fragment(deploymentFragment);
 

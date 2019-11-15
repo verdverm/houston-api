@@ -7,7 +7,7 @@ import commander from "commander";
 import { version } from "utilities";
 import { merge } from "lodash";
 import got from "got";
-import { DEPLOYMENT_AIRFLOW } from "constants";
+import { DEPLOYMENT_AIRFLOW, MEDIATYPE_DOCKER_MANIFEST_V2 } from "constants";
 
 /*
  * Handle webhooks from the docker registry.
@@ -31,7 +31,11 @@ export default async function(req, res) {
       );
 
       // Get the existing config for this deployment.
-      const config = await prisma.deployment({ releaseName }).config();
+      const config = await prisma
+        .deployment({ releaseName, deletedAt: null })
+        .config();
+
+      if (!config) return;
 
       try {
         const imageMetadata = await exports.extractImageMetadata(ev);
@@ -91,9 +95,6 @@ export default async function(req, res) {
 
   res.sendStatus(200);
 }
-
-const MEDIATYPE_DOCKER_MANIFEST_V2 =
-  "application/vnd.docker.distribution.manifest.v2+json";
 
 export async function extractImageMetadata(ev) {
   if (ev.target.mediaType != MEDIATYPE_DOCKER_MANIFEST_V2) {

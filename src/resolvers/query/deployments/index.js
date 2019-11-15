@@ -10,7 +10,7 @@ import { addFragmentToInfo } from "graphql-binding";
  */
 export default async function deployments(parent, args, ctx, info) {
   return await ctx.db.query.deployments(
-    null,
+    { where: { deletedAt: null } },
     addFragmentToInfo(info, fragment)
   );
 }

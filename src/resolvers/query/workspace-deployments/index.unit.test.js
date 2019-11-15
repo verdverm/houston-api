@@ -87,8 +87,9 @@ describe("deploymentsQuery", () => {
     const query = deploymentsQuery(args, ctx);
 
     expect(query).toHaveProperty("where.AND");
-    expect(query.where.AND).toHaveLength(1);
+    expect(query.where.AND).toHaveLength(2);
     expect(query.where.AND[0]).toHaveProperty("workspace.id", workspaceId);
+    expect(query.where.AND[1]).toHaveProperty("deletedAt", null);
   });
 
   test("correctly falls back if no arguments are provided", async () => {
@@ -112,10 +113,11 @@ describe("deploymentsQuery", () => {
     const query = deploymentsQuery(args, ctx);
 
     expect(query).toHaveProperty("where.AND");
-    expect(query.where.AND).toHaveLength(1);
+    expect(query.where.AND).toHaveLength(2);
     expect(query.where.AND[0]).toHaveProperty("id_in", [
       deploymentId1,
       deploymentId2
     ]);
+    expect(query.where.AND[1]).toHaveProperty("deletedAt", null);
   });
 });

@@ -48,3 +48,6 @@ export const DEFAULT_NEXT_IMAGE_TAG = "cli-1";
 
 export const DOCKER_REGISTRY_CONTENT_TYPE =
   "application/vnd.docker.distribution.events.v1+json";
+
+export const MEDIATYPE_DOCKER_MANIFEST_V2 =
+  "application/vnd.docker.distribution.manifest.v2+json";

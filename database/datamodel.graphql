@@ -126,6 +126,7 @@ type Deployment {
   workspace: Workspace
   createdAt: DateTime! @createdAt
   updatedAt: DateTime! @updatedAt
+  deletedAt: DateTime
   images: [DockerImage!] @relation(name: "DeploymentDockerImages" onDelete: CASCADE)
 }
 
