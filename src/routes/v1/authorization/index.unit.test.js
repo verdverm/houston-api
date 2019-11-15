@@ -91,6 +91,7 @@ describe("GET /authorization", () => {
 
       await expect(res).resolves.toHaveProperty("statusCode", 200);
       expect(prisma.deployment).toBeCalledWith({
+        deletedAt: null,
         releaseName: "imploding-sun-1234"
       });
     });
@@ -101,6 +102,7 @@ describe("GET /authorization", () => {
       const res = request.get("/");
       await expect(res).resolves.toHaveProperty("statusCode", 403);
       expect(prisma.deployment).toBeCalledWith({
+        deletedAt: null,
         releaseName: "imploding-sun-1234"
       });
     });
@@ -149,6 +151,7 @@ describe("GET /authorization", () => {
 
       await expect(res).resolves.toHaveProperty("statusCode", 200);
       expect(prisma.deployment).toBeCalledWith({
+        deletedAt: null,
         releaseName: "imploding-sun-1234"
       });
     });
@@ -159,6 +162,7 @@ describe("GET /authorization", () => {
       const res = request.get("/");
       await expect(res).resolves.toHaveProperty("statusCode", 403);
       expect(prisma.deployment).toBeCalledWith({
+        deletedAt: null,
         releaseName: "imploding-sun-1234"
       });
     });
