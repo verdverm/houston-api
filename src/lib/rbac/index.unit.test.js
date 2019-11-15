@@ -3,7 +3,8 @@ import {
   hasSystemPermission,
   checkPermission,
   isServiceAccount,
-  accesibleDeploymentsWithPermission
+  accesibleDeploymentsWithPermission,
+  upgradeOldRolesConfig
 } from "./index";
 import casual from "casual";
 import {
@@ -85,6 +86,17 @@ describe("hasPermission", () => {
 
     expect(hasPerm).toBe(false);
   });
+
+  test("denies when config sets permission to false", () => {
+    const user = {
+      id: casual.uuid,
+      roleBindings: [{ role: "SYSTEM_VIEWER" }]
+    };
+
+    const hasPerm = hasPermission(user, "system.monitoring.get");
+
+    expect(hasPerm).toBe(false);
+  });
 });
 
 describe("hasSystemPermission", () => {
@@ -149,10 +161,10 @@ describe("accesibleDeploymentsWithPermission", () => {
   const userObject = {
     id: casual.uuid,
     roleBindings: [
-      { role: DEPLOYMENT_ADMIN, deployment: { id: casual.uuid } },
-      { role: DEPLOYMENT_VIEWER, deployment: { id: casual.uuid } },
-      { role: WORKSPACE_ADMIN, workspace: { id: casual.uuid } },
-      { role: DEPLOYMENT_ADMIN, deployment: { id: casual.uuid } }
+      { role: DEPLOYMENT_ADMIN, deployment: { id: "deployment1" } },
+      { role: DEPLOYMENT_VIEWER, deployment: { id: "deployment2" } },
+      { role: WORKSPACE_ADMIN, workspace: { id: "workspace3" } },
+      { role: DEPLOYMENT_ADMIN, deployment: { id: "deployment4" } }
     ]
   };
 
@@ -170,5 +182,31 @@ describe("accesibleDeploymentsWithPermission", () => {
       userObject.roleBindings[0].deployment.id,
       userObject.roleBindings[3].deployment.id
     ]);
+  });
+});
+
+describe("upgradeOldRolesConfig", () => {
+  const newConfig = {
+    ROLE_NAME: {
+      name: "x",
+      permissions: {
+        perm1: null,
+        perm2: null
+      }
+    }
+  };
+  test("upgrades old conifg", () => {
+    const oldConfig = [
+      {
+        id: "ROLE_NAME",
+        name: "x",
+        permissions: ["perm1", "perm2"]
+      }
+    ];
+    expect(upgradeOldRolesConfig(oldConfig)).toEqual(newConfig);
+  });
+
+  test("leaves new conifg alone", () => {
+    expect(upgradeOldRolesConfig(newConfig)).toBe(newConfig);
   });
 });
