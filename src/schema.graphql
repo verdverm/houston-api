@@ -241,6 +241,10 @@ type Metric {
   result: JSON
 }
 
+type DeploymentStatus {
+  result: JSON
+}
+
 #
 # Queries
 #
@@ -579,4 +583,8 @@ type Subscription {
     since: Int
     step: Int
   ): [Metric] @auth(permissions: ["deployment.metrics.get", "system.deployments.metrics"], op: OR)
+
+  deploymentStatus(
+    releaseName: String!
+  ): DeploymentStatus @auth
 }
