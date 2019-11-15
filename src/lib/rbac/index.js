@@ -111,10 +111,9 @@ export async function getServiceAccountWithRoleBindings(apiKey) {
 
   // Return a slightly modified version, to mimic what we return
   // for a user.
-  return {
-    id: serviceAccount.id,
-    roleBindings: [serviceAccount.roleBinding]
-  };
+  serviceAccount.roleBindings = [serviceAccount.roleBinding];
+  delete serviceAccount.roleBinding;
+  return serviceAccount;
 }
 
 /*

@@ -87,6 +87,6 @@
     "nock": "^11.6.0",
     "nodemon": "^1.18.7",
     "prettier": "^1.15.1",
-    "supertest": "^3.3.0"
+    "supertest": "^4.0.2"
   }
 }
