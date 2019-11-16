@@ -10,7 +10,8 @@ import {
   findLatestTag,
   generateNextTag,
   deploymentOverrides,
-  mapCustomEnvironmentVariables
+  mapCustomEnvironmentVariables,
+  platform
 } from "./index";
 import { generateReleaseName } from "deployments/naming";
 import casual from "casual";
@@ -27,7 +28,10 @@ describe("generateHelmValues", () => {
   test("generates correct shape with default/missing deployment config", () => {
     const deployment = {
       id: casual.uuid,
-      releaseName: generateReleaseName()
+      releaseName: generateReleaseName(),
+      workspace: {
+        id: casual.uuid
+      }
     };
     const config = generateHelmValues(deployment);
     expect(config).toHaveProperty("ingress");
@@ -369,5 +373,35 @@ describe("mapCustomEnvironmentVariables", () => {
       expect.stringContaining(deployment.releaseName)
     );
     expect(env.secret[0]).toHaveProperty("secretKey", envs[0].key);
+  });
+});
+
+describe("platform", () => {
+  const deployment = {
+    releaseName: casual.word,
+    workspace: { id: casual.uuid }
+  };
+  const { releaseName: platformReleaseName } = config.get("helm");
+  test("returns labels for v0.11.0 and above", () => {
+    const platformConfig = platform(deployment);
+    expect(platformConfig).toHaveProperty(
+      "labels.platform",
+      platformReleaseName
+    );
+    expect(platformConfig).toHaveProperty(
+      "labels.workspace",
+      deployment.workspace.id
+    );
+  });
+  test("returns platform for less than v0.11.0", () => {
+    const platformConfig = platform(deployment);
+    expect(platformConfig).toHaveProperty(
+      "platform.release",
+      platformReleaseName
+    );
+    expect(platformConfig).toHaveProperty(
+      "platform.workspace",
+      deployment.workspace.id
+    );
   });
 });

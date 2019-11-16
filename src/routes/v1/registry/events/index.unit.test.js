@@ -34,7 +34,9 @@ describe("POST /registry-events", () => {
     prisma.updateDeployment = jest
       .fn()
       .mockName("updateDeployment")
-      .mockReturnValue({});
+      .mockReturnValue({
+        workspace: { id: casual.uuid }
+      });
 
     const labels = Symbol(),
       env = Symbol(),

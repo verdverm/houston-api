@@ -94,7 +94,10 @@ describe("createDeployment", () => {
           releaseName: req.data.releaseName,
           config: { executor: AIRFLOW_EXECUTOR_DEFAULT },
           createdAt: new Date(),
-          updatedAt: new Date()
+          updatedAt: new Date(),
+          workspace: {
+            id: casual.uuid
+          }
         };
       });
 

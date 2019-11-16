@@ -48,7 +48,7 @@ export function generateHelmValues(deployment, values = {}) {
     constraints(deployment), // Apply any constraints (quotas, pgbouncer, etc).
     registry(deployment), // Apply the registry connection details.
     elasticsearch(deployment), // Apply the elasticsearch connection details
-    // platform(deployment), // Apply astronomer platform specific values.
+    platform(deployment), // Apply astronomer platform specific values.
     deploymentOverrides(deployment) // The deployment level config.
   );
 
@@ -313,14 +313,24 @@ export function elasticsearch(deployment) {
  * @param {Object} deployment A deployment object.
  * @return {Object} Helm values.
  */
-// export function platform(deployment) {
-//   return {
-//     platform: {
-//       release: deployment.releaseName,
-//       workspace: deployment.workspace.id
-//     }
-//   };
-// }
+export function platform(deployment) {
+  const { releaseName: platformReleaseName } = config.get("helm");
+
+  // Labels to apply to all objects created.
+  const labels = {
+    platform: platformReleaseName,
+    workspace: deployment.workspace.id
+  };
+
+  // Pre-0.11.0 format.
+  const platform = {
+    release: platformReleaseName,
+    workspace: deployment.workspace.id
+  };
+
+  // Merge both in.
+  return { labels, platform };
+}
 
 /*
  * HOF to help create mergeable resources

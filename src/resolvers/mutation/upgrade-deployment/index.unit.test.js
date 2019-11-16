@@ -55,7 +55,10 @@ describe("upgradeDeployment", () => {
       releaseName: generateReleaseName(),
       config: { executor: AIRFLOW_EXECUTOR_DEFAULT },
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      workspace: {
+        id: casual.uuid
+      }
     });
 
     // Construct db object for context.

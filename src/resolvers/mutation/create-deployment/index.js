@@ -33,10 +33,7 @@ import {
  * @return {Deployment} The newly created Deployment.
  */
 export default async function createDeployment(parent, args, ctx, info) {
-  const {
-    releaseVersion: platformReleaseVersion,
-    releaseName: platformReleaseName
-  } = config.get("helm");
+  const { releaseVersion: platformReleaseVersion } = config.get("helm");
 
   // Get executor config
   const { executors } = config.get("deployments");
@@ -146,11 +143,12 @@ export default async function createDeployment(parent, args, ctx, info) {
   const data = { metadataConnection, resultBackendConnection };
   const registry = { connection: { pass: registryPassword } };
   const elasticsearch = { connection: { pass: elasticsearchPassword } };
-  const platform = {
-    release: platformReleaseName,
-    workspace: args.workspaceUuid
-  };
-  const values = { data, registry, elasticsearch, platform, airflowVersion };
+
+  // Combine values together for helm input.
+  const values = { data, registry, elasticsearch, airflowVersion };
+
+  // Generate the helm input for the airflow chart (eg: values.yaml).
+  const helmConfig = generateHelmValues(deployment, values);
 
   // Fire off createDeployment to commander.
   await ctx.commander.request("createDeployment", {
@@ -160,8 +158,8 @@ export default async function createDeployment(parent, args, ctx, info) {
       version: version
     },
     namespace: generateNamespace(releaseName),
-    namespaceLabels: generateDeploymentLabels(platform),
-    rawConfig: JSON.stringify(generateHelmValues(deployment, values))
+    namespaceLabels: generateDeploymentLabels(helmConfig.labels),
+    rawConfig: JSON.stringify(helmConfig)
   });
 
   // If we have environment variables, send to commander.

@@ -6,6 +6,7 @@ export const deploymentFragment = `fragment EnsureFields on Deployment {
   extraAu
   airflowVersion
   alertEmails
+  workspace { id }
 }`;
 
 export const workspaceFragment = `{

@@ -24,7 +24,7 @@ helm:
   baseDomain: astronomer.io
   acme: ~
   rbacEnabled: ~
-  releaseName: ~
+  releaseName: astronomer
   releaseNamespace: ~
   releaseVersion: ~
 
