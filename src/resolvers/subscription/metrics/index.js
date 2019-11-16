@@ -22,7 +22,7 @@ export async function subscribe(parent, args, { db, pubsub }) {
 
   // Get the release name of the current deployment
   let { releaseName } = await db.query.deployment(
-    { where: { id: args.deploymentUuid, deletedAt: null } },
+    { where: { id: args.deploymentUuid } },
     `{ releaseName }`
   );
 

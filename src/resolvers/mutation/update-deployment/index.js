@@ -26,7 +26,7 @@ import { DEPLOYMENT_AIRFLOW } from "constants";
 export default async function updateDeployment(parent, args, ctx, info) {
   // Get the deployment first.
   const deployment = await ctx.db.query.deployment(
-    { where: { id: args.deploymentUuid, deletedAt: null } },
+    { where: { id: args.deploymentUuid } },
     queryFragment
   );
 
