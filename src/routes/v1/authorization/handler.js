@@ -32,7 +32,7 @@ export default async function(req, res) {
   if (matches) {
     // Get the deploymentId for the parsed releaseName.
     const deploymentId = await prisma
-      .deployment({ deletedAt: null, releaseName: matches[1] })
+      .deployment({ releaseName: matches[1] })
       .id();
 
     // Check if we have deployment level access to it.

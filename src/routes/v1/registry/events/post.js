@@ -31,9 +31,7 @@ export default async function(req, res) {
       );
 
       // Get the existing config for this deployment.
-      const config = await prisma
-        .deployment({ releaseName, deletedAt: null })
-        .config();
+      const config = await prisma.deployment({ releaseName }).config();
 
       if (!config) return;
 
