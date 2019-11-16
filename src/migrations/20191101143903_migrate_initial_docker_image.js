@@ -7,10 +7,8 @@ import config from "config";
 import { DEPLOYMENT_AIRFLOW } from "constants";
 
 export async function up() {
-  const deployments = await prisma.deployments(
-    { deletedAt: null },
-    `{ releaseName }`
-  );
+  const deployments = await prisma.deployments({}, `{ releaseName }`);
+
   // Grab some configuration.
   const {
     releaseNamespace: namespace,
