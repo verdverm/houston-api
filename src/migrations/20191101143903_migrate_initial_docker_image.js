@@ -5,8 +5,16 @@ import { extractImageMetadata } from "routes/v1/registry/events/post";
 import request from "request-promise-native";
 import config from "config";
 import { DEPLOYMENT_AIRFLOW } from "constants";
+import { execSync } from "child_process";
 
 export async function up() {
+  // Since we are using the prisma client library and we run `prisma generate`
+  // before these migrations, the query below will fail, looking for new columns against
+  // an unmigrated database.
+  log.debug("Running prisma-deploy");
+  execSync("node_modules/.bin/prisma deploy --force", { stdio: "inherit" });
+
+  // Query for all deployments in the system.
   const deployments = await prisma.deployments({}, `{ releaseName }`);
 
   // Grab some configuration.
@@ -17,11 +25,13 @@ export async function up() {
 
   const registryPort = config.get("registry.port");
 
+  // Current deployment as we loop through them.
   let deployment;
 
   // Skip for local env without docker registry
   try {
     for (deployment of deployments) {
+      log.debug(`Migrating ${deployment.releaseName}...`);
       const releaseName = deployment.releaseName;
       const repo = `${releaseName}/${DEPLOYMENT_AIRFLOW}`;
       const registry = `${platformReleaseName}-registry.${namespace}:${registryPort}`;
