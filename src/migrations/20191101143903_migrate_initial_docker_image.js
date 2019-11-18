@@ -26,11 +26,14 @@ export async function up() {
   const registryPort = config.get("registry.port");
 
   // Current deployment as we loop through them.
-  let deployment;
+  if (!deployments) {
+    log.info("There is no deployments :(");
+    return;
+  }
 
   // Skip for local env without docker registry
   try {
-    for (deployment of deployments) {
+    for (const deployment of deployments) {
       log.debug(`Migrating ${deployment.releaseName}...`);
       const releaseName = deployment.releaseName;
       const repo = `${releaseName}/${DEPLOYMENT_AIRFLOW}`;
@@ -42,7 +45,7 @@ export async function up() {
           type: "repository",
           // Build the repo name.
           name: repo,
-          actions: ["push"]
+          actions: ["pull"]
         }
       ]);
 
@@ -57,9 +60,12 @@ export async function up() {
         headers: { Authorization: `Bearer ${dockerJWT}` }
       });
 
-      let tag;
+      if (!tags) {
+        log.info("There is no tags :(");
+        continue;
+      }
 
-      for (tag of tags) {
+      for (const tag of tags) {
         // For each tag create record
         const ev = {
           target: {
