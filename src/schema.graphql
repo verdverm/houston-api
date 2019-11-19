@@ -487,6 +487,13 @@ type Mutation {
     role: Role!
   ): ServiceAccount @auth(permissions: ["workspace.serviceAccounts.create", "system.serviceAccounts.create"], op: OR)
 
+  # New ServiceAccount scoped mutation
+  createSystemServiceAccount(
+    label: String!
+    category: String
+    role: Role!
+  ): ServiceAccount @auth(permissions: ["system.serviceAccounts.create"], op: OR)
+
   # Legacy - backwards compatibility
   updateServiceAccount(
     serviceAccountUuid: Uuid!
@@ -519,6 +526,10 @@ type Mutation {
     serviceAccountUuid: Uuid!
     deploymentUuid: Uuid!
   ): ServiceAccount @auth(permissions: ["deployment.serviceAccounts.delete", "system.serviceAccounts.delete"], op: OR)
+
+  deleteSystemServiceAccount(
+    serviceAccountUuid: Uuid!
+  ): ServiceAccount @auth(permissions: ["system.serviceAccounts.delete"], op: OR)
 
   createSystemRoleBinding(
     userId: ID!

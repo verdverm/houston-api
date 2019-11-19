@@ -5,6 +5,7 @@ import createDeployment from "./create-deployment";
 import createDeploymentServiceAccount from "./create-deployment-service-account";
 import createServiceAccount from "./create-service-account";
 import createWorkspaceServiceAccount from "./create-workspace-service-account";
+import createSystemServiceAccount from "./create-system-service-account";
 import createSystemRoleBinding from "./create-system-rolebinding";
 import createToken from "./create-token";
 import createUser from "./create-user";
@@ -13,6 +14,7 @@ import deleteDeployment from "./delete-deployment";
 import deleteInviteToken from "./delete-invite-token";
 import deleteServiceAccount from "./delete-service-account";
 import deleteDeploymentServiceAccount from "./delete-deployment-service-account";
+import deleteSystemServiceAccount from "./delete-system-service-account";
 import deleteWorkspaceServiceAccount from "./delete-workspace-service-account";
 import deleteWorkspace from "./delete-workspace";
 import deploymentAlertsUpdate from "./deployment-alerts-update";
@@ -43,6 +45,7 @@ export default {
   createDeployment,
   createDeploymentServiceAccount,
   createServiceAccount,
+  createSystemServiceAccount,
   createWorkspaceServiceAccount,
   createSystemRoleBinding,
   createToken,
@@ -52,6 +55,7 @@ export default {
   deleteInviteToken,
   deleteServiceAccount,
   deleteDeploymentServiceAccount,
+  deleteSystemServiceAccount,
   deleteWorkspaceServiceAccount,
   deleteWorkspace,
   deploymentAlertsUpdate,
