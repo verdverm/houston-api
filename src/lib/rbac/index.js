@@ -176,8 +176,7 @@ export async function getAuthUser(authorization) {
  * TODO: Remove me and the two references to me right above when
  * deployment level RBAC is in place.
  * This function wraps the two calls above to append fake roleBindings
- * to the user object for any deployments that belong to workspaces where
- * the user has WORKSPACE_ADMIN role.
+ * to the user object for any deployments that belong to workspaces.
  * @param {Promise} promise A proimse for a user or service account.
  * @return {Object} The user object with roleBindings.
  */
