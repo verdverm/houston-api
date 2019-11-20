@@ -22,7 +22,7 @@ export default async function validateDeploymentCredentials(
 
   // Get the password for this deployment
   const truePassword = await prisma
-    .deployment({ deletedAt: null, releaseName })
+    .deployment({ releaseName })
     [passwordField]();
 
   // Return false if no result.
