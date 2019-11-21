@@ -313,14 +313,21 @@ roles:
 #
 deployments:
 
+  defaults:
+    # Default Airflow chart settings
+    chart:
+      version: 0.10.3
+
+    # Default Airflow image settings
+    image:
+      version: 1.10.5
+      distro: alpine3.10
+
   # Labels specifed here are applied to Airflow deployment namespaces.
   namespaceLabels: {}
 
   # Log out final helm values whenever they are generated, before deployment.
   logHelmValues: false
-
-  # Default airflow version to deploy. This is used as the default image tag.
-  defaultAirflowVersion: "1.10.5"
 
   # This is the database connection that we use to connect
   # and create other databases/schemas/users for each

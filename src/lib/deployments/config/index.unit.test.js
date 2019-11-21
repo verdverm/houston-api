@@ -1,4 +1,5 @@
 import {
+  airflowImageTag,
   mapResources,
   objectToArrayOfKeyValue,
   arrayOfKeyValueToObject,
@@ -403,5 +404,14 @@ describe("platform", () => {
       "platform.workspace",
       deployment.workspace.id
     );
+  });
+});
+
+describe("airflowImageTag", () => {
+  test("returns labels for v0.11.0 and above", () => {
+    const version = "0.10.3";
+    const distro = "buster";
+    const tag = airflowImageTag(version, distro);
+    expect(tag).toBe("0.10.3-buster");
   });
 });

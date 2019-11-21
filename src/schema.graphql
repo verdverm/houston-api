@@ -140,9 +140,11 @@ type DeploymentConfig {
   astroUnit: AstroUnit
   maxExtraAu: Int
   executors: JSON
-  latestVersion: String
   singleNamespace: Boolean!
   loggingEnabled: Boolean!
+  latestVersion: String @deprecated
+  airflowChartVersion: String!
+  airflowImageTag: String!
 }
 
 type WorkspaceCapabilities {

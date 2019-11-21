@@ -7,6 +7,7 @@ import {
 } from "deployments/naming";
 import { createDatabaseForDeployment } from "deployments/database";
 import {
+  airflowImageTag,
   arrayOfKeyValueToObject,
   generateHelmValues,
   mapPropertiesToDeployment,
@@ -33,7 +34,8 @@ import {
  * @return {Deployment} The newly created Deployment.
  */
 export default async function createDeployment(parent, args, ctx, info) {
-  const { releaseVersion: platformReleaseVersion } = config.get("helm");
+  // Grab default chart and image
+  const { chart, image } = config.get("deployments.defaults");
 
   // Get executor config
   const { executors } = config.get("deployments");
@@ -61,15 +63,12 @@ export default async function createDeployment(parent, args, ctx, info) {
     throw new WorkspaceSuspendedError();
   }
 
-  // Grab the default airflow version.
-  const defaultAirflowVersion = config.get("deployments.defaultAirflowVersion");
-
   // Validate deployment args.
   await validate(args.workspaceUuid, args);
 
-  // Default deployment version to platform version.
-  const version = get(args, "version", platformReleaseVersion);
-  const airflowVersion = get(args, "airflowVersion", defaultAirflowVersion);
+  // Parse args for default versions, falling back to platform versions.
+  const version = get(args, "version", chart.version);
+  const airflowVersion = get(args, "airflowVersion", image.version);
 
   // Generate a unique registry password for this deployment.
   const registryPassword = crypto.randomBytes(16).toString("hex");
@@ -143,9 +142,16 @@ export default async function createDeployment(parent, args, ctx, info) {
   const data = { metadataConnection, resultBackendConnection };
   const registry = { connection: { pass: registryPassword } };
   const elasticsearch = { connection: { pass: elasticsearchPassword } };
+  const defaultAirflowTag = airflowImageTag(airflowVersion, image.distro);
 
   // Combine values together for helm input.
-  const values = { data, registry, elasticsearch, airflowVersion };
+  const values = {
+    data,
+    registry,
+    elasticsearch,
+    airflowVersion /* This is deprecated after v0.10.3, delete me soon */,
+    defaultAirflowTag /* This is the new version post v0.10.3, keep me */
+  };
 
   // Generate the helm input for the airflow chart (eg: values.yaml).
   const helmConfig = generateHelmValues(deployment, values);

@@ -35,9 +35,11 @@ const query = `
       }
       maxExtraAu
       executors
-      latestVersion
       singleNamespace
       loggingEnabled
+      latestVersion
+      airflowChartVersion
+      airflowImageTag
     }
   }
 `;
@@ -55,5 +57,7 @@ describe("deploymentConfig", () => {
     expect(data.deploymentConfig).toHaveProperty("latestVersion");
     expect(data.deploymentConfig).toHaveProperty("singleNamespace");
     expect(data.deploymentConfig).toHaveProperty("loggingEnabled");
+    expect(data.deploymentConfig).toHaveProperty("airflowChartVersion");
+    expect(data.deploymentConfig).toHaveProperty("airflowImageTag");
   });
 });

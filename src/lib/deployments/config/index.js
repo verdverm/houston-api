@@ -527,3 +527,11 @@ export function mapCustomEnvironmentVariables(deployment, envs = []) {
 
   return { secret: secrets };
 }
+
+/*
+ * Generate the default airflow image tag.
+ * @reuturn {String} Airflow image tag.
+ */
+export function airflowImageTag(version, distro) {
+  return `${version}-${distro}`;
+}
