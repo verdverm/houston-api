@@ -115,8 +115,6 @@ httpServer.listen({ port: serverConfig.port }, () => {
     `Server ready at http://localhost:${serverConfig.port}${server.graphqlPath}`
   );
   log.info(
-    `Subscriptions ready at ws://localhost:${serverConfig.port}${
-      server.subscriptionsPath
-    }`
+    `Subscriptions ready at ws://localhost:${serverConfig.port}${server.subscriptionsPath}`
   );
 });

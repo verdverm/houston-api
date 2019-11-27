@@ -12,5 +12,5 @@ export const deploymentFragment = `fragment EnsureFields on Deployment {
 export const workspaceFragment = `{
   stripeCustomerId
   isSuspended
-  deployments {id}
+  deployments {id, deletedAt}
 }`;

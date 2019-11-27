@@ -18,7 +18,7 @@ import { WorkspaceSuspendedError, TrialError } from "errors";
 import { addFragmentToInfo } from "graphql-binding";
 import config from "config";
 import bcrypt from "bcryptjs";
-import { get, find, size } from "lodash";
+import { get, isNull, find, size } from "lodash";
 import crypto from "crypto";
 import {
   DEPLOYMENT_AIRFLOW,
@@ -48,12 +48,18 @@ export default async function createDeployment(parent, args, ctx, info) {
   // Is stripe enabled for the system.
   const stripeEnabled = config.get("stripe.enabled");
 
+  // Find deployments that have not yet been soft deleted
+  const existingDeployments = find(workspace.deployments, dep =>
+    isNull(dep.deletedAt)
+  );
+
   // Throw an error if stripe is enabled (Cloud only) and a stripeCustomerId
   // does not exist in the Workspace table
+
   if (
     !workspace.stripeCustomerId &&
     stripeEnabled &&
-    size(workspace.deployments) > 0
+    size(existingDeployments) > 0
   ) {
     throw new TrialError();
   }

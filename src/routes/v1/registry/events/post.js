@@ -133,9 +133,11 @@ export async function extractImageMetadata(ev) {
     `blobs/${manifest.config.digest}`
   );
   log.debug(`Fectching image config from ${configURL}`);
-  const imageMetadata = (await client.get(configURL, {
-    headers: { Accept: manifest.config.mediaType }
-  })).body;
+  const imageMetadata = (
+    await client.get(configURL, {
+      headers: { Accept: manifest.config.mediaType }
+    })
+  ).body;
 
   return {
     labels: imageMetadata.config.Labels,

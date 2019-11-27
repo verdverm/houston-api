@@ -265,9 +265,7 @@ describe("extractImageMetadata", () => {
       .get(`/v2/telescopic-sun-2787/airflow/manifests/${event.target.digest}`)
       .reply(200, manifestResponse)
       .get(
-        `/v2/telescopic-sun-2787/airflow/blobs/${
-          manifestResponse.config.digest
-        }`
+        `/v2/telescopic-sun-2787/airflow/blobs/${manifestResponse.config.digest}`
       )
       .reply(200, configBlobResponse);
 
