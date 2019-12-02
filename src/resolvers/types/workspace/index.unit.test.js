@@ -21,13 +21,21 @@ describe("Workspace", () => {
   });
 
   test("deploymentCount returns length of deployments", () => {
-    const parent = { deployments: [{ id: casual.uuid }] };
+    const parent = { deployments: [{ id: casual.uuid, deletedAt: null }] };
     const count = deploymentCount(parent);
     expect(count).toBe(1);
   });
 
   test("deploymentCount returns 0 when no deployments", () => {
     const parent = {};
+    const count = deploymentCount(parent);
+    expect(count).toBe(0);
+  });
+
+  test("deploymentCount returns 0 when there is a single deleted deployment", () => {
+    const parent = {
+      deployments: [{ id: casual.uuid, deletedAt: new Date() }]
+    };
     const count = deploymentCount(parent);
     expect(count).toBe(0);
   });
