@@ -24,13 +24,10 @@ async function deploymentUpgrade() {
   const airflowChartVersion = config.get("deployments.defaults.chart.version");
   for (const deployment of deployments) {
     if (semver.lt(deployment.version, airflowChartVersion)) {
-      const updatedDeployment = await prisma.mutation.updateDeployment(
-        {
-          where: { id: deployment.deploymentUuid },
-          data: { version: airflowChartVersion }
-        },
-        `{ releaseName, version }`
-      );
+      const updatedDeployment = await prisma.updateDeployment({
+        where: { id: deployment.id },
+        data: { version: airflowChartVersion }
+      });
 
       await commander.request("updateDeployment", {
         releaseName: updatedDeployment.releaseName,
