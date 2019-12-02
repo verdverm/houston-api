@@ -7,7 +7,8 @@ import log from "logger";
 import { prisma } from "generated/client";
 import commander from "commander";
 import { generateHelmValues } from "deployments/config";
-import yargs from "yargs";
+import semver from "semver";
+import config from "config";
 import { DEPLOYMENT_AIRFLOW } from "constants";
 
 /*
@@ -17,18 +18,18 @@ async function deploymentUpgrade() {
   log.info("Starting automatic deployment upgrade");
   const deployments = await prisma.deployments({}, `{ releaseName, version }`);
   if (deployments.length === 0) {
-    log.info("There is no deployments to delete :(");
+    log.info("There are no deployments to delete :(");
     return;
   }
-
+  const airflowChartVersion = config.get("deployments.defaults.chart.version");
   for (const deployment of deployments) {
-    if (deployment.version !== argv["airflowChartVersion"]) {
+    if (semver.lt(deployment.version, airflowChartVersion)) {
       const updatedDeployment = await prisma.mutation.updateDeployment(
         {
           where: { id: deployment.deploymentUuid },
-          data: { version: argv["airflowChartVersion"] }
+          data: { version: airflowChartVersion }
         },
-        `{ releaseNam, version }`
+        `{ releaseName, version }`
       );
 
       await commander.request("updateDeployment", {
@@ -42,16 +43,6 @@ async function deploymentUpgrade() {
     }
   }
 }
-
-const argv = yargs
-  .option("airflow-chart-version", {
-    alias: "v",
-    required: true,
-    description: "Latest airflow chart version",
-    type: "string"
-  })
-  .help()
-  .alias("help", "h").argv;
 
 // When a file is run directly from Node, require.main is set to its module.
 if (require.main === module) {
