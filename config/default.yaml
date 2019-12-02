@@ -205,7 +205,7 @@ roles:
   #       system.monitoring.get: false
 
   #
-  # System
+  # System Roles
   #
   SYSTEM_VIEWER:
     name: System Viewer
@@ -247,9 +247,8 @@ roles:
       ? system.airflow.admin
 
   #
-  # Workspace
+  # Workspace Roles
   #
-
   WORKSPACE_VIEWER:
     name: Workspace Viewer
     permissions: &PERMS__WORKSPACE_VIEWER
@@ -277,7 +276,7 @@ roles:
       ? workspace.iam.update
 
   #
-  # Deployment
+  # Deployment Roles
   #
   DEPLOYMENT_VIEWER:
     name: Deployment Viewer
@@ -307,6 +306,14 @@ roles:
       <<: *PERMS__DEPLOYMENT_EDITOR
       ? deployment.airflow.admin
       ? deployment.config.delete
+
+  #
+  # User Role (Everyone)
+  #
+  USER:
+    name: User
+    permissions:
+      ? system.workspace.create
 
 #
 # Airflow Deployment Configurations

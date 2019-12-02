@@ -435,7 +435,7 @@ type Mutation {
   createWorkspace(
     label: String!
     description: String
-  ): Workspace @auth
+  ): Workspace @auth(permissions: ["system.workspace.create"])
 
   workspaceAddUser(
     workspaceUuid: Uuid
