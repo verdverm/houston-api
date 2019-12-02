@@ -38,8 +38,13 @@ const query = `
       singleNamespace
       loggingEnabled
       latestVersion
-      airflowChartVersion
-      airflowImageTag
+      airflowImages {
+        version
+        tag
+      }
+      airflowVersions
+      defaultAirflowImageTag
+      defaultAirflowChartVersion
     }
   }
 `;
@@ -57,7 +62,9 @@ describe("deploymentConfig", () => {
     expect(data.deploymentConfig).toHaveProperty("latestVersion");
     expect(data.deploymentConfig).toHaveProperty("singleNamespace");
     expect(data.deploymentConfig).toHaveProperty("loggingEnabled");
-    expect(data.deploymentConfig).toHaveProperty("airflowChartVersion");
-    expect(data.deploymentConfig).toHaveProperty("airflowImageTag");
+    expect(data.deploymentConfig).toHaveProperty("airflowImages");
+    expect(data.deploymentConfig).toHaveProperty("airflowVersions");
+    expect(data.deploymentConfig).toHaveProperty("defaultAirflowImageTag");
+    expect(data.deploymentConfig).toHaveProperty("defaultAirflowChartVersion");
   });
 });
