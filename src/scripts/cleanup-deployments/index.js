@@ -120,7 +120,7 @@ async function deploymentCleanup() {
     `{ releaseName }`
   );
   if (deployments.length === 0) {
-    log.info("There is no deployments to delete :(");
+    log.info("There are no deployments to delete :(");
     return;
   }
   for (const deployment of deployments) {
