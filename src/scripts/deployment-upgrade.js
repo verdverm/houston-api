@@ -16,7 +16,9 @@ import { DEPLOYMENT_AIRFLOW } from "constants";
  */
 async function deploymentUpgrade() {
   log.info("Starting automatic deployment upgrade");
-  const deployments = await prisma.deployments({}, `{ releaseName, version }`);
+  const deployments = await prisma
+    .deployments({})
+    .$fragment(`{ id releaseName version workspace { id } }`);
   if (deployments.length === 0) {
     log.info("There are no deployments to delete :(");
     return;
@@ -24,11 +26,20 @@ async function deploymentUpgrade() {
   const airflowChartVersion = config.get("deployments.defaults.chart.version");
   for (const deployment of deployments) {
     if (semver.lt(deployment.version, airflowChartVersion)) {
-      const updatedDeployment = await prisma.updateDeployment({
-        where: { id: deployment.id },
-        data: { version: airflowChartVersion }
-      });
-
+      const releaseName = deployment.releaseName;
+      const updatedDeployment = await prisma
+        .updateDeployment({
+          where: { releaseName },
+          data: { version: airflowChartVersion }
+        })
+        .$fragment(
+          `{ id releaseName version extraAu airflowVersion alertEmails workspace { id } }`
+        );
+      log.info(
+        `updating deployment of ${updatedDeployment.releaseName} from ${
+          deployment.version
+        } to ${updatedDeployment.version}`
+      );
       await commander.request("updateDeployment", {
         releaseName: updatedDeployment.releaseName,
         chart: {
@@ -39,6 +50,7 @@ async function deploymentUpgrade() {
       });
     }
   }
+  log.info("Automatic deployment upgrade has been finished!");
 }
 
 // When a file is run directly from Node, require.main is set to its module.
