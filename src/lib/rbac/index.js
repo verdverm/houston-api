@@ -107,10 +107,10 @@ export function checkSystemPermission(user, permission) {
 /* Get a user that has the required information to make
  * RBAC decisions.
  * @param {String} id The user id.
- * @return {Promise<Object>} The User object with RoleBindings.
+ * @return {Object} The User object with RoleBindings.
  */
-export function getUserWithRoleBindings(id) {
-  return prisma.user({ id }).$fragment(userFragment);
+export async function getUserWithRoleBindings(id) {
+  return await prisma.user({ id }).$fragment(userFragment);
 }
 
 /* Get a ServiceAccount that has the required information to make
@@ -157,8 +157,8 @@ export async function getAuthUser(authorization) {
 
   // If we do have a service account, set it as the user on the context.
   if (isServiceAcct) {
-    return addDeploymentRoleBindings(
-      getServiceAccountWithRoleBindings(authorization)
+    return await addSyntheticRoleBindings(
+      await getServiceAccountWithRoleBindings(authorization)
     );
   }
 
@@ -168,7 +168,7 @@ export async function getAuthUser(authorization) {
   // If we have a userId, set the user on the session,
   // otherwise return nothing.
   if (uuid) {
-    return addDeploymentRoleBindings(getUserWithRoleBindings(uuid));
+    return await addSyntheticRoleBindings(await getUserWithRoleBindings(uuid));
   }
 }
 
@@ -177,12 +177,10 @@ export async function getAuthUser(authorization) {
  * deployment level RBAC is in place.
  * This function wraps the two calls above to append fake roleBindings
  * to the user object for any deployments that belong to workspaces.
- * @param {Promise} promise A proimse for a user or service account.
+ * @param {Object} User A user or service account.
  * @return {Object} The user object with roleBindings.
  */
-async function addDeploymentRoleBindings(promise) {
-  // Resolve the promise for user/service account.
-  const user = await promise;
+async function addDeploymentRoleBindings(user) {
   if (!user) return;
 
   // Get list of roleBindings for all workspaces the user belongs to.
@@ -224,6 +222,36 @@ async function addDeploymentRoleBindings(promise) {
 
   // Return a modified user, spreading existing rolebindings, with new fake ones.
   return { ...user, roleBindings };
+}
+
+/* Bind the USER role to all users on the platform.
+ * This role will allow anyone to create a new workspace,
+ * but it gives us an extra layer of configuration in our permissions.
+ * Enterprise customers can use this role to determine what default permissions
+ * all platform users have.
+ * @param {Object} User A user or service account.
+ * @return {Object} The user object with roleBindings.
+ */
+export function addUserRoleBinding(user) {
+  if (!user) return;
+
+  const userRoleBinding = { role: "USER", workspace: null, deployment: null };
+
+  // Combine with existing real roleBindings.
+  const roleBindings = [...user.roleBindings, userRoleBinding];
+
+  // Return a modified user, spreading existing rolebindings, with new fake ones.
+  return { ...user, roleBindings };
+}
+
+/* Add any "synthetic" roles to the user object. These are any roles
+ * that we want to programatically assign at runtime, rather than ones that
+ * are stored in the database.
+ * @param {Object} User A user or service account.
+ * @return {Object} The user object with roleBindings.
+ */
+async function addSyntheticRoleBindings(user) {
+  return addUserRoleBinding(await addDeploymentRoleBindings(user));
 }
 
 // /* If the passed argument is a string, lookup the user by id.

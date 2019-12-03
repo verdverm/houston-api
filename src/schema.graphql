@@ -143,8 +143,16 @@ type DeploymentConfig {
   singleNamespace: Boolean!
   loggingEnabled: Boolean!
   latestVersion: String @deprecated
-  airflowChartVersion: String!
-  airflowImageTag: String!
+  airflowImages: [AirflowImage!]!
+  airflowVersions: [String!]!
+  defaultAirflowImageTag: String!
+  defaultAirflowChartVersion: String!
+}
+
+type AirflowImage {
+  version: String!
+  channel: String!
+  tag: String!
 }
 
 type WorkspaceCapabilities {
@@ -427,7 +435,7 @@ type Mutation {
   createWorkspace(
     label: String!
     description: String
-  ): Workspace @auth
+  ): Workspace @auth(permissions: ["system.workspace.create"])
 
   workspaceAddUser(
     workspaceUuid: Uuid

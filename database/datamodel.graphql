@@ -8,6 +8,7 @@ enum Role {
   DEPLOYMENT_ADMIN
   DEPLOYMENT_EDITOR
   DEPLOYMENT_VIEWER
+  USER
 }
 
 type User {

@@ -4,7 +4,8 @@ import {
   checkPermission,
   isServiceAccount,
   accesibleDeploymentsWithPermission,
-  upgradeOldRolesConfig
+  upgradeOldRolesConfig,
+  addUserRoleBinding
 } from "./index";
 import casual from "casual";
 import {
@@ -208,5 +209,30 @@ describe("upgradeOldRolesConfig", () => {
 
   test("leaves new conifg alone", () => {
     expect(upgradeOldRolesConfig(newConfig)).toBe(newConfig);
+  });
+});
+
+describe("addUserRoleBinding", () => {
+  const userId = casual.uuid;
+  const newUser = {
+    id: userId,
+    roleBindings: [
+      {
+        role: "USER",
+        workspace: null,
+        deployment: null
+      }
+    ]
+  };
+  test("passing no user returns undefined", () => {
+    const user = null;
+    expect(addUserRoleBinding(user)).toBeUndefined();
+  });
+  test("returns with USER role", () => {
+    const user = {
+      id: userId,
+      roleBindings: []
+    };
+    expect(addUserRoleBinding(user)).toEqual(newUser);
   });
 });

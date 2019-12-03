@@ -7,8 +7,8 @@ import {
 } from "deployments/naming";
 import { createDatabaseForDeployment } from "deployments/database";
 import {
-  airflowImageTag,
   arrayOfKeyValueToObject,
+  defaultAirflowImage,
   generateHelmValues,
   mapPropertiesToDeployment,
   generateDefaultDeploymentConfig
@@ -34,8 +34,9 @@ import {
  * @return {Deployment} The newly created Deployment.
  */
 export default async function createDeployment(parent, args, ctx, info) {
-  // Grab default chart and image
-  const { chart, image } = config.get("deployments.defaults");
+  // Grab default chart
+  const defaultChartVersion = config.get("deployments.chart.version");
+  const defaultAirflowVersion = defaultAirflowImage().version;
 
   // Get executor config
   const { executors } = config.get("deployments");
@@ -73,8 +74,8 @@ export default async function createDeployment(parent, args, ctx, info) {
   await validate(args.workspaceUuid, args);
 
   // Parse args for default versions, falling back to platform versions.
-  const version = get(args, "version", chart.version);
-  const airflowVersion = get(args, "airflowVersion", image.version);
+  const version = get(args, "version", defaultChartVersion);
+  const airflowVersion = get(args, "airflowVersion", defaultAirflowVersion);
 
   // Generate a unique registry password for this deployment.
   const registryPassword = crypto.randomBytes(16).toString("hex");
@@ -148,7 +149,6 @@ export default async function createDeployment(parent, args, ctx, info) {
   const data = { metadataConnection, resultBackendConnection };
   const registry = { connection: { pass: registryPassword } };
   const elasticsearch = { connection: { pass: elasticsearchPassword } };
-  const defaultAirflowTag = airflowImageTag(airflowVersion, image.distro);
 
   // Combine values together for helm input.
   const values = {
@@ -156,7 +156,7 @@ export default async function createDeployment(parent, args, ctx, info) {
     registry,
     elasticsearch,
     airflowVersion /* This is deprecated after v0.10.3, delete me soon */,
-    defaultAirflowTag /* This is the new version post v0.10.3, keep me */
+    defaultAirflowTag: airflowVersion /* This is the new version post v0.10.3, keep me */
   };
 
   // Generate the helm input for the airflow chart (eg: values.yaml).

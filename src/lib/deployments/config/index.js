@@ -3,6 +3,8 @@ import log from "logger";
 import {
   curry,
   find,
+  filter,
+  first,
   fromPairs,
   get,
   isNumber,
@@ -12,10 +14,12 @@ import {
   maxBy,
   merge,
   set,
-  split
+  split,
+  uniq
 } from "lodash";
 import config from "config";
 import yaml from "yamljs";
+import semver from "semver";
 import {
   DEPLOYMENT_PROPERTY_EXTRA_AU,
   DEPLOYMENT_PROPERTY_ALERT_EMAILS,
@@ -534,4 +538,31 @@ export function mapCustomEnvironmentVariables(deployment, envs = []) {
  */
 export function airflowImageTag(version, distro) {
   return `${version}-${distro}`;
+}
+
+/*
+ * Get list of supported Airflow images.
+ * @reuturn {[String]} List of airflow images.
+ */
+export function airflowImages() {
+  return config
+    .get("deployments.images")
+    .slice(0)
+    .sort((a, b) => semver.rcompare(a.version, b.version));
+}
+
+/*
+ * Get list of supported Airflow versions.
+ * @reuturn {[Object]} List of Airflow versions.
+ */
+export function airflowVersions() {
+  return uniq(map(airflowImages(), "version"));
+}
+
+/*
+ * Get default Airflow image.
+ * @reuturn {String} Default Airflow image tag.
+ */
+export function defaultAirflowImage() {
+  return first(filter(airflowImages(), i => i.channel === "stable"));
 }
