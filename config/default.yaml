@@ -319,7 +319,9 @@ roles:
 # Airflow Deployment Configurations
 #
 deployments:
-
+  # To enable automatic airflow upgrades
+  automaticUpgrades:
+    enabled: true
   # Airflow chart settings
   # Static helm configurations for this chart are found below.
   chart:
