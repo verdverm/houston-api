@@ -16,38 +16,55 @@ import { DEPLOYMENT_AIRFLOW } from "constants";
  */
 async function deploymentUpgrade() {
   log.info("Starting automatic deployment upgrade");
+
+  // This is our desired chart version
+  const desiredVersion = config.get("deployments.chart.version");
+
+  // Find all deployments.
   const deployments = await prisma
     .deployments({})
     .$fragment(`{ id releaseName version workspace { id } }`);
+
+  // Return early if we have no deployments.
   if (deployments.length === 0) {
-    log.info("There are no deployments to delete :(");
+    log.info("There are no deployments to delete");
     return;
   }
-  const airflowChartVersion = config.get("deployments.defaults.chart.version");
+
+  // Loop through and upgrade all deployments.
   for (const deployment of deployments) {
-    if (semver.lt(deployment.version, airflowChartVersion)) {
-      const releaseName = deployment.releaseName;
-      const updatedDeployment = await prisma
-        .updateDeployment({
-          where: { releaseName },
-          data: { version: airflowChartVersion }
-        })
-        .$fragment(
-          `{ id releaseName version extraAu airflowVersion alertEmails workspace { id } }`
-        );
-      log.info(
-        `updating deployment ${releaseName} from ${deployment.version} to ${airflowChartVersion}`
-      );
-      await commander.request("updateDeployment", {
-        releaseName: updatedDeployment.releaseName,
-        chart: {
-          name: DEPLOYMENT_AIRFLOW,
-          version: updatedDeployment.version
-        },
-        rawConfig: JSON.stringify(generateHelmValues(updatedDeployment))
-      });
+    // Pull out some deployment fields.
+    const { version, releaseName } = deployment;
+
+    // Skip upgrade if this deployment is greater than or equal to the desired version.
+    if (semver.gte(version, desiredVersion)) {
+      log.info(`Skipping upgrade to ${releaseName}, already on ${version}`);
+      continue;
     }
+
+    // Update the database.
+    const updatedDeployment = await prisma
+      .updateDeployment({
+        where: { releaseName },
+        data: { version: desiredVersion }
+      })
+      .$fragment(`{ id workspace { id } }`);
+
+    log.info(
+      `Updating deployment ${releaseName} from ${version} to ${desiredVersion}`
+    );
+
+    // Fire the update to commander.
+    await commander.request("updateDeployment", {
+      releaseName: updatedDeployment.releaseName,
+      chart: {
+        name: DEPLOYMENT_AIRFLOW,
+        version: updatedDeployment.version
+      },
+      rawConfig: JSON.stringify(generateHelmValues(updatedDeployment))
+    });
   }
+
   log.info("Automatic deployment upgrade has been finished!");
 }
 
