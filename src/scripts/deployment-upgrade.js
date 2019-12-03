@@ -36,9 +36,7 @@ async function deploymentUpgrade() {
           `{ id releaseName version extraAu airflowVersion alertEmails workspace { id } }`
         );
       log.info(
-        `updating deployment of ${updatedDeployment.releaseName} from ${
-          deployment.version
-        } to ${updatedDeployment.version}`
+        `updating deployment ${releaseName} from ${deployment.version} to ${airflowChartVersion}`
       );
       await commander.request("updateDeployment", {
         releaseName: updatedDeployment.releaseName,
