@@ -16,7 +16,8 @@
     "knex-migrate": "npm run knex migrate:latest",
     "prisma-deploy": "prisma deploy --force",
     "cleanup-deployments": "babel-node src/scripts/cleanup-deployments/index.js",
-    "upgrade-deployments": "babel-node src/scripts/upgrade-deployments/index.js"
+    "upgrade-deployments": "babel-node src/scripts/upgrade-deployments/index.js",
+    "expire-deployments": "babel-node src/scripts/expire-deployments/index.js"
   },
   "author": "Astronomer",
   "license": "Astronomer Enterprise License",
