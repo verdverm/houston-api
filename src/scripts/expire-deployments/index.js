@@ -8,7 +8,7 @@ import { prisma } from "generated/client";
 /*
  * Soft deletion of expired deployments
  */
-async function index() {
+async function expireDeployments() {
   log.info("Starting soft deletion of expired deployments");
 
   const expireDate = new Date();
@@ -42,7 +42,7 @@ async function index() {
 
 // When a file is run directly from Node, require.main is set to its module.
 if (require.main === module) {
-  index().catch(err => {
+  expireDeployments().catch(err => {
     log.error(err);
   });
 }

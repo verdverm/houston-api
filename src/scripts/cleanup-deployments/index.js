@@ -111,7 +111,7 @@ async function cleanupImagesForDeployment(deployment) {
 /*
  * Cleanup soft deleted deployments
  */
-async function deploymentCleanup() {
+async function cleanupDeployments() {
   log.info("Starting registry cleanup");
   const olderDate = new Date();
   olderDate.setDate(olderDate.getDate() - argv["olderThan"]);
@@ -142,7 +142,7 @@ const argv = yargs
 
 // When a file is run directly from Node, require.main is set to its module.
 if (require.main === module) {
-  deploymentCleanup().catch(err => {
+  cleanupDeployments().catch(err => {
     log.error(err);
   });
 }

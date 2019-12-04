@@ -14,7 +14,7 @@ import { DEPLOYMENT_AIRFLOW } from "constants";
 /*
  * Upgrade deployments
  */
-async function deploymentUpgrade() {
+async function upgradeDeployments() {
   log.info("Starting automatic deployment upgrade");
 
   // This is our desired chart version
@@ -70,7 +70,7 @@ async function deploymentUpgrade() {
 
 // When a file is run directly from Node, require.main is set to its module.
 if (require.main === module) {
-  deploymentUpgrade().catch(err => {
+  upgradeDeployments().catch(err => {
     log.error(err);
   });
 }
