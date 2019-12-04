@@ -16,7 +16,7 @@
     "knex-migrate": "npm run knex migrate:latest",
     "prisma-deploy": "prisma deploy --force",
     "cleanup-deployments": "prisma generate && babel-node src/scripts/cleanup-deployments/index.js",
-    "upgrade-deployments": "pirmsa generate && babel-node src/scripts/upgrade-deployments/index.js",
+    "upgrade-deployments": "prisma generate && babel-node src/scripts/upgrade-deployments/index.js",
     "expire-deployments": "prisma generate && babel-node src/scripts/expire-deployments/index.js"
   },
   "author": "Astronomer",
