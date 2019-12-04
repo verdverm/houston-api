@@ -15,10 +15,10 @@ import { DEPLOYMENT_AIRFLOW } from "constants";
  * Upgrade deployments
  */
 async function upgradeDeployments() {
-  log.info("Starting automatic deployment upgrade");
-
   // This is our desired chart version
   const desiredVersion = config.get("deployments.chart.version");
+
+  log.info(`Starting automatic deployment upgrade to ${desiredVersion}`);
 
   // Find all deployments.
   const deployments = await prisma
