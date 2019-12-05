@@ -7,6 +7,7 @@ import {
 } from "deployments/naming";
 import { createDatabaseForDeployment } from "deployments/database";
 import {
+  airflowImageForVersion,
   arrayOfKeyValueToObject,
   defaultAirflowImage,
   generateHelmValues,
@@ -156,7 +157,8 @@ export default async function createDeployment(parent, args, ctx, info) {
     registry,
     elasticsearch,
     airflowVersion /* This is deprecated after v0.10.3, delete me soon */,
-    defaultAirflowTag: airflowVersion /* This is the new version post v0.10.3, keep me */
+    defaultAirflowTag: airflowImageForVersion(airflowVersion)
+      .tag /* This is the new version post v0.10.3, keep me */
   };
 
   // Generate the helm input for the airflow chart (eg: values.yaml).

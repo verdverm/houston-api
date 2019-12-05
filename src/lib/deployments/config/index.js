@@ -561,8 +561,21 @@ export function airflowVersions() {
 
 /*
  * Get default Airflow image.
- * @reuturn {String} Default Airflow image tag.
+ * @reuturn {String} Default Airflow image.
  */
 export function defaultAirflowImage() {
   return first(filter(airflowImages(), i => i.channel === "stable"));
+}
+
+/*
+ * Get Airflow image for specified version.
+ * @reuturn {String} Default Airflow image.
+ */
+export function airflowImageForVersion(version) {
+  return first(
+    filter(
+      airflowImages(),
+      i => i.channel === "stable" && i.version === version
+    )
+  );
 }
