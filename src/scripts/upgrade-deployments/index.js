@@ -22,7 +22,7 @@ async function upgradeDeployments() {
 
   // Find all deployments.
   const deployments = await prisma
-    .deployments({})
+    .deployments({ where: { deletedAt: null } })
     .$fragment(`{ id releaseName version workspace { id } }`);
 
   // Return early if we have no deployments.
@@ -48,7 +48,7 @@ async function upgradeDeployments() {
         where: { releaseName },
         data: { version: desiredVersion }
       })
-      .$fragment(`{ id workspace { id } }`);
+      .$fragment(`{ id releaseName extraAu workspace { id } }`);
 
     log.info(
       `Updating deployment ${releaseName} from ${version} to ${desiredVersion}`
@@ -56,10 +56,10 @@ async function upgradeDeployments() {
 
     // Fire the update to commander.
     await commander.request("updateDeployment", {
-      releaseName: updatedDeployment.releaseName,
+      releaseName,
       chart: {
         name: DEPLOYMENT_AIRFLOW,
-        version: updatedDeployment.version
+        version: desiredVersion
       },
       rawConfig: JSON.stringify(generateHelmValues(updatedDeployment))
     });
