@@ -20,7 +20,7 @@ async function expireDeployments() {
 
   // Return early if we have no deployments.
   if (deployments.length === 0) {
-    log.info("There are no deployments to delete :(");
+    log.info("There are no deployments to delete");
     return;
   }
 
