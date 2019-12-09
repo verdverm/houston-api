@@ -41,11 +41,11 @@ export function workspaceCapabilities(parent, args, ctx) {
   const permissions = [
     {
       key: "canUpdateBilling",
-      value: "workspace.iam.update"
+      value: "workspace.billing.update"
     },
     {
       key: "canUpdateIAM",
-      value: "workspace.billing.update"
+      value: "workspace.iam.update"
     },
     {
       key: "canUpdateWorkspace",
