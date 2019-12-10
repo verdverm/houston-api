@@ -27,7 +27,7 @@ async function upgradeDeployments() {
       .deployments({ where: { deletedAt: null } })
       .$fragment(`{ id releaseName version workspace { id } }`);
   } catch (e) {
-    // Prisma 0.10.3 comparability
+    // Astronomer 0.10.3 comparability
     log.error(`Error from prisma: ${e}`);
     deployments = await prisma
       .deployments({})
