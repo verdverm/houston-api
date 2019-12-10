@@ -24,12 +24,16 @@ RUN apk update \
 		python \
 		git \
 	&& apk add --no-cache \
+		curl \
 		bash \
 		netcat-openbsd \
 		nodejs \
 		nodejs-npm \
 		openssl \
 	&& npm install \
+	&& curl -L -o /usr/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.17.0/bin/linux/amd64/kubectl \
+            && chmod +x /usr/bin/kubectl \
+            && kubectl version --client \
 	&& apk del .build-deps
 
 # Copy in source code.
