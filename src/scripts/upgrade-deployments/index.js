@@ -21,9 +21,18 @@ async function upgradeDeployments() {
   log.info(`Starting automatic deployment upgrade to ${desiredVersion}`);
 
   // Find all deployments.
-  const deployments = await prisma
-    .deployments({ where: { deletedAt: null } })
-    .$fragment(`{ id releaseName version workspace { id } }`);
+  let deployments;
+  try {
+    deployments = await prisma
+      .deployments({ where: { deletedAt: null } })
+      .$fragment(`{ id releaseName version workspace { id } }`);
+  } catch (e) {
+    // Prisma 0.10.3 comparability
+    log.error(`Error from prisma: ${e}`);
+    deployments = await prisma
+      .deployments({})
+      .$fragment(`{ id releaseName version workspace { id } }`);
+  }
 
   // Return early if we have no deployments.
   if (deployments.length === 0) {
