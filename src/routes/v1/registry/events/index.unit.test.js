@@ -35,7 +35,9 @@ describe("POST /registry-events", () => {
       .fn()
       .mockName("updateDeployment")
       .mockReturnValue({
-        workspace: { id: casual.uuid }
+        $fragment: function() {
+          return { workspace: { id: casual.uuid } };
+        }
       });
 
     const labels = Symbol(),

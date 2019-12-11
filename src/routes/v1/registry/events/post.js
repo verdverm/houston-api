@@ -74,10 +74,12 @@ export default async function(req, res) {
       });
 
       // Update the deployment.
-      const updatedDeployment = await prisma.updateDeployment({
-        where: { releaseName },
-        data: { config: updatedConfig }
-      });
+      const updatedDeployment = await prisma
+        .updateDeployment({
+          where: { releaseName },
+          data: { config: updatedConfig }
+        })
+        .$fragment(`{ id releaseName extraAu version workspace { id } }`);
 
       // Fire the helm upgrade to commander.
       await commander.request("updateDeployment", {
