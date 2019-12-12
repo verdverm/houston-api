@@ -79,6 +79,7 @@ export async function createUser(opts) {
 
   // Run the mutation and return id.
   const id = await prisma.createUser(mutation).id();
+
   // Run the analytics.js identify call
 
   identify(id, { fullName, email, signedUpAt: Date.now() });
