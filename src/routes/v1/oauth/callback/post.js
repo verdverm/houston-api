@@ -1,9 +1,11 @@
 import fragment from "./fragment";
-import { createUser as _createUser } from "users";
+import { createUser as _createUser, isFirst } from "users";
 import { getClient } from "oauth/config";
+import { PublicSignupsDisabledError } from "errors";
 import { orbit } from "utilities";
 import { prisma } from "generated/client";
 import { createAuthJWT, setJWTCookie } from "jwt";
+import config from "config";
 import { first, merge } from "lodash";
 import { URLSearchParams } from "url";
 
@@ -15,8 +17,10 @@ import { URLSearchParams } from "url";
 export default async function(req, res, next) {
   // Grab params out of the request body.
   const { state: rawState } = req.body;
+  const firstUser = await isFirst();
+  const publicSignups = config.get("publicSignups");
 
-  // TODO: Hanvle `error` in the response
+  // TODO: Handle `error` in the response
 
   // Parse the state object.
   const state = JSON.parse(decodeURIComponent(rawState));
@@ -76,6 +80,11 @@ export default async function(req, res, next) {
       where: { id: userId },
       data: { fullName, avatarUrl }
     });
+  }
+
+  // If the user does not exist and public signups are disabled, throw an error
+  if (!user && !publicSignups && !firstUser && !state.inviteToken) {
+    throw new PublicSignupsDisabledError();
   }
 
   // If we just created the user, also create and connect the oauth cred.
