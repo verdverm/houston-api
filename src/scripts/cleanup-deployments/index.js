@@ -93,7 +93,7 @@ async function cleanupImagesForDeployment(deployment) {
   });
 
   if (tags.length === 0) {
-    log.info("There is no tags to delete :(");
+    log.info("There is no tags to delete");
     return;
   }
   for (const tag of tags) {
@@ -120,7 +120,7 @@ async function cleanupDeployments() {
     `{ releaseName }`
   );
   if (deployments.length === 0) {
-    log.info("There are no deployments to delete :(");
+    log.info("There are no deployments to delete");
     return;
   }
   for (const deployment of deployments) {
