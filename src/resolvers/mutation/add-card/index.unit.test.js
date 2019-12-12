@@ -59,12 +59,18 @@ describe("addCard", () => {
       });
 
     // Mock up some functions.
-    const updateWorkspace = jest.fn();
+    const updateWorkspace = jest
+      .fn()
+      .mockReturnValue({ label: casual.word, stripeCustomerId: casual.uuid });
 
     // Construct db object for context.
     const db = {
       mutation: { updateWorkspace }
     };
+
+    // Mock up a user for context.
+    const user = { id: casual.uuid };
+
     // Vars for the gql mutation.
     const vars = {
       workspaceUuid: casual.uuid,
@@ -74,7 +80,7 @@ describe("addCard", () => {
     };
 
     // Run the graphql mutation.
-    const res = await graphql(schema, mutation, null, { db }, vars);
+    const res = await graphql(schema, mutation, null, { db, user }, vars);
     expect(res.errors).toBeUndefined();
     expect(updateWorkspace.mock.calls.length).toBe(1);
   });
