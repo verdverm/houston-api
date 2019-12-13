@@ -8,7 +8,7 @@ import {
 export class PublicSignupsDisabledError extends Error {
   message =
     this.message ||
-    "Public signups are disabled, a valid inviteToken is required";
+    "Public sign ups are disabled, a valid inviteToken is required to login to the platform. Public sign ups can be enabled via configuration change.";
 }
 
 export class InviteTokenNotFoundError extends UserInputError {
