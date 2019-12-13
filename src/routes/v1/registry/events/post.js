@@ -79,7 +79,9 @@ export default async function(req, res) {
           where: { releaseName },
           data: { config: updatedConfig }
         })
-        .$fragment(`{ id releaseName extraAu version workspace { id } }`);
+        .$fragment(
+          `{ id config releaseName extraAu version workspace { id } }`
+        );
 
       // Fire the helm upgrade to commander.
       await commander.request("updateDeployment", {
