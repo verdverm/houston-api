@@ -74,7 +74,7 @@ You will need to make some edits:
 kubectl get secret -n tester astronomer-bootstrap -o yaml
 
 echo -n "base64-string" | base64 -d   # or -D if on mac
-echo -n "postgres://postgres:<password>@<postgres-service>.<namespace>:5432"
+echo -n "postgres://postgres:<password>@<postgres-service>.<namespace>:5432" | base64
 
 kubectl edit secret -n tester astronomer-bootstrap
 ```
