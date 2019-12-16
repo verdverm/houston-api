@@ -115,7 +115,11 @@ async function cleanupImagesForDeployment(deployment) {
   // Delete each tag.
   for (const tag of tags) {
     const digestHash = await getManifestForTag(dockerJWT, registry, repo, tag);
-    await deleteManifest(dockerJWT, registry, repo, digestHash);
+    try {
+      await deleteManifest(dockerJWT, registry, repo, digestHash);
+    } catch (e) {
+      log.error(e);
+    }
   }
 }
 
@@ -124,7 +128,6 @@ async function cleanupImagesForDeployment(deployment) {
  */
 async function cleanupDeployments() {
   log.info("Starting registry cleanup");
-
   // Get the cutoff date.
   const olderThan = moment()
     .subtract(argv["olderThan"], "days")
@@ -144,8 +147,8 @@ async function cleanupDeployments() {
 
   // Loop through the deployments and cleanup.
   for (const deployment of deployments) {
-    await cleanupImagesForDeployment(deployment);
     await removeDatabaseForDeployment(deployment);
+    await cleanupImagesForDeployment(deployment);
     await prisma.deleteDeployment({
       releaseName: deployment.releaseName
     });

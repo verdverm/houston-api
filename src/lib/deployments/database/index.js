@@ -119,8 +119,17 @@ export async function removeDatabaseForDeployment(deployment) {
   const rootConn = createConnection(parsedConn);
 
   const dbName = generateDatabaseName(deployment.releaseName);
-  log.info(`Droping database: ${dbName}`);
-  await rootConn.raw(`DROP DATABASE ${dbName};`);
+  log.info(`Dropping database: ${dbName}`);
+
+  // In case of database doesn't exists
+  try {
+    await rootConn.raw(`DROP DATABASE ${dbName};`);
+  } catch (e) {
+    log.error(e);
+  } finally {
+    // To prevent hanging, we should explicitly destroy connection
+    await rootConn.destroy();
+  }
 }
 
 /*
