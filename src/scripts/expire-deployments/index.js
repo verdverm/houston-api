@@ -13,6 +13,8 @@ async function expireDeployments() {
 
   const expireDate = new Date();
 
+  log.info(`Searching for deployments that expired before ${expireDate}`);
+
   // Find all suspended deployments.
   const deployments = await prisma
     .deployments({ where: { workspace: { trialEndsAt_lte: expireDate } } })

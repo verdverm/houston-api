@@ -133,7 +133,7 @@ async function cleanupDeployments() {
     .subtract(argv["olderThan"], "days")
     .toDate();
 
-  log.info(`Searching for deployments deleted prior to ${olderThan}`);
+  log.info(`Searching for deployments deleted before ${olderThan}`);
 
   // Find the deployments that are older than cleanup
   const deployments = await prisma.deployments(
