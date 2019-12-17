@@ -127,7 +127,7 @@ async function cleanupImagesForDeployment(deployment) {
  * Cleanup soft deleted deployments
  */
 async function cleanupDeployments() {
-  log.info("Starting registry cleanup");
+  log.info("Starting deployment cleanup");
   // Get the cutoff date.
   const olderThan = moment()
     .subtract(argv["olderThan"], "days")
