@@ -17,12 +17,14 @@ async function expireDeployments() {
 
   // Find all suspended deployments.
   const deployments = await prisma
-    .deployments({ where: { workspace: { trialEndsAt_lte: expireDate } } })
+    .deployments({
+      where: { deletedAt: null, workspace: { trialEndsAt_lte: expireDate } }
+    })
     .$fragment(`{ id releaseName workspace { id trialEndsAt } }`);
 
   // Return early if we have no deployments.
   if (deployments.length === 0) {
-    log.info("There are no deployments to delete");
+    log.info("There are no deployments to expire");
     return;
   }
 
@@ -34,7 +36,7 @@ async function expireDeployments() {
 
     // Update the database.
     await prisma.updateDeployment({
-      where: { id: id },
+      where: { id },
       data: { deletedAt: new Date() }
     });
   }
