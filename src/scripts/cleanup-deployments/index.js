@@ -73,7 +73,7 @@ async function cleanupImagesForDeployment(deployment) {
   const repo = `${releaseName}/${DEPLOYMENT_AIRFLOW}`;
   const registry = `${platformReleaseName}-registry.${namespace}:${registryPort}`;
 
-  log.info(`Cleaning docker registry for ${repo}`);
+  log.info(`Cleaning docker registry ${repo}`);
 
   // Create a JWT for the registry request.
   let dockerJWT;
