@@ -46,6 +46,8 @@ export async function createDatabaseForDeployment(deployment) {
     numbers: true
   });
 
+  log.info(`Creating database ${dbName}`);
+
   // Create the new deployment database.
   await createDatabase(rootConn, dbName);
 
@@ -77,6 +79,8 @@ export async function createDatabaseForDeployment(deployment) {
 
   // Kill connection to the deployments db.
   deploymentDb.destroy();
+
+  log.info(`Created database ${dbName}`);
 
   // Construct connection details for airflow schema.
   const metadataConnection = {
@@ -119,11 +123,16 @@ export async function removeDatabaseForDeployment(deployment) {
   const rootConn = createConnection(parsedConn);
 
   const dbName = generateDatabaseName(deployment.releaseName);
-  log.info(`Dropping database: ${dbName}`);
+  log.info(`Dropping database ${dbName}`);
 
   // In case of database doesn't exists
   try {
+    await rootConn.raw(`REVOKE CONNECT ON DATABASE ${dbName} FROM public;`);
+    await rootConn.raw(
+      `SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = '${dbName}';`
+    );
     await rootConn.raw(`DROP DATABASE ${dbName};`);
+    log.info(`Dropped database ${dbName}`);
   } catch (e) {
     log.error(e);
   } finally {
