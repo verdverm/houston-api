@@ -45,6 +45,10 @@ export default function createPoller(
     return Promise.resolve({ value: undefined, done: true });
   };
 
+  iterator.throw = error => {
+    return Promise.reject(error);
+  };
+
   // Return the AsyncIterator
   return iterator;
 }

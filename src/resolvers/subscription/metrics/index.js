@@ -35,6 +35,7 @@ export async function subscribe(parent, args, { db, pubsub }) {
       } else {
         const getQueries = queries(releaseName, args.since, args.step);
         const data = [];
+
         Object.keys(getQueries).forEach(async k => {
           if (args.metricType.indexOf(k) > -1) {
             const promises = getQueries[k].map(async ql => {

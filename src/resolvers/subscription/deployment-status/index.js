@@ -20,9 +20,20 @@ export function buildURI(query) {
   return `http://${host}:${port}/api/v1/${query}`;
 }
 
+export async function getMetric(releaseName) {
+  const req = await request({
+    method: "GET",
+    json: true,
+    uri: buildURI(`
+      rate(airflow_scheduler_heartbeat{deployment=~"${releaseName}", type="counter"}[1m])
+    `)
+  }).catch(err => log.debug(err));
+  return { result: req.data ? req.data.result : [] };
+}
+
 // Start the subscription
 export async function subscribe(parent, args, { pubsub }) {
-  const { releaseName } = args;
+  let { releaseName } = args;
 
   // Return sample data
   if (useSample) {
@@ -33,14 +44,8 @@ export async function subscribe(parent, args, { pubsub }) {
 
   // Return promQL data if in production
   return createPoller(async publish => {
-    const query = `rate(airflow_scheduler_heartbeat{deployment=~"${releaseName}", type="counter"}[1m])`;
-    const response = await request({
-      method: "GET",
-      json: true,
-      uri: buildURI(query)
-    }).catch(err => log.debug(err));
-
-    publish({ deploymentStatus: { result: response } });
+    const res = await Promise.resolve(getMetric(releaseName));
+    publish({ deploymentStatus: res });
   }, pubsub);
 }
 
