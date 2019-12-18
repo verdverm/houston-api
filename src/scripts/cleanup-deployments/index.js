@@ -47,7 +47,7 @@ async function getManifestForTag(dockerJWT, registry, repo, tag) {
  */
 async function deleteManifest(dockerJWT, registry, repo, digestHash) {
   const uri = `http://${registry}/v2/${repo}/manifests/${digestHash}`;
-  log.debug(`deleting ${digestHash}: DELETE ${uri}`);
+  log.debug(`Deleting ${digestHash}: DELETE ${uri}`);
   await request({
     method: "DELETE",
     uri,
@@ -74,14 +74,22 @@ async function cleanupImagesForDeployment(deployment) {
   const registry = `${platformReleaseName}-registry.${namespace}:${registryPort}`;
 
   // Create a JWT for the registry request.
-  const dockerJWT = createDockerJWT("houston", [
-    {
-      type: "repository",
-      // Build the repo name.
-      name: repo,
-      actions: ["pull", "delete"]
-    }
-  ]);
+  let dockerJWT;
+
+  try {
+    dockerJWT = createDockerJWT("houston", [
+      {
+        type: "repository",
+        // Build the repo name.
+        name: repo,
+        actions: ["pull", "delete"]
+      }
+    ]);
+  } catch (e) {
+    return log.info(
+      `Could not create registry JWT, skipping registry cleanup for ${repo}`
+    );
+  }
 
   // Build the registry request URL for tag list.
   const uri = `http://${registry}/v2/${repo}/tags/list`;
@@ -108,7 +116,7 @@ async function cleanupImagesForDeployment(deployment) {
 
   // Exit early if we have no tags.
   if (size(tags) === 0) {
-    log.info("There is no tags to delete");
+    log.info("There are no tags to delete");
     return;
   }
 
@@ -121,6 +129,8 @@ async function cleanupImagesForDeployment(deployment) {
       log.error(e);
     }
   }
+
+  log.info(`Cleaned ${repo}`);
 }
 
 /*
@@ -149,6 +159,7 @@ async function cleanupDeployments() {
 
   // Loop through the deployments and cleanup.
   for (const deployment of deployments) {
+    log.info(`Beginning cleanup for ${deployment.releaseName}`);
     await removeDatabaseForDeployment(deployment);
     await cleanupImagesForDeployment(deployment);
     await prisma.deleteDeployment({
