@@ -63,10 +63,12 @@ are available with most systems having it in their package manager.
 (brew / apt install telepresence)
 
 
-Note, this will use the configuration, secrets, and environment variables
+Note, this will use the secrets and environment variables
 from the deployment in kubernetes.
+The config will be taken from the local filesystem.
+To use the cluster configs, see below.
 
-You will need to make some edits:
+You will need to make some edits to make Houston work locally with telepresence.
 
 #### Edit the database conection string to remove the "svc.cluster.local"
 
@@ -99,20 +101,37 @@ telepresence \
   --swap-deployment tester-houston \
   --run-shell
 
-... deploys proxy, prints output ...
+# ... deploys proxy, prints output ...
 
 # once it comes online, you can get your normal shell by running...
 bash
 
-# start houston-api
-docker-compose up -d # needed for prisma
+# mount secret volumes
+./scripts/volumes.sh
 
-export NODE_ENV=development
+# start houston locally
 npm start
 ```
 
 You will now have a locally running houston
 as if it was in kubernetes.
+
+#### Configuration files
+
+Running Houston under telepresence will take changes
+from your local filesystem.
+You can also use the configuration from within the cluster.
+In the previous section, add an argument to the volumes script:
+
+```bash
+./scripts/volumes.sh production
+```
+
+Any argument will cause the cluster config dir to be mounted.
+This will also set the NODE_ENV to the argument value.
+You can set the NODE_ENV yourself to select a different, local config value
+if you do not want to use the cluster versions.
+Additionally, both methods support ENV_VAR overrides in wither mode.
 
 
 ## Live testing in Kubernetes
