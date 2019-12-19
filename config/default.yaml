@@ -426,6 +426,7 @@ deployments:
         limit: 30
     - name: pgbouncer
       au:
+        req: 0.1
         default: 2
         limit: 2
     - name: flower
