@@ -134,7 +134,7 @@ if you do not want to use the cluster versions.
 Additionally, both methods support ENV_VAR overrides in wither mode.
 
 
-## Live testing in Kubernetes
+## Testing Airflow Chart Upgrades in Kubernetes
 
 Sometimes it's useful to manually take over the role of commander, in order to test other components, like the airflow chart. Since commander requires the chart to live in a remote repository, it's difficult to quickly iterate on changes to the chart locally. One way to test this type of scenario is to disable commander and enable logging of the helm values instead. This can be done by setting configuration `commander.enabled: false` and `deployments.logHelmValues: true`. These can be overridden via environment variables.
 
