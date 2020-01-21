@@ -107,7 +107,7 @@ telepresence \
 bash
 
 # mount secret volumes
-./scripts/volumes.sh
+./bin/volumes.sh
 
 # start houston locally
 npm start
